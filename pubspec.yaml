@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  floor: ^1.4.2
   flutter_localizations:
     sdk: flutter
   flutter_tabler_icons: ^1.43.0
@@ -45,6 +46,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  build_runner: ^2.1.2
+  floor_generator: ^1.4.2
   flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
