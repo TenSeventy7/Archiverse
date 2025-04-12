@@ -2,7 +2,8 @@
     <application
         android:label="archiverse"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"> <!-- Enable predictive back gesture on Android 13+ -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
