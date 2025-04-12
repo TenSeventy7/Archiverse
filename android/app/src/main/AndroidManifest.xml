@@ -4,6 +4,12 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"> <!-- Enable predictive back gesture on Android 13+ -->
+
+        <!-- Enable Impeller for iOS-style rendering on Android. --> 
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
