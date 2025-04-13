@@ -95,6 +95,96 @@ abstract class AppLocalizations {
     Locale('tl')
   ];
 
+  /// No description provided for @about_app_name.
+  ///
+  /// In en, this message translates to:
+  /// **'About Archiverse'**
+  String get about_app_name;
+
+  /// No description provided for @about_contributors_see_all.
+  ///
+  /// In en, this message translates to:
+  /// **'See all contributors'**
+  String get about_contributors_see_all;
+
+  /// No description provided for @about_discord_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discuss on Discord'**
+  String get about_discord_subtitle;
+
+  /// No description provided for @about_discord_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the Community'**
+  String get about_discord_title;
+
+  /// No description provided for @about_footer_flutter.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ❤️ using Flutter'**
+  String get about_footer_flutter;
+
+  /// No description provided for @about_github_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See the source code on GitHub'**
+  String get about_github_subtitle;
+
+  /// No description provided for @about_github_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Source Code'**
+  String get about_github_title;
+
+  /// No description provided for @about_header_contributors.
+  ///
+  /// In en, this message translates to:
+  /// **'Contributors'**
+  String get about_header_contributors;
+
+  /// No description provided for @about_header_contributors_localization.
+  ///
+  /// In en, this message translates to:
+  /// **'Localization Contributors'**
+  String get about_header_contributors_localization;
+
+  /// No description provided for @about_header_core_team.
+  ///
+  /// In en, this message translates to:
+  /// **'Core Team'**
+  String get about_header_core_team;
+
+  /// No description provided for @about_header_special_thanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Special Thanks'**
+  String get about_header_special_thanks;
+
+  /// No description provided for @about_report_bug_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a bug or issue on GitHub'**
+  String get about_report_bug_subtitle;
+
+  /// No description provided for @about_report_bug_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a Bug'**
+  String get about_report_bug_title;
+
+  /// No description provided for @about_update_card_btn_update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get about_update_card_btn_update;
+
+  /// No description provided for @about_update_card_title.
+  ///
+  /// In en, this message translates to:
+  /// **'An update is available!'**
+  String get about_update_card_title;
+
   /// No description provided for @app_name.
   ///
   /// In en, this message translates to:
@@ -148,6 +238,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore'**
   String get dialog_restore;
+
+  /// No description provided for @fandom_anime_manga.
+  ///
+  /// In en, this message translates to:
+  /// **'Anime & Manga'**
+  String get fandom_anime_manga;
+
+  /// No description provided for @fandom_books_literature.
+  ///
+  /// In en, this message translates to:
+  /// **'Books & Literature'**
+  String get fandom_books_literature;
+
+  /// No description provided for @fandom_cartoons_comics_graphic_novels.
+  ///
+  /// In en, this message translates to:
+  /// **'Cartoons & Comics & Graphic Novels'**
+  String get fandom_cartoons_comics_graphic_novels;
+
+  /// No description provided for @fandom_celebrities_real_people.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrities & Real People'**
+  String get fandom_celebrities_real_people;
+
+  /// No description provided for @fandom_movies.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies'**
+  String get fandom_movies;
+
+  /// No description provided for @fandom_music_bands.
+  ///
+  /// In en, this message translates to:
+  /// **'Music & Bands'**
+  String get fandom_music_bands;
+
+  /// No description provided for @fandom_other_media.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Media'**
+  String get fandom_other_media;
+
+  /// No description provided for @fandom_theater.
+  ///
+  /// In en, this message translates to:
+  /// **'Theater'**
+  String get fandom_theater;
+
+  /// No description provided for @fandom_tv_shows.
+  ///
+  /// In en, this message translates to:
+  /// **'TV Shows'**
+  String get fandom_tv_shows;
+
+  /// No description provided for @fandom_uncategorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncategorized Fandoms'**
+  String get fandom_uncategorized;
+
+  /// No description provided for @fandom_video_games.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Games'**
+  String get fandom_video_games;
+
+  /// No description provided for @onboarding_1_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Millions of stories await. From scorching romances to epic space battles, find your next obsession with our powerful search. Customize your feed, unlock hidden gems, and prepare to be amazed!'**
+  String get onboarding_1_subtitle;
+
+  /// No description provided for @onboarding_1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Amazing Works'**
+  String get onboarding_1_title;
+
+  /// No description provided for @onboarding_2_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Wi-Fi? No worries! Download your favorites and conquer boredom on the go. Train, plane, or cozy reading nook - your library is always a tap away.'**
+  String get onboarding_2_subtitle;
+
+  /// No description provided for @onboarding_2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Anytime, Anywhere'**
+  String get onboarding_2_title;
+
+  /// No description provided for @onboarding_3_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your love, leave comments, and join the lively discussions. Make friends, find kindred spirits, and let your voice be heard. Remember, you\'re not just reading, you\'re part of something bigger!'**
+  String get onboarding_3_subtitle;
+
+  /// No description provided for @onboarding_3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with the Community'**
+  String get onboarding_3_title;
+
+  /// No description provided for @onboarding_4_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Dive into the Archiverse'**
+  String get onboarding_4_cta;
+
+  /// No description provided for @onboarding_4_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re holding the key to endless worlds. Open Archiverse, unlock your next adventure, and let the stories begin!'**
+  String get onboarding_4_subtitle;
+
+  /// No description provided for @onboarding_4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Your Journey'**
+  String get onboarding_4_title;
+
+  /// No description provided for @onboarding_intro.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore a galaxy of stories. Dive deep into endless imagination and join the passionate fandom. Archiverse: Your ultimate AO3 reader.'**
+  String get onboarding_intro;
+
+  /// No description provided for @onboarding_intro_cta.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go!'**
+  String get onboarding_intro_cta;
+
+  /// No description provided for @onboarding_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboarding_next;
+
+  /// No description provided for @onboarding_skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboarding_skip;
+
+  /// No description provided for @placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Placeholder'**
+  String get placeholder;
+
+  /// No description provided for @series_info_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'This series has been completed'**
+  String get series_info_complete;
 
   /// No description provided for @settings_author_filters_add_author.
   ///
@@ -1612,6 +1858,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Graphic Violence'**
   String get settings_warnings_violence;
+
+  /// No description provided for @work_bookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks'**
+  String get work_bookmarks;
+
+  /// No description provided for @work_comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get work_comment;
+
+  /// No description provided for @work_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get work_complete;
+
+  /// No description provided for @work_detail_btn_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Start reading'**
+  String get work_detail_btn_read;
+
+  /// No description provided for @work_detail_chapters.
+  ///
+  /// In en, this message translates to:
+  /// **'Chapters'**
+  String get work_detail_chapters;
+
+  /// No description provided for @work_detail_words.
+  ///
+  /// In en, this message translates to:
+  /// **'Words'**
+  String get work_detail_words;
+
+  /// No description provided for @work_download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get work_download;
+
+  /// No description provided for @work_kudos.
+  ///
+  /// In en, this message translates to:
+  /// **'Kudos'**
+  String get work_kudos;
+
+  /// No description provided for @work_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get work_share;
+
+  /// No description provided for @work_subscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get work_subscribe;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

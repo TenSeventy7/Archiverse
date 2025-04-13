@@ -1,0 +1,295 @@
+/*
+ * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
+ * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+import 'package:archiverse/components/compact_text_icon.dart';
+import 'package:archiverse/components/rating_badges.dart';
+import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/work.dart';
+import 'package:archiverse/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+
+class _WorkOptionsDialog extends StatelessWidget {
+  final Work work;
+  const _WorkOptionsDialog({required this.work});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildWorkHeader(context),
+
+        // Primary actions
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Card(
+            elevation: 0,
+            color: colorScheme.surfaceContainer,
+            margin: const EdgeInsets.only(bottom: 12.0),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.book_2,
+                  title: 'Read',
+                  subtitle: 'Continue from Chapter ${null ?? 1}',
+                  isHighlighted: true,
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Navigator.pushNamed(context, ReaderActivity.routeName, arguments: work);
+                  },
+                ),
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.download,
+                  title: context.strings.work_download,
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Secondary actions
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Card(
+            elevation: 0,
+            color: colorScheme.surfaceContainer,
+            margin: const EdgeInsets.symmetric(vertical: 4.0),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.heart,
+                  title: context.strings.work_kudos,
+                  onTap: () {},
+                ),
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.message,
+                  title: context.strings.work_comment,
+                  onTap: () {},
+                ),
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.share,
+                  title: context.strings.work_share,
+                  onTap: () {},
+                ),
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.bell_plus,
+                  title: context.strings.work_subscribe,
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        SizedBox(height: context.commonPadding * 1.5),
+      ],
+    );
+  }
+
+  Widget _buildWorkHeader(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      color: colorScheme.surface,
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title, author and rating badges
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      work.title,
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      AppUtils.formatAuthorList(work.authors),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              RatingBadges(work: work),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Fandom tags
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              AppUtils.formatFandomsList(work.fandoms),
+              style: context.textTheme.labelSmall?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // Statistics row with shadows
+          _buildWorkStatistics(),
+
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    bool isHighlighted = false,
+    required VoidCallback onTap,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color:
+                    isHighlighted
+                        ? colorScheme.primaryContainer
+                        : colorScheme.surface,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              alignment: Alignment.center,
+              child: Icon(
+                icon,
+                size: 20,
+                color:
+                    isHighlighted
+                        ? colorScheme.onPrimaryContainer
+                        : colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight:
+                          isHighlighted ? FontWeight.w600 : FontWeight.normal,
+                      color: isHighlighted ? colorScheme.primary : null,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Icon(
+              TablerIcons.chevron_right,
+              size: 20,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return const Padding(
+      padding: EdgeInsets.only(left: 72),
+      child: Divider(height: 1),
+    );
+  }
+
+  Row _buildWorkStatistics() {
+    return Row(
+      spacing: 12.0,
+      children: [
+        CompactTextIcon(icon: TablerIcons.book, statistic: work.chapters),
+        CompactTextIcon(icon: TablerIcons.align_left, statistic: work.words),
+        CompactTextIcon(icon: TablerIcons.message, statistic: work.comments),
+        CompactTextIcon(icon: TablerIcons.heart, statistic: work.kudos),
+      ],
+    );
+  }
+}
+
+class WorkOptionsDialog {
+  static void showSheet(
+    BuildContext context, {
+    required Work work,
+    AnimationController? bottomSheetAnimator,
+  }) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      transitionAnimationController: bottomSheetAnimator,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (BuildContext context) => _WorkOptionsDialog(work: work),
+    );
+  }
+}

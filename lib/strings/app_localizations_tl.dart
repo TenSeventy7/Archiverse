@@ -9,6 +9,51 @@ class AppLocalizationsTl extends AppLocalizations {
   AppLocalizationsTl([String locale = 'tl']) : super(locale);
 
   @override
+  String get about_app_name => 'About Archiverse';
+
+  @override
+  String get about_contributors_see_all => 'See all contributors';
+
+  @override
+  String get about_discord_subtitle => 'Discuss on Discord';
+
+  @override
+  String get about_discord_title => 'Join the Community';
+
+  @override
+  String get about_footer_flutter => 'Made with ❤️ using Flutter';
+
+  @override
+  String get about_github_subtitle => 'See the source code on GitHub';
+
+  @override
+  String get about_github_title => 'Source Code';
+
+  @override
+  String get about_header_contributors => 'Contributors';
+
+  @override
+  String get about_header_contributors_localization => 'Localization Contributors';
+
+  @override
+  String get about_header_core_team => 'Core Team';
+
+  @override
+  String get about_header_special_thanks => 'Special Thanks';
+
+  @override
+  String get about_report_bug_subtitle => 'Report a bug or issue on GitHub';
+
+  @override
+  String get about_report_bug_title => 'Report a Bug';
+
+  @override
+  String get about_update_card_btn_update => 'Update';
+
+  @override
+  String get about_update_card_title => 'An update is available!';
+
+  @override
   String get app_name => 'Archiverse';
 
   @override
@@ -34,6 +79,84 @@ class AppLocalizationsTl extends AppLocalizations {
 
   @override
   String get dialog_restore => 'Restore';
+
+  @override
+  String get fandom_anime_manga => 'Anime & Manga';
+
+  @override
+  String get fandom_books_literature => 'Books & Literature';
+
+  @override
+  String get fandom_cartoons_comics_graphic_novels => 'Cartoons & Comics & Graphic Novels';
+
+  @override
+  String get fandom_celebrities_real_people => 'Celebrities & Real People';
+
+  @override
+  String get fandom_movies => 'Movies';
+
+  @override
+  String get fandom_music_bands => 'Music & Bands';
+
+  @override
+  String get fandom_other_media => 'Other Media';
+
+  @override
+  String get fandom_theater => 'Theater';
+
+  @override
+  String get fandom_tv_shows => 'TV Shows';
+
+  @override
+  String get fandom_uncategorized => 'Uncategorized Fandoms';
+
+  @override
+  String get fandom_video_games => 'Video Games';
+
+  @override
+  String get onboarding_1_subtitle => 'Millions of stories await. From scorching romances to epic space battles, find your next obsession with our powerful search. Customize your feed, unlock hidden gems, and prepare to be amazed!';
+
+  @override
+  String get onboarding_1_title => 'Discover Amazing Works';
+
+  @override
+  String get onboarding_2_subtitle => 'No Wi-Fi? No worries! Download your favorites and conquer boredom on the go. Train, plane, or cozy reading nook - your library is always a tap away.';
+
+  @override
+  String get onboarding_2_title => 'Read Anytime, Anywhere';
+
+  @override
+  String get onboarding_3_subtitle => 'Share your love, leave comments, and join the lively discussions. Make friends, find kindred spirits, and let your voice be heard. Remember, you\'re not just reading, you\'re part of something bigger!';
+
+  @override
+  String get onboarding_3_title => 'Connect with the Community';
+
+  @override
+  String get onboarding_4_cta => 'Dive into the Archiverse';
+
+  @override
+  String get onboarding_4_subtitle => 'You\'re holding the key to endless worlds. Open Archiverse, unlock your next adventure, and let the stories begin!';
+
+  @override
+  String get onboarding_4_title => 'Start Your Journey';
+
+  @override
+  String get onboarding_intro => 'Explore a galaxy of stories. Dive deep into endless imagination and join the passionate fandom. Archiverse: Your ultimate AO3 reader.';
+
+  @override
+  String get onboarding_intro_cta => 'Let\'s go!';
+
+  @override
+  String get onboarding_next => 'Next';
+
+  @override
+  String get onboarding_skip => 'Skip';
+
+  @override
+  String get placeholder => 'Placeholder';
+
+  @override
+  String get series_info_complete => 'This series has been completed';
 
   @override
   String get settings_author_filters_add_author => 'Add Author';
@@ -794,4 +917,34 @@ class AppLocalizationsTl extends AppLocalizations {
 
   @override
   String get settings_warnings_violence => 'Graphic Violence';
+
+  @override
+  String get work_bookmarks => 'Bookmarks';
+
+  @override
+  String get work_comment => 'Comment';
+
+  @override
+  String get work_complete => 'Completed';
+
+  @override
+  String get work_detail_btn_read => 'Start reading';
+
+  @override
+  String get work_detail_chapters => 'Chapters';
+
+  @override
+  String get work_detail_words => 'Words';
+
+  @override
+  String get work_download => 'Download';
+
+  @override
+  String get work_kudos => 'Kudos';
+
+  @override
+  String get work_share => 'Share';
+
+  @override
+  String get work_subscribe => 'Subscribe';
 }
