@@ -160,11 +160,15 @@ class WorkItem extends StatelessWidget {
                 color: colorScheme.onSecondaryContainer,
               ),
               const SizedBox(width: 6),
-              Text(
-                "Part ${work.part} of the ${work.series.title} series",
-                style: context.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.onSecondaryContainer,
+              Flexible(
+                child: Text(
+                  "Part ${work.part} of the ${work.series.title} series",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onSecondaryContainer,
+                  ),
                 ),
               ),
             ],
