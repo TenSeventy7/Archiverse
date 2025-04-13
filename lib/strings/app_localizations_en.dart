@@ -10,4 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get app_name => 'Archiverse';
+
+  @override
+  String get dialog_cancel => 'Cancel';
 }
