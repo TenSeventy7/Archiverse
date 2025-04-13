@@ -5,6 +5,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
+import 'package:archiverse/views/activity_search.dart';
 import 'package:flutter/material.dart';
 
 class DiscoverFragment extends StatefulWidget {
@@ -23,9 +24,8 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
         return <Widget>[
           DiscoverHeader(
             userName: "John",
-            onSearchTap: () {
-              // Handle search tap
-            },
+            onSearchTap:
+                () => context.navigator.pushNamed(SearchActivity.routeName),
           ),
         ];
       },

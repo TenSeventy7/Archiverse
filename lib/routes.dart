@@ -5,6 +5,7 @@
  */
 
 import 'package:archiverse/views/activity_about.dart';
+import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
@@ -26,6 +27,7 @@ import 'package:archiverse/views/activity_home.dart';
 class AppRoutes {
   static Map<String, Widget Function(BuildContext)> routes = {
     HomeActivity.routeName: (context) => const HomeActivity(),
+    SearchActivity.routeName: (context) => const SearchActivity(),
     AboutActivity.routeName: (context) => const AboutActivity(),
     SettingsActivity.routeName: (context) => const SettingsActivity(),
     TextSizeSettingsActivity.routeName:
