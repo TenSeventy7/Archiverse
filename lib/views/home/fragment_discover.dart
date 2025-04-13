@@ -1,4 +1,10 @@
+import 'package:archiverse/components/cards/work_card.dart';
+import 'package:archiverse/components/continue_reading_card.dart';
+import 'package:archiverse/components/discover_header.dart';
+import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/work.dart';
+import 'package:archiverse/placeholders.dart';
 import 'package:flutter/material.dart';
 
 class DiscoverFragment extends StatefulWidget {
@@ -15,37 +21,50 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
       physics: const BouncingScrollPhysics(),
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
-          SliverAppBar.large(
-            title: const Text('Discover'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  // Handle search action
-                },
-              ),
-            ],
+          DiscoverHeader(
+            userName: "John",
+            onSearchTap: () {
+              // Handle search tap
+            },
           ),
         ];
       },
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return ListTile(
-                  title: Text('Item $index'),
-                  onTap: () {
-                    // Handle item tap
-                  },
-                );
-              },
-              childCount: 20, // Number of items in the list
+          SliverPadding(
+            padding: context.horizontalPadding,
+            sliver: SliverList.list(
+              children: [
+                ContinueReadingCard(
+                  work: Fillers.work,
+                  history: Fillers.history,
+                ),
+
+                TextHeader.large(title: "Suggested for you"),
+                // Dummy works
+                Column(
+                  spacing: 8.0,
+                  children: [
+                    ..._generateDummyWorks(5).map((work) {
+                      return WorkCard(work: work);
+                    }).toList(),
+                  ],
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  _generateDummyWorks(int length) {
+    List<Work> works = Fillers.generateRandomWorks(length);
+    List<Work> dummyWorks = [];
+    for (int i = 0; i < length; i++) {
+      dummyWorks.add(works[i % works.length]);
+    }
+    return dummyWorks;
   }
 }
