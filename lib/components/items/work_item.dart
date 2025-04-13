@@ -1,6 +1,5 @@
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
-import 'package:archiverse/components/rating_card.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
