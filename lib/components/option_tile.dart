@@ -4,6 +4,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class OptionTile extends StatelessWidget {
   final String title;
+  final String? subtitle;
   final IconData? icon;
   final VoidCallback? onTap;
   final String? routeName;
@@ -13,6 +14,7 @@ class OptionTile extends StatelessWidget {
   const OptionTile({
     super.key,
     required this.title,
+    this.subtitle,
     this.icon,
     this.trailing,
     this.onTap,
@@ -23,6 +25,7 @@ class OptionTile extends StatelessWidget {
   // Factory constructor for switch variant
   const factory OptionTile.switcher({
     required String title,
+    String? subtitle,
     IconData? icon,
     Widget? trailing,
     required bool value,
@@ -39,7 +42,43 @@ class OptionTile extends StatelessWidget {
     required List<dynamic> values,
     required dynamic selectedValue,
     required ValueChanged<dynamic> onChanged,
+    bool enabled,
   }) = _ListOptionTile;
+
+  // Factory constructor for radio variant
+  const factory OptionTile.radio({
+    required String title,
+    IconData? icon,
+    Widget? trailing,
+    required dynamic value,
+    required dynamic groupValue,
+    required ValueChanged<dynamic> onChanged,
+    String? subtitle,
+    bool enabled,
+  }) = _RadioOptionTile;
+
+  // Factory constructor for slider variant
+  const factory OptionTile.slider({
+    required String title,
+    IconData? icon,
+    required double value,
+    required ValueChanged<double> onChanged,
+    double min,
+    double max,
+    int? divisions,
+    bool enabled,
+  }) = _SliderOptionTile;
+
+  // Factory constructor for custom tile content
+  const factory OptionTile.custom({
+    required String title,
+    IconData? icon,
+    required Widget widget,
+    VoidCallback? onTap,
+    String? routeName,
+    bool enabled,
+    EdgeInsets? padding,
+  }) = _CustomOptionTile;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +114,7 @@ class _SwitchOptionTile extends OptionTile {
 
   const _SwitchOptionTile({
     required super.title,
+    super.subtitle,
     super.icon,
     super.trailing,
     super.enabled = true,
@@ -86,6 +126,7 @@ class _SwitchOptionTile extends OptionTile {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
       leading: icon != null ? Icon(icon) : null,
       trailing: _buildTrailingWidget(
         child: Switch(value: value, onChanged: enabled ? onChanged : null),
@@ -115,11 +156,13 @@ class _ListOptionTile extends OptionTile {
     required this.values,
     required this.selectedValue,
     required this.onChanged,
+    super.enabled,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      enabled: enabled,
       title: Text(title),
       subtitle: Text(_getSelectedEntryName()),
       leading: icon != null ? Icon(icon) : null,
@@ -171,6 +214,118 @@ class _ListOptionTile extends OptionTile {
           ],
         );
       },
+    );
+  }
+}
+
+class _RadioOptionTile extends OptionTile {
+  final dynamic value;
+  final dynamic groupValue;
+  final ValueChanged<dynamic> onChanged;
+  final String? subtitle;
+
+  const _RadioOptionTile({
+    required super.title,
+    super.icon,
+    super.trailing,
+    required this.value,
+    required this.groupValue,
+    required this.onChanged,
+    this.subtitle,
+    super.enabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
+      leading: icon != null ? Icon(icon) : null,
+      trailing: _buildTrailingWidget(
+        child: Radio<dynamic>(
+          value: value,
+          groupValue: groupValue,
+          onChanged: enabled ? onChanged : null,
+        ),
+      ),
+      enabled: enabled,
+      onTap: enabled ? () => onChanged(value) : null,
+    );
+  }
+}
+
+class _SliderOptionTile extends OptionTile {
+  final double value;
+  final ValueChanged<double> onChanged;
+  final double min;
+  final double max;
+  final int? divisions;
+
+  const _SliderOptionTile({
+    required super.title,
+    super.icon,
+    required this.value,
+    required this.onChanged,
+    this.min = 0.8,
+    this.max = 2.0,
+    this.divisions = 12,
+    super.enabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      leading: icon != null ? Icon(icon) : null,
+      isThreeLine: true,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: context.commonPadding,
+        vertical: 8,
+      ),
+      trailing: Text(
+        '${(value * 100).toInt()}%',
+        style: context.textTheme.titleSmall,
+      ),
+      subtitle: Slider(
+        value: value,
+        min: min,
+        max: max,
+        divisions: divisions,
+        onChanged: enabled ? onChanged : null,
+        padding: const EdgeInsets.only(top: 4, bottom: 4),
+        inactiveColor: context.colorScheme.surfaceContainerLow,
+      ),
+      enabled: enabled,
+    );
+  }
+}
+
+class _CustomOptionTile extends OptionTile {
+  final Widget widget;
+  final EdgeInsets? padding;
+
+  const _CustomOptionTile({
+    required super.title,
+    super.icon,
+    required this.widget,
+    super.onTap,
+    super.routeName,
+    super.enabled = true,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: widget,
+      contentPadding: padding ?? EdgeInsets.all(0),
+      leading: icon != null ? Icon(icon) : null,
+      enabled: enabled,
+      onTap:
+          onTap ??
+          (routeName != null
+              ? () => context.navigator.pushNamed(routeName!)
+              : null),
     );
   }
 }
