@@ -1,6 +1,7 @@
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -182,9 +183,7 @@ class _UserFragmentState extends State<UserFragment> {
         OptionTile(
           title: 'About',
           icon: TablerIcons.info_circle,
-          onTap: () {
-            // TODO: Navigate to about
-          },
+          routeName: AboutActivity.routeName,
         ),
       ],
     );

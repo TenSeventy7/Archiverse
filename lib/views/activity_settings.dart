@@ -2,6 +2,19 @@ import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/views/activity_common.dart';
+import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
+import 'package:archiverse/views/settings/activity_backup_settings.dart';
+import 'package:archiverse/views/settings/activity_blocked_content_settings.dart';
+import 'package:archiverse/views/settings/activity_cache_management.dart';
+import 'package:archiverse/views/settings/activity_content_warnings_settings.dart';
+import 'package:archiverse/views/settings/activity_downloads.dart';
+import 'package:archiverse/views/settings/activity_font_selection.dart';
+import 'package:archiverse/views/settings/activity_rating_preferences.dart';
+import 'package:archiverse/views/settings/activity_reading_history_settings.dart';
+import 'package:archiverse/views/settings/activity_reading_layout_settings.dart';
+import 'package:archiverse/views/settings/activity_scrolling_behavior_settings.dart';
+import 'package:archiverse/views/settings/activity_tag_filters_settings.dart';
+import 'package:archiverse/views/settings/activity_text_size_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -28,7 +41,9 @@ class _SettingsActivityState extends State<SettingsActivity> {
       body: NestedScrollView(
         physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[SliverAppBar.large(title: const Text('Settings'))];
+          return <Widget>[
+            SliverAppBar.large(title: Text(context.strings.settings_title)),
+          ];
         },
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -39,10 +54,10 @@ class _SettingsActivityState extends State<SettingsActivity> {
                 delegate: SliverChildListDelegate([
                   // Theme & Appearance
                   OptionGroup(
-                    title: 'Theme & Appearance',
+                    title: context.strings.settings_category_theme,
                     children: [
                       OptionTile.switcher(
-                        title: 'Use System Theme',
+                        title: context.strings.settings_theme_system,
                         icon: TablerIcons.device_desktop,
                         value: _useSystemTheme,
                         onChanged: (value) {
@@ -52,7 +67,7 @@ class _SettingsActivityState extends State<SettingsActivity> {
                         },
                       ),
                       OptionTile.switcher(
-                        title: 'Dark Mode',
+                        title: context.strings.settings_theme_dark_mode,
                         icon: TablerIcons.moon,
                         value: _darkMode,
                         enabled: !_useSystemTheme,
@@ -63,7 +78,7 @@ class _SettingsActivityState extends State<SettingsActivity> {
                         },
                       ),
                       OptionTile.switcher(
-                        title: 'Use Wallpaper Colors',
+                        title: context.strings.settings_theme_wallpaper_colors,
                         icon: TablerIcons.palette,
                         value: _useWallpaperColors,
                         onChanged: (value) {
@@ -73,7 +88,7 @@ class _SettingsActivityState extends State<SettingsActivity> {
                         },
                       ),
                       OptionTile.switcher(
-                        title: 'High Contrast',
+                        title: context.strings.settings_theme_high_contrast,
                         icon: TablerIcons.contrast,
                         value: _highContrastMode,
                         onChanged: (value) {
@@ -83,15 +98,15 @@ class _SettingsActivityState extends State<SettingsActivity> {
                         },
                       ),
                       OptionTile.list(
-                        title: 'Color Scheme',
+                        title: context.strings.settings_theme_color_scheme,
                         icon: TablerIcons.color_swatch,
                         entries: [
-                          'Default Blue',
-                          'Vibrant Purple',
-                          'Forest Green',
-                          'Warm Orange',
-                          'Classic Red',
-                          'Cool Cyan',
+                          context.strings.settings_theme_color_blue,
+                          context.strings.settings_theme_color_purple,
+                          context.strings.settings_theme_color_green,
+                          context.strings.settings_theme_color_orange,
+                          context.strings.settings_theme_color_red,
+                          context.strings.settings_theme_color_cyan,
                         ],
                         values: [
                           Colors.blue,
@@ -114,23 +129,27 @@ class _SettingsActivityState extends State<SettingsActivity> {
 
                   // Reading Experience
                   OptionGroup(
-                    title: 'Reading Experience',
+                    title: context.strings.settings_category_reading,
                     children: [
                       OptionTile(
-                        title: 'Text Size',
+                        title: context.strings.settings_text_size_title,
                         icon: TablerIcons.text_size,
+                        routeName: TextSizeSettingsActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Font Selection',
+                        title: context.strings.settings_font_title,
                         icon: TablerIcons.typography,
+                        routeName: FontSelectionSettingsActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Reading Layout',
+                        title: context.strings.settings_layout_title,
                         icon: TablerIcons.layout,
+                        routeName: ReadingLayoutSettingsActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Scrolling Behavior',
+                        title: context.strings.settings_scrolling_title,
                         icon: TablerIcons.swipe_down,
+                        routeName: ScrollingBehaviorSettingsActivity.routeName,
                       ),
                     ],
                   ),
@@ -138,48 +157,60 @@ class _SettingsActivityState extends State<SettingsActivity> {
 
                   // Content & Filters
                   OptionGroup(
-                    title: 'Content & Filters',
+                    title: context.strings.settings_category_content,
                     children: [
                       OptionTile(
-                        title: 'Content Warnings',
+                        title: context.strings.settings_warnings_title,
                         icon: TablerIcons.alert_triangle,
+                        routeName: ContentWarningsSettingsActivity.routeName,
                       ),
-                      OptionTile(title: 'Tag Filters', icon: TablerIcons.tag),
                       OptionTile(
-                        title: 'Blocked Content',
+                        title: context.strings.settings_tag_filters_title,
+                        icon: TablerIcons.tag,
+                        routeName: TagFiltersSettingsActivity.routeName,
+                      ),
+                      OptionTile(
+                        title: context.strings.settings_blocked_content_title,
                         icon: TablerIcons.ghost_off,
+                        routeName: BlockedContentActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Rating Preferences',
+                        title: context.strings.settings_rating_title,
                         icon: TablerIcons.shield,
+                        routeName: RatingPreferencesActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Author Filters',
+                        title: context.strings.settings_author_filters_title,
                         icon: TablerIcons.user_off,
+                        routeName: AuthorFiltersSettingsActivity.routeName,
                       ),
                     ],
                   ),
                   const SizedBox(height: 16.0),
 
-                  // Additional sections...
+                  // Storage & Data section
                   OptionGroup(
-                    title: 'Storage & Data',
+                    title: context.strings.settings_category_storage,
                     children: [
                       OptionTile(
-                        title: 'Downloads',
+                        title: context.strings.settings_downloads_title,
                         icon: TablerIcons.download,
+                        routeName: DownloadsSettingsActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Cache Management',
+                        title: context.strings.settings_cache_title,
                         icon: TablerIcons.refresh,
+                        routeName: CacheManagementActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Reading History',
+                        title: context.strings.settings_history_title,
                         icon: TablerIcons.history,
+                        routeName: ReadingHistorySettingsActivity.routeName,
                       ),
                       OptionTile(
-                        title: 'Backup & Restore',
+                        title: context.strings.settings_backup_title,
                         icon: TablerIcons.database,
+                        routeName: BackupRestoreActivity.routeName,
                       ),
                     ],
                   ),
