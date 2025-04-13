@@ -9,6 +9,7 @@ import 'package:archiverse/theme.dart';
 import 'package:archiverse/strings/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:relative_time/relative_time.dart';
 
 void main() {
   // Ensure widgets have been initialized
@@ -27,6 +28,7 @@ class Archiverse extends StatelessWidget {
       title: 'Archiverse',
       localizationsDelegates: const [
         AppLocalizations.delegate,
+        RelativeTimeLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
