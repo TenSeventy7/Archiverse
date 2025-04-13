@@ -5,6 +5,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
@@ -16,6 +17,10 @@ class AppTheme {
         TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       },
+    ),
+    actionIconTheme: ActionIconThemeData(
+      backButtonIconBuilder:
+          (BuildContext context) => const Icon(TablerIcons.chevron_left),
     ),
 
     // Temporarily set this to false to use new Material 3 progress indicators
@@ -31,6 +36,10 @@ class AppTheme {
         TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       },
+    ),
+    actionIconTheme: ActionIconThemeData(
+      backButtonIconBuilder:
+          (BuildContext context) => const Icon(TablerIcons.chevron_left),
     ),
 
     // Temporarily set this to false to use new Material 3 progress indicators
