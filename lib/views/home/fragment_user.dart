@@ -52,6 +52,7 @@ class _UserFragmentState extends State<UserFragment> {
     return SliverAppBar.large(
       title: Text(userName),
       expandedHeight: context.screenHeight * 0.4,
+      shape: RoundedRectangleBorder(),
       flexibleSpace: FlexibleSpaceBar(
         background: Column(
           mainAxisAlignment: MainAxisAlignment.center,
