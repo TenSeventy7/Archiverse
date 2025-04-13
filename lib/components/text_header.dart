@@ -65,7 +65,6 @@ class TextHeader extends StatelessWidget {
         right: context.commonPaddingHalf,
         top: (size == TextHeaderSize.small) ? 0.0 : 8.0,
       ),
-      onTap: onTap,
       title: Text(title, style: titleStyle),
       subtitle:
           subtitle != null
