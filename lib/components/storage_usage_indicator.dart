@@ -54,7 +54,8 @@ class StorageUsageIndicator extends StatelessWidget {
 
           LinearProgressIndicator(
             value: usagePercentage,
-            minHeight: 8,
+            minHeight: 16,
+            borderRadius: BorderRadius.circular(24),
             backgroundColor: context.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(
               usagePercentage > 0.9
