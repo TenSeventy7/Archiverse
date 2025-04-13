@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/routes.dart';
 import 'package:archiverse/theme.dart';
 import 'package:archiverse/strings/app_localizations.dart';
@@ -14,6 +15,7 @@ import 'package:relative_time/relative_time.dart';
 void main() {
   // Ensure widgets have been initialized
   WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+  Ao3Api().initFlutter();
 
   runApp(const Archiverse());
 }
