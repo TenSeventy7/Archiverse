@@ -262,6 +262,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2+8"
+  enhanced_future_builder:
+    dependency: "direct main"
+    description:
+      name: enhanced_future_builder
+      sha256: d0360c6cf190f35db6f3add919505afa02babe7471bfc960c2ad88c2ace4ad21
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   extended_http:
     dependency: "direct main"
     description:
@@ -896,7 +904,7 @@ packages:
     source: sdk
     version: "0.0.0"
   sliver_tools:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sliver_tools
       sha256: eae28220badfb9d0559207badcbbc9ad5331aac829a88cb0964d330d2a4636a6
