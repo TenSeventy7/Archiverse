@@ -51,6 +51,7 @@ class _UserFragmentState extends State<UserFragment> {
   Widget _buildAppBar() {
     return SliverAppBar.large(
       title: Text(userName),
+      centerTitle: true,
       expandedHeight: context.screenHeight * 0.4,
       shape: RoundedRectangleBorder(),
       flexibleSpace: FlexibleSpaceBar(

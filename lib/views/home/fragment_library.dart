@@ -40,6 +40,7 @@ class _LibraryFragmentState extends State<LibraryFragment>
             title: Text('Library'),
             pinned: true,
             floating: true,
+            centerTitle: true,
             shape: RoundedRectangleBorder(),
             forceElevated: innerBoxIsScrolled,
             actions: [
