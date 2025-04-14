@@ -53,8 +53,8 @@ extension BuildContextExtension on BuildContext {
 
   // Return a common EdgeInset for padding
   EdgeInsets get horizontalPadding =>
-      const EdgeInsets.symmetric(horizontal: 16.0);
-  double get commonPadding => 16.0;
+      const EdgeInsets.symmetric(horizontal: 8.0);
+  double get commonPadding => 8.0;
   double get commonPaddingHalf => 8.0;
 
   // Return a common list tile visual density

@@ -61,14 +61,14 @@ class _UserFragmentState extends State<UserFragment> {
           children: [
             SizedBox(height: context.screenPadding.top),
             CircleAvatar(radius: 52, backgroundImage: NetworkImage(userImage)),
-            SizedBox(height: context.commonPadding),
+            SizedBox(height: context.commonPadding * 2),
             Text(
               userName,
               style: context.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: context.commonPaddingHalf),
+            SizedBox(height: context.commonPaddingHalf * 2),
             FilledButton.tonal(
               onPressed: () {
                 // TODO: Open profile page
