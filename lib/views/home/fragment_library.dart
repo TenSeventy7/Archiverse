@@ -39,7 +39,6 @@ class _LibraryFragmentState extends State<LibraryFragment>
           SliverAppBar(
             title: Text('Library'),
             pinned: true,
-            floating: true,
             centerTitle: true,
             shape: RoundedRectangleBorder(),
             forceElevated: innerBoxIsScrolled,
