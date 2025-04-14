@@ -23,10 +23,10 @@ class DiscoverHeader extends StatelessWidget {
       centerTitle: false,
       pinned: true,
       floating: true,
-      toolbarHeight: kToolbarHeight + 16.0,
+      toolbarHeight: kToolbarHeight + 24.0,
       shape: RoundedRectangleBorder(),
       title: PaddedColumn(
-        padding: EdgeInsets.symmetric(horizontal: context.commonPaddingHalf),
+        padding: EdgeInsets.symmetric(horizontal: context.commonPadding),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
