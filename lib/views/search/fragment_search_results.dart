@@ -118,7 +118,15 @@ class _SearchResultsFragmentState extends State<SearchResultsFragment> {
             header: header,
             elevation: 0,
           ),
-      whenNotDone: Column(children: [CircularProgressIndicator()]),
+      whenNotDone: WorkSuggestions(
+        works: Fillers.works,
+        loading: true,
+        header: header,
+        elevation: 0,
+      ),
+      whenError: (error) => const SizedBox(),
+    );
+  }
       whenError: (error) => const SizedBox(),
     );
   }

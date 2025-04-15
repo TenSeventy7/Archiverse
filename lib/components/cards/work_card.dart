@@ -2,6 +2,7 @@ import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:flutter/material.dart';
 import 'package:archiverse/models/work.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkCard extends StatelessWidget {
   final Work work;
@@ -23,7 +24,12 @@ class WorkCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Accent color strip based on rating
-            Container(height: 8, color: _getRatingColor(context, work)),
+            Skeleton.shade(
+              child: Container(
+                height: 8,
+                color: _getRatingColor(context, work),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 18.0,

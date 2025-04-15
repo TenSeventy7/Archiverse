@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkItem extends StatelessWidget {
   final Work work;
@@ -27,7 +28,10 @@ class WorkItem extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [_buildLastUpdatedRow(context), RatingBadges(work: work)],
+          children: [
+            _buildLastUpdatedRow(context),
+            Skeleton.unite(child: RatingBadges(work: work)),
+          ],
         ),
 
         const SizedBox(height: 14.0),
@@ -50,7 +54,7 @@ class WorkItem extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     AppUtils.formatAuthorList(work.authors),
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -62,13 +66,16 @@ class WorkItem extends StatelessWidget {
             ),
 
             // Options button
-            IconButton.filledTonal(
-              visualDensity: VisualDensity.compact,
-              onPressed: () => WorkOptionsDialog.showSheet(context, work: work),
-              icon: Icon(
-                TablerIcons.dots_vertical,
-                size: 18.0,
-                color: colorScheme.onSurfaceVariant,
+            Skeleton.leaf(
+              child: IconButton.filledTonal(
+                visualDensity: VisualDensity.compact,
+                onPressed:
+                    () => WorkOptionsDialog.showSheet(context, work: work),
+                icon: Icon(
+                  TablerIcons.dots_vertical,
+                  size: 18.0,
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],
@@ -76,21 +83,25 @@ class WorkItem extends StatelessWidget {
 
         // Fandoms and series info
         if (!small) ...[
-          const SizedBox(height: 8.0),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              AppUtils.formatFandomsList(work.fandoms),
-              style: context.textTheme.labelMedium?.copyWith(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w500,
+          const SizedBox(height: 10.0),
+          Skeleton.leaf(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                AppUtils.formatFandomsList(work.fandoms),
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
+
+          const SizedBox(height: 4.0),
 
           ..._buildSeriesInfo(context),
 

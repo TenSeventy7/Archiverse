@@ -7,7 +7,7 @@
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:flutter/material.dart';
-// import 'package:skeletonizer/skeletonizer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkSuggestions extends StatelessWidget {
   final List<Work> works;
@@ -30,14 +30,18 @@ class WorkSuggestions extends StatelessWidget {
     return Visibility(
       visible: trimmed.isNotEmpty,
       replacement: const SizedBox(),
-      child: Column(
-        children: [
-          header ?? const SizedBox(),
-          ...trimmed.map(
-            (work) => WorkCard(work: work, elevation: elevation ?? 1),
-          ),
-          footer ?? const SizedBox(),
-        ],
+      child: Skeletonizer(
+        enabled: loading,
+        child: Column(
+          spacing: 4.0,
+          children: [
+            header ?? const SizedBox(),
+            ...trimmed.map(
+              (work) => WorkCard(work: work, elevation: elevation ?? 1),
+            ),
+            footer ?? const SizedBox(),
+          ],
+        ),
       ),
     );
   }
