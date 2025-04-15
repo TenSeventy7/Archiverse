@@ -1,6 +1,7 @@
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/suggestions/author_suggestions.dart';
+import 'package:archiverse/components/suggestions/tag_suggestions.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -8,6 +9,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/providers/provider_search.dart';
 import 'package:archiverse/views/search/fragment_author_results.dart';
+import 'package:archiverse/views/search/fragment_tag_results.dart';
 import 'package:archiverse/views/search/fragment_work_results.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class SearchResultsFragment extends StatefulWidget {
   State<SearchResultsFragment> createState() => _SearchResultsFragmentState();
 }
 
-enum _SearchState { RESULTS, WORKS, AUTHORS }
+enum _SearchState { RESULTS, WORKS, AUTHORS, TAGS }
 
 class _SearchResultsFragmentState extends State<SearchResultsFragment> {
   _SearchState _state = _SearchState.RESULTS;
@@ -90,6 +92,8 @@ class _SearchResultsFragmentState extends State<SearchResultsFragment> {
         return WorkSearchFragment(query: query);
       case _SearchState.AUTHORS:
         return AuthorSearchFragment(query: query);
+      case _SearchState.TAGS:
+        return TagSearchFragment(query: query);
     }
   }
 
@@ -101,6 +105,8 @@ class _SearchResultsFragmentState extends State<SearchResultsFragment> {
           _buildWorksWidget(context, query),
           SizedBox(height: context.commonPadding),
           _buildAuthorsWidget(context, query),
+          SizedBox(height: context.commonPadding),
+          _buildTagsWidget(context, query),
           SizedBox(height: context.commonPadding),
         ]),
       ),
@@ -160,6 +166,30 @@ class _SearchResultsFragmentState extends State<SearchResultsFragment> {
       whenError: (error) => const SizedBox(),
     );
   }
+
+  Widget _buildTagsWidget(BuildContext context, String query) {
+    Widget header = TextHeader.medium(
+      title: "Tags",
+      actionText: Text("More"),
+      onTap: () => _setState(context, _SearchState.TAGS),
+    );
+
+    return EnhancedFutureBuilder(
+      future: Ao3Api().searchTags(query, page: 1),
+      rememberFutureResult: false,
+      whenDone:
+          (tags) => TagSuggestions(
+            tags: tags,
+            loading: false,
+            header: header,
+            elevation: 0,
+          ),
+      whenNotDone: TagSuggestions(
+        tags: Fillers.fandoms,
+        loading: true,
+        header: header,
+        elevation: 0,
+      ),
       whenError: (error) => const SizedBox(),
     );
   }
