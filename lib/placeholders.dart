@@ -34,6 +34,7 @@ class Fillers {
   static Pseud get user =>
       Pseud(name: userName, pseud: pseudName, bio: loremIpsum);
   static List<User> get users => List<User>.generate(5, (index) => user);
+  static List<Pseud> get pseuds => List<Pseud>.generate(5, (index) => user);
 
   // Tag
   static Tag get _tag => Tag(name: longName, count: largeNumber);
