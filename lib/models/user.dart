@@ -34,7 +34,7 @@ class User {
     this.isAuthenticated = false,
   });
 
-  bool get hasImage => (imageUrl?.contains("otw-ao3-icons") ?? false);
+  bool get hasImage => (imageUrl != null && !imageUrl!.contains("icon_user"));
   bool get isAnonymous => name == "Anonymous";
   bool get isOrphan => name == "orphan_account";
   bool get isValid => !isAnonymous && !isOrphan && !guest;
