@@ -39,12 +39,14 @@ enum RelationshipType {
 
   static Map<String, RelationshipType> get map {
     return {
-      "F/F": RelationshipType.FEM_SLASH,
-      "Gen": RelationshipType.GEN,
-      "F/M": RelationshipType.HET,
-      "Multi": RelationshipType.MULTI,
-      "Underage": RelationshipType.UNDERAGE,
-      "Other": RelationshipType.OTHER,
+      "slash": RelationshipType.SLASH,
+      "femslash": RelationshipType.FEM_SLASH,
+      "gen": RelationshipType.GEN,
+      "het": RelationshipType.HET,
+      "multi": RelationshipType.MULTI,
+      "underage": RelationshipType.UNDERAGE,
+      "other": RelationshipType.OTHER,
+      "none": RelationshipType.NONE,
     };
   }
 }
