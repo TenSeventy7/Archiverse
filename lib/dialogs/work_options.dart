@@ -29,7 +29,7 @@ class _WorkOptionsDialog extends StatelessWidget {
 
         // Primary actions
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Card(
             elevation: 0,
             color: colorScheme.surfaceContainer,
@@ -64,7 +64,7 @@ class _WorkOptionsDialog extends StatelessWidget {
 
         // Secondary actions
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Card(
             elevation: 0,
             color: colorScheme.surfaceContainer,
@@ -110,7 +110,7 @@ class _WorkOptionsDialog extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: context.commonPadding * 1.5),
+        SizedBox(height: context.screenPadding.bottom + context.commonPadding),
       ],
     );
   }
@@ -120,7 +120,7 @@ class _WorkOptionsDialog extends StatelessWidget {
 
     return Container(
       color: colorScheme.surface,
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _WorkOptionsDialog extends StatelessWidget {
           // Statistics row with shadows
           _buildWorkStatistics(),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
         ],
       ),
     );
@@ -192,65 +192,39 @@ class _WorkOptionsDialog extends StatelessWidget {
   }) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return InkWell(
+    return ListTile(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color:
-                    isHighlighted
-                        ? colorScheme.primaryContainer
-                        : colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: Alignment.center,
-              child: Icon(
-                icon,
-                size: 20,
-                color:
-                    isHighlighted
-                        ? colorScheme.onPrimaryContainer
-                        : colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight:
-                          isHighlighted ? FontWeight.w600 : FontWeight.normal,
-                      color: isHighlighted ? colorScheme.primary : null,
-                    ),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Icon(
-              TablerIcons.chevron_right,
-              size: 20,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ],
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color:
+              isHighlighted
+                  ? colorScheme.primaryContainer
+                  : colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        alignment: Alignment.center,
+        child: Icon(
+          icon,
+          size: 20,
+          color:
+              isHighlighted
+                  ? colorScheme.onPrimaryContainer
+                  : colorScheme.onSurface,
         ),
       ),
+      title: Text(
+        title,
+        style: context.textTheme.titleMedium?.copyWith(
+          color: isHighlighted ? colorScheme.primary : null,
+        ),
+      ),
+      subtitle:
+          subtitle != null
+              ? Text(subtitle, style: context.textTheme.bodySmall)
+              : null,
     );
   }
 
