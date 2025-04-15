@@ -56,6 +56,7 @@ extension BuildContextExtension on BuildContext {
       const EdgeInsets.symmetric(horizontal: 8.0);
   double get commonPadding => 8.0;
   double get commonPaddingHalf => 8.0;
+  double get commonPaddingDouble => 16.0;
 
   // Return a common list tile visual density
   VisualDensity get commonDensity => const VisualDensity(vertical: 2);

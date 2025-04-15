@@ -65,8 +65,8 @@ class TextHeader extends StatelessWidget {
 
     return ListTile(
       contentPadding: EdgeInsets.only(
-        left: context.commonPaddingHalf + (padding?.left ?? 0.0),
-        right: context.commonPaddingHalf + (padding?.right ?? 0.0),
+        left: context.commonPaddingDouble + (padding?.left ?? 0.0),
+        right: context.commonPadding + (padding?.right ?? 0.0),
         top: (size == TextHeaderSize.small) ? 0.0 : 8.0 + (padding?.top ?? 0.0),
         bottom: padding?.bottom ?? 0.0,
       ),
