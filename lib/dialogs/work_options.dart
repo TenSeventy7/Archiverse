@@ -255,7 +255,7 @@ class WorkOptionsDialog {
     AnimationController? bottomSheetAnimator,
   }) {
     showModalBottomSheet<void>(
-      context: context,
+      context: Navigator.of(context, rootNavigator: true).context,
       showDragHandle: true,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
