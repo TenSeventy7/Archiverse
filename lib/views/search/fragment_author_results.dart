@@ -11,18 +11,18 @@ import 'package:archiverse/views/search/fragment_search_kind_common.dart';
 import 'package:flutter/material.dart';
 
 class AuthorSearchFragment extends StatelessWidget {
-  final String query;
-  const AuthorSearchFragment({super.key, required this.query});
+  static const String routeName = '/search/authors';
+  const AuthorSearchFragment({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CommonSearchFragment<Pseud>(
+    return CommonKindSearchFragment<Pseud>(
       fetcher: _fetchItems,
       itemBuilder: _buildItems,
     );
   }
 
-  Future<List<Pseud>> _fetchItems(int page) async {
+  Future<List<Pseud>> _fetchItems(String query, int page) async {
     return await Ao3Api().searchUsers(query, page: page);
   }
 

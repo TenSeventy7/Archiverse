@@ -4,10 +4,12 @@ import 'package:archiverse/components/search/recent_item.dart';
 import 'package:archiverse/components/search/trending_tag.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/providers/provider_search.dart';
+import 'package:archiverse/views/search/fragment_search_common.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class InitialSearchFragment extends StatelessWidget {
+class InitialSearchFragment extends CommonStatelessSearchFragment {
+  static const String routeName = 'search/';
   const InitialSearchFragment({super.key});
 
   @override

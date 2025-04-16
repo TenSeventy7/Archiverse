@@ -10,25 +10,30 @@
 
 import 'dart:async';
 
-import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/providers/provider_search.dart';
+import 'package:archiverse/views/search/fragment_search_common.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 
-class CommonSearchFragment<T> extends StatefulWidget {
-  final Future<List<T>> Function(int) fetcher;
+class CommonKindSearchFragment<T> extends CommonSearchFragment {
+  final Future<List<T>> Function(String, int) fetcher;
   final Widget Function(BuildContext, T, int) itemBuilder;
 
-  const CommonSearchFragment({
+  const CommonKindSearchFragment({
     super.key,
     required this.fetcher,
     required this.itemBuilder,
   });
 
   @override
-  CommonSearchFragmentState<T> createState() => CommonSearchFragmentState<T>();
+  CommonKindSearchFragmentState<T> createState() =>
+      CommonKindSearchFragmentState<T>();
 }
 
-class CommonSearchFragmentState<T> extends State<CommonSearchFragment<T>> {
+class CommonKindSearchFragmentState<T>
+    extends State<CommonKindSearchFragment<T>> {
+  late SearchProvider _provider;
   final PagingController<int, T> _controller = PagingController(
     firstPageKey: 1,
   );
@@ -37,7 +42,7 @@ class CommonSearchFragmentState<T> extends State<CommonSearchFragment<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList<int, T>.separated(
+    return PagedListView<int, T>.separated(
       pagingController: _controller,
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: widget.itemBuilder,
@@ -49,15 +54,21 @@ class CommonSearchFragmentState<T> extends State<CommonSearchFragment<T>> {
 
   @override
   void initState() {
+    super.initState();
     _controller.addPageRequestListener((page) {
       _fetchItems(page);
     });
-    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _provider = Provider.of<SearchProvider>(context);
   }
 
   Future<void> _fetchItems(int key) async {
     try {
-      final items = await widget.fetcher(key);
+      final items = await widget.fetcher(_provider.query, key);
 
       final isLastPage = items.length < _pageSize;
       if (isLastPage) {

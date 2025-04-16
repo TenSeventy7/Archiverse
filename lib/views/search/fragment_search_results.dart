@@ -1,196 +1,147 @@
-import 'package:archiverse/api/ao3_api.dart';
-import 'package:archiverse/components/cards/work_card.dart';
-import 'package:archiverse/components/suggestions/author_suggestions.dart';
-import 'package:archiverse/components/suggestions/tag_suggestions.dart';
-import 'package:archiverse/components/suggestions/work_suggestions.dart';
-import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/work.dart';
-import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/providers/provider_search.dart';
-import 'package:archiverse/views/search/fragment_author_results.dart';
-import 'package:archiverse/views/search/fragment_tag_results.dart';
-import 'package:archiverse/views/search/fragment_work_results.dart';
-import 'package:enhanced_future_builder/enhanced_future_builder.dart';
+import 'package:archiverse/views/search/fragment_search_common.dart';
+import 'package:archiverse/views/search/sections/section_authors.dart';
+import 'package:archiverse/views/search/sections/section_characters.dart';
+import 'package:archiverse/views/search/sections/section_common.dart';
+import 'package:archiverse/views/search/sections/section_fandoms.dart';
+import 'package:archiverse/views/search/sections/section_relationships.dart';
+import 'package:archiverse/views/search/sections/section_tags.dart';
+import 'package:archiverse/views/search/sections/section_works.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
-class SearchResultsFragment extends StatefulWidget {
-  final String query;
-
-  const SearchResultsFragment({Key? key, required this.query})
-    : super(key: key);
+class SearchResultsFragment extends CommonSearchFragment {
+  static const String routeName = 'search/results/';
+  const SearchResultsFragment({super.key});
 
   @override
   State<SearchResultsFragment> createState() => _SearchResultsFragmentState();
 }
 
-enum _SearchState { RESULTS, WORKS, AUTHORS, TAGS }
-
 class _SearchResultsFragmentState extends State<SearchResultsFragment> {
-  _SearchState _state = _SearchState.RESULTS;
-  Widget _results = const SizedBox();
+  final ScrollController _scrollController = ScrollController();
   String _lastQuery = "";
 
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _onBackPressed(context);
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverAnimatedSwitcher(
-            switchInCurve: Curves.ease,
-            switchOutCurve: Curves.ease,
-            duration: const Duration(milliseconds: 350),
-            child: _buildSearchState(context, widget.query),
-          ),
-        ],
-      ),
-    );
-  }
+  // List of result sections - easily extensible by adding new sections here
+  final List<SearchResultSection> _sections = [
+    WorksResultSection(),
+    AuthorsResultSection(),
+    FandomsResultSection(),
+    CharactersResultSection(),
+    RelationshipsResultSection(),
+    TagsResultSection(),
+  ];
 
-  void _setState(BuildContext context, _SearchState nextState) {
-    setState(() {
-      _state = nextState;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<SearchProvider>(context, listen: false);
+      if (provider.query.isNotEmpty) {
+        _fetchData(provider.query);
+      }
     });
   }
 
-  void _onBackPressed(BuildContext context) {
-    switch (_state) {
-      case _SearchState.RESULTS:
-        Provider.of<SearchProvider>(context, listen: false).clearSearch();
-        break;
-      default:
-        setState(() {
-          _state = _SearchState.RESULTS;
-        });
-        break;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = Provider.of<SearchProvider>(context);
+
+    if (provider.query != _lastQuery && provider.query.isNotEmpty) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+      _fetchData(provider.query);
     }
   }
 
-  Widget _buildSearchState(BuildContext context, String query) {
-    // If the query has changed, rebuild the results widget
-    // and remember it; so that we don't rebuild it again.
-    if (query != _lastQuery) {
+  Future<void> _fetchData(String query) async {
+    if (query.isEmpty) return;
+
+    setState(() {
       _lastQuery = query;
-      _buildResults(context, query);
+      // Mark all sections as loading
+      for (var section in _sections) {
+        section.isLoading = true;
+      }
+    });
 
-      _state = _SearchState.RESULTS; // Reset state when query changes
+    // Fetch data for all sections in parallel
+    await Future.wait(_sections.map((section) => section.fetchData(query)));
+
+    if (mounted && query == _lastQuery) {
+      setState(() {
+        for (var section in _sections) {
+          section.isLoading = false;
+        }
+      });
     }
-
-    switch (_state) {
-      case _SearchState.RESULTS:
-        return _results;
-      case _SearchState.WORKS:
-        return WorkSearchFragment(query: query);
-      case _SearchState.AUTHORS:
-        return AuthorSearchFragment(query: query);
-      case _SearchState.TAGS:
-        return TagSearchFragment(query: query);
-    }
   }
 
-  void _buildResults(BuildContext context, String query) {
-    _results = SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: context.commonPadding),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          _buildWorksWidget(context, query),
-          SizedBox(height: context.commonPadding),
-          _buildAuthorsWidget(context, query),
-          SizedBox(height: context.commonPadding),
-          _buildTagsWidget(context, query),
-          SizedBox(height: context.commonPadding),
-        ]),
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<SearchProvider>(context);
+
+    return CustomScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
       ),
-    );
-  }
+      slivers: [
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: context.commonPadding),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                int sectionIndex = index ~/ 2;
+                bool isSpacer = index > 0 && index % 2 == 1;
 
-  Widget _buildWorksWidget(BuildContext context, String query) {
-    Widget header = TextHeader.medium(
-      title: "Works",
-      actionText: Text("More"),
-      onTap: () => _setState(context, _SearchState.WORKS),
-    );
+                // Return spacer between sections
+                if (isSpacer) {
+                  return SizedBox(height: context.commonPadding);
+                }
 
-    return EnhancedFutureBuilder(
-      future: Ao3Api().searchWorks(query, page: 1),
-      rememberFutureResult: false,
-      whenDone:
-          (works) => WorkSuggestions(
-            works: works,
-            loading: false,
-            header: header,
-            elevation: 0,
+                // Return section widget
+                if (sectionIndex < _sections.length) {
+                  final section = _sections[sectionIndex];
+                  return KeyedSubtree(
+                    key: section.key,
+                    child: section.buildSectionWidget(
+                      context,
+                      () => section.navigateToDetailedResults(
+                        context,
+                        provider.query,
+                      ),
+                    ),
+                  );
+                }
+
+                // Extra padding at the bottom
+                if (index == _sections.length * 2) {
+                  return SizedBox(height: context.commonPadding * 2);
+                }
+
+                return null;
+              },
+              childCount:
+                  _sections.length * 2 +
+                  1, // Sections + spacers + bottom padding
+            ),
           ),
-      whenNotDone: WorkSuggestions(
-        works: Fillers.works,
-        loading: true,
-        header: header,
-        elevation: 0,
-      ),
-      whenError: (error) => const SizedBox(),
-    );
-  }
-
-  Widget _buildAuthorsWidget(BuildContext context, String query) {
-    Widget header = TextHeader.medium(
-      title: "Authors",
-      actionText: Text("More"),
-      onTap: () => _setState(context, _SearchState.AUTHORS),
-    );
-
-    return EnhancedFutureBuilder(
-      future: Ao3Api().searchUsers(query, page: 1),
-      rememberFutureResult: false,
-      whenDone:
-          (authors) => AuthorSuggestions(
-            authors: authors,
-            loading: false,
-            header: header,
-            elevation: 0,
-          ),
-      whenNotDone: AuthorSuggestions(
-        authors: Fillers.pseuds,
-        loading: true,
-        header: header,
-        elevation: 0,
-      ),
-      whenError: (error) => const SizedBox(),
-    );
-  }
-
-  Widget _buildTagsWidget(BuildContext context, String query) {
-    Widget header = TextHeader.medium(
-      title: "Tags",
-      actionText: Text("More"),
-      onTap: () => _setState(context, _SearchState.TAGS),
-    );
-
-    return EnhancedFutureBuilder(
-      future: Ao3Api().searchTags(query, page: 1),
-      rememberFutureResult: false,
-      whenDone:
-          (tags) => TagSuggestions(
-            tags: tags,
-            loading: false,
-            header: header,
-            elevation: 0,
-          ),
-      whenNotDone: TagSuggestions(
-        tags: Fillers.fandoms,
-        loading: true,
-        header: header,
-        elevation: 0,
-      ),
-      whenError: (error) => const SizedBox(),
+        ),
+      ],
     );
   }
 }

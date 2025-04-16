@@ -5,25 +5,30 @@
  */
 
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/components/items/tag_item.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/views/search/fragment_search_kind_common.dart';
 import 'package:flutter/material.dart';
 
 class TagSearchFragment extends StatelessWidget {
-  final String query;
-  const TagSearchFragment({super.key, required this.query});
+  static const String routeName = '/search/tags';
+  const TagSearchFragment({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CommonSearchFragment<Tag>(
+    return CommonKindSearchFragment<Tag>(
       fetcher: _fetchItems,
       itemBuilder: _buildItems,
     );
   }
 
-  Future<List<Tag>> _fetchItems(int page) async {
-    return await Ao3Api().searchTags(query, page: page);
+  Future<List<Tag>> _fetchItems(String query, int page) async {
+    return fetchItems(query, page);
+  }
+
+  Future<List<Tag>> fetchItems(String query, int page) async {
+    return await Ao3Api().searchTags(query, page: page, type: TagType.FREEFORM);
   }
 
   Widget _buildItems(BuildContext context, Tag tag, int index) {
