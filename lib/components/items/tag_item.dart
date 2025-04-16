@@ -91,7 +91,8 @@ class TagItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (tag.canonical)
+        SizedBox(width: 16.0),
+        if (tag.canonical) ...[
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Tooltip(
@@ -103,6 +104,8 @@ class TagItem extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(width: 8.0),
+        ],
       ],
     );
   }
