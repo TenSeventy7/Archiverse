@@ -20,7 +20,13 @@ class AppTheme {
     ),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder:
-          (BuildContext context) => const Icon(TablerIcons.chevron_left),
+          (BuildContext context) => Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? TablerIcons.arrow_right
+                : TablerIcons.arrow_left,
+            size: 22.0,
+            textDirection: TextDirection.rtl,
+          ),
     ),
 
     // Temporarily set this to false to use new Material 3 progress indicators
@@ -39,7 +45,13 @@ class AppTheme {
     ),
     actionIconTheme: ActionIconThemeData(
       backButtonIconBuilder:
-          (BuildContext context) => const Icon(TablerIcons.chevron_left),
+          (BuildContext context) => Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? TablerIcons.arrow_right
+                : TablerIcons.arrow_left,
+            size: 22.0,
+            textDirection: TextDirection.rtl,
+          ),
     ),
 
     // Temporarily set this to false to use new Material 3 progress indicators
