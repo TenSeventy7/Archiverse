@@ -49,6 +49,7 @@ dependencies:
     git:
       url: https://github.com/TenSeventy7/skeletonizer-flutter-3.30.git
       ref: support-rounded-superellipse
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
