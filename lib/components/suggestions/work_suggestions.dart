@@ -1,48 +1,19 @@
-/*
- * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
- * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 import 'package:archiverse/components/cards/work_card.dart';
+import 'package:archiverse/components/suggestions/base_suggestions.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-class WorkSuggestions extends StatelessWidget {
-  final List<Work> works;
-  final bool loading;
-  final Widget? header;
-  final Widget? footer;
-  final double? elevation;
+class WorkSuggestions extends BaseSuggestions<Work, WorkCard> {
   const WorkSuggestions({
     super.key,
-    required this.works,
-    required this.loading,
-    this.header,
-    this.footer,
-    this.elevation,
-  });
+    required List<Work> works,
+    required super.loading,
+    super.header,
+    super.footer,
+    super.elevation,
+  }) : super(items: works, maxItems: 5);
 
   @override
-  Widget build(BuildContext context) {
-    List<Work> trimmed = works.take(5).toList();
-    return Visibility(
-      visible: trimmed.isNotEmpty,
-      replacement: const SizedBox(),
-      child: Skeletonizer(
-        enabled: loading,
-        child: Column(
-          spacing: 4.0,
-          children: [
-            header ?? const SizedBox(),
-            ...trimmed.map(
-              (work) => WorkCard(work: work, elevation: elevation ?? 1),
-            ),
-            footer ?? const SizedBox(),
-          ],
-        ),
-      ),
-    );
+  WorkCard buildCard(Work work, double elevation) {
+    return WorkCard(work: work, elevation: elevation);
   }
 }

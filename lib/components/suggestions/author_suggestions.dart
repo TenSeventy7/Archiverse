@@ -1,48 +1,19 @@
-/*
- * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
- * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 import 'package:archiverse/components/cards/author_card.dart';
+import 'package:archiverse/components/suggestions/base_suggestions.dart';
 import 'package:archiverse/models/pseud.dart';
-import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-class AuthorSuggestions extends StatelessWidget {
-  final List<Pseud> authors;
-  final bool loading;
-  final Widget? header;
-  final Widget? footer;
-  final double? elevation;
+class AuthorSuggestions extends BaseSuggestions<Pseud, AuthorCard> {
   const AuthorSuggestions({
     super.key,
-    required this.authors,
-    required this.loading,
-    this.header,
-    this.footer,
-    this.elevation,
-  });
+    required List<Pseud> authors,
+    required super.loading,
+    super.header,
+    super.footer,
+    super.elevation,
+  }) : super(items: authors, maxItems: 8);
 
   @override
-  Widget build(BuildContext context) {
-    List<Pseud> trimmed = authors.take(8).toList();
-    return Visibility(
-      visible: trimmed.isNotEmpty,
-      replacement: const SizedBox(),
-      child: Skeletonizer(
-        enabled: loading,
-        child: Column(
-          spacing: 4.0,
-          children: [
-            header ?? const SizedBox(),
-            ...trimmed.map(
-              (author) => AuthorCard(author: author, elevation: elevation ?? 1),
-            ),
-            footer ?? const SizedBox(),
-          ],
-        ),
-      ),
-    );
+  AuthorCard buildCard(Pseud author, double elevation) {
+    return AuthorCard(author: author, elevation: elevation);
   }
 }
