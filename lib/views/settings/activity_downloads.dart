@@ -39,9 +39,10 @@ class _DownloadsSettingsActivityState extends State<DownloadsSettingsActivity> {
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.only(
+            left: context.commonPaddingHalf,
+            right: context.commonPaddingHalf,
+            bottom: 16,
           ),
           children: [
             // Storage indicators
@@ -52,6 +53,8 @@ class _DownloadsSettingsActivityState extends State<DownloadsSettingsActivity> {
               icon: TablerIcons.device_mobile,
             ),
 
+            const SizedBox(height: 32),
+
             StorageUsageIndicator(
               usedSpace: _archiverseStorage,
               totalSpace: _deviceTotalStorage,
@@ -59,7 +62,7 @@ class _DownloadsSettingsActivityState extends State<DownloadsSettingsActivity> {
               icon: TablerIcons.book,
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
 
             // Download settings
             OptionGroup(

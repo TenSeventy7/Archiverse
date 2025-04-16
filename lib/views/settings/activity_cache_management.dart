@@ -57,9 +57,10 @@ class _CacheManagementActivityState extends State<CacheManagementActivity> {
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.only(
+            left: context.commonPaddingHalf,
+            right: context.commonPaddingHalf,
+            bottom: 16,
           ),
           children: [
             // Device storage usage indicator
@@ -70,6 +71,8 @@ class _CacheManagementActivityState extends State<CacheManagementActivity> {
               icon: TablerIcons.device_mobile,
             ),
 
+            const SizedBox(height: 32),
+
             // Cache storage usage indicator
             StorageUsageIndicator(
               usedSpace: _totalCacheSize,
@@ -78,7 +81,7 @@ class _CacheManagementActivityState extends State<CacheManagementActivity> {
               icon: TablerIcons.refresh,
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
 
             // Cache types
             OptionGroup(
