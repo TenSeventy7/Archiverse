@@ -28,15 +28,7 @@ class TagItem extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Tag name and canonical indicator
-                _buildTagName(context),
-
-                if (!compact && tag.parents.isNotEmpty) ...[
-                  const SizedBox(height: 6.0),
-                  _buildParentTags(context),
-                ],
-              ],
+              children: [_buildTagName(context)],
             ),
           ),
 
@@ -45,6 +37,19 @@ class TagItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _getIconFromType(TagType type) {
+    switch (type) {
+      case TagType.RELATIONSHIP:
+        return TablerIcons.circles_relation;
+      case TagType.CHARACTER:
+        return TablerIcons.user;
+      case TagType.FANDOM:
+        return TablerIcons.star;
+      default:
+        return TablerIcons.tag; // Default icon
+    }
   }
 
   Widget _buildTagIcon(BuildContext context) {
@@ -61,7 +66,7 @@ class TagItem extends StatelessWidget {
         ),
         child: Center(
           child: Icon(
-            TablerIcons.tag,
+            _getIconFromType(tag.type),
             size: size / 2,
             color: colorScheme.onSecondaryContainer,
           ),
@@ -95,56 +100,6 @@ class TagItem extends StatelessWidget {
                 TablerIcons.check,
                 size: 18.0,
                 color: colorScheme.primary,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildParentTags(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Wrap(
-      spacing: 8.0,
-      runSpacing: 4.0,
-      children: [
-        for (var parent in tag.parents.take(2))
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  TablerIcons.arrow_up,
-                  size: 12.0,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-                const SizedBox(width: 4.0),
-                Text(
-                  parent.name,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        if (tag.parents.length > 2)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Text(
-              "+${tag.parents.length - 2} more",
-              style: context.textTheme.labelSmall?.copyWith(
-                color: colorScheme.onPrimaryContainer,
               ),
             ),
           ),
