@@ -1,5 +1,6 @@
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
+import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,11 @@ class AuthorItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Row(
+      spacing: 16.0,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Avatar
         _buildAvatar(context),
-
-        const SizedBox(width: 16.0),
 
         // Author details
         Expanded(
@@ -62,34 +62,16 @@ class AuthorItem extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final size = compact ? 48.0 : 64.0;
+    final size = compact ? 24.0 : 32.0;
 
-    return Skeleton.leaf(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: colorScheme.primaryContainer,
-          shape: BoxShape.circle,
-          image:
-              author.hasImage && author.imageUrl != null
-                  ? DecorationImage(
-                    image: NetworkImage(author.imageUrl!),
-                    fit: BoxFit.cover,
-                  )
-                  : null,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.0),
+      child: Skeleton.leaf(
+        child: CircleAvatar(
+          maxRadius: size,
+          backgroundColor: context.colorScheme.primaryContainer,
+          child: UserImage(context: context, user: author, size: size),
         ),
-        child:
-            !author.hasImage || author.imageUrl == null
-                ? Center(
-                  child: Icon(
-                    TablerIcons.user,
-                    size: size / 2,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                )
-                : null,
       ),
     );
   }
