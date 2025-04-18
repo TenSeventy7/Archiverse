@@ -57,7 +57,11 @@ class AppUtils {
     }
   }
 
-  static String formatDate(BuildContext context, DateTime date) {
+  static String formatDate(
+    BuildContext context,
+    DateTime date, {
+    bool proper = true,
+  }) {
     try {
       String relative = RelativeTime(
         context,
@@ -70,7 +74,11 @@ class AppUtils {
       ).format(date);
 
       // Capitalize the first letter of the string
-      return '${relative[0].toUpperCase()}${relative.substring(1)}';
+      if (proper) {
+        return '${relative[0].toUpperCase()}${relative.substring(1)}';
+      } else {
+        return relative;
+      }
     } catch (e) {
       return "Unknown";
     }
