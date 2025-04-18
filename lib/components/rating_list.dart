@@ -5,6 +5,7 @@
  */
 
 import 'package:archiverse/components/rating_utils.dart';
+import 'package:archiverse/dialogs/rating_info.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:flutter/material.dart';
@@ -50,30 +51,36 @@ class RatingList extends StatelessWidget {
   }) {
     return Card(
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       color: info.backgroundColor.withAlpha(26),
       margin: EdgeInsets.zero,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: info.backgroundColor,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child:
-              useIcon
-                  ? Icon(info.icon, color: info.foregroundColor, size: 28)
-                  : Center(
-                    child: Text(
-                      info.symbol,
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.titleLarge?.copyWith(
-                        color: info.foregroundColor,
-                        fontWeight: FontWeight.bold,
+        onTap: () {
+          RatingInfoDialog.showSheet(context, info: info, useIcon: useIcon);
+        },
+        leading: Skeleton.leaf(
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: info.backgroundColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:
+                useIcon
+                    ? Icon(info.icon, color: info.foregroundColor, size: 28)
+                    : Center(
+                      child: Text(
+                        info.symbol,
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          color: info.foregroundColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
+          ),
         ),
         title: Text(
           info.label,
