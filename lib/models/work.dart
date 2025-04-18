@@ -23,6 +23,7 @@ enum AgeRating {
       "teen": AgeRating.TEEN,
       "mature": AgeRating.MATURE,
       "explicit": AgeRating.EXPLICIT,
+      "notrated": AgeRating.NONE,
     };
   }
 }
@@ -39,6 +40,13 @@ enum RelationshipType {
 
   static Map<String, RelationshipType> get map {
     return {
+      "F/F": RelationshipType.FEM_SLASH,
+      "M/M": RelationshipType.SLASH,
+      "Gen": RelationshipType.GEN,
+      "F/M": RelationshipType.HET,
+      "Multi": RelationshipType.MULTI,
+      "Underage": RelationshipType.UNDERAGE,
+      "Other": RelationshipType.OTHER,
       "slash": RelationshipType.SLASH,
       "femslash": RelationshipType.FEM_SLASH,
       "gen": RelationshipType.GEN,
@@ -67,6 +75,8 @@ enum WarningType {
       "Graphic Depictions Of Violence": WarningType.GRAPHIC_VIOLENCE,
       "Major Character Death": WarningType.MAJOR_CHARACTER_DEATH,
       "Underage": WarningType.UNDERAGE,
+      "chosenotto": WarningType.AUTHOR_DEFERRED,
+      "yes": WarningType.APPLICABLE,
     };
   }
 }
