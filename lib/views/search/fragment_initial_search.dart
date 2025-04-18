@@ -16,55 +16,57 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
   Widget build(BuildContext context) {
     final provider = Provider.of<SearchProvider>(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Recent searches section
-        TextHeader.medium(
-          title: 'Recent Searches',
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        ),
-
-        if (provider.recentSearches.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Text('No recent searches'),
-          )
-        else
-          ...provider.recentSearches.map(
-            (term) => RecentSearchItem(
-              searchTerm: term,
-              onTap: () => provider.performSearch(term),
-              onRemove: () => provider.removeSearchItem(term),
-            ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Recent searches section
+          TextHeader.medium(
+            title: 'Recent Searches',
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
           ),
 
-        const SizedBox(height: 16.0),
-        const PaddedDivider(padding: EdgeInsets.symmetric(horizontal: 16.0)),
+          if (provider.recentSearches.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Text('No recent searches'),
+            )
+          else
+            ...provider.recentSearches.map(
+              (term) => RecentSearchItem(
+                searchTerm: term,
+                onTap: () => provider.performSearch(term),
+                onRemove: () => provider.removeSearchItem(term),
+              ),
+            ),
 
-        // Trending tags section
-        TextHeader.medium(
-          title: 'Trending Tags',
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        ),
-        PaddedWrap(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          spacing: 8,
-          runSpacing: 2,
-          children:
-              provider.trendingTags
-                  .map(
-                    (tag) => TrendingTagChip(
-                      tag: tag,
-                      onTap: () => provider.performSearch(tag),
-                    ),
-                  )
-                  .toList(),
-        ),
+          const SizedBox(height: 16.0),
+          const PaddedDivider(padding: EdgeInsets.symmetric(horizontal: 16.0)),
 
-        // Add extra space at bottom
-        const SizedBox(height: 16.0),
-      ],
+          // Trending tags section
+          TextHeader.medium(
+            title: 'Trending Tags',
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          ),
+          PaddedWrap(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            spacing: 8,
+            runSpacing: 2,
+            children:
+                provider.trendingTags
+                    .map(
+                      (tag) => TrendingTagChip(
+                        tag: tag,
+                        onTap: () => provider.performSearch(tag),
+                      ),
+                    )
+                    .toList(),
+          ),
+
+          // Add extra space at bottom
+          const SizedBox(height: 16.0),
+        ],
+      ),
     );
   }
 }
