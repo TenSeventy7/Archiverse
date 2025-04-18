@@ -2,6 +2,7 @@ import 'package:archiverse/components/cards/base_card.dart';
 import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/models/work.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -31,8 +32,8 @@ class WorkCard extends BaseCard<Work> {
   Function(BuildContext) get onLongPress =>
       (context) => WorkOptionsDialog.showSheet(context, work: item);
 
-  // @override
-  // String getRouteName() => 'work';
+  @override
+  String getRouteName() => WorkActivity.routeName;
 
   Color _getRatingColor(BuildContext context, Work work) {
     switch (work.rating) {

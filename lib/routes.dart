@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_settings.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
 import 'package:archiverse/views/settings/activity_blocked_content_settings.dart';
@@ -62,6 +64,14 @@ class AppRoutes {
     if (name == null) return null;
 
     switch (name) {
+      case WorkActivity.routeName:
+        final args = settings.arguments;
+        if (args is Work) {
+          return MaterialPageRoute(
+            builder: (context) => WorkActivity(work: args),
+          );
+        }
+        return null;
       default:
         return null;
     }

@@ -1,4 +1,3 @@
-
 /*
  * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
  * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
@@ -12,17 +11,22 @@ import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
+import 'package:intl/intl.dart';
 import 'package:relative_time/relative_time.dart';
 
 class AppUtils {
-  static String formatAuthorList(List<Pseud> authors,
-      {bool showPseud = true, int showCount = 3}) {
+  static String formatAuthorList(
+    List<Pseud> authors, {
+    bool showPseud = true,
+    int showCount = 3,
+  }) {
     List<String> authorNames = [];
 
     for (var author in authors) {
-      String authorName = showPseud && author.name != author.pseud
-          ? "${author.pseud} (${author.name})"
-          : author.name;
+      String authorName =
+          showPseud && author.name != author.pseud
+              ? "${author.pseud} (${author.name})"
+              : author.name;
 
       if (!authorNames.contains(authorName)) {
         authorNames.add(authorName);
@@ -54,7 +58,7 @@ class AppUtils {
   }
 
   static String formatDate(BuildContext context, DateTime date) {
-    try {      
+    try {
       String relative = RelativeTime(
         context,
         timeUnits: const [
@@ -102,17 +106,17 @@ class AppUtils {
   }
 
   static String formatWorkLastUpdated(BuildContext context, Work work) {
-    return _formatLastUpdated(
-        context, work.updateDate, work.publishDate);
+    return _formatLastUpdated(context, work.updateDate, work.publishDate);
   }
 
   static String formatSeriesLastUpdated(BuildContext context, Series series) {
-    return _formatLastUpdated(
-        context, series.updateDate, series.publishDate);
+    return _formatLastUpdated(context, series.updateDate, series.publishDate);
   }
 
   static String formatCollectionLastUpdated(
-      BuildContext context, Collection collection) {
+    BuildContext context,
+    Collection collection,
+  ) {
     return _formatLastUpdated(context, collection.creationDate, null);
   }
 
@@ -121,5 +125,29 @@ class AppUtils {
     var firstP = document.querySelector('p');
     return firstP != null ? firstP.outerHtml : '';
   }
-}
 
+  static String formatCompactNumber(int number) {
+    if (number >= 1000000) {
+      return '${(number / 1000000).toStringAsFixed(1)}M';
+    } else if (number >= 1000) {
+      return '${(number / 1000).toStringAsFixed(1)}K';
+    } else {
+      return number.toString();
+    }
+  }
+
+  static String truncateHtml(String content, int length) {
+    var document = parse(content);
+    var text = document.body?.text ?? '';
+    if (text.length <= length) {
+      return text;
+    } else {
+      return '${text.substring(0, length)}...';
+    }
+  }
+
+  static formatNumber(int num) {
+    var currentLocale = Intl.getCurrentLocale();
+    return NumberFormat('#,##0', currentLocale).format(num);
+  }
+}
