@@ -44,7 +44,10 @@ abstract class BaseCard<T> extends StatelessWidget {
   Widget buildFooter(BuildContext context) => const SizedBox.shrink();
   void onTap(BuildContext context) {
     // Default navigation behavior
-    Navigator.pushNamed(context, getRouteName(), arguments: item);
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).pushNamed(getRouteName(), arguments: item);
   }
 
   Function(BuildContext)? get onLongPress => null;
