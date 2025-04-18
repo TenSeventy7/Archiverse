@@ -6,12 +6,14 @@
 
 import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 enum TextHeaderSize { small, medium, large }
 
 class TextHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final IconData? icon;
   final Widget? actionText;
   final Function()? onTap;
   final TextHeaderSize size;
@@ -20,6 +22,7 @@ class TextHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.icon,
     this.actionText,
     this.onTap,
     this.padding,
@@ -29,6 +32,7 @@ class TextHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.icon,
     this.actionText,
     this.onTap,
     this.padding,
@@ -38,6 +42,7 @@ class TextHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.icon,
     this.actionText,
     this.onTap,
     this.padding,
@@ -70,6 +75,14 @@ class TextHeader extends StatelessWidget {
         top: (size == TextHeaderSize.small) ? 0.0 : 8.0 + (padding?.top ?? 0.0),
         bottom: padding?.bottom ?? 0.0,
       ),
+      leading:
+          icon != null
+              ? Icon(
+                icon,
+                size: 20.0,
+                color: context.colorScheme.primary.withValues(alpha: 0.6),
+              )
+              : null,
       title: Text(title, style: titleStyle),
       subtitle:
           subtitle != null
