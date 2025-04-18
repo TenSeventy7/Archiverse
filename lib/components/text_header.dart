@@ -18,6 +18,7 @@ class TextHeader extends StatelessWidget {
   final Function()? onTap;
   final TextHeaderSize size;
   final EdgeInsets? padding;
+  final bool hasPadding;
   const TextHeader.small({
     super.key,
     required this.title,
@@ -26,6 +27,7 @@ class TextHeader extends StatelessWidget {
     this.actionText,
     this.onTap,
     this.padding,
+    this.hasPadding = true,
   }) : size = TextHeaderSize.small;
 
   const TextHeader.medium({
@@ -36,6 +38,7 @@ class TextHeader extends StatelessWidget {
     this.actionText,
     this.onTap,
     this.padding,
+    this.hasPadding = true,
   }) : size = TextHeaderSize.medium;
 
   const TextHeader.large({
@@ -46,6 +49,7 @@ class TextHeader extends StatelessWidget {
     this.actionText,
     this.onTap,
     this.padding,
+    this.hasPadding = true,
   }) : size = TextHeaderSize.large;
 
   @override
@@ -70,8 +74,12 @@ class TextHeader extends StatelessWidget {
 
     return ListTile(
       contentPadding: EdgeInsets.only(
-        left: context.commonPaddingDouble + (padding?.left ?? 0.0),
-        right: context.commonPadding + (padding?.right ?? 0.0),
+        left:
+            (hasPadding ? context.commonPaddingDouble : 0.0) +
+            (padding?.left ?? 0.0),
+        right:
+            (hasPadding ? context.commonPadding : 0.0) +
+            (padding?.right ?? 0.0),
         top: (size == TextHeaderSize.small) ? 0.0 : 8.0 + (padding?.top ?? 0.0),
         bottom: padding?.bottom ?? 0.0,
       ),
