@@ -17,7 +17,7 @@ class RatingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 4,
+      spacing: 12,
       children: [
         // Age Rating
         _buildRatingItem(
@@ -51,6 +51,7 @@ class RatingList extends StatelessWidget {
     return Card(
       elevation: 0,
       color: info.backgroundColor.withAlpha(26),
+      margin: EdgeInsets.zero,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: Container(
