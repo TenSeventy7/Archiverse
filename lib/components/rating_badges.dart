@@ -14,17 +14,13 @@ class RatingBadges extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Age Rating Badge
-        _buildRatingBadge(
-          RatingUtils.getAgeRatingInfo(context, work.rating),
-          showIcon: false,
-        ),
+        _buildRatingBadge(RatingUtils.getAgeRatingInfo(context, work.rating)),
         const SizedBox(width: 6),
 
         // Relationship Badge (take first if multiple exist)
         if (work.relationship.isNotEmpty)
           _buildRatingBadge(
             RatingUtils.getRelationshipInfo(context, work.relationship.first),
-            showText: false,
           ),
         if (work.relationship.isNotEmpty) const SizedBox(width: 6),
 
@@ -32,17 +28,12 @@ class RatingBadges extends StatelessWidget {
         if (work.warnings.isNotEmpty)
           _buildRatingBadge(
             RatingUtils.getWarningInfo(context, work.warnings.first),
-            showText: false,
           ),
       ],
     );
   }
 
-  Widget _buildRatingBadge(
-    RatingInfo info, {
-    bool showIcon = true,
-    bool showText = true,
-  }) {
+  Widget _buildRatingBadge(RatingInfo info) {
     return Tooltip(
       message: "${info.label}: ${info.description}",
       child: Container(
@@ -53,23 +44,7 @@ class RatingBadges extends StatelessWidget {
           color: info.backgroundColor,
           borderRadius: BorderRadius.circular(4),
         ),
-        child:
-            showIcon
-                ? Icon(info.icon, size: size * 0.6, color: info.foregroundColor)
-                : showText
-                ? Text(
-                  info.symbol,
-                  style: TextStyle(
-                    color: info.foregroundColor,
-                    fontSize: size * 0.6,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-                : Icon(
-                  info.icon,
-                  size: size * 0.6,
-                  color: info.foregroundColor,
-                ),
+        child: Icon(info.icon, size: size * 0.6, color: info.foregroundColor),
       ),
     );
   }

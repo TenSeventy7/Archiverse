@@ -1,12 +1,10 @@
 import 'package:archiverse/components/rating_utils.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class _RatingInfoDialog extends StatelessWidget {
   final RatingInfo info;
-  final bool useIcon;
-  const _RatingInfoDialog({super.key, required this.info, this.useIcon = true});
+  const _RatingInfoDialog({required this.info});
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +20,7 @@ class _RatingInfoDialog extends StatelessWidget {
           color: info.backgroundColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child:
-            useIcon
-                ? Icon(info.icon, color: info.foregroundColor, size: 32)
-                : Center(
-                  child: Text(
-                    info.symbol,
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(
-                          color: info.foregroundColor,
-                          fontWeight: FontWeight.bold,
-                        )
-                        .apply(fontSizeDelta: 4),
-                  ),
-                ),
+        child: Icon(info.icon, color: info.foregroundColor, size: 32),
       ),
       iconPadding: EdgeInsets.only(
         left: context.screenWidth * 0.5 - 40,
@@ -65,16 +49,10 @@ class _RatingInfoDialog extends StatelessWidget {
 }
 
 class RatingInfoDialog {
-  static void showSheet(
-    BuildContext context, {
-    required RatingInfo info,
-    bool useIcon = true,
-  }) {
+  static void showSheet(BuildContext context, {required RatingInfo info}) {
     showDialog(
       context: context,
-      builder:
-          (BuildContext context) =>
-              _RatingInfoDialog(info: info, useIcon: useIcon),
+      builder: (BuildContext context) => _RatingInfoDialog(info: info),
     );
   }
 }

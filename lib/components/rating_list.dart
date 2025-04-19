@@ -24,7 +24,6 @@ class RatingList extends StatelessWidget {
         _buildRatingItem(
           context,
           RatingUtils.getAgeRatingInfo(context, work.rating),
-          useIcon: false,
         ),
 
         // Relationship Types
@@ -44,11 +43,7 @@ class RatingList extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingItem(
-    BuildContext context,
-    RatingInfo info, {
-    bool useIcon = true,
-  }) {
+  Widget _buildRatingItem(BuildContext context, RatingInfo info) {
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
@@ -57,7 +52,7 @@ class RatingList extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         onTap: () {
-          RatingInfoDialog.showSheet(context, info: info, useIcon: useIcon);
+          RatingInfoDialog.showSheet(context, info: info);
         },
         leading: Skeleton.leaf(
           child: Container(
@@ -67,19 +62,7 @@ class RatingList extends StatelessWidget {
               color: info.backgroundColor,
               borderRadius: BorderRadius.circular(8),
             ),
-            child:
-                useIcon
-                    ? Icon(info.icon, color: info.foregroundColor, size: 28)
-                    : Center(
-                      child: Text(
-                        info.symbol,
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.titleLarge?.copyWith(
-                          color: info.foregroundColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+            child: Icon(info.icon, color: info.foregroundColor, size: 28),
           ),
         ),
         title: Text(

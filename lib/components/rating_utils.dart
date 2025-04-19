@@ -17,7 +17,7 @@ class RatingUtils {
               "General Audiences content is suitable for everyone, including younger readers. These works avoid adult themes, explicit language, violence, or sexual content. They're comparable to G or PG rated films.\n\nThese works typically focus on themes like friendship, adventure, mild drama, or humor without elements that would be concerning for parents or young readers.\n\nReaders of any age can safely enjoy General Audiences works without encountering mature or potentially disturbing content.",
           backgroundColor: Colors.green.withOpacity(0.8),
           foregroundColor: Colors.white,
-          icon: TablerIcons.circle_check,
+          icon: TablerIcons.letter_g,
         );
       case AgeRating.TEEN:
         return RatingInfo(
@@ -29,7 +29,7 @@ class RatingUtils {
               "Teen And Up content is appropriate for teenagers and older readers, similar to PG-13 rated films or T-rated video games.\n\nThese works may include:\n• Mild to moderate violence\n• Some coarse language\n• Mild suggestive themes\n• Non-explicit romantic situations\n• Mild substance references\n• Some mature themes\n\nWhile these works avoid explicit content, they may address more complex or mature themes than General Audiences works. Parents might want to review Teen rated works before recommending them to younger teenagers.",
           backgroundColor: Colors.orange.withOpacity(0.8),
           foregroundColor: Colors.white,
-          icon: TablerIcons.circle_letter_t,
+          icon: TablerIcons.letter_t,
         );
       case AgeRating.MATURE:
         return RatingInfo(
@@ -41,7 +41,7 @@ class RatingUtils {
               "Mature content is intended for adult readers and may not be suitable for people under 17, comparable to R-rated films or M-rated video games.\n\nThese works may include:\n• Strong violence or detailed injury descriptions\n• Frequent coarse language\n• Moderate sexual content (not explicit)\n• Substance use\n• Complex psychological themes\n• Challenging social issues\n\nMature works handle adult themes and situations with more intensity than Teen works but stop short of explicit sexual content. They often explore complex moral questions, difficult relationships, or darker themes that require mature understanding.",
           backgroundColor: Colors.deepOrange.withOpacity(0.8),
           foregroundColor: Colors.white,
-          icon: TablerIcons.circle_letter_m,
+          icon: TablerIcons.letter_m,
         );
       case AgeRating.EXPLICIT:
         return RatingInfo(
@@ -53,7 +53,7 @@ class RatingUtils {
               "Explicit content is strictly for adult readers age 18+. These works contain content not suitable for minors under any circumstances.\n\nExplicit works typically include:\n• Explicit sexual content with detailed descriptions\n• Potentially disturbing graphic violence\n• Very adult themes and situations\n• Content that would receive NC-17 or stronger ratings in film\n\nThis rating indicates the highest level of mature content. While not all Explicit works contain all these elements, the rating serves as a clear boundary for content intended only for mature adults. Authors use this rating when their work includes detailed sexual scenes or extremely graphic content.",
           backgroundColor: Colors.red.withOpacity(0.8),
           foregroundColor: Colors.white,
-          icon: TablerIcons.circle_letter_e,
+          icon: TablerIcons.letter_e,
         );
       default:
         return RatingInfo(
@@ -65,7 +65,7 @@ class RatingUtils {
               "When a work is Not Rated, the author has not provided specific guidance about the content's appropriateness for different age groups.\n\nImportant considerations:\n• These works could potentially contain content from any rating category\n• There may be unexpected mature elements without warning\n• Readers should approach with caution, especially younger readers or those sensitive to certain content\n• The lack of rating doesn't necessarily mean inappropriate content, but indicates uncertainty\n\nIf you have specific content concerns, you may want to check the work's tags or comments for more information before reading. When in doubt, assume that unrated works could contain mature themes.",
           backgroundColor: Colors.grey.withOpacity(0.8),
           foregroundColor: Colors.white,
-          icon: TablerIcons.circle_letter_n,
+          icon: TablerIcons.letter_n,
         );
     }
   }
