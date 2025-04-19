@@ -11,6 +11,7 @@ import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/loading_states.dart';
+import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
@@ -475,7 +476,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                     ),
                     Text(
                       item.authors.length == 1
-                          ? item.authors[0].name
+                          ? _getAuthorName(item.authors.first)
                           : "${item.authors.length} authors",
                       style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w500,
@@ -781,5 +782,13 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   @override
   Widget buildTitle(BuildContext context) {
     return Text(item.title);
+  }
+
+  String _getAuthorName(Pseud first) {
+    if (first.isPseud) {
+      return "${first.pseud} (${first.name})";
+    } else {
+      return first.name;
+    }
   }
 }
