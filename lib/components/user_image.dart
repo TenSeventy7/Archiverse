@@ -21,7 +21,7 @@ class UserImage extends StatelessWidget {
     required this.context,
     required this.user,
     this.size = 0,
-    this.imageSize = 100.0,
+    this.imageSize = 200.0,
   });
 
   @override
@@ -47,9 +47,21 @@ class UserImage extends StatelessWidget {
 
   Widget _buildPlaceholder(BuildContext context) {
     return Icon(
-      TablerIcons.user,
+      _getIcon(),
       size: size,
       color: context.colorScheme.onPrimaryContainer,
     );
+  }
+
+  IconData _getIcon() {
+    if (user.isAnonymous) {
+      return TablerIcons.user_question;
+    }
+
+    if (user.isOrphan) {
+      return TablerIcons.user_x;
+    }
+
+    return TablerIcons.user;
   }
 }
