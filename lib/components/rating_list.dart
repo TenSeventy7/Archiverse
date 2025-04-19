@@ -44,18 +44,21 @@ class RatingList extends StatelessWidget {
   }
 
   Widget _buildRatingItem(BuildContext context, RatingInfo info) {
-    return Card(
-      elevation: 0,
-      clipBehavior: Clip.antiAlias,
-      color: info.backgroundColor.withAlpha(26),
-      margin: EdgeInsets.zero,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        onTap: () {
-          RatingInfoDialog.showSheet(context, info: info);
-        },
-        leading: Skeleton.leaf(
-          child: Container(
+    return Skeleton.leaf(
+      child: Card(
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        color: info.backgroundColor.withAlpha(26),
+        margin: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 4,
+          ),
+          onTap: () {
+            RatingInfoDialog.showSheet(context, info: info);
+          },
+          leading: Container(
             width: 42,
             height: 42,
             decoration: BoxDecoration(
@@ -64,14 +67,14 @@ class RatingList extends StatelessWidget {
             ),
             child: Icon(info.icon, color: info.foregroundColor, size: 28),
           ),
-        ),
-        title: Text(
-          info.label,
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
+          title: Text(
+            info.label,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          subtitle: Text(info.description, style: context.textTheme.bodySmall),
         ),
-        subtitle: Text(info.description, style: context.textTheme.bodySmall),
       ),
     );
   }
