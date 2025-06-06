@@ -33,7 +33,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_header_contributors => 'Contributors';
 
   @override
-  String get about_header_contributors_localization => 'Localization Contributors';
+  String get about_header_contributors_localization =>
+      'Localization Contributors';
 
   @override
   String get about_header_core_team => 'Core Team';
@@ -87,7 +88,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fandom_books_literature => 'Books & Literature';
 
   @override
-  String get fandom_cartoons_comics_graphic_novels => 'Cartoons & Comics & Graphic Novels';
+  String get fandom_cartoons_comics_graphic_novels =>
+      'Cartoons & Comics & Graphic Novels';
 
   @override
   String get fandom_celebrities_real_people => 'Celebrities & Real People';
@@ -114,19 +116,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fandom_video_games => 'Video Games';
 
   @override
-  String get onboarding_1_subtitle => 'Millions of stories await. From scorching romances to epic space battles, find your next obsession with our powerful search. Customize your feed, unlock hidden gems, and prepare to be amazed!';
+  String get onboarding_1_subtitle =>
+      'Millions of stories await. From scorching romances to epic space battles, find your next obsession with our powerful search. Customize your feed, unlock hidden gems, and prepare to be amazed!';
 
   @override
   String get onboarding_1_title => 'Discover Amazing Works';
 
   @override
-  String get onboarding_2_subtitle => 'No Wi-Fi? No worries! Download your favorites and conquer boredom on the go. Train, plane, or cozy reading nook - your library is always a tap away.';
+  String get onboarding_2_subtitle =>
+      'No Wi-Fi? No worries! Download your favorites and conquer boredom on the go. Train, plane, or cozy reading nook - your library is always a tap away.';
 
   @override
   String get onboarding_2_title => 'Read Anytime, Anywhere';
 
   @override
-  String get onboarding_3_subtitle => 'Share your love, leave comments, and join the lively discussions. Make friends, find kindred spirits, and let your voice be heard. Remember, you\'re not just reading, you\'re part of something bigger!';
+  String get onboarding_3_subtitle =>
+      'Share your love, leave comments, and join the lively discussions. Make friends, find kindred spirits, and let your voice be heard. Remember, you\'re not just reading, you\'re part of something bigger!';
 
   @override
   String get onboarding_3_title => 'Connect with the Community';
@@ -135,13 +140,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboarding_4_cta => 'Dive into the Archiverse';
 
   @override
-  String get onboarding_4_subtitle => 'You\'re holding the key to endless worlds. Open Archiverse, unlock your next adventure, and let the stories begin!';
+  String get onboarding_4_subtitle =>
+      'You\'re holding the key to endless worlds. Open Archiverse, unlock your next adventure, and let the stories begin!';
 
   @override
   String get onboarding_4_title => 'Start Your Journey';
 
   @override
-  String get onboarding_intro => 'Explore a galaxy of stories. Dive deep into endless imagination and join the passionate fandom. Archiverse: Your ultimate AO3 reader.';
+  String get onboarding_intro =>
+      'Explore a galaxy of stories. Dive deep into endless imagination and join the passionate fandom. Archiverse: Your ultimate AO3 reader.';
 
   @override
   String get onboarding_intro_cta => 'Let\'s go!';
@@ -180,7 +187,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_author_filters_hide_search => 'Hide from Search Results';
 
   @override
-  String get settings_author_filters_hide_works => 'Hide Works by Blocked Authors';
+  String get settings_author_filters_hide_works =>
+      'Hide Works by Blocked Authors';
 
   @override
   String get settings_author_filters_no_blocked => 'No blocked authors yet';
@@ -195,19 +203,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_author_filters_notify_works => 'Notify for New Works';
 
   @override
-  String get settings_author_filters_notify_works_subtitle => 'Get notifications when followed authors post new works';
+  String get settings_author_filters_notify_works_subtitle =>
+      'Get notifications when followed authors post new works';
 
   @override
-  String get settings_author_filters_show_indicator => 'Show Blocked Author Indicator';
+  String get settings_author_filters_show_indicator =>
+      'Show Blocked Author Indicator';
 
   @override
-  String get settings_author_filters_show_indicator_subtitle => 'Shows when content is hidden due to author blocks';
+  String get settings_author_filters_show_indicator_subtitle =>
+      'Shows when content is hidden due to author blocks';
 
   @override
   String get settings_author_filters_sync_ao3 => 'Sync with AO3 Subscriptions';
 
   @override
-  String get settings_author_filters_sync_ao3_subtitle => 'Import authors you subscribe to on AO3';
+  String get settings_author_filters_sync_ao3_subtitle =>
+      'Import authors you subscribe to on AO3';
 
   @override
   String get settings_author_filters_title => 'Author Filters';
@@ -231,7 +243,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_backup_create_now => 'Create Backup Now';
 
   @override
-  String get settings_backup_create_now_subtitle => 'Back up your data immediately';
+  String get settings_backup_create_now_subtitle =>
+      'Back up your data immediately';
 
   @override
   String settings_backup_created_at(Object date) {
@@ -259,10 +272,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_backup_export_file => 'Export to File';
 
   @override
-  String get settings_backup_export_file_subtitle => 'Export settings to an external file';
+  String get settings_backup_export_file_subtitle =>
+      'Export settings to an external file';
 
   @override
-  String get settings_backup_export_processing => 'Export functionality would be implemented here';
+  String get settings_backup_export_processing =>
+      'Export functionality would be implemented here';
 
   @override
   String settings_backup_format(Object date) {
@@ -285,16 +300,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_backup_import_file => 'Import from File';
 
   @override
-  String get settings_backup_import_file_subtitle => 'Import settings from an external file';
+  String get settings_backup_import_file_subtitle =>
+      'Import settings from an external file';
 
   @override
-  String get settings_backup_import_processing => 'Import functionality would be implemented here';
+  String get settings_backup_import_processing =>
+      'Import functionality would be implemented here';
 
   @override
   String get settings_backup_include_downloads => 'Include Downloads';
 
   @override
-  String get settings_backup_include_downloads_subtitle => 'Include downloaded works in backups';
+  String get settings_backup_include_downloads_subtitle =>
+      'Include downloaded works in backups';
 
   @override
   String settings_backup_items_count(Object count) {
@@ -331,7 +349,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settings_backup_restore_subtitle => 'Choose a backup to restore from';
+  String get settings_backup_restore_subtitle =>
+      'Choose a backup to restore from';
 
   @override
   String get settings_backup_restored_success => 'Backup restored successfully';
@@ -357,10 +376,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_blocked_content_add => 'Block Content by ID';
 
   @override
-  String get settings_blocked_content_add_subtitle => 'Enter a work or collection ID';
+  String get settings_blocked_content_add_subtitle =>
+      'Enter a work or collection ID';
 
   @override
-  String get settings_blocked_content_blocked_collections => 'Blocked Collections';
+  String get settings_blocked_content_blocked_collections =>
+      'Blocked Collections';
 
   @override
   String get settings_blocked_content_blocked_works => 'Blocked Works';
@@ -385,34 +406,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_blocked_content_empty => 'No blocked content yet';
 
   @override
-  String get settings_blocked_content_empty_subtitle => 'Content you block will appear here';
+  String get settings_blocked_content_empty_subtitle =>
+      'Content you block will appear here';
 
   @override
-  String get settings_blocked_content_enter_collection_id => 'Enter collection ID';
+  String get settings_blocked_content_enter_collection_id =>
+      'Enter collection ID';
 
   @override
-  String get settings_blocked_content_enter_type => 'Enter content type to block';
+  String get settings_blocked_content_enter_type =>
+      'Enter content type to block';
 
   @override
   String get settings_blocked_content_enter_work_id => 'Enter work ID';
 
   @override
-  String get settings_blocked_content_hide_feeds => 'Hide Blocked Content in Feeds';
+  String get settings_blocked_content_hide_feeds =>
+      'Hide Blocked Content in Feeds';
 
   @override
-  String get settings_blocked_content_hide_search => 'Hide Blocked Content in Search';
+  String get settings_blocked_content_hide_search =>
+      'Hide Blocked Content in Search';
 
   @override
-  String get settings_blocked_content_show_indicator => 'Show Blocked Content Indicator';
+  String get settings_blocked_content_show_indicator =>
+      'Show Blocked Content Indicator';
 
   @override
-  String get settings_blocked_content_show_indicator_subtitle => 'Shows when content has been hidden';
+  String get settings_blocked_content_show_indicator_subtitle =>
+      'Shows when content has been hidden';
 
   @override
   String get settings_blocked_content_title => 'Blocked Content';
 
   @override
-  String get settings_blocked_content_unblock_collection => 'Unblock collection';
+  String get settings_blocked_content_unblock_collection =>
+      'Unblock collection';
 
   @override
   String get settings_blocked_content_unblock_work => 'Unblock work';
@@ -437,7 +466,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_cache_clear_all => 'Clear All Cache';
 
   @override
-  String get settings_cache_clear_all_message => 'Are you sure you want to clear all cached data? This won\'t affect your downloads.';
+  String get settings_cache_clear_all_message =>
+      'Are you sure you want to clear all cached data? This won\'t affect your downloads.';
 
   @override
   String get settings_cache_cleared => 'All cache cleared';
@@ -478,7 +508,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_cache_preserve_read => 'Preserve Recently Read Cache';
 
   @override
-  String get settings_cache_preserve_read_subtitle => 'Keep cache for works you\'ve recently viewed';
+  String get settings_cache_preserve_read_subtitle =>
+      'Keep cache for works you\'ve recently viewed';
 
   @override
   String get settings_cache_search => 'Search Cache';
@@ -523,7 +554,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_downloads_auto_delete => 'Auto-Delete Old Downloads';
 
   @override
-  String get settings_downloads_auto_delete_subtitle => 'Remove downloads older than 30 days';
+  String get settings_downloads_auto_delete_subtitle =>
+      'Remove downloads older than 30 days';
 
   @override
   String get settings_downloads_delete_all => 'Delete all downloads';
@@ -532,7 +564,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_downloads_delete_confirmation => 'Delete All Downloads?';
 
   @override
-  String get settings_downloads_delete_confirmation_message => 'This will permanently remove all downloaded works. This action cannot be undone.';
+  String get settings_downloads_delete_confirmation_message =>
+      'This will permanently remove all downloaded works. This action cannot be undone.';
 
   @override
   String get settings_downloads_deleted => 'All downloads deleted';
@@ -568,7 +601,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_history_clear => 'Clear Reading History';
 
   @override
-  String get settings_history_clear_subtitle => 'Remove all reading history data';
+  String get settings_history_clear_subtitle =>
+      'Remove all reading history data';
 
   @override
   String get settings_history_retention => 'History Retention';
@@ -595,13 +629,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_history_sync_ao3 => 'Sync with AO3';
 
   @override
-  String get settings_history_sync_ao3_subtitle => 'Sync history with your AO3 account';
+  String get settings_history_sync_ao3_subtitle =>
+      'Sync history with your AO3 account';
 
   @override
   String get settings_history_sync_bookmarks => 'Sync Bookmarks';
 
   @override
-  String get settings_history_sync_bookmarks_subtitle => 'Add works to bookmarks when marked as favorite';
+  String get settings_history_sync_bookmarks_subtitle =>
+      'Add works to bookmarks when marked as favorite';
 
   @override
   String get settings_history_title => 'Reading History';
@@ -610,7 +646,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_history_track => 'Track Reading History';
 
   @override
-  String get settings_history_track_subtitle => 'Keep record of works you\'ve read';
+  String get settings_history_track_subtitle =>
+      'Keep record of works you\'ve read';
 
   @override
   String get settings_layout_dual_column => 'Dual Column';
@@ -642,10 +679,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_layout_type => 'Layout type';
 
   @override
-  String get settings_rating_age_confirmation => 'Require Age Confirmation for Explicit';
+  String get settings_rating_age_confirmation =>
+      'Require Age Confirmation for Explicit';
 
   @override
-  String get settings_rating_age_confirmation_subtitle => 'Only applies if you\'re showing explicit content';
+  String get settings_rating_age_confirmation_subtitle =>
+      'Only applies if you\'re showing explicit content';
 
   @override
   String get settings_rating_blur_explicit => 'Blur Explicit Thumbnails';
@@ -681,7 +720,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_rating_show_icons => 'Show Rating Icons';
 
   @override
-  String get settings_rating_show_icons_subtitle => 'Display visual indicators of work ratings';
+  String get settings_rating_show_icons_subtitle =>
+      'Display visual indicators of work ratings';
 
   @override
   String get settings_rating_teen => 'Teen And Up';
@@ -693,25 +733,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_rating_visibility => 'Rating Visibility';
 
   @override
-  String get settings_rating_visibility_subtitle => 'Show or hide works with the following ratings';
+  String get settings_rating_visibility_subtitle =>
+      'Show or hide works with the following ratings';
 
   @override
   String get settings_scrolling_animation => 'Allow Page Turning Animation';
 
   @override
-  String get settings_scrolling_animation_subtitle => 'Adds a page turning animation';
+  String get settings_scrolling_animation_subtitle =>
+      'Adds a page turning animation';
 
   @override
   String get settings_scrolling_continuous => 'Continuous';
 
   @override
-  String get settings_scrolling_continuous_subtitle => 'Standard smooth scrolling';
+  String get settings_scrolling_continuous_subtitle =>
+      'Standard smooth scrolling';
 
   @override
   String get settings_scrolling_keep_screen_on => 'Keep Screen On';
 
   @override
-  String get settings_scrolling_keep_screen_on_subtitle => 'Prevents the screen from turning off';
+  String get settings_scrolling_keep_screen_on_subtitle =>
+      'Prevents the screen from turning off';
 
   @override
   String get settings_scrolling_paged => 'Paged';
@@ -726,7 +770,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_scrolling_physics => 'Physics-based Scrolling';
 
   @override
-  String get settings_scrolling_physics_subtitle => 'Makes scrolling feel more natural with momentum';
+  String get settings_scrolling_physics_subtitle =>
+      'Makes scrolling feel more natural with momentum';
 
   @override
   String get settings_scrolling_sensitivity => 'Scroll Sensitivity';
@@ -735,13 +780,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_scrolling_show_indicator => 'Show Page Indicator';
 
   @override
-  String get settings_scrolling_show_indicator_subtitle => 'Displays a page indicator at the bottom';
+  String get settings_scrolling_show_indicator_subtitle =>
+      'Displays a page indicator at the bottom';
 
   @override
   String get settings_scrolling_tap_edges => 'Tap Edges to Turn Page';
 
   @override
-  String get settings_scrolling_tap_edges_subtitle => 'Tap the edges of the screen to turn pages';
+  String get settings_scrolling_tap_edges_subtitle =>
+      'Tap the edges of the screen to turn pages';
 
   @override
   String get settings_scrolling_title => 'Scrolling Behavior';
@@ -761,7 +808,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tag_filters_blacklist => 'Blacklist Mode';
 
   @override
-  String get settings_tag_filters_blacklist_subtitle => 'Hide works with specified tags';
+  String get settings_tag_filters_blacklist_subtitle =>
+      'Hide works with specified tags';
 
   @override
   String get settings_tag_filters_enter_tag => 'Enter tag name';
@@ -770,10 +818,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tag_filters_hide_works => 'Hide Filtered Works';
 
   @override
-  String get settings_tag_filters_hide_works_blacklist => 'Hide works with blacklisted tags';
+  String get settings_tag_filters_hide_works_blacklist =>
+      'Hide works with blacklisted tags';
 
   @override
-  String get settings_tag_filters_hide_works_whitelist => 'Hide works without whitelisted tags';
+  String get settings_tag_filters_hide_works_whitelist =>
+      'Hide works without whitelisted tags';
 
   @override
   String settings_tag_filters_no_tags(Object mode) {
@@ -790,7 +840,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tag_filters_sync => 'Sync with AO3 Account';
 
   @override
-  String get settings_tag_filters_sync_subtitle => 'Sync filters with your AO3 account';
+  String get settings_tag_filters_sync_subtitle =>
+      'Sync filters with your AO3 account';
 
   @override
   String get settings_tag_filters_title => 'Tag Filters';
@@ -799,13 +850,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_tag_filters_whitelist => 'Whitelist Mode';
 
   @override
-  String get settings_tag_filters_whitelist_subtitle => 'Only show works with specified tags';
+  String get settings_tag_filters_whitelist_subtitle =>
+      'Only show works with specified tags';
 
   @override
-  String get settings_text_size_adjust_label => 'Adjust the slider to change the text size throughout the app.';
+  String get settings_text_size_adjust_label =>
+      'Adjust the slider to change the text size throughout the app.';
 
   @override
-  String get settings_text_size_body => 'This is the body text that you\'ll see throughout the app. It should be comfortable to read for extended periods of time.';
+  String get settings_text_size_body =>
+      'This is the body text that you\'ll see throughout the app. It should be comfortable to read for extended periods of time.';
 
   @override
   String get settings_text_size_heading => 'This is a heading';
@@ -814,7 +868,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_text_size_preview_title => 'Text Size Preview';
 
   @override
-  String get settings_text_size_subheading => 'This is a subheading that provides more context';
+  String get settings_text_size_subheading =>
+      'This is a subheading that provides more context';
 
   @override
   String get settings_text_size_title => 'Text Size';
@@ -859,25 +914,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_warnings_apply => 'Archive Warnings Apply';
 
   @override
-  String get settings_warnings_apply_subtitle => 'Works with creator-selected warnings';
+  String get settings_warnings_apply_subtitle =>
+      'Works with creator-selected warnings';
 
   @override
   String get settings_warnings_autohide => 'Auto-hide Explicit Content';
 
   @override
-  String get settings_warnings_autohide_subtitle => 'Always hide explicit content by default';
+  String get settings_warnings_autohide_subtitle =>
+      'Always hide explicit content by default';
 
   @override
   String get settings_warnings_blur => 'Blur Sensitive Content';
 
   @override
-  String get settings_warnings_blur_subtitle => 'Blur images and summaries until confirmed';
+  String get settings_warnings_blur_subtitle =>
+      'Blur images and summaries until confirmed';
 
   @override
   String get settings_warnings_choose_not_to => 'Creator Chose Not To Warn';
 
   @override
-  String get settings_warnings_choose_not_to_subtitle => 'Works where creator opted out of warnings';
+  String get settings_warnings_choose_not_to_subtitle =>
+      'Works where creator opted out of warnings';
 
   @override
   String get settings_warnings_death => 'Major Character Death';
@@ -886,7 +945,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_warnings_dialog => 'Show Warning Dialog';
 
   @override
-  String get settings_warnings_dialog_subtitle => 'Display confirmation dialog for sensitive content';
+  String get settings_warnings_dialog_subtitle =>
+      'Display confirmation dialog for sensitive content';
 
   @override
   String get settings_warnings_display => 'Warning Display';
@@ -895,7 +955,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_warnings_no_warnings => 'No Archive Warnings';
 
   @override
-  String get settings_warnings_no_warnings_subtitle => 'Works with no specific warnings';
+  String get settings_warnings_no_warnings_subtitle =>
+      'Works with no specific warnings';
 
   @override
   String get settings_warnings_noncon => 'Rape/Non-Con';
@@ -910,7 +971,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_warnings_types => 'Archive Warning Types';
 
   @override
-  String get settings_warnings_types_subtitle => 'Choose which types of Archive Warnings should trigger confirmation dialogs';
+  String get settings_warnings_types_subtitle =>
+      'Choose which types of Archive Warnings should trigger confirmation dialogs';
 
   @override
   String get settings_warnings_underage => 'Underage';
