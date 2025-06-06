@@ -109,6 +109,7 @@ abstract class CommonDetailActivityState<T>
     return SliverAppBar.large(
       title: buildTitle(context),
       centerTitle: true,
+      shape: RoundedRectangleBorder(),
       expandedHeight: getExpandedHeight(context),
       actions: buildAppBarActions(context),
       leading: IconButton(
@@ -126,14 +127,16 @@ abstract class CommonDetailActivityState<T>
           child: buildExpandedAppBarWidget(context),
         ),
       ),
+      bottom: buildAppBarBottom(context),
     );
   }
 
   // Overridable methods
   Widget? buildBottomBar(BuildContext context) => null;
   List<Widget>? buildAppBarActions(BuildContext context) => null;
+  PreferredSizeWidget? buildAppBarBottom(BuildContext context) => null;
   List<Widget> buildDetailSlivers(BuildContext context);
   Widget buildExpandedAppBarWidget(BuildContext context);
   Widget buildTitle(BuildContext context);
-  double getExpandedHeight(BuildContext context);
+  double? getExpandedHeight(BuildContext context);
 }

@@ -1,5 +1,6 @@
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/components/bookmarks_card.dart';
+import 'package:archiverse/components/cards/series_card.dart';
 import 'package:archiverse/components/items/series_item.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/rating_list.dart';
@@ -17,6 +18,7 @@ import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
 import 'package:archiverse/components/work_metadata_item.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
@@ -384,7 +386,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           if (item.series.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
+                horizontal: 8.0,
                 vertical: 16.0,
               ),
               child: _buildSeriesSection(context),
@@ -393,7 +395,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           // Summary section - always show full
           if (item.summary.isNotEmpty) ...[
             _buildSummarySection(context),
-            const SizedBox(height: 24),
+            const SizedBox(height: 2),
           ],
 
           // Ratings
@@ -446,10 +448,9 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
               Skeleton.leaf(
                 child: SizedBox(
                   height: 48,
-                  width:
-                      item.authors.length > 1
-                          ? 48 + (item.authors.length - 1) * 24
-                          : 48,
+                  width: item.authors.length > 1
+                      ? 48 + (item.authors.length - 1) * 24
+                      : 48,
                   child: Stack(
                     children: [
                       for (int i = 0; i < item.authors.length; i++)
@@ -458,14 +459,13 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                           child: CircleAvatar(
                             radius: 24,
                             child: EnhancedFutureBuilder(
-                              future: Ao3Api().getUser(item.authors[i]),
+                              future: Ao3Api().getPseud(item.authors[i]),
                               rememberFutureResult: true,
-                              whenDone:
-                                  (author) => UserImage(
-                                    context: context,
-                                    user: author,
-                                    size: 24,
-                                  ),
+                              whenDone: (author) => UserImage(
+                                context: context,
+                                user: author,
+                                size: 24,
+                              ),
                               whenNotDone: UserImage(
                                 context: context,
                                 user: item.authors[i],
@@ -516,48 +516,18 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Series",
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
         for (var s in _series ?? item.series) ...[
           Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Part ${s.part} of",
+              "Part ${s.part} of the series",
               style: context.textTheme.titleSmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          Card.outlined(
-            clipBehavior: Clip.antiAlias,
-            margin: EdgeInsets.symmetric(vertical: 8.0),
-            child: Skeletonizer(
-              enabled: _series == null,
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    "", // TODO: Add SeriesDetail.routeName
-                    arguments: s.series,
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child:
-                      _series != null && _series!.isEmpty
-                          ? LoadError.small(onPressed: _fetchSeries)
-                          : SeriesItem.small(series: s.series),
-                ),
-              ),
-            ),
-          ),
+          SeriesCard.small(series: s.series),
         ],
       ],
     );
@@ -572,11 +542,10 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextHeader.medium(title: "Summary", hasPadding: false),
           HtmlWidget(summary, textStyle: context.textTheme.bodyMedium),
         ],
       ),
@@ -585,7 +554,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   Widget _buildRatingsSetction(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -624,22 +593,21 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
               Wrap(
                 spacing: 8,
                 runSpacing: 4,
-                children:
-                    entry.value
-                        .map(
-                          (tag) => ActionChip(
-                            avatar: _getTagIconFor(entry.key),
-                            label: Text(tag.name),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                "", // TODO: Add TagDetail.routeName
-                                arguments: tag,
-                              );
-                            },
-                          ),
-                        )
-                        .toList(),
+                children: entry.value
+                    .map(
+                      (tag) => ActionChip(
+                        avatar: _getTagIconFor(entry.key),
+                        label: Text(tag.name),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            "", // TODO: Add TagDetail.routeName
+                            arguments: tag,
+                          );
+                        },
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ],
