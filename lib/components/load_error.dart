@@ -1,4 +1,3 @@
-
 /*
  * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
  * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
@@ -10,17 +9,13 @@ import 'package:archiverse/extensions/context_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-enum _LoadErrorType {
-  small,
-  medium,
-  large,
-}
+enum _LoadErrorType { small, medium, large }
 
 class LoadError extends StatelessWidget {
   const LoadError({super.key, required this.onPressed})
-      : _type = _LoadErrorType.large;
+    : _type = _LoadErrorType.large;
   const LoadError.small({super.key, required this.onPressed})
-      : _type = _LoadErrorType.small;
+    : _type = _LoadErrorType.small;
 
   final Function()? onPressed;
   final _LoadErrorType _type;
@@ -43,31 +38,28 @@ class LoadError extends StatelessWidget {
           horizontal: context.commonPadding,
           vertical: 24.0,
         ),
-        child: Row(
+        child: Column(
+          spacing: 24.0,
           children: [
-            const SizedBox(width: 8.0),
             Icon(
               TablerIcons.wifi_off,
-              color: context.colorScheme.primary,
-              size: 56.0,
+              color: context.colorScheme.surfaceContainerHighest,
+              size: 64.0,
             ),
-            const SizedBox(width: 16.0),
-            Expanded(
-              child: Column(
-                children: [
-                  Text(
-                    "There was a problem loading this content.",
-                    textAlign: TextAlign.center,
-                    style: context.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8.0),
-                  FilledButton.icon(
-                    onPressed: onPressed,
-                    icon: const Icon(TablerIcons.reload),
-                    label: Text("Try again"),
-                  ),
-                ],
-              ),
+            Column(
+              spacing: 8.0,
+              children: [
+                Text(
+                  "There was a problem loading this content.",
+                  textAlign: TextAlign.center,
+                  style: context.textTheme.titleMedium,
+                ),
+                FilledButton.icon(
+                  onPressed: onPressed,
+                  icon: const Icon(TablerIcons.reload),
+                  label: Text("Try again"),
+                ),
+              ],
             ),
           ],
         ),
@@ -82,9 +74,7 @@ class LoadError extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              context.getDrawable("component_error_img.png"),
-            ),
+            Image.asset(context.getDrawable("component_error_img.png")),
             const SizedBox(height: 24.0),
             Text(
               "Uh-oh! There seems to be a problem.",
@@ -102,7 +92,7 @@ class LoadError extends StatelessWidget {
               onPressed: onPressed,
               icon: const Icon(TablerIcons.reload),
               label: Text("Try again"),
-            )
+            ),
           ],
         ),
       ),
