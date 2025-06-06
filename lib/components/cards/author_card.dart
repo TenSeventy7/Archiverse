@@ -1,6 +1,7 @@
 import 'package:archiverse/components/cards/base_card.dart';
 import 'package:archiverse/components/items/author_item.dart';
 import 'package:archiverse/models/pseud.dart';
+import 'package:archiverse/views/activity_author.dart';
 import 'package:flutter/material.dart';
 
 class AuthorCard extends BaseCard<Pseud> {
@@ -12,6 +13,6 @@ class AuthorCard extends BaseCard<Pseud> {
     return AuthorItem(author: item);
   }
 
-  // @override
-  // String getRouteName() => 'author';
+  @override
+  String getRouteName() => AuthorActivity.routeName;
 }

@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
+import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_work.dart';
@@ -69,6 +71,22 @@ class AppRoutes {
         if (args is Work) {
           return MaterialPageRoute(
             builder: (context) => WorkActivity(work: args),
+          );
+        }
+        return null;
+      case AuthorActivity.routeName:
+        final args = settings.arguments;
+        if (args is Map<String, dynamic>) {
+          final pseud = args['pseud'] as Pseud;
+          final fromAuthor = args['fromAuthor'] as bool;
+          return MaterialPageRoute(
+            builder:
+                (context) =>
+                    AuthorActivity(author: pseud, fromAuthor: fromAuthor),
+          );
+        } else if (args is Pseud) {
+          return MaterialPageRoute(
+            builder: (context) => AuthorActivity(author: args),
           );
         }
         return null;

@@ -431,6 +431,12 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
             AuthorsListDialog.showSheet(context, authors: item.authors);
             return;
           }
+
+          // Otherwise, navigate to author detail
+          context.navigator.pushNamed(
+            AuthorActivity.routeName,
+            arguments: item.authors.first,
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
