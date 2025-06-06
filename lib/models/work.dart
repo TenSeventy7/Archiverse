@@ -75,8 +75,11 @@ enum WarningType {
       "Graphic Depictions Of Violence": WarningType.GRAPHIC_VIOLENCE,
       "Major Character Death": WarningType.MAJOR_CHARACTER_DEATH,
       "Underage": WarningType.UNDERAGE,
+      "Underage Sex": WarningType.UNDERAGE,
+      "No Archive Warnings Apply": WarningType.NOT_APPLICABLE,
       "chosenotto": WarningType.AUTHOR_DEFERRED,
       "yes": WarningType.APPLICABLE,
+      "no": WarningType.NOT_APPLICABLE,
     };
   }
 }
