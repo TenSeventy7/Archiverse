@@ -87,7 +87,12 @@ class TextHeader extends StatelessWidget {
           icon != null
               ? Icon(
                 icon,
-                size: 20.0,
+                size:
+                    size == TextHeaderSize.small
+                        ? 20.0
+                        : size == TextHeaderSize.medium
+                        ? 24.0
+                        : 28.0,
                 color: context.colorScheme.primary.withValues(alpha: 0.6),
               )
               : null,
