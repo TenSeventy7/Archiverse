@@ -151,20 +151,19 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
         spacing: 12.0,
         children: [
           FloatingActionButton(
+            heroTag: "like",
             elevation: 0.0,
             focusElevation: 0.0,
             hoverElevation: 0.0,
             highlightElevation: 0.0,
             disabledElevation: 0.0,
             shape: CircleBorder(),
-            backgroundColor:
-                _isLiked
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.secondaryContainer,
-            foregroundColor:
-                _isLiked
-                    ? Theme.of(context).colorScheme.onSecondary
-                    : Theme.of(context).colorScheme.onSecondaryContainer,
+            backgroundColor: _isLiked
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).colorScheme.secondaryContainer,
+            foregroundColor: _isLiked
+                ? Theme.of(context).colorScheme.onSecondary
+                : Theme.of(context).colorScheme.onSecondaryContainer,
 
             onPressed: _toggleLike,
             child: Icon(
@@ -176,6 +175,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           // Start Reading button
           Expanded(
             child: FloatingActionButton(
+              heroTag: "read",
               elevation: 0.0,
               focusElevation: 0.0,
               hoverElevation: 0.0,
@@ -198,6 +198,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
           // Work Options
           FloatingActionButton(
+            heroTag: "options",
             elevation: 0.0,
             focusElevation: 0.0,
             hoverElevation: 0.0,
@@ -206,8 +207,8 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
             shape: CircleBorder(),
             backgroundColor: Theme.of(context).colorScheme.tertiary,
             foregroundColor: Theme.of(context).colorScheme.onTertiary,
-            onPressed:
-                () => WorkOptionsDialog.showSheet(context, work: widget.item),
+            onPressed: () =>
+                WorkOptionsDialog.showSheet(context, work: widget.item),
             child: Icon(TablerIcons.dots_vertical, size: 24.0),
           ),
         ],
@@ -772,7 +773,6 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   @override
   Widget buildExpandedAppBarWidget(BuildContext context) {
-    // No gradient - just a clean white background
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
       child: Column(
