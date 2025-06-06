@@ -663,7 +663,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
               child: Text(
                 "Work Information",
                 style: context.textTheme.titleMedium?.copyWith(
@@ -672,7 +672,10 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
               ),
             ),
 
-            Divider(color: theme.colorScheme.outlineVariant.withOpacity(0.3)),
+            Divider(
+              height: 1,
+              color: theme.colorScheme.outlineVariant.withOpacity(0.3),
+            ),
 
             // Grid of metadata items
             Padding(
