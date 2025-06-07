@@ -1,6 +1,7 @@
 import 'package:archiverse/components/cards/base_card.dart';
 import 'package:archiverse/components/items/series_item.dart';
 import 'package:archiverse/models/series.dart';
+import 'package:archiverse/views/activity_series.dart';
 import 'package:flutter/material.dart';
 
 class SeriesCard extends BaseCard<Series> {
@@ -23,6 +24,6 @@ class SeriesCard extends BaseCard<Series> {
     return SeriesItem(series: item);
   }
 
-  // @override
-  // String getRouteName() => AuthorActivity.routeName;
+  @override
+  String getRouteName() => SeriesActivity.routeName;
 }

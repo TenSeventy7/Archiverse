@@ -5,10 +5,12 @@
  */
 
 import 'package:archiverse/models/pseud.dart';
+import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_search.dart';
+import 'package:archiverse/views/activity_series.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_work.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
@@ -34,30 +36,30 @@ class AppRoutes {
     SearchActivity.routeName: (context) => const SearchActivity(),
     AboutActivity.routeName: (context) => const AboutActivity(),
     SettingsActivity.routeName: (context) => const SettingsActivity(),
-    TextSizeSettingsActivity.routeName:
-        (context) => const TextSizeSettingsActivity(),
-    FontSelectionSettingsActivity.routeName:
-        (context) => const FontSelectionSettingsActivity(),
-    ReadingLayoutSettingsActivity.routeName:
-        (context) => const ReadingLayoutSettingsActivity(),
-    ScrollingBehaviorSettingsActivity.routeName:
-        (context) => const ScrollingBehaviorSettingsActivity(),
-    ContentWarningsSettingsActivity.routeName:
-        (context) => const ContentWarningsSettingsActivity(),
-    RatingPreferencesActivity.routeName:
-        (context) => const RatingPreferencesActivity(),
-    TagFiltersSettingsActivity.routeName:
-        (context) => const TagFiltersSettingsActivity(),
-    BlockedContentActivity.routeName:
-        (context) => const BlockedContentActivity(),
-    AuthorFiltersSettingsActivity.routeName:
-        (context) => const AuthorFiltersSettingsActivity(),
-    DownloadsSettingsActivity.routeName:
-        (context) => const DownloadsSettingsActivity(),
-    CacheManagementActivity.routeName:
-        (context) => const CacheManagementActivity(),
-    ReadingHistorySettingsActivity.routeName:
-        (context) => const ReadingHistorySettingsActivity(),
+    TextSizeSettingsActivity.routeName: (context) =>
+        const TextSizeSettingsActivity(),
+    FontSelectionSettingsActivity.routeName: (context) =>
+        const FontSelectionSettingsActivity(),
+    ReadingLayoutSettingsActivity.routeName: (context) =>
+        const ReadingLayoutSettingsActivity(),
+    ScrollingBehaviorSettingsActivity.routeName: (context) =>
+        const ScrollingBehaviorSettingsActivity(),
+    ContentWarningsSettingsActivity.routeName: (context) =>
+        const ContentWarningsSettingsActivity(),
+    RatingPreferencesActivity.routeName: (context) =>
+        const RatingPreferencesActivity(),
+    TagFiltersSettingsActivity.routeName: (context) =>
+        const TagFiltersSettingsActivity(),
+    BlockedContentActivity.routeName: (context) =>
+        const BlockedContentActivity(),
+    AuthorFiltersSettingsActivity.routeName: (context) =>
+        const AuthorFiltersSettingsActivity(),
+    DownloadsSettingsActivity.routeName: (context) =>
+        const DownloadsSettingsActivity(),
+    CacheManagementActivity.routeName: (context) =>
+        const CacheManagementActivity(),
+    ReadingHistorySettingsActivity.routeName: (context) =>
+        const ReadingHistorySettingsActivity(),
     BackupRestoreActivity.routeName: (context) => const BackupRestoreActivity(),
   };
 
@@ -80,13 +82,20 @@ class AppRoutes {
           final pseud = args['pseud'] as Pseud;
           final fromAuthor = args['fromAuthor'] as bool;
           return MaterialPageRoute(
-            builder:
-                (context) =>
-                    AuthorActivity(author: pseud, fromAuthor: fromAuthor),
+            builder: (context) =>
+                AuthorActivity(author: pseud, fromAuthor: fromAuthor),
           );
         } else if (args is Pseud) {
           return MaterialPageRoute(
             builder: (context) => AuthorActivity(author: args),
+          );
+        }
+        return null;
+      case SeriesActivity.routeName:
+        final args = settings.arguments;
+        if (args is Series) {
+          return MaterialPageRoute(
+            builder: (context) => SeriesActivity(series: args),
           );
         }
         return null;
