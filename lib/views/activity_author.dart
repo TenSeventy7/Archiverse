@@ -6,6 +6,9 @@ import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
+import 'package:archiverse/components/suggestions/bookmark_suggestions.dart';
+import 'package:archiverse/components/suggestions/work_suggestions.dart';
+import 'package:archiverse/components/suggestions/series_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/pseuds_list_dialog.dart';
@@ -329,6 +332,152 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     );
   }
 
+  Widget _buildWorksSection(BuildContext context) {
+    if (_worksState == LoadingState.ERROR) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: LoadError.small(onPressed: _fetchWorks)),
+      );
+    } else if (_worksState == LoadingState.LOADING) {
+      return WorkSuggestions(works: Fillers.works, loading: true, elevation: 0);
+    } else if (_works == null || _works!.isEmpty) {
+      return Center(
+        child: ItemPlaceholder.small(
+          message: "No works found",
+          icon: TablerIcons.book_off,
+        ),
+      );
+    } else {
+      return WorkSuggestions(works: _works!, loading: false, elevation: 0);
+    }
+  }
+
+  Widget _buildSeriesSection(BuildContext context) {
+    if (_seriesState == LoadingState.ERROR) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: LoadError.small(onPressed: _fetchSeries)),
+      );
+    } else if (_seriesState == LoadingState.LOADING) {
+      return SeriesSuggestions(
+        series: Fillers.seriesList,
+        loading: true,
+        elevation: 0,
+      );
+    } else if (_series == null || _series!.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: ItemPlaceholder.small(
+            message: "No series found",
+            icon: TablerIcons.books_off,
+          ),
+        ),
+      );
+    } else {
+      return SeriesSuggestions(series: _series!, loading: false, elevation: 0);
+    }
+  }
+
+  Widget _buildBookmarksSection(BuildContext context) {
+    if (_bookmarksState == LoadingState.ERROR) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: LoadError.small(onPressed: _fetchBookmarks)),
+      );
+    } else if (_bookmarksState == LoadingState.LOADING) {
+      return BookmarkSuggestions.contentOnly(
+        bookmarks: Fillers.bookmarks,
+        loading: true,
+        elevation: 0,
+      );
+    } else if (_bookmarks == null || _bookmarks!.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: ItemPlaceholder.small(
+            message: "No bookmarks found",
+            icon: TablerIcons.bookmark_off,
+          ),
+        ),
+      );
+    } else {
+      return BookmarkSuggestions.contentOnly(
+        bookmarks: _bookmarks!,
+        loading: false,
+        elevation: 0,
+      );
+    }
+  }
+
+  Widget _buildContentSections(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Works Section
+        TextHeader.large(
+          title: "Works",
+          icon: TablerIcons.book_2,
+          onTap: () => Navigator.pushNamed(context, "", arguments: item),
+          actionText:
+              _worksState == LoadingState.ERROR ||
+                  _worksState == LoadingState.LOADING ||
+                  (_works?.isEmpty ?? true)
+              ? null
+              : Text("See more"),
+        ),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(
+            horizontal: context.commonPadding,
+          ),
+          child: _buildWorksSection(context),
+        ),
+
+        SizedBox(height: 16),
+
+        // Series Section
+        TextHeader.large(
+          title: "Series",
+          icon: TablerIcons.list_numbers,
+          onTap: () => Navigator.pushNamed(context, "", arguments: item),
+          actionText:
+              _seriesState == LoadingState.ERROR ||
+                  _seriesState == LoadingState.LOADING ||
+                  (_series?.isEmpty ?? true)
+              ? null
+              : Text("See more"),
+        ),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(
+            horizontal: context.commonPadding,
+          ),
+          child: _buildSeriesSection(context),
+        ),
+
+        SizedBox(height: 16),
+
+        // Bookmarks Section
+        TextHeader.large(
+          title: "Bookmarks",
+          icon: TablerIcons.bookmarks,
+          onTap: () => Navigator.pushNamed(context, "", arguments: item),
+          actionText:
+              _seriesState == LoadingState.ERROR ||
+                  _seriesState == LoadingState.LOADING ||
+                  (_series?.isEmpty ?? true)
+              ? null
+              : Text("See more"),
+        ),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(
+            horizontal: context.commonPadding,
+          ),
+          child: _buildBookmarksSection(context),
+        ),
+      ],
+    );
+  }
+
   Widget _buildStatCards(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
@@ -393,153 +542,6 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  // Replace _buildContentTabs with content sections
-  Widget _buildContentSections(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Works Section
-        _buildSection(
-          context,
-          "Works",
-          TablerIcons.book_2,
-          _worksState,
-          _fetchWorks,
-          _works,
-          (index) => WorkCard(work: _works![index]),
-          () => Navigator.pushNamed(context, "", arguments: item),
-          "No works found",
-          TablerIcons.book_off,
-        ),
-
-        // Bookmarks Section
-        _buildSection(
-          context,
-          "Bookmarks",
-          TablerIcons.bookmarks,
-          _bookmarksState,
-          _fetchBookmarks,
-          _bookmarks,
-          (index) => Card(
-            margin: EdgeInsets.only(bottom: 8.0),
-            child: ListTile(
-              title: Text(
-                _bookmarks![index].work?.title ??
-                    _bookmarks![index].series?.title ??
-                    "Unknown",
-              ),
-              subtitle: Text("Bookmarked work"),
-              leading: Icon(TablerIcons.bookmark),
-            ),
-          ),
-          () => Navigator.pushNamed(context, "", arguments: item),
-          "No bookmarks found",
-          TablerIcons.bookmark_off,
-        ),
-
-        // Series Section
-        _buildSection(
-          context,
-          "Series",
-          TablerIcons.list_numbers,
-          _seriesState,
-          _fetchSeries,
-          _series,
-          (index) => SeriesCard(series: _series![index]),
-          () => Navigator.pushNamed(context, "", arguments: item),
-          "No series found",
-          TablerIcons.books_off,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSection<T>(
-    BuildContext context,
-    String title,
-    IconData icon,
-    LoadingState loadingState,
-    Function() onRetry,
-    List<T>? items,
-    Widget Function(int) itemBuilder,
-    Function() onSeeMore,
-    String emptyMessage,
-    IconData emptyIcon,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextHeader.large(
-          title: title,
-          icon: icon,
-          onTap: onSeeMore,
-          actionText: Text("See more"),
-        ),
-
-        if (loadingState == LoadingState.LOADING)
-          _buildHorizontalLoadingList(context)
-        else if (loadingState == LoadingState.ERROR)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(child: LoadError.small(onPressed: onRetry)),
-          )
-        else if (items == null || items.isEmpty)
-          Center(
-            child: ItemPlaceholder.small(
-              message: emptyMessage,
-              icon: emptyIcon,
-            ),
-          )
-        else
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.all(8.0),
-            itemCount: items.length > 5 ? 5 : items.length, // Show max 5 items
-            itemBuilder: (context, index) {
-              return itemBuilder(index);
-            },
-          ),
-      ],
-    );
-  }
-
-  Widget _buildHorizontalLoadingList(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 3,
-        itemBuilder: (_, __) => Skeletonizer(
-          enabled: true,
-          child: Card(
-            margin: EdgeInsets.only(bottom: 16.0),
-            child: Container(height: 100),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context, String message, IconData icon) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 48, color: Theme.of(context).colorScheme.outline),
-          SizedBox(height: 16),
-          Text(
-            message,
-            style: context.textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ),
-        ],
       ),
     );
   }
