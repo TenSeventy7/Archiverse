@@ -371,24 +371,26 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     Color color,
   ) {
     return Expanded(
-      child: Card(
-        elevation: 0,
-        color: color.withOpacity(0.1),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 24),
-              SizedBox(height: 8),
-              Text(
-                value,
-                style: context.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
+      child: Skeleton.leaf(
+        child: Card(
+          elevation: 0,
+          color: color.withOpacity(0.1),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Column(
+              children: [
+                Icon(icon, color: color, size: 24),
+                SizedBox(height: 8),
+                Text(
+                  value,
+                  style: context.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
                 ),
-              ),
-              Text(label, style: context.textTheme.bodySmall),
-            ],
+                Text(label, style: context.textTheme.bodySmall),
+              ],
+            ),
           ),
         ),
       ),
