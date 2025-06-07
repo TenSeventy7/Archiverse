@@ -21,7 +21,7 @@ class _RatingInfoActivity extends StatelessWidget {
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        padding: EdgeInsetsGeometry.all(16.0),
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.0, vertical: 14.0),
         color: context.theme.colorScheme.surfaceContainer,
         child: Row(
           spacing: 16.0,
@@ -30,6 +30,14 @@ class _RatingInfoActivity extends StatelessWidget {
               child: FilledButton.tonalIcon(
                 onPressed: () => {
                   // TODO: Implement learn more action
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      content: Text(
+                        "This should open a web page with more info.",
+                      ),
+                    ),
+                  ),
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
