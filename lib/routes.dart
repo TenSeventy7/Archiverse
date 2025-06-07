@@ -12,6 +12,7 @@ import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_series.dart';
 import 'package:archiverse/views/activity_settings.dart';
+import 'package:archiverse/views/activity_signin.dart';
 import 'package:archiverse/views/activity_work.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
@@ -60,6 +61,7 @@ class AppRoutes {
         const CacheManagementActivity(),
     ReadingHistorySettingsActivity.routeName: (context) =>
         const ReadingHistorySettingsActivity(),
+    SignInActivity.routeName: (context) => const SignInActivity(),
     BackupRestoreActivity.routeName: (context) => const BackupRestoreActivity(),
   };
 

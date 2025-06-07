@@ -3,6 +3,7 @@ import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_settings.dart';
+import 'package:archiverse/views/activity_signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -72,6 +73,7 @@ class _UserFragmentState extends State<UserFragment> {
             FilledButton.tonal(
               onPressed: () {
                 // TODO: Open profile page
+                context.navigator.pushNamed(SignInActivity.routeName);
               },
               child: const Text('View Profile'),
             ),
