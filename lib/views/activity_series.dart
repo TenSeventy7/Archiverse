@@ -1,4 +1,5 @@
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/components/bookmarks_card.dart';
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
@@ -7,6 +8,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/authors_list_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/loading_states.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
@@ -35,6 +37,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
   SeriesDetailState() : super(Fillers.series);
 
   // State variables
+  List<Bookmark>? _bookmarks;
   final PagingController<int, Work> _worksController = PagingController(
     firstPageKey: 1,
   );
@@ -59,6 +62,27 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
   void onItemLoaded() {
     // Fetch initial works when item is loaded
     _fetchInitialWorks();
+    _fetchBookmarks();
+  }
+
+  void _fetchBookmarks() async {
+    try {
+      List<Bookmark> bookmarks = await Ao3Api().getBookmarksFromSeries(
+        item,
+        page: 1,
+      );
+      if (mounted) {
+        setState(() {
+          _bookmarks = bookmarks;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _bookmarks = null;
+        });
+      }
+    }
   }
 
   // Add this method
@@ -174,10 +198,36 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
         ),
       ),
       _buildWorksSliver(context),
+
+      // Bookmarks preview if available
+      if (_bookmarks != null && _bookmarks!.isNotEmpty)
+        SliverToBoxAdapter(child: _buildBookmarksSection(context)),
+
       SliverToBoxAdapter(
         child: SizedBox(height: context.screenPadding.bottom + 24.0),
       ),
     ];
+  }
+
+  Widget _buildBookmarksSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextHeader.medium(
+            title: "Recent Bookmarks",
+            actionText: Text("See all"),
+            onTap: () {},
+            hasPadding: false,
+          ),
+
+          const SizedBox(height: 8),
+
+          BookmarksCard(bookmarks: _bookmarks, context: context),
+        ],
+      ),
+    );
   }
 
   Widget _buildSeriesInfo(BuildContext context) {
