@@ -108,10 +108,10 @@ class _AuthorsListDialog extends StatelessWidget {
         leading: CircleAvatar(
           radius: isGrid ? 20 : 28,
           child: EnhancedFutureBuilder(
-            future: Ao3Api().getUser(author),
+            future: Ao3Api().getPseud(author),
             rememberFutureResult: true,
-            whenDone:
-                (author) => UserImage(context: context, user: author, size: 24),
+            whenDone: (author) =>
+                UserImage(context: context, user: author, size: 24),
             whenNotDone: UserImage(context: context, user: author, size: 24),
           ),
         ),
@@ -134,10 +134,9 @@ class _AuthorsListDialog extends StatelessWidget {
             Text(
               author.isPseud ? "(${author.name})" : author.name,
               style: context.textTheme.titleSmall?.copyWith(
-                color:
-                    author.isPseud
-                        ? context.colorScheme.onSurfaceVariant
-                        : null,
+                color: author.isPseud
+                    ? context.colorScheme.onSurfaceVariant
+                    : null,
                 fontWeight: !author.isPseud ? FontWeight.w600 : null,
                 fontSize: !author.isPseud ? 18 : null,
               ),
