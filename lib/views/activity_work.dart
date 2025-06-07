@@ -144,77 +144,49 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   @override
-  Widget? buildBottomBar(BuildContext context) {
+  List<Widget>? buildBottomBar(BuildContext context) {
     if (state == LoadingState.ERROR) return null;
 
-    return BottomAppBar(
-      height: 76,
-      child: Row(
-        spacing: 12.0,
-        children: [
-          FloatingActionButton(
-            heroTag: "like",
-            elevation: 0.0,
-            focusElevation: 0.0,
-            hoverElevation: 0.0,
-            highlightElevation: 0.0,
-            disabledElevation: 0.0,
-            shape: CircleBorder(),
-            backgroundColor: _isLiked
-                ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.secondaryContainer,
-            foregroundColor: _isLiked
-                ? Theme.of(context).colorScheme.onSecondary
-                : Theme.of(context).colorScheme.onSecondaryContainer,
-
-            onPressed: _toggleLike,
-            child: Icon(
-              _isLiked ? TablerIcons.heart_filled : TablerIcons.heart,
-              size: 24.0,
-            ),
-          ),
-
-          // Start Reading button
-          Expanded(
-            child: FloatingActionButton(
-              heroTag: "read",
-              elevation: 0.0,
-              focusElevation: 0.0,
-              hoverElevation: 0.0,
-              highlightElevation: 0.0,
-              disabledElevation: 0.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(48),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              onPressed: _startReading,
-              child: Text(
-                "Start Reading",
-                style: context.textTheme.titleMedium?.copyWith(
-                  color: context.colorScheme.onPrimary,
-                ),
-              ),
-            ),
-          ),
-
-          // Work Options
-          FloatingActionButton(
-            heroTag: "options",
-            elevation: 0.0,
-            focusElevation: 0.0,
-            hoverElevation: 0.0,
-            highlightElevation: 0.0,
-            disabledElevation: 0.0,
-            shape: CircleBorder(),
-            backgroundColor: Theme.of(context).colorScheme.tertiary,
-            foregroundColor: Theme.of(context).colorScheme.onTertiary,
-            onPressed: () =>
-                WorkOptionsDialog.showSheet(context, work: widget.item),
-            child: Icon(TablerIcons.dots_vertical, size: 24.0),
-          ),
-        ],
+    return [
+      IconButton(
+        onPressed: _toggleLike,
+        icon: Icon(
+          _isLiked ? TablerIcons.heart_filled : TablerIcons.heart,
+          size: 22.0,
+        ),
       ),
+
+      IconButton(
+        onPressed: () {
+          // TODO
+        },
+        icon: Icon(TablerIcons.message, size: 22.0),
+      ),
+
+      IconButton(
+        onPressed: () {
+          // TODO
+        },
+        icon: Icon(TablerIcons.share, size: 22.0),
+      ),
+
+      // Work Options
+      IconButton(
+        onPressed: () =>
+            WorkOptionsDialog.showSheet(context, work: widget.item),
+        icon: Icon(TablerIcons.dots_vertical, size: 22.0),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildBottomActionButton(BuildContext context) {
+    return FloatingActionButton(
+      heroTag: "read",
+      backgroundColor: context.colorScheme.tertiaryContainer,
+      foregroundColor: context.colorScheme.onTertiaryContainer,
+      onPressed: () {},
+      child: Icon(TablerIcons.book, size: 20.0),
     );
   }
 
