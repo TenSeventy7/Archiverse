@@ -47,6 +47,12 @@ class Tag {
   String get encodedName =>
       name.replaceAll(".", "*d*").replaceAll("/", "*s*").replaceAll("&", "*a*");
 
+  bool get isRomanticRelationship =>
+      type == TagType.RELATIONSHIP && name.toLowerCase().contains("/");
+
+  bool get isPlatonicRelationship =>
+      type == TagType.RELATIONSHIP && !isRomanticRelationship;
+
   Tag copyWith({
     String? name,
     int? count,
