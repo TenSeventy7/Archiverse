@@ -1,6 +1,8 @@
 import 'package:archiverse/components/cards/base_card.dart';
 import 'package:archiverse/components/items/bookmark_item.dart';
 import 'package:archiverse/models/bookmark.dart';
+import 'package:archiverse/views/activity_series.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 
 class BookmarkCard extends BaseCard<Bookmark> {
@@ -32,6 +34,25 @@ class BookmarkCard extends BaseCard<Bookmark> {
     return BookmarkItem(bookmark: item, displayMode: displayMode);
   }
 
-  // @override
-  // String getRouteName() => SeriesActivity.routeName;
+  @override
+  void onTap(BuildContext context) {
+    if (item.series != null) {
+      Navigator.pushNamed(
+        context,
+        SeriesActivity.routeName,
+        arguments: item.series,
+      );
+    } else if (item.work != null) {
+      Navigator.pushNamed(
+        context,
+        WorkActivity.routeName,
+        arguments: item.work,
+      );
+    } else {
+      SnackBar snackBar = SnackBar(
+        content: Text('No series or work associated with this bookmark.'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
 }
