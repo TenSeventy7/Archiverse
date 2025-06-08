@@ -27,8 +27,8 @@ class TagBookmarkItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Bookmarks section
-        _buildBookmarksSection(context, colorScheme),
+        // Work/Series content section
+        _buildContentSection(context, colorScheme),
 
         const SizedBox(height: 18),
         Divider(
@@ -38,8 +38,8 @@ class TagBookmarkItem extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Work/Series content section
-        _buildContentSection(context, colorScheme),
+        // Bookmarks section
+        _buildBookmarksSection(context, colorScheme),
       ],
     );
   }
@@ -48,23 +48,6 @@ class TagBookmarkItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header with bookmark count
-        Row(
-          children: [
-            Icon(TablerIcons.bookmarks, size: 20, color: colorScheme.primary),
-            const SizedBox(width: 8),
-            Text(
-              "${tagBookmark.bookmarks.length} Bookmark${tagBookmark.bookmarks.length != 1 ? 's' : ''}",
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
         // Individual bookmarks
         ...tagBookmark.bookmarks.asMap().entries.map((entry) {
           final index = entry.key;
@@ -86,7 +69,7 @@ class TagBookmarkItem extends StatelessWidget {
               ],
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -111,6 +94,7 @@ class TagBookmarkItem extends StatelessWidget {
             children: [
               // User info and date
               Row(
+                spacing: 12.0,
                 children: [
                   Expanded(
                     child: Row(
@@ -125,10 +109,14 @@ class TagBookmarkItem extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          bookmark.user.pseud,
-                          style: context.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
+                        Expanded(
+                          child: Text(
+                            bookmark.user.pseud,
+                            style: context.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],
