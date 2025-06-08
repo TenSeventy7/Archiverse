@@ -569,6 +569,12 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                     .map(
                       (tag) => ActionChip(
                         avatar: _getTagIconFor(entry.key),
+                        backgroundColor: context.colorScheme.surfaceVariant
+                            .withOpacity(0.3),
+                        side: BorderSide(
+                          color: context.colorScheme.outline.withOpacity(0.2),
+                          width: 1,
+                        ),
                         label: Text(tag.name),
                         onPressed: () {
                           Navigator.pushNamed(
