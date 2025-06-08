@@ -189,7 +189,11 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: EdgeInsets.all(context.commonPaddingDouble),
+      padding: EdgeInsets.only(
+        top: context.commonPaddingDouble,
+        left: context.commonPaddingDouble,
+        right: context.commonPaddingDouble,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -240,8 +244,10 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
                 ),
             ],
           ),
-          SizedBox(height: 24),
-          _buildCanonicalCard(context),
+          if (item.canonical) ...[
+            SizedBox(height: 24),
+            _buildCanonicalCard(context),
+          ],
         ],
       ),
     );
@@ -249,8 +255,6 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
   Widget _buildCanonicalCard(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    if (!item.canonical) return SizedBox.shrink();
 
     return Card.filled(
       elevation: 0,
