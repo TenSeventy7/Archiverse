@@ -21,7 +21,12 @@ class _RatingInfoActivity extends StatelessWidget {
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.0, vertical: 14.0),
+        padding: EdgeInsetsGeometry.only(
+          left: 16.0,
+          right: 16.0,
+          top: 14.0,
+          bottom: 14.0 + context.screenInsets.bottom,
+        ),
         color: context.theme.colorScheme.surfaceContainer,
         child: Row(
           spacing: 16.0,
