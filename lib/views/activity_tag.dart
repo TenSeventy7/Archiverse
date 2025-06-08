@@ -302,19 +302,6 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
-          // Add relationship type indicator for relationship tags
-          if (tag.type == TagType.RELATIONSHIP) ...[
-            SizedBox(width: 2),
-            Icon(
-              tag.isRomanticRelationship
-                  ? TablerIcons.heart
-                  : TablerIcons.user_plus,
-              size: 10,
-              color: tag.isRomanticRelationship
-                  ? colorScheme.error.withOpacity(0.8)
-                  : colorScheme.onSurfaceVariant.withOpacity(0.8),
-            ),
-          ],
         ],
       ),
       label: Text(tag.name),
