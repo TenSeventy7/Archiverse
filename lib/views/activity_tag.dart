@@ -1,4 +1,5 @@
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
 import 'package:archiverse/components/suggestions/bookmark_suggestions.dart';
@@ -482,34 +483,10 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
     } else if (_works == null || _works!.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            children: [
-              Icon(
-                TablerIcons.book_off,
-                size: 48,
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-              ),
-              SizedBox(height: 16),
-              Text(
-                "No works found",
-                style: context.textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "This tag doesn't have any associated works yet.",
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.8),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          padding: const EdgeInsets.all(8.0),
+          child: ItemPlaceholder.small(
+            message: "No works found",
+            icon: TablerIcons.book_off,
           ),
         ),
       );
@@ -566,34 +543,10 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
     } else if (_bookmarks == null || _bookmarks!.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            children: [
-              Icon(
-                TablerIcons.bookmark_off,
-                size: 48,
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-              ),
-              SizedBox(height: 16),
-              Text(
-                "No bookmarks found",
-                style: context.textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "This tag doesn't have any associated bookmarks yet.",
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withOpacity(0.8),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          padding: const EdgeInsets.all(8.0),
+          child: ItemPlaceholder.small(
+            message: "No bookmarks found",
+            icon: TablerIcons.bookmark_off,
           ),
         ),
       );
