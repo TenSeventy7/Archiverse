@@ -6,6 +6,7 @@
 
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
+import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
@@ -13,6 +14,7 @@ import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_series.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_signin.dart';
+import 'package:archiverse/views/activity_tag.dart';
 import 'package:archiverse/views/activity_work.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
@@ -98,6 +100,14 @@ class AppRoutes {
         if (args is Series) {
           return MaterialPageRoute(
             builder: (context) => SeriesActivity(series: args),
+          );
+        }
+        return null;
+      case TagActivity.routeName:
+        final args = settings.arguments;
+        if (args is Tag) {
+          return MaterialPageRoute(
+            builder: (context) => TagActivity(tag: args),
           );
         }
         return null;

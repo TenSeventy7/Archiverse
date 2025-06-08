@@ -1,6 +1,7 @@
 import 'package:archiverse/components/cards/base_card.dart';
 import 'package:archiverse/components/items/tag_item.dart';
 import 'package:archiverse/models/tag.dart';
+import 'package:archiverse/views/activity_tag.dart';
 import 'package:flutter/material.dart';
 
 class TagCard extends BaseCard<Tag> {
@@ -18,6 +19,6 @@ class TagCard extends BaseCard<Tag> {
     return TagItem(tag: item);
   }
 
-  // @override
-  // String getRouteName() => 'tag';
+  @override
+  String getRouteName() => TagActivity.routeName;
 }
