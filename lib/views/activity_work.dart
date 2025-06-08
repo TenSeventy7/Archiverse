@@ -21,6 +21,7 @@ import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
 import 'package:archiverse/components/work_metadata_item.dart';
+import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -577,9 +578,8 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                         ),
                         label: Text(tag.name),
                         onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            "", // TODO: Add TagDetail.routeName
+                          context.navigator.pushNamed(
+                            TagWorksActivity.routeName,
                             arguments: tag,
                           );
                         },
