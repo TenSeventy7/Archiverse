@@ -16,6 +16,7 @@ import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_signin.dart';
 import 'package:archiverse/views/activity_tag.dart';
 import 'package:archiverse/views/activity_work.dart';
+import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
 import 'package:archiverse/views/settings/activity_blocked_content_settings.dart';
@@ -108,6 +109,14 @@ class AppRoutes {
         if (args is Tag) {
           return MaterialPageRoute(
             builder: (context) => TagActivity(tag: args),
+          );
+        }
+        return null;
+      case TagWorksActivity.routeName:
+        final args = settings.arguments;
+        if (args is Tag) {
+          return MaterialPageRoute(
+            builder: (context) => TagWorksActivity(tag: args),
           );
         }
         return null;

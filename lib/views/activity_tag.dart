@@ -15,6 +15,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
+import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -458,7 +459,10 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
             icon: TablerIcons.book_2,
             onTap:
                 _worksState == LoadingState.LOADED && _works?.isNotEmpty == true
-                ? () => Navigator.pushNamed(context, "", arguments: item)
+                ? () => context.navigator.pushNamed(
+                    TagWorksActivity.routeName,
+                    arguments: item,
+                  )
                 : null,
             actionText:
                 _worksState == LoadingState.LOADED && _works?.isNotEmpty == true
