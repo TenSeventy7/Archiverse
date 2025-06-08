@@ -77,7 +77,7 @@ class BookmarkItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Bookmark type chip
-        _buildBookmarkTypeChip(context, colorScheme),
+        Skeleton.unite(child: _buildBookmarkTypeChip(context, colorScheme)),
 
         // Date of bookmark
         Row(
