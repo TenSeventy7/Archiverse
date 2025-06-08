@@ -75,7 +75,7 @@ class TagWorksActivityState extends CommonListActivityState<Work> {
               maxRadius: 32.0,
               backgroundColor: context.colorScheme.primaryContainer,
               child: EnhancedFutureBuilder(
-                future: Ao3Api().getUser(author),
+                future: Ao3Api().getPseud(author),
                 rememberFutureResult: false,
                 whenDone: (author) =>
                     UserImage(context: context, user: author, size: 32),
