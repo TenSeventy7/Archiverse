@@ -16,6 +16,7 @@ import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_signin.dart';
 import 'package:archiverse/views/activity_tag.dart';
 import 'package:archiverse/views/activity_work.dart';
+import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
@@ -126,6 +127,14 @@ class AppRoutes {
         if (args is Pseud) {
           return MaterialPageRoute(
             builder: (context) => AuthorWorksActivity(author: args),
+          );
+        }
+        return null;
+      case AuthorSeriesActivity.routeName:
+        final args = settings.arguments;
+        if (args is Pseud) {
+          return MaterialPageRoute(
+            builder: (context) => AuthorSeriesActivity(author: args),
           );
         }
         return null;

@@ -21,6 +21,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
+import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
@@ -443,7 +444,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         TextHeader.large(
           title: "Series",
           icon: TablerIcons.list_numbers,
-          onTap: () => Navigator.pushNamed(context, "", arguments: item),
+          onTap: () => context.navigator.pushNamed(
+            AuthorSeriesActivity.routeName,
+            arguments: item,
+          ),
           actionText:
               _seriesState == LoadingState.ERROR ||
                   _seriesState == LoadingState.LOADING ||
