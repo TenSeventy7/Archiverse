@@ -38,12 +38,12 @@ class TagWorksActivityState extends CommonListActivityState<Work> {
 
   @override
   Widget buildTitle(BuildContext context) {
-    return Text(tag.name, maxLines: 2, overflow: TextOverflow.ellipsis);
+    return Text(tag.name, maxLines: 1, overflow: TextOverflow.ellipsis);
   }
 
   @override
   double getExpandedHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height * 0.26;
+    return MediaQuery.of(context).size.height * 0.3;
   }
 
   @override
