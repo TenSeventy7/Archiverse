@@ -598,7 +598,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
                     // For pseuds, show the main username
                     if (item.isPseud)
                       Text(
-                        item.name,
+                        "(${item.name})",
                         style: context.textTheme.titleMedium?.copyWith(
                           color: colorScheme.onSurface.withAlpha(170),
                         ),

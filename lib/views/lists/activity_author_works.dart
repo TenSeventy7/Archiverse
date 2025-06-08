@@ -106,7 +106,7 @@ class TagWorksActivityState extends CommonListActivityState<Work> {
                   // For pseuds, show the main username
                   if (author.isPseud)
                     Text(
-                      author.name,
+                      "(${author.name})",
                       style: context.textTheme.titleSmall?.copyWith(
                         color: colorScheme.onSurface.withAlpha(170),
                       ),
