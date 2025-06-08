@@ -1,11 +1,15 @@
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
+import 'package:archiverse/components/suggestions/bookmark_suggestions.dart';
+import 'package:archiverse/components/suggestions/tag_bookmark_suggestions.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/loading_states.dart';
 import 'package:archiverse/models/tag.dart';
+import 'package:archiverse/models/tag_bookmark.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
@@ -28,9 +32,11 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
   // Content sections
   List<Work>? _works;
+  List<TagBookmark>? _bookmarks;
 
   // Loading states
   LoadingState _worksState = LoadingState.LOADING;
+  LoadingState _bookmarksState = LoadingState.LOADING;
 
   // Expansion states for tag sections
   bool _parentsExpanded = false;
@@ -42,6 +48,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
   @override
   void onItemLoaded() {
     _fetchWorks();
+    _fetchBookmarks();
   }
 
   Future<void> _fetchWorks() async {
@@ -62,6 +69,29 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
       if (mounted) {
         setState(() {
           _worksState = LoadingState.ERROR;
+        });
+      }
+    }
+  }
+
+  Future<void> _fetchBookmarks() async {
+    setState(() {
+      _bookmarksState = LoadingState.LOADING;
+    });
+
+    try {
+      final bookmarks = await Ao3Api().getBookmarksFromTag(item);
+
+      if (mounted) {
+        setState(() {
+          _bookmarks = bookmarks;
+          _bookmarksState = LoadingState.LOADED;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _bookmarksState = LoadingState.ERROR;
         });
       }
     }
@@ -143,6 +173,8 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
               ),
 
             _buildWorksSection(context),
+
+            _buildBookmarksSection(context),
 
             // Add some space at the bottom
             SizedBox(height: context.screenPadding.bottom + 24.0),
@@ -483,6 +515,90 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
       );
     } else {
       return WorkSuggestions(works: _works!, loading: false, elevation: 0);
+    }
+  }
+
+  _buildBookmarksSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextHeader.large(
+            title: "Bookmarks",
+            icon: TablerIcons.bookmark,
+            onTap:
+                _bookmarksState == LoadingState.LOADED &&
+                    _bookmarks?.isNotEmpty == true
+                ? () => Navigator.pushNamed(context, "", arguments: item)
+                : null,
+            actionText:
+                _bookmarksState == LoadingState.LOADED &&
+                    _bookmarks?.isNotEmpty == true
+                ? Text("See all")
+                : null,
+            hasPadding: false,
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+          ),
+
+          SizedBox(height: 8),
+
+          _buildBookmarksContent(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBookmarksContent(BuildContext context) {
+    if (_bookmarksState == LoadingState.ERROR) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: LoadError.small(onPressed: _fetchBookmarks)),
+      );
+    } else if (_bookmarksState == LoadingState.LOADING) {
+      return Skeletonizer(
+        child: TagBookmarkSuggestions(
+          tagBookmarks: Fillers.tagBookmarks,
+          loading: true,
+          elevation: 0,
+        ),
+      );
+    } else if (_bookmarks == null || _bookmarks!.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            children: [
+              Icon(
+                TablerIcons.bookmark_off,
+                size: 48,
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withOpacity(0.6),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "No bookmarks found",
+                style: context.textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "This tag doesn't have any associated bookmarks yet.",
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withOpacity(0.8),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return TagBookmarkSuggestions(tagBookmarks: _bookmarks!, loading: false);
     }
   }
 
