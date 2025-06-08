@@ -42,38 +42,33 @@ class SeriesItem extends StatelessWidget {
           children: [
             _buildLastUpdatedRow(context, future),
             // Series indicator badge
-            if (!small) ...[
-              Skeleton.unite(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.tertiaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        TablerIcons.books,
-                        size: 12,
+            Skeleton.unite(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      TablerIcons.books,
+                      size: 12,
+                      color: colorScheme.onTertiaryContainer,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      "Series",
+                      style: context.textTheme.labelSmall?.copyWith(
                         color: colorScheme.onTertiaryContainer,
+                        fontWeight: FontWeight.w500,
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "Series",
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onTertiaryContainer,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ],
         ),
 
