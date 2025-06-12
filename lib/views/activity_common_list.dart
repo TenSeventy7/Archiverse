@@ -33,6 +33,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
   double? getExpandedHeight(BuildContext context) => null;
   Widget? buildSeparator(BuildContext context, int index) =>
       const Divider(height: 1);
+  bool get isSelectable => true;
 
   @override
   void initState() {
@@ -76,10 +77,17 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
     );
   }
 
+  EdgeInsets get padding =>
+      EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0);
+
   Widget _buildItemWidget(BuildContext context, T item, int index) {
+    if (!isSelectable) {
+      return buildItemWidget(context, item, index);
+    }
+
     return ListTile(
       title: buildItemWidget(context, item, index),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+      contentPadding: padding,
       onTap: () => onItemTap(item),
     );
   }
