@@ -427,7 +427,8 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
           actionText:
               _worksState == LoadingState.ERROR ||
                   _worksState == LoadingState.LOADING ||
-                  (_works?.isEmpty ?? true)
+                  (_works?.isEmpty ?? true) ||
+                  (_works?.length ?? 0) < 5
               ? null
               : Text("See more"),
         ),
@@ -451,7 +452,8 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
           actionText:
               _seriesState == LoadingState.ERROR ||
                   _seriesState == LoadingState.LOADING ||
-                  (_series?.isEmpty ?? true)
+                  (_series?.isEmpty ?? true) ||
+                  (_series?.length ?? 0) < 5
               ? null
               : Text("See more"),
         ),
