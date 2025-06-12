@@ -5,6 +5,7 @@ abstract class BaseCard<T> extends StatelessWidget {
   final double? elevation;
   final EdgeInsetsGeometry contentPadding;
   final BorderRadius borderRadius;
+  final bool isSelectable;
 
   const BaseCard({
     super.key,
@@ -12,6 +13,7 @@ abstract class BaseCard<T> extends StatelessWidget {
     this.elevation,
     this.contentPadding = const EdgeInsets.all(16.0),
     this.borderRadius = const BorderRadius.all(Radius.circular(16.0)),
+    this.isSelectable = true,
   });
 
   @override
@@ -19,20 +21,28 @@ abstract class BaseCard<T> extends StatelessWidget {
     return Card.outlined(
       elevation: elevation ?? 0,
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        borderRadius: borderRadius,
-        onTap: () => onTap(context),
-        onLongPress: onLongPress != null ? () => onLongPress!(context) : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            buildHeader(context),
-            Padding(padding: contentPadding, child: buildContent(context)),
-            buildFooter(context),
-          ],
-        ),
-      ),
+      child: isSelectable
+          ? InkWell(
+              borderRadius: borderRadius,
+              onTap: () => onTap(context),
+              onLongPress: onLongPress != null
+                  ? () => onLongPress!(context)
+                  : null,
+              child: _buildCardContent(context),
+            )
+          : _buildCardContent(context),
+    );
+  }
+
+  Widget _buildCardContent(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        buildHeader(context),
+        Padding(padding: contentPadding, child: buildContent(context)),
+        buildFooter(context),
+      ],
     );
   }
 
