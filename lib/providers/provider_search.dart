@@ -10,6 +10,8 @@ import 'package:archiverse/views/search/fragment_tag_results.dart';
 import 'package:archiverse/views/search/fragment_work_results.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:async';
+
 /// Routes configuration for search navigation
 class _SearchRoutes {
   static final Map<String, Widget> routes = {
@@ -56,6 +58,11 @@ class SearchProvider extends ChangeNotifier {
   bool _suggestionsLoading = false;
   List<String> _suggestions = [];
 
+  // Debouncing
+  Timer? _debounceTimer;
+  static const Duration _debounceDuration = Duration(milliseconds: 500);
+  static const int _minCharactersForSuggestions = 3;
+
   // History and trending data
   final List<String> _recentSearches = [
     'Harry Potter fanfiction',
@@ -96,9 +103,17 @@ class SearchProvider extends ChangeNotifier {
     // Skip listener logic if we're programmatically changing text
     if (_isProgrammaticTextChange) return;
 
-    if (controller.text.isNotEmpty) {
+    // Cancel previous timer
+    _debounceTimer?.cancel();
+
+    if (controller.text.isNotEmpty &&
+        controller.text.length >= _minCharactersForSuggestions) {
       _isShowingSuggestions = true;
-      _updateSuggestions(controller.text);
+
+      // Start debounce timer
+      _debounceTimer = Timer(_debounceDuration, () {
+        _updateSuggestions(controller.text);
+      });
     } else {
       _isShowingSuggestions = false;
       _suggestions = [];
@@ -159,7 +174,7 @@ class SearchProvider extends ChangeNotifier {
 
   /// Fetches autocomplete suggestions for the input
   void _updateSuggestions(String input) async {
-    if (input.isEmpty) {
+    if (input.isEmpty || input.length < _minCharactersForSuggestions) {
       _suggestions = [];
       notifyListeners();
       return;
@@ -236,6 +251,7 @@ class SearchProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     controller.removeListener(_onTextChanged);
     controller.dispose();
     focusNode.dispose();
