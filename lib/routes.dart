@@ -20,6 +20,7 @@ import 'package:archiverse/views/lists/activity_author_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
 import 'package:archiverse/views/lists/activity_series_bookmarks.dart';
+import 'package:archiverse/views/lists/activity_tag_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/lists/activity_work_bookmarks.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
@@ -163,6 +164,14 @@ class AppRoutes {
         if (args is Pseud) {
           return MaterialPageRoute(
             builder: (context) => AuthorBookmarksActivity(author: args),
+          );
+        }
+        return null;
+      case TagBookmarksActivity.routeName:
+        final args = settings.arguments;
+        if (args is Tag) {
+          return MaterialPageRoute(
+            builder: (context) => TagBookmarksActivity(tag: args),
           );
         }
         return null;

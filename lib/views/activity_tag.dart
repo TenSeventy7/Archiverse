@@ -15,6 +15,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
+import 'package:archiverse/views/lists/activity_tag_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -502,7 +503,10 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
             onTap:
                 _bookmarksState == LoadingState.LOADED &&
                     _bookmarks?.isNotEmpty == true
-                ? () => Navigator.pushNamed(context, "", arguments: item)
+                ? () => context.navigator.pushNamed(
+                    TagBookmarksActivity.routeName,
+                    arguments: item,
+                  )
                 : null,
             actionText:
                 _bookmarksState == LoadingState.LOADED &&
