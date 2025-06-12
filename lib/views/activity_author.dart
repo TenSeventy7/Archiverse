@@ -388,7 +388,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         child: Center(child: LoadError.small(onPressed: _fetchBookmarks)),
       );
     } else if (_bookmarksState == LoadingState.LOADING) {
-      return BookmarkSuggestions.contentOnly(
+      return BookmarkSuggestions.contentWithNotes(
         bookmarks: Fillers.bookmarks,
         loading: true,
         elevation: 0,
@@ -404,7 +404,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         ),
       );
     } else {
-      return BookmarkSuggestions.contentOnly(
+      return BookmarkSuggestions.contentWithNotes(
         bookmarks: _bookmarks!,
         loading: false,
         elevation: 0,
