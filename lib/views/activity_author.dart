@@ -472,9 +472,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
           icon: TablerIcons.bookmarks,
           onTap: () => Navigator.pushNamed(context, "", arguments: item),
           actionText:
-              _seriesState == LoadingState.ERROR ||
-                  _seriesState == LoadingState.LOADING ||
-                  (_series?.isEmpty ?? true)
+              _bookmarksState == LoadingState.ERROR ||
+                  _bookmarksState == LoadingState.LOADING ||
+                  (_bookmarks?.isEmpty ?? true) ||
+                  (_bookmarks?.length ?? 0) < 5
               ? null
               : Text("See more"),
         ),
