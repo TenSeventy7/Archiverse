@@ -27,6 +27,13 @@ class BookmarkCard extends BaseCard<Bookmark> {
     this.displayMode = BookmarkItemDisplayMode.contentOnly,
   }) : super(item: bookmark);
 
+  const BookmarkCard.contentWithNotes({
+    super.key,
+    required Bookmark bookmark,
+    super.elevation,
+    this.displayMode = BookmarkItemDisplayMode.contentWithNotes,
+  }) : super(item: bookmark);
+
   final BookmarkItemDisplayMode displayMode;
 
   @override

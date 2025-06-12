@@ -34,6 +34,16 @@ class BookmarkSuggestions extends BaseSuggestions<Bookmark, BookmarkCard> {
   }) : displayMode = BookmarkItemDisplayMode.contentOnly,
        super(items: bookmarks, maxItems: 5);
 
+  const BookmarkSuggestions.contentWithNotes({
+    super.key,
+    required List<Bookmark> bookmarks,
+    required super.loading,
+    super.header,
+    super.footer,
+    super.elevation,
+  }) : displayMode = BookmarkItemDisplayMode.contentWithNotes,
+       super(items: bookmarks, maxItems: 5);
+
   final BookmarkItemDisplayMode displayMode;
 
   @override

@@ -23,6 +23,9 @@ enum BookmarkItemDisplayMode {
 
   /// Show only the work/series content with bookmark type indicator
   contentOnly,
+
+  /// Show the content with bookmark notes and recommendation notes but no bookmarkee info
+  contentWithNotes,
 }
 
 class BookmarkItem extends StatelessWidget {
@@ -41,6 +44,9 @@ class BookmarkItem extends StatelessWidget {
   const BookmarkItem.contentOnly({super.key, required this.bookmark})
     : displayMode = BookmarkItemDisplayMode.contentOnly;
 
+  const BookmarkItem.contentWithNotes({super.key, required this.bookmark})
+    : displayMode = BookmarkItemDisplayMode.contentWithNotes;
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -49,7 +55,8 @@ class BookmarkItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Show bookmarkee info unless content-only mode
-        if (displayMode != BookmarkItemDisplayMode.contentOnly) ...[
+        if (displayMode != BookmarkItemDisplayMode.contentOnly &&
+            displayMode != BookmarkItemDisplayMode.contentWithNotes) ...[
           _buildBookmarkeeSection(context, colorScheme),
 
           // Divider only shown in full mode
@@ -331,6 +338,20 @@ class BookmarkItem extends StatelessWidget {
         // Show bookmark type indicator in content-only mode
         if (displayMode == BookmarkItemDisplayMode.contentOnly) ...[
           _buildBookmarkeeHeader(context, colorScheme),
+          const SizedBox(height: 16),
+        ],
+
+        if (displayMode == BookmarkItemDisplayMode.contentWithNotes) ...[
+          // Notes section if in contentWithNotes mode
+          _buildBookmarkeeHeader(context, colorScheme),
+          ..._buildNotesSection(context, colorScheme),
+
+          const SizedBox(height: 18),
+          Divider(
+            color: colorScheme.outlineVariant.withOpacity(0.5),
+            thickness: 1,
+            height: 1,
+          ),
           const SizedBox(height: 16),
         ],
 
