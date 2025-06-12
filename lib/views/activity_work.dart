@@ -22,6 +22,7 @@ import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
 import 'package:archiverse/components/work_metadata_item.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
+import 'package:archiverse/views/lists/activity_work_bookmarks.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -714,7 +715,10 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           TextHeader.medium(
             title: "Recent Bookmarks",
             actionText: Text("See all"),
-            onTap: () {},
+            onTap: () => context.navigator.pushNamed(
+              WorkBookmarksActivity.routeName,
+              arguments: item,
+            ),
             hasPadding: false,
           ),
 

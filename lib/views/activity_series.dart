@@ -17,6 +17,7 @@ import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
+import 'package:archiverse/views/lists/activity_series_bookmarks.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -218,7 +219,10 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
           TextHeader.medium(
             title: "Recent Bookmarks",
             actionText: Text("See all"),
-            onTap: () {},
+            onTap: () => context.navigator.pushNamed(
+              SeriesBookmarksActivity.routeName,
+              arguments: item,
+            ),
             hasPadding: false,
           ),
 
@@ -483,23 +487,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
   Widget _buildSummarySection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextHeader.medium(title: "Summary", hasPadding: false),
-          const SizedBox(height: 8),
-          Card.outlined(
-            margin: EdgeInsets.zero,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: HtmlWidget(
-                item.summary,
-                textStyle: context.textTheme.bodyMedium,
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: HtmlWidget(item.summary, textStyle: context.textTheme.bodyMedium),
     );
   }
 

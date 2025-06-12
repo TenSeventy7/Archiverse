@@ -16,9 +16,12 @@ import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_signin.dart';
 import 'package:archiverse/views/activity_tag.dart';
 import 'package:archiverse/views/activity_work.dart';
+import 'package:archiverse/views/lists/activity_author_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
+import 'package:archiverse/views/lists/activity_series_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
+import 'package:archiverse/views/lists/activity_work_bookmarks.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
 import 'package:archiverse/views/settings/activity_blocked_content_settings.dart';
@@ -135,6 +138,31 @@ class AppRoutes {
         if (args is Pseud) {
           return MaterialPageRoute(
             builder: (context) => AuthorSeriesActivity(author: args),
+          );
+        }
+        return null;
+      case WorkBookmarksActivity.routeName:
+        final args = settings.arguments;
+        if (args is Work) {
+          return MaterialPageRoute(
+            builder: (context) => WorkBookmarksActivity(work: args),
+          );
+        }
+        return null;
+
+      case SeriesBookmarksActivity.routeName:
+        final args = settings.arguments;
+        if (args is Series) {
+          return MaterialPageRoute(
+            builder: (context) => SeriesBookmarksActivity(series: args),
+          );
+        }
+        return null;
+      case AuthorBookmarksActivity.routeName:
+        final args = settings.arguments;
+        if (args is Pseud) {
+          return MaterialPageRoute(
+            builder: (context) => AuthorBookmarksActivity(author: args),
           );
         }
         return null;

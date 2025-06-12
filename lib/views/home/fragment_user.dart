@@ -102,14 +102,6 @@ class _UserFragmentState extends State<UserFragment> {
           },
         ),
         OptionTile(
-          title: 'Messages',
-          icon: TablerIcons.messages,
-          trailing: Badge.count(count: 2),
-          onTap: () {
-            // TODO: Navigate to messages
-          },
-        ),
-        OptionTile(
           title: 'Account Settings',
           icon: TablerIcons.settings,
           onTap: () {

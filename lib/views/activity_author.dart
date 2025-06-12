@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:archiverse/api/ao3_api.dart';
-import 'package:archiverse/components/cards/series_card.dart';
-import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
@@ -21,6 +19,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
+import 'package:archiverse/views/lists/activity_author_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
@@ -470,7 +469,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         TextHeader.large(
           title: "Bookmarks",
           icon: TablerIcons.bookmarks,
-          onTap: () => Navigator.pushNamed(context, "", arguments: item),
+          onTap: () => context.navigator.pushNamed(
+            AuthorBookmarksActivity.routeName,
+            arguments: item,
+          ),
           actionText:
               _bookmarksState == LoadingState.ERROR ||
                   _bookmarksState == LoadingState.LOADING ||
