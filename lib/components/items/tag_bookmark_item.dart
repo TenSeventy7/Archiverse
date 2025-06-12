@@ -10,6 +10,9 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/tag_bookmark.dart';
 import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_author.dart';
+import 'package:archiverse/views/activity_series.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -28,15 +31,40 @@ class TagBookmarkItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Work/Series content section
-        _buildContentSection(context, colorScheme),
+        InkWell(
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(16),
+            child: _buildContentSection(context, colorScheme),
+          ),
+          onTap: () {
+            if (tagBookmark.series != null) {
+              Navigator.pushNamed(
+                context,
+                SeriesActivity.routeName,
+                arguments: tagBookmark.series,
+              );
+            } else if (tagBookmark.work != null) {
+              Navigator.pushNamed(
+                context,
+                WorkActivity.routeName,
+                arguments: tagBookmark.work,
+              );
+            } else {
+              SnackBar snackBar = SnackBar(
+                content: Text(
+                  'No series or work associated with this tag bookmark.',
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          },
+        ),
 
-        const SizedBox(height: 18),
         Divider(
           color: colorScheme.outlineVariant.withOpacity(0.5),
           thickness: 1,
           height: 1,
         ),
-        const SizedBox(height: 16),
 
         // Bookmarks section
         _buildBookmarksSection(context, colorScheme),
@@ -45,32 +73,27 @@ class TagBookmarkItem extends StatelessWidget {
   }
 
   Widget _buildBookmarksSection(BuildContext context, ColorScheme colorScheme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Individual bookmarks
-        ...tagBookmark.bookmarks.asMap().entries.map((entry) {
-          final index = entry.key;
-          final bookmark = entry.value;
-          final isLast = index == tagBookmark.bookmarks.length - 1;
-
-          return Column(
-            children: [
-              _buildSingleBookmark(context, colorScheme, bookmark),
-              if (!isLast) ...[
-                const SizedBox(height: 12),
-                Divider(
-                  color: colorScheme.outlineVariant.withOpacity(0.3),
-                  thickness: 0.5,
-                  height: 1,
-                  indent: 48,
-                ),
-                const SizedBox(height: 12),
-              ],
-            ],
-          );
-        }),
-      ],
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        final bookmark = tagBookmark.bookmarks[index];
+        return ListTile(
+          title: _buildSingleBookmark(context, colorScheme, bookmark),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          onTap: () => context.navigator.pushNamed(
+            AuthorActivity.routeName,
+            arguments: bookmark.user,
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => Divider(
+        color: colorScheme.outlineVariant.withOpacity(0.3),
+        thickness: 0.5,
+        height: 1,
+        indent: 32,
+      ),
+      itemCount: tagBookmark.bookmarks.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
