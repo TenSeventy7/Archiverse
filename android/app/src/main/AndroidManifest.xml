@@ -2,9 +2,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     
     <application
-        android:label="archiverse"
+        android:label="@string/app_name"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_archiverse_launcher"
         android:enableOnBackInvokedCallback="true"> <!-- Enable predictive back gesture on Android 13+ -->
 
         <!-- Enable Impeller for iOS-style rendering on Android. --> 
