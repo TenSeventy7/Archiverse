@@ -27,6 +27,7 @@ enum TagType {
 
 class Tag {
   final String name;
+  final String localizedName; // Optional localized name for the tag
   final int count;
   final bool canonical;
   final List<Tag> parents, children, synonyms, mergers, subtags;
@@ -34,6 +35,7 @@ class Tag {
 
   Tag({
     required this.name,
+    String? localizedName,
     this.count = 0,
     this.type = TagType.FREEFORM,
     this.canonical = false,
@@ -42,7 +44,7 @@ class Tag {
     this.synonyms = const [],
     this.mergers = const [],
     this.subtags = const [],
-  });
+  }) : localizedName = localizedName ?? name;
 
   String get encodedName =>
       name.replaceAll(".", "*d*").replaceAll("/", "*s*").replaceAll("&", "*a*");
@@ -55,6 +57,7 @@ class Tag {
 
   Tag copyWith({
     String? name,
+    String? localizedName,
     int? count,
     bool? canonical,
     TagType? type,
@@ -66,6 +69,7 @@ class Tag {
   }) {
     return Tag(
       name: name ?? this.name,
+      localizedName: localizedName ?? this.localizedName,
       type: type ?? this.type,
       count: count ?? this.count,
       canonical: canonical ?? this.canonical,
