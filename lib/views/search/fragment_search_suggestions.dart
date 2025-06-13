@@ -18,10 +18,7 @@ class SearchSuggestionsFragment extends CommonStatelessSearchFragment {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextHeader.medium(
-              title: 'Suggestions',
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            ),
+            TextHeader.medium(icon: TablerIcons.bulb, title: 'Suggestions'),
 
             if (provider.suggestionsLoading)
               const Padding(
@@ -44,8 +41,8 @@ class SearchSuggestionsFragment extends CommonStatelessSearchFragment {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: OutlinedButton.icon(
-                  onPressed:
-                      () => provider.performSearch(provider.controller.text),
+                  onPressed: () =>
+                      provider.performSearch(provider.controller.text),
                   icon: const Icon(TablerIcons.search),
                   label: Text('Search for "${provider.controller.text}"'),
                   style: OutlinedButton.styleFrom(
