@@ -27,7 +27,7 @@ class _AuthorsListDialog extends StatelessWidget {
         slivers: [
           // Header
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,112 +43,58 @@ class _AuthorsListDialog extends StatelessWidget {
           ),
 
           // Grid layout for authors
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            sliver: _buildAuthorList(context),
-          ),
+          _buildAuthorList(context),
         ],
       ),
     );
   }
 
   Widget _buildAuthorList(BuildContext context) {
-    // Use grid for 4+ authors, list for fewer
-    return authors.length >= 4
-        ? _buildAuthorsGrid(context)
-        : _buildAuthorsColumnList(context);
-  }
-
-  Widget _buildAuthorsColumnList(BuildContext context) {
-    return SliverList.builder(
+    return SliverList.separated(
       itemCount: authors.length,
-      itemBuilder: (context, index) {
-        return _buildAuthorCard(context, authors[index]);
-      },
+      itemBuilder: _buildListTile,
+      separatorBuilder: (context, index) => const Divider(height: 1),
     );
   }
 
-  Widget _buildAuthorsGrid(BuildContext context) {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 2.75,
-      ),
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return _buildAuthorCard(context, authors[index], isGrid: true);
-      }, childCount: authors.length),
-    );
-  }
-
-  Widget _buildAuthorCard(
-    BuildContext context,
-    Pseud author, {
-    bool isGrid = false,
-  }) {
-    return Card.outlined(
-      clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.symmetric(vertical: isGrid ? 0 : 6),
-      elevation: 0,
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(
-          vertical: isGrid ? 4 : 12,
-          horizontal: isGrid ? 8 : 16,
-        ),
-        onTap: () {
-          if (author.isValid) {
-            Navigator.pushNamed(
-              context,
-              AuthorActivity.routeName,
-              arguments: author,
-            );
-          }
-        },
-        leading: CircleAvatar(
-          radius: isGrid ? 20 : 28,
-          child: EnhancedFutureBuilder(
-            future: Ao3Api().getPseud(author),
-            rememberFutureResult: true,
-            whenDone: (author) =>
-                UserImage(context: context, user: author, size: 24),
-            whenNotDone: UserImage(context: context, user: author, size: 24),
+  ListTile _buildListTile(BuildContext context, int index) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      leading: CircleAvatar(
+        radius: 20,
+        child: EnhancedFutureBuilder(
+          future: Ao3Api().getPseud(authors[index]),
+          rememberFutureResult: true,
+          whenDone: (author) =>
+              UserImage(context: context, user: author, size: 20),
+          whenNotDone: UserImage(
+            context: context,
+            user: authors[index],
+            size: 20,
           ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Display pseudonym if different from username
-            if (author.isPseud)
-              Text(
-                author.pseud,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-            // Always display username
-            Text(
-              author.isPseud ? "(${author.name})" : author.name,
-              style: context.textTheme.titleSmall?.copyWith(
-                color: author.isPseud
-                    ? context.colorScheme.onSurfaceVariant
-                    : null,
-                fontWeight: !author.isPseud ? FontWeight.w600 : null,
-                fontSize: !author.isPseud ? 18 : null,
-              ),
-            ),
-          ],
-        ),
-        trailing: Icon(
-          TablerIcons.chevron_right,
-          color: context.colorScheme.onSurfaceVariant,
-          size: 20,
-        ),
       ),
+      title: Text(
+        authors[index].isPseud ? authors[index].pseud : authors[index].name,
+        style: context.textTheme.titleMedium,
+      ),
+      subtitle: authors[index].isPseud
+          ? Text("(${authors[index].name})", style: context.textTheme.bodySmall)
+          : null,
+      trailing: Icon(
+        TablerIcons.chevron_right,
+        color: context.colorScheme.onSurfaceVariant,
+        size: 20,
+      ),
+      onTap: () {
+        if (authors[index].isValid) {
+          Navigator.pushNamed(
+            context,
+            AuthorActivity.routeName,
+            arguments: authors[index],
+          );
+        }
+      },
     );
   }
 }
