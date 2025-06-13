@@ -1,4 +1,6 @@
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/models/media.dart';
+import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/views/search/fragment_author_results.dart';
 import 'package:archiverse/views/search/fragment_character_results.dart';
 import 'package:archiverse/views/search/fragment_fandom_results.dart';
@@ -71,6 +73,10 @@ class SearchProvider extends ChangeNotifier {
   // History and trending data
   List<String> _recentSearches = [];
 
+  Map<Media, List<Tag>> fandoms = {};
+  bool isFandomsLoading = true;
+  bool isFandomsError = false;
+
   final List<String> _trendingTags = [
     'Fluff',
     'Angst',
@@ -98,6 +104,7 @@ class SearchProvider extends ChangeNotifier {
   SearchProvider() {
     controller.addListener(_onTextChanged);
     _loadRecentSearches();
+    loadTopFandoms();
   }
 
   /// Loads recent searches from SharedPreferences
@@ -112,6 +119,25 @@ class SearchProvider extends ChangeNotifier {
       _recentSearches = [];
     }
   }
+
+  /// Loads top fandoms from the API
+  Future<void> loadTopFandoms() async {
+    if (!isFandomsLoading) return;
+
+    try {
+      final fandoms = await Ao3Api().getTopFandoms();
+      this.fandoms = fandoms;
+      isFandomsLoading = false;
+      notifyListeners();
+    } catch (e) {
+      // Handle error silently, fallback to empty map
+      this.fandoms = {};
+      isFandomsLoading = false;
+      isFandomsError = true;
+      notifyListeners();
+    }
+  }
+
   /// Saves recent searches to SharedPreferences
   Future<void> _saveRecentSearches() async {
     try {
