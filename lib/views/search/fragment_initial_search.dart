@@ -131,14 +131,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
                       tags[index].name,
                       style: context.textTheme.titleMedium,
                     ),
-                    subtitle: Text(
-                      "${AppUtils.formatCompactNumber(tags[index].count)} works",
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant.withOpacity(
-                          0.7,
-                        ),
-                      ),
-                    ),
+                    subtitle: _buildWorksCount(media, tags, index, context),
                     trailing: Icon(
                       TablerIcons.chevron_right,
                       color: context.colorScheme.onSurfaceVariant,
@@ -155,6 +148,25 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget? _buildWorksCount(
+    Media media,
+    List<Tag> tags,
+    int index,
+    BuildContext context,
+  ) {
+    if (media == Media.UNCATEGORIZED) {
+      // AO3 does not support showing works count for uncategorized tags
+      return null;
+    }
+
+    return Text(
+      "${AppUtils.formatCompactNumber(tags[index].count)} works",
+      style: context.textTheme.titleSmall?.copyWith(
+        color: context.colorScheme.onSurfaceVariant.withOpacity(0.7),
       ),
     );
   }
