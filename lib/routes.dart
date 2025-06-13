@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
+import 'package:archiverse/views/activity_media.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_series.dart';
 import 'package:archiverse/views/activity_settings.dart';
@@ -172,6 +174,14 @@ class AppRoutes {
         if (args is Tag) {
           return MaterialPageRoute(
             builder: (context) => TagBookmarksActivity(tag: args),
+          );
+        }
+        return null;
+      case MediaActivity.routeName:
+        final args = settings.arguments;
+        if (args is Media) {
+          return MaterialPageRoute(
+            builder: (context) => MediaActivity(media: args),
           );
         }
         return null;

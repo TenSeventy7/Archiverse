@@ -10,6 +10,7 @@ import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/providers/provider_search.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_media.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/search/fragment_search_common.dart';
 import 'package:flutter/material.dart';
@@ -169,7 +170,8 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
       ),
       onTap: () => Navigator.of(
         context,
-      ).pushNamed(TagWorksActivity.routeName, arguments: media),
+        rootNavigator: true,
+      ).pushNamed(MediaActivity.routeName, arguments: media),
     );
   }
 }
