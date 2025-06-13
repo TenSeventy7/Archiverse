@@ -51,6 +51,12 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   // Scroll controller for custom scroll effects
   final ScrollController _scrollController = ScrollController();
 
+  // Expansion states for tag sections
+  bool _fandomsExpanded = false;
+  bool _charactersExpanded = false;
+  bool _relationshipsExpanded = false;
+  bool _tagsExpanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -548,6 +554,14 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       "Tags": item.tags,
     };
 
+    // Map to track expansion states
+    final Map<String, bool> expansionStates = {
+      "Fandoms": _fandomsExpanded,
+      "Characters": _charactersExpanded,
+      "Relationships": _relationshipsExpanded,
+      "Tags": _tagsExpanded,
+    };
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -556,42 +570,95 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           // Loop through each tag category
           for (var entry in tagGroups.entries) ...[
             if (entry.value.isNotEmpty) ...[
-              // Category header
-              TextHeader.medium(
-                title: entry.key,
-                icon: _getCategoryIcon(entry.key),
-                hasPadding: false,
-              ),
-
-              // Tags wrapped in a Flow widget
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: entry.value
-                    .map(
-                      (tag) => ActionChip(
-                        avatar: _getTagIconFor(entry.key),
-                        backgroundColor: context.colorScheme.surfaceVariant
-                            .withOpacity(0.3),
-                        side: BorderSide(
-                          color: context.colorScheme.outline.withOpacity(0.2),
-                          width: 1,
-                        ),
-                        label: Text(tag.name),
-                        onPressed: () {
-                          context.navigator.pushNamed(
-                            TagWorksActivity.routeName,
-                            arguments: tag,
-                          );
-                        },
-                      ),
-                    )
-                    .toList(),
+              _buildTagSection(
+                context,
+                entry.key,
+                entry.value,
+                expansionStates[entry.key]!,
+                (expanded) => _updateExpansionState(entry.key, expanded),
               ),
             ],
           ],
         ],
       ),
+    );
+  }
+
+  void _updateExpansionState(String category, bool expanded) {
+    setState(() {
+      switch (category) {
+        case "Fandoms":
+          _fandomsExpanded = expanded;
+          break;
+        case "Characters":
+          _charactersExpanded = expanded;
+          break;
+        case "Relationships":
+          _relationshipsExpanded = expanded;
+          break;
+        case "Tags":
+          _tagsExpanded = expanded;
+          break;
+      }
+    });
+  }
+
+  Widget _buildTagSection(
+    BuildContext context,
+    String category,
+    List<Tag> tags,
+    bool isExpanded,
+    Function(bool) onToggle,
+  ) {
+    final shouldShowExpandButton = tags.length > 5;
+    final tagsToShow = isExpanded ? tags : tags.take(5).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Category header
+        TextHeader.medium(
+          title: category,
+          icon: _getCategoryIcon(category),
+          hasPadding: false,
+          onTap: shouldShowExpandButton ? () => onToggle(!isExpanded) : null,
+          actionText: shouldShowExpandButton
+              ? Text(isExpanded ? "Show less" : "Show all (${tags.length})")
+              : null,
+        ),
+
+        // Animated expansion of tags
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutCubicEmphasized,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: tagsToShow
+                .map(
+                  (tag) => ActionChip(
+                    avatar: _getTagIconFor(category),
+                    backgroundColor: context.colorScheme.surfaceVariant
+                        .withOpacity(0.3),
+                    side: BorderSide(
+                      color: context.colorScheme.outline.withOpacity(0.2),
+                      width: 1,
+                    ),
+                    label: Text(tag.name),
+                    onPressed: () {
+                      context.navigator.pushNamed(
+                        TagWorksActivity.routeName,
+                        arguments: tag,
+                      );
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+
+        const SizedBox(height: 8),
+      ],
     );
   }
 

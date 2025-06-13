@@ -428,12 +428,16 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
                 ? Text(isExpanded ? "Show less" : "Show all (${tags.length})")
                 : null,
           ),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: tagsToShow
-                .map((tag) => _buildTagChip(context, tag))
-                .toList(),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOutCubicEmphasized,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: tagsToShow
+                  .map((tag) => _buildTagChip(context, tag))
+                  .toList(),
+            ),
           ),
         ],
       ),
