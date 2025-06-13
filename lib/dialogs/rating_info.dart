@@ -25,7 +25,7 @@ class _RatingInfoActivity extends StatelessWidget {
           left: 16.0,
           right: 16.0,
           top: 14.0,
-          bottom: 14.0 + context.screenInsets.bottom,
+          bottom: 14.0 + context.screenPadding.bottom,
         ),
         color: context.theme.colorScheme.surfaceContainer,
         child: Row(
@@ -103,7 +103,7 @@ class _RatingInfoActivity extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: context.screenInsets.top + kToolbarHeight),
+        SizedBox(height: context.screenPadding.top + kToolbarHeight),
         Container(
           width: 64,
           height: 64,
