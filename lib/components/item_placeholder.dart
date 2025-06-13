@@ -12,12 +12,17 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 enum _ItemPlaceholderType { small, medium, large }
 
 class ItemPlaceholder extends StatelessWidget {
-  const ItemPlaceholder({super.key, this.message, this.icon})
+  const ItemPlaceholder({super.key, this.message, this.subtitle, this.icon})
     : _type = _ItemPlaceholderType.large;
-  const ItemPlaceholder.small({super.key, this.message, this.icon})
-    : _type = _ItemPlaceholderType.small;
+  const ItemPlaceholder.small({
+    super.key,
+    this.message,
+    this.subtitle,
+    this.icon,
+  }) : _type = _ItemPlaceholderType.small;
 
   final String? message;
+  final String? subtitle;
   final IconData? icon;
   final _ItemPlaceholderType _type;
 
@@ -88,7 +93,8 @@ class ItemPlaceholder extends StatelessWidget {
             const SizedBox(height: 8.0),
             // ignore: prefer_const_constructors
             Text(
-              "This page seems to be empty for now. Check back in later!",
+              subtitle ??
+                  "This page seems to be empty for now. Check back in later!",
               textAlign: TextAlign.center,
             ),
           ],
