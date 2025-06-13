@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// Routes configuration for search navigation
 class _SearchRoutes {
   static final Map<String, Widget> routes = {
@@ -43,6 +45,9 @@ class SearchProvider extends ChangeNotifier {
   static const int _initialLevel = 0;
   static const int _resultsLevel = 1;
 
+  // SharedPreferences key
+  static const String _recentSearchesKey = 'app_recent_searches';
+
   // Navigation
   final GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
   int _currentRouteLevel = 0;
@@ -64,11 +69,7 @@ class SearchProvider extends ChangeNotifier {
   static const int _minCharactersForSuggestions = 3;
 
   // History and trending data
-  final List<String> _recentSearches = [
-    'Harry Potter fanfiction',
-    'Enemies to lovers',
-    'Star Wars AU',
-  ];
+  List<String> _recentSearches = [];
 
   final List<String> _trendingTags = [
     'Fluff',
@@ -96,6 +97,29 @@ class SearchProvider extends ChangeNotifier {
   /// Creates a new SearchProvider and sets up listeners
   SearchProvider() {
     controller.addListener(_onTextChanged);
+    _loadRecentSearches();
+  }
+
+  /// Loads recent searches from SharedPreferences
+  Future<void> _loadRecentSearches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final searches = prefs.getStringList(_recentSearchesKey) ?? [];
+      _recentSearches = searches;
+      notifyListeners();
+    } catch (e) {
+      // Fallback to default searches if loading fails
+      _recentSearches = [];
+    }
+  }
+  /// Saves recent searches to SharedPreferences
+  Future<void> _saveRecentSearches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_recentSearchesKey, _recentSearches);
+    } catch (e) {
+      // Handle save error silently
+    }
   }
 
   /// Handles text input changes
@@ -143,11 +167,19 @@ class SearchProvider extends ChangeNotifier {
     // Add to recent searches (avoid duplicates)
     if (!_recentSearches.contains(query)) {
       _recentSearches.insert(0, query);
+
       // Keep list to a reasonable size
       if (_recentSearches.length > 10) {
         _recentSearches.removeLast();
       }
+    } else {
+      // Move existing search to the front
+      _recentSearches.remove(query);
+      _recentSearches.insert(0, query);
     }
+
+    // Save to persistent storage
+    _saveRecentSearches();
 
     // Navigate based on current state
     if (!isShowingResults) {
@@ -169,6 +201,7 @@ class SearchProvider extends ChangeNotifier {
   /// Removes a search item from history
   void removeSearchItem(String item) {
     _recentSearches.remove(item);
+    _saveRecentSearches();
     notifyListeners();
   }
 
