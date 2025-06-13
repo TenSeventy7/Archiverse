@@ -203,46 +203,50 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
           Row(
             children: [
               // Tag type chip
-              Chip(
-                avatar: Icon(
-                  _getTagTypeIcon(item.type),
-                  size: 16,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-                label: Text(
-                  item.type.toString(),
-                  style: context.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+              Skeleton.leaf(
+                child: Chip(
+                  avatar: Icon(
+                    _getTagTypeIcon(item.type),
+                    size: 16,
+                    color: colorScheme.onPrimaryContainer,
                   ),
+                  label: Text(
+                    item.type.toString(),
+                    style: context.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  backgroundColor: colorScheme.primaryContainer,
+                  side: BorderSide.none,
                 ),
-                backgroundColor: colorScheme.primaryContainer,
-                side: BorderSide.none,
               ),
 
               SizedBox(width: 8),
 
               // Relationship type indicator
               if (item.type == TagType.RELATIONSHIP)
-                Chip(
-                  avatar: Icon(
-                    item.isRomanticRelationship
-                        ? TablerIcons.heart_filled
-                        : TablerIcons.users,
-                    size: 16,
-                    color: item.isRomanticRelationship
-                        ? colorScheme.onErrorContainer
-                        : colorScheme.onSurfaceVariant,
-                  ),
-                  label: Text(
-                    item.isRomanticRelationship ? "Romantic" : "Platonic",
-                    style: context.textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+                Skeleton.leaf(
+                  child: Chip(
+                    avatar: Icon(
+                      item.isRomanticRelationship
+                          ? TablerIcons.heart_filled
+                          : TablerIcons.users,
+                      size: 16,
+                      color: item.isRomanticRelationship
+                          ? colorScheme.onErrorContainer
+                          : colorScheme.onSurfaceVariant,
                     ),
+                    label: Text(
+                      item.isRomanticRelationship ? "Romantic" : "Platonic",
+                      style: context.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    backgroundColor: item.isRomanticRelationship
+                        ? colorScheme.secondaryContainer.withOpacity(0.7)
+                        : colorScheme.tertiaryContainer.withOpacity(0.7),
+                    side: BorderSide.none,
                   ),
-                  backgroundColor: item.isRomanticRelationship
-                      ? colorScheme.secondaryContainer.withOpacity(0.7)
-                      : colorScheme.tertiaryContainer.withOpacity(0.7),
-                  side: BorderSide.none,
                 ),
             ],
           ),
