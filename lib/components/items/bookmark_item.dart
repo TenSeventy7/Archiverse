@@ -333,6 +333,11 @@ class BookmarkItem extends StatelessWidget {
   }
 
   Widget _buildContentSection(BuildContext context, ColorScheme colorScheme) {
+    List<Widget> notes = [];
+    if (displayMode == BookmarkItemDisplayMode.contentWithNotes) {
+      notes = _buildNotesSection(context, colorScheme);
+    }
+
     return Column(
       children: [
         // Show bookmark type indicator in content-only mode
@@ -344,14 +349,17 @@ class BookmarkItem extends StatelessWidget {
         if (displayMode == BookmarkItemDisplayMode.contentWithNotes) ...[
           // Notes section if in contentWithNotes mode
           _buildBookmarkeeHeader(context, colorScheme),
-          ..._buildNotesSection(context, colorScheme),
+          ...notes,
 
-          const SizedBox(height: 18),
-          Divider(
-            color: colorScheme.outlineVariant.withOpacity(0.5),
-            thickness: 1,
-            height: 1,
-          ),
+          if (notes.isNotEmpty) ...[
+            const SizedBox(height: 18),
+            Divider(
+              color: colorScheme.outlineVariant.withOpacity(0.5),
+              thickness: 1,
+              height: 1,
+            ),
+          ],
+
           const SizedBox(height: 16),
         ],
 
