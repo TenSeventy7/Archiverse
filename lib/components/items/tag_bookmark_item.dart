@@ -336,12 +336,10 @@ class TagBookmarkItem extends StatelessWidget {
   }
 
   Widget _buildContentSection(BuildContext context, ColorScheme colorScheme) {
-    return Skeleton.unite(
-      child: tagBookmark.work != null
-          ? WorkItem.small(work: tagBookmark.work!)
-          : tagBookmark.series != null
-          ? SeriesItem.small(series: tagBookmark.series!)
-          : const SizedBox(),
-    );
+    return tagBookmark.work != null
+        ? WorkItem.small(work: tagBookmark.work!)
+        : tagBookmark.series != null
+        ? SeriesItem.small(series: tagBookmark.series!)
+        : const SizedBox();
   }
 }
