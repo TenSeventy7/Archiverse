@@ -1,5 +1,6 @@
 import 'package:alphabet_list_view/alphabet_list_view.dart';
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/media.dart';
@@ -23,29 +24,94 @@ class MediaActivity extends CommonActivity {
 class _MediaActivityState extends State<MediaActivity> {
   Media get media => widget.media;
   late Future<List<AlphabetListViewItemGroup>> _groups;
+  final TextEditingController _searchController = TextEditingController();
+  List<Tag> _allTags = [];
+  String _searchQuery = '';
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
     _groups = _fetchTags();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    _searchQuery = _searchController.text;
+
+    // Filter tags
+    List<Tag> filtered = _allTags
+        .where(
+          (tag) => tag.name.toLowerCase().contains(_searchQuery.toLowerCase()),
+        )
+        .toList();
+
+    setState(() {
+      _groups = _buildGroupsFromTags(filtered);
+    });
+  }
+
+  void _startSearch() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearch() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      _searchQuery = '';
+      _groups = _buildGroupsFromTags(_allTags);
+    });
   }
 
   Future<List<AlphabetListViewItemGroup>> _fetchTags() async {
-    List<AlphabetListViewItemGroup> groups = [];
     List<Tag> tags = await Ao3Api().getTagsFromFandomType(media);
+    _allTags = tags;
+    return _buildGroupsFromTags(tags);
+  }
+
+  Future<List<AlphabetListViewItemGroup>> _buildGroupsFromTags(
+    List<Tag> tags,
+  ) async {
+    List<AlphabetListViewItemGroup> groups = [];
 
     if (tags.isEmpty) {
       return groups;
     }
 
+    // Filter tags based on search query
+    List<Tag> filteredTags = tags;
+    if (_searchQuery.isNotEmpty) {
+      filteredTags = tags
+          .where(
+            (tag) => tag.localizedName.toLowerCase().contains(
+              _searchQuery.toLowerCase(),
+            ),
+          )
+          .toList();
+    }
+
+    if (filteredTags.isEmpty) {
+      return groups;
+    }
+
     // Alphabetically arrange tags
-    tags.sort((a, b) => a.name.compareTo(b.name));
+    filteredTags.sort((a, b) => a.localizedName.compareTo(b.localizedName));
 
     // Group tags by first letter
     String? currentLetter;
     List<Tag> currentGroup = [];
-    for (final tag in tags) {
-      String firstLetter = tag.name[0].toUpperCase();
+    for (final tag in filteredTags) {
+      String firstLetter = tag.localizedName[0].toUpperCase();
       if (currentLetter != firstLetter) {
         if (currentGroup.isNotEmpty) {
           groups.add(
@@ -62,6 +128,16 @@ class _MediaActivityState extends State<MediaActivity> {
       }
     }
 
+    // Add the last group
+    if (currentGroup.isNotEmpty) {
+      groups.add(
+        AlphabetListViewItemGroup(
+          tag: currentLetter!,
+          children: currentGroup.map((t) => _buildListTile(t)).toList(),
+        ),
+      );
+    }
+
     return groups;
   }
 
@@ -69,12 +145,52 @@ class _MediaActivityState extends State<MediaActivity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(media.toLocalName(context)),
-        centerTitle: true,
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Search fandoms',
+                  border: InputBorder.none,
+                  hintStyle: context.textTheme.bodyLarge?.copyWith(
+                    color: context.colorScheme.onSurfaceVariant.withOpacity(
+                      0.7,
+                    ),
+                  ),
+                ),
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colorScheme.onSurface,
+                ),
+              )
+            : Text(media.toLocalName(context)),
+        centerTitle: !_isSearching,
+        leading: _isSearching
+            ? IconButton(
+                icon: Icon(TablerIcons.arrow_left),
+                onPressed: _stopSearch,
+              )
+            : null,
+        actions: _isSearching
+            ? [
+                if (_searchController.text.isNotEmpty)
+                  IconButton(
+                    icon: Icon(TablerIcons.x),
+                    onPressed: () {
+                      _searchController.clear();
+                      _onSearchChanged();
+                    },
+                  ),
+              ]
+            : [
+                IconButton(
+                  icon: Icon(TablerIcons.search),
+                  onPressed: _startSearch,
+                ),
+              ],
       ),
       body: EnhancedFutureBuilder(
         future: _groups,
-        rememberFutureResult: true,
+        rememberFutureResult: false,
         whenDone: _buildList,
         whenError: (error) => LoadError(
           onPressed: () => setState(() {
@@ -113,6 +229,16 @@ class _MediaActivityState extends State<MediaActivity> {
   }
 
   Widget _buildList(List<AlphabetListViewItemGroup> groups) {
+    if (groups.isEmpty && _searchQuery.isNotEmpty) {
+      return Center(
+        child: ItemPlaceholder(
+          icon: TablerIcons.search,
+          message: 'No results found',
+          subtitle: 'Try a different search term.',
+        ),
+      );
+    }
+
     return AlphabetListView(
       items: groups,
       options: AlphabetListViewOptions(
