@@ -6,6 +6,8 @@ import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_list.dart';
+import 'package:archiverse/views/activity_series.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -34,7 +36,26 @@ class AuthorBookmarksActivityState extends CommonListActivityState<Bookmark> {
 
   @override
   void onItemTap(Bookmark item) {
-    context.navigator.pushNamed(AuthorActivity.routeName, arguments: item.user);
+    if (item.work != null) {
+      Navigator.pushNamed(
+        context,
+        WorkActivity.routeName,
+        arguments: item.work,
+      );
+    } else if (item.series != null) {
+      Navigator.pushNamed(
+        context,
+        SeriesActivity.routeName,
+        arguments: item.series,
+      );
+    } else {
+      // Handle case where neither work nor series is available
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("No work or series associated with this bookmark."),
+        ),
+      );
+    }
   }
 
   @override
@@ -86,30 +107,33 @@ class AuthorBookmarksActivityState extends CommonListActivityState<Bookmark> {
             ),
 
             // User info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    author.isPseud ? author.pseud : author.name,
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: colorScheme.onSurface,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  // For pseuds, show the main username
-                  if (author.isPseud)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Text(
-                      "(${author.name})",
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: colorScheme.onSurface.withAlpha(170),
+                      author.isPseud ? author.pseud : author.name,
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                ],
+
+                    // For pseuds, show the main username
+                    if (author.isPseud)
+                      Text(
+                        "(${author.name})",
+                        style: context.textTheme.titleSmall?.copyWith(
+                          color: colorScheme.onSurface.withAlpha(170),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -88,30 +88,33 @@ class TagWorksActivityState extends CommonListActivityState<Series> {
             ),
 
             // User info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    author.isPseud ? author.pseud : author.name,
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: colorScheme.onSurface,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  // For pseuds, show the main username
-                  if (author.isPseud)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
                     Text(
-                      "(${author.name})",
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: colorScheme.onSurface.withAlpha(170),
+                      author.isPseud ? author.pseud : author.name,
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                ],
+
+                    // For pseuds, show the main username
+                    if (author.isPseud)
+                      Text(
+                        "(${author.name})",
+                        style: context.textTheme.titleSmall?.copyWith(
+                          color: colorScheme.onSurface.withAlpha(170),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],

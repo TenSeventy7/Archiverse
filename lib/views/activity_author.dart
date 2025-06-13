@@ -569,10 +569,11 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         // Profile section
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
+          spacing: 8.0,
           children: [
             // User avatar
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: Skeleton.leaf(
                 child: CircleAvatar(
                   radius: 42,
@@ -592,7 +593,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
                   children: [
                     Text(
                       item.isPseud ? item.pseud : item.name,
-                      style: context.textTheme.headlineMedium?.copyWith(
+                      style: context.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface,
                       ),
@@ -621,10 +622,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
                               size: 16,
                               color: colorScheme.onSurface.withAlpha(150),
                             ),
-                            SizedBox(width: 4),
+                            SizedBox(width: 6),
                             Text(
                               "Joined ${AppUtils.formatDate(context, item.joinDate!)}",
-                              style: context.textTheme.bodySmall?.copyWith(
+                              style: context.textTheme.titleSmall?.copyWith(
                                 color: colorScheme.onSurface.withAlpha(150),
                               ),
                             ),
