@@ -4,11 +4,13 @@ import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/views/search/fragment_relationship_results.dart';
 import 'package:archiverse/views/search/sections/section_tags.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class RelationshipsResultSection extends TagsResultSection {
   RelationshipsResultSection()
     : super(
         title: 'Relationships',
+        icon: TablerIcons.user_heart,
         routeName: RelationshipSearchFragment.routeName,
       );
 

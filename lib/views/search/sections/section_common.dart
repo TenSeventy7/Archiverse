@@ -8,6 +8,9 @@ abstract class SearchResultSection<T> {
   /// Title displayed in the header
   final String title;
 
+  /// Optional icon displayed in the header
+  final IconData? icon;
+
   /// Route name for "See More" navigation
   final String routeName;
 
@@ -20,7 +23,11 @@ abstract class SearchResultSection<T> {
   /// Key to force rebuilds when data changes
   final GlobalKey key = GlobalKey();
 
-  SearchResultSection({required this.title, required this.routeName});
+  SearchResultSection({
+    required this.title,
+    this.icon,
+    required this.routeName,
+  });
 
   /// Fetch data for this section from the API
   Future<void> fetchData(String query);
@@ -41,6 +48,7 @@ abstract class SearchResultSection<T> {
   Widget buildHeader(BuildContext context, VoidCallback onSeeMore) {
     return TextHeader.medium(
       title: title,
+      icon: icon,
       actionText: Text("More"),
       onTap: onSeeMore,
     );

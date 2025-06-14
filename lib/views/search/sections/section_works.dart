@@ -5,10 +5,15 @@ import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/views/search/fragment_work_results.dart';
 import 'package:archiverse/views/search/sections/section_common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class WorksResultSection extends SearchResultSection<Work> {
   WorksResultSection()
-    : super(title: 'Works', routeName: WorkSearchFragment.routeName);
+    : super(
+        title: 'Works',
+        icon: TablerIcons.book,
+        routeName: WorkSearchFragment.routeName,
+      );
 
   @override
   Future<void> fetchData(String query) async {
