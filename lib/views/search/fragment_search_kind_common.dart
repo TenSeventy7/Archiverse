@@ -43,12 +43,13 @@ class CommonKindSearchFragmentState<T>
   @override
   Widget build(BuildContext context) {
     return PagedListView<int, T>.separated(
+      padding: EdgeInsets.zero,
       pagingController: _controller,
       builderDelegate: PagedChildBuilderDelegate<T>(
         itemBuilder: widget.itemBuilder,
       ),
-      separatorBuilder:
-          (BuildContext context, int index) => const Divider(height: 1),
+      separatorBuilder: (BuildContext context, int index) =>
+          const Divider(height: 1),
     );
   }
 

@@ -74,6 +74,7 @@ class TagBookmarkItem extends StatelessWidget {
 
   Widget _buildBookmarksSection(BuildContext context, ColorScheme colorScheme) {
     return ListView.separated(
+      padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         final bookmark = tagBookmark.bookmarks[index];
         return ListTile(

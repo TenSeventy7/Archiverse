@@ -157,6 +157,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
     if (separator != null) {
       return PagedListView<int, T>.separated(
         pagingController: _controller,
+        padding: EdgeInsets.zero,
         builderDelegate: PagedChildBuilderDelegate<T>(
           itemBuilder: _buildItemWidget,
           firstPageErrorIndicatorBuilder: (context) =>

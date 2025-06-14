@@ -119,6 +119,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
             itemCount: tags.length + 1,
             itemBuilder: (context, index) => index == tags.length
                 ? _buildSeeMoreTile(context, media)
