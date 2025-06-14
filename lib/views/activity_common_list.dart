@@ -21,6 +21,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
 
   // Abstract methods for extending classes to implement
   Future<List<T>> fetchItems(int page);
+  List<T> _lastItems = [];
   Widget buildItemWidget(BuildContext context, T item, int index);
   void onItemTap(T item) => {}; // Optional callback for item tap
   int get pageSize => 20; // AO3 typically shows 20 works per page
@@ -51,11 +52,16 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
     try {
       final items = await fetchItems(page);
 
-      final isLastPage = items.length < pageSize;
+      final isLastPage =
+          items.length < pageSize ||
+          items.isEmpty ||
+          _lastItems.isNotEmpty &&
+              items.every((item) => _lastItems.contains(item));
       if (isLastPage) {
         _controller.appendLastPage(items);
       } else {
         _controller.appendPage(items, page + 1);
+        _lastItems = items;
       }
     } catch (error) {
       _controller.error = error;
