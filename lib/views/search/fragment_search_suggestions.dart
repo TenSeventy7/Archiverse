@@ -1,3 +1,4 @@
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/providers/provider_search.dart';
 import 'package:archiverse/views/search/fragment_search_common.dart';
@@ -28,7 +29,10 @@ class SearchSuggestionsFragment extends CommonStatelessSearchFragment {
             else if (provider.suggestions.isEmpty)
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                child: Text('No suggestions available'),
+                child: ItemPlaceholder.small(
+                  icon: TablerIcons.bulb,
+                  message: 'No suggestions found',
+                ),
               )
             else
               ...provider.suggestions.map(
