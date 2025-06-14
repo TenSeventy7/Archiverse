@@ -69,8 +69,8 @@ class WorkItem extends StatelessWidget {
             Skeleton.leaf(
               child: IconButton.filledTonal(
                 visualDensity: VisualDensity.compact,
-                onPressed:
-                    () => WorkOptionsDialog.showSheet(context, work: work),
+                onPressed: () =>
+                    WorkOptionsDialog.showSheet(context, work: work),
                 icon: Icon(
                   TablerIcons.dots_vertical,
                   size: 18.0,
@@ -217,9 +217,10 @@ class WorkItem extends StatelessWidget {
           spacing: 8.0,
           children: [
             if (work.finished == true)
-              CompactTextIcon.text(
-                icon: TablerIcons.check,
-                text: context.strings.work_complete,
+              Icon(
+                TablerIcons.circle_check_filled,
+                size: 18.0,
+                color: colorScheme.tertiary,
               ),
             if (work.requiresAuth) ...[
               Icon(TablerIcons.lock, size: 14.0, color: colorScheme.error),
