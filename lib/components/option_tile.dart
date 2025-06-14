@@ -83,7 +83,8 @@ class OptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(title),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+      title: title.isNotEmpty ? Text(title) : null,
       leading: icon != null ? Icon(icon) : null,
       trailing: _buildTrailingWidget(
         child: const Icon(TablerIcons.chevron_right),
@@ -132,12 +133,11 @@ class _SwitchOptionTile extends OptionTile {
         child: Switch(value: value, onChanged: enabled ? onChanged : null),
       ),
       enabled: enabled,
-      onTap:
-          enabled
-              ? () {
-                onChanged(!value);
-              }
-              : null,
+      onTap: enabled
+          ? () {
+              onChanged(!value);
+            }
+          : null,
     );
   }
 }
