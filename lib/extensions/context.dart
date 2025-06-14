@@ -6,6 +6,7 @@
  * This extends Flutter's BuildContext class to bring creature comforts
  * developers are used to (like me) in native Android development.
  */
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:archiverse/strings/app_localizations.dart';
@@ -70,16 +71,23 @@ extension BuildContextExtension on BuildContext {
   // Sets navigation bar color
   void setNavigationBarColor(Color color) {
     // Determine icon color based on brightness and set color of system navigation bar
-    var style =
-        isDarkMode ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light;
+    var style = isDarkMode
+        ? SystemUiOverlayStyle.dark
+        : SystemUiOverlayStyle.light;
 
     SystemChrome.setSystemUIOverlayStyle(
       style.copyWith(
         systemNavigationBarColor: color,
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
       ),
     );
+  }
+
+  // Returns if app is running in debug mode
+  bool get isDebugMode {
+    return kDebugMode;
   }
 }
