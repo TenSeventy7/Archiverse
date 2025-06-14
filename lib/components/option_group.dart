@@ -25,16 +25,20 @@ class OptionGroup extends StatelessWidget {
           ),
         Card.filled(
           clipBehavior: Clip.antiAlias,
+          color: context.colorScheme.surfaceContainerLowest,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.0),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: _buildChildrenWithDividers(),
+            children: _buildChildrenWithDividers(context),
           ),
         ),
       ],
     );
   }
 
-  List<Widget> _buildChildrenWithDividers() {
+  List<Widget> _buildChildrenWithDividers(BuildContext context) {
     final result = <Widget>[];
 
     for (int i = 0; i < children.length; i++) {
@@ -42,7 +46,12 @@ class OptionGroup extends StatelessWidget {
 
       // Add divider if not the last item
       if (i < children.length - 1) {
-        result.add(const Divider(height: 1));
+        result.add(
+          Divider(
+            height: 1,
+            color: context.colorScheme.surfaceContainerHighest,
+          ),
+        );
       }
     }
 
