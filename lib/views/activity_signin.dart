@@ -1,3 +1,4 @@
+import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -15,7 +16,6 @@ class _SignInActivityState extends State<SignInActivity> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -39,7 +39,7 @@ class _SignInActivityState extends State<SignInActivity> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 48),
+                SizedBox(height: 44 - context.screenPadding.bottom),
 
                 // Header Section
                 Center(
@@ -67,7 +67,7 @@ class _SignInActivityState extends State<SignInActivity> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Access more features on Archive of Our Own by linking your AO3 account',
+                        'Access more features in Archiverse and see more content by signing in with your Archive of Our Own account.',
                         textAlign: TextAlign.center,
                         style: theme.textTheme.labelLarge?.copyWith(
                           color: colorScheme.onSurfaceVariant,
