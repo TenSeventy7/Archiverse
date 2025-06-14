@@ -1,7 +1,9 @@
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
 
 class SignInActivity extends CommonActivity {
   const SignInActivity({super.key});
@@ -16,6 +18,7 @@ class _SignInActivityState extends State<SignInActivity> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -182,31 +185,36 @@ class _SignInActivityState extends State<SignInActivity> {
                   width: double.infinity,
                   height: 56,
                   child: FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Handle sign in
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Signing in as ${_emailController.text}',
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: !_isLoading
+                        ? () {
+                            if (_formKey.currentState!.validate()) {
+                              _signIn();
+                            }
+                          }
+                        : null,
                     style: FilledButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    child: !_isLoading
+                        ? const Text(
+                            'Sign In',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        : const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          ),
                   ),
                 ),
 
@@ -274,5 +282,53 @@ class _SignInActivityState extends State<SignInActivity> {
         ),
       ),
     );
+  }
+
+  void _signIn() {
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Attempt to sign in with the provided email and password
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    UserProvider provider = Provider.of<UserProvider>(context, listen: false);
+    provider
+        .signIn(username: email, password: password)
+        .then((user) {
+          if (user != null) {
+            // Sign in successful
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Welcome back, ${user.name}!'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+            Navigator.pop(context); // Close the sign-in screen
+          } else {
+            // Sign in failed
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Sign in failed. Please check your credentials.'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        })
+        .catchError((error) {
+          // Handle any errors during sign in
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error signing in: $error'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        })
+        .whenComplete(() {
+          setState(() {
+            _isLoading = false;
+          });
+        });
   }
 }
