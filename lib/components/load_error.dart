@@ -70,7 +70,9 @@ class LoadError extends StatelessWidget {
   Center _buildLargeError(BuildContext context) {
     return Center(
       child: Padding(
-        padding: context.screenPadding,
+        padding: context.screenPadding.add(
+          EdgeInsets.symmetric(horizontal: context.commonPaddingDouble),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
