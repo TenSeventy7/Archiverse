@@ -1,9 +1,10 @@
 /*
- * (C) 2024, John Vincent Corcega <archiverse@tenseventyseven.xyz>
+ * (C) 2024-2025, John Vincent Corcega <archiverse@tenseventyseven.xyz>
  * This code is licensed under GNU AGPL 3.0 or later. See LICENSE for details.
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
@@ -12,6 +13,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_media.dart';
+import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_series.dart';
 import 'package:archiverse/views/activity_settings.dart';
@@ -182,6 +184,26 @@ class AppRoutes {
         if (args is Media) {
           return MaterialPageRoute(
             builder: (context) => MediaActivity(media: args),
+          );
+        }
+        return null;
+      case ReaderActivity.routeName:
+        final args = settings.arguments;
+        if (args is Work) {
+          return MaterialPageRoute(
+            builder: (context) => ReaderActivity(work: args),
+          );
+        }
+        if (args is Map<String, dynamic>) {
+          final work = args['work'] as Work;
+          final chapter = args['chapter'] as Chapter?;
+          return MaterialPageRoute(
+            builder: (context) => ReaderActivity(work: work, chapter: chapter),
+          );
+        }
+        if (args is Chapter) {
+          throw ArgumentError(
+            "ReaderActivity cannot be initialized with just a Chapter directly.",
           );
         }
         return null;

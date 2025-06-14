@@ -21,6 +21,7 @@ import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_common_detail.dart';
 import 'package:archiverse/components/work_metadata_item.dart';
+import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/lists/activity_work_bookmarks.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
@@ -130,10 +131,12 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   void _startReading() {
-    Navigator.pushNamed(
-      context,
-      "", // TODO: Add Reader.routeName
-      arguments: {"work": item, "chapter": null},
+    context.navigator.pushNamed(
+      ReaderActivity.routeName,
+      arguments: {
+        "work": item,
+        "chapter": null, // TODO: Implement getting recent chapter
+      },
     );
   }
 
@@ -193,7 +196,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       heroTag: "read",
       backgroundColor: context.colorScheme.tertiaryContainer,
       foregroundColor: context.colorScheme.onTertiaryContainer,
-      onPressed: () {},
+      onPressed: _startReading,
       child: Icon(TablerIcons.book, size: 20.0),
     );
   }
