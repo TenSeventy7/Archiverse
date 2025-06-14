@@ -9,12 +9,14 @@ import 'package:archiverse/components/rating_badges.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class _WorkOptionsDialog extends StatelessWidget {
   final Work work;
-  const _WorkOptionsDialog({required this.work});
+  final bool isReader; // Flag to indicate if this is for the reader activity
+  const _WorkOptionsDialog({required this.work, this.isReader = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +39,34 @@ class _WorkOptionsDialog extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                _buildActionTile(
-                  context,
-                  icon: TablerIcons.book_2,
-                  title: 'Read',
-                  subtitle: 'Continue from Chapter ${null ?? 1}',
-                  isHighlighted: true,
-                  onTap: () {
-                    Navigator.pop(context);
-                    // Navigator.pushNamed(context, ReaderActivity.routeName, arguments: work);
-                  },
-                ),
+                if (!isReader) ...[
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.book_2,
+                    title: 'Read',
+                    subtitle: 'Continue from Chapter ${null ?? 1}',
+                    isHighlighted: true,
+                    onTap: () {
+                      Navigator.pop(context);
+                      // Navigator.pushNamed(context, ReaderActivity.routeName, arguments: work);
+                    },
+                  ),
+                ] else ...[
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.book,
+                    title: "View Work Details",
+                    trailing: Icon(TablerIcons.chevron_right, size: 20),
+                    isHighlighted: true,
+                    onTap: () {
+                      context.navigator.pop();
+                      context.navigator.pushNamed(
+                        WorkActivity.routeName,
+                        arguments: work,
+                      );
+                    },
+                  ),
+                ],
 
                 _buildDivider(),
 
@@ -187,6 +206,7 @@ class _WorkOptionsDialog extends StatelessWidget {
     required IconData icon,
     required String title,
     String? subtitle,
+    Widget? trailing,
     bool isHighlighted = false,
     required VoidCallback onTap,
   }) {
@@ -199,20 +219,18 @@ class _WorkOptionsDialog extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color:
-              isHighlighted
-                  ? colorScheme.primaryContainer
-                  : colorScheme.surface,
+          color: isHighlighted
+              ? colorScheme.primaryContainer
+              : colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
         child: Icon(
           icon,
           size: 20,
-          color:
-              isHighlighted
-                  ? colorScheme.onPrimaryContainer
-                  : colorScheme.onSurface,
+          color: isHighlighted
+              ? colorScheme.onPrimaryContainer
+              : colorScheme.onSurface,
         ),
       ),
       title: Text(
@@ -221,10 +239,10 @@ class _WorkOptionsDialog extends StatelessWidget {
           color: isHighlighted ? colorScheme.primary : null,
         ),
       ),
-      subtitle:
-          subtitle != null
-              ? Text(subtitle, style: context.textTheme.bodySmall)
-              : null,
+      subtitle: subtitle != null
+          ? Text(subtitle, style: context.textTheme.bodySmall)
+          : null,
+      trailing: trailing,
     );
   }
 
@@ -252,6 +270,7 @@ class WorkOptionsDialog {
   static void showSheet(
     BuildContext context, {
     required Work work,
+    bool isReader = false,
     AnimationController? bottomSheetAnimator,
   }) {
     showModalBottomSheet<void>(
@@ -263,7 +282,8 @@ class WorkOptionsDialog {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (BuildContext context) => _WorkOptionsDialog(work: work),
+      builder: (BuildContext context) =>
+          _WorkOptionsDialog(work: work, isReader: isReader),
     );
   }
 }
