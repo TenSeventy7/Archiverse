@@ -767,6 +767,16 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                     label: "Language",
                     value: item.language ?? "English",
                   ),
+
+                  // If debug, show work ID
+                  if (context.isDebugMode) ...[
+                    WorkMetadataItem(
+                      context: context,
+                      icon: TablerIcons.hash,
+                      label: "Work ID",
+                      value: item.id.toString(),
+                    ),
+                  ],
                 ],
               ),
             ),
