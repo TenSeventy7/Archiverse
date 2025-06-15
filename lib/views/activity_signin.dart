@@ -85,6 +85,7 @@ class _SignInActivityState extends State<SignInActivity> {
                 // Email Field
                 TextFormField(
                   controller: _emailController,
+                  enabled: !_isLoading,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
@@ -129,6 +130,7 @@ class _SignInActivityState extends State<SignInActivity> {
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
+                  enabled: !_isLoading,
                   obscureText: !_isPasswordVisible,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
@@ -221,14 +223,16 @@ class _SignInActivityState extends State<SignInActivity> {
                 const SizedBox(height: 8),
 
                 TextButton(
-                  onPressed: () {
-                    // Handle forgot password
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Forgot password functionality'),
-                      ),
-                    );
-                  },
+                  onPressed: !_isLoading
+                      ? () {
+                          // Handle forgot password
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Forgot password functionality'),
+                            ),
+                          );
+                        }
+                      : null,
                   child: const Text('Forgot Password?'),
                 ),
 
@@ -246,14 +250,18 @@ class _SignInActivityState extends State<SignInActivity> {
                         ),
                       ),
                       TextButton.icon(
-                        onPressed: () {
-                          // Navigate to sign up
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Navigate to AO3 registration'),
-                            ),
-                          );
-                        },
+                        onPressed: !_isLoading
+                            ? () {
+                                // Navigate to sign up
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Navigate to AO3 registration',
+                                    ),
+                                  ),
+                                );
+                              }
+                            : null,
                         icon: const Icon(TablerIcons.mailbox),
                         label: const Text(
                           'Request an invitation to join',
