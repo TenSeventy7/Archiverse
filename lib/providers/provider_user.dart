@@ -10,9 +10,13 @@ class UserProvider extends ChangeNotifier {
   Pseud? _user;
   Pseud? get user => _user;
 
+  bool _isFetching = true;
+  bool get isFetching => _isFetching;
+
   /// Constructor
   UserProvider() {
     // Initialize the user state when the provider is created
+    _isFetching = true;
     initializeUser();
   }
 
@@ -24,6 +28,7 @@ class UserProvider extends ChangeNotifier {
 
     if (username == null) {
       _user = null;
+      _isFetching = false;
       notifyListeners();
       return;
     }
@@ -31,11 +36,13 @@ class UserProvider extends ChangeNotifier {
     try {
       _user = await _api.getUser(Pseud(name: username, pseud: username));
       _api.setUser(_user);
+      _isFetching = false;
       notifyListeners();
     } catch (e) {
       // Handle error, e.g., user not found or network issue
       print("Error loading user: $e");
       _user = null;
+      _isFetching = false;
       notifyListeners();
     }
   }
