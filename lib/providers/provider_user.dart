@@ -34,7 +34,10 @@ class UserProvider extends ChangeNotifier {
     }
 
     try {
-      _user = await _api.getUser(Pseud(name: username, pseud: username));
+      _user = await _api.getUser(
+        Pseud(name: username, pseud: username),
+        refresh: true,
+      );
       _api.setUser(_user);
       _isFetching = false;
       notifyListeners();
@@ -55,6 +58,10 @@ class UserProvider extends ChangeNotifier {
     try {
       _user = await _api.signIn(username, password);
       notifyListeners();
+
+      // Save the username in secure storage for future use
+      await _api.storage.write(key: "username", value: _user!.name);
+
       return _user;
     } catch (e) {
       // Handle error, e.g., invalid credentials
@@ -71,5 +78,24 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     }
     return result;
+  }
+
+  /// Refresh the user information
+  Future<void> refresh() async {
+    if (_user == null) {
+      return;
+    }
+    _isFetching = true;
+    notifyListeners();
+    try {
+      _user = await _api.getUser(_user!, refresh: true);
+      _api.setUser(_user);
+    } catch (e) {
+      // Handle error, e.g., network issue
+      print("Error refreshing user: $e");
+    } finally {
+      _isFetching = false;
+      notifyListeners();
+    }
   }
 }
