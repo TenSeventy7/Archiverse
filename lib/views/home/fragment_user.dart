@@ -11,6 +11,7 @@ import 'package:archiverse/views/activity_signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class UserFragment extends StatefulWidget {
   const UserFragment({Key? key}) : super(key: key);
@@ -74,15 +75,18 @@ class _UserFragmentState extends State<UserFragment> {
       expandedHeight: context.screenHeight * 0.4,
       shape: RoundedRectangleBorder(),
       flexibleSpace: FlexibleSpaceBar(
-        background: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: context.screenPadding.top),
-            _buildUserImage(context, provider),
-            SizedBox(height: context.commonPadding * 2),
-            ..._buildHeaderBottom(context, provider),
-          ],
+        background: Skeletonizer(
+          enabled: provider.isFetching,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: context.screenPadding.top),
+              _buildUserImage(context, provider),
+              SizedBox(height: context.commonPadding * 2),
+              ..._buildHeaderBottom(context, provider),
+            ],
+          ),
         ),
       ),
       actions: [],
@@ -111,6 +115,14 @@ class _UserFragmentState extends State<UserFragment> {
           icon: TablerIcons.settings,
           onTap: () {
             // TODO: Navigate to account settings
+          },
+        ),
+        OptionTile(
+          title: 'Sign Out',
+          icon: TablerIcons.logout,
+          onTap: () {
+            UserProvider provider = context.read<UserProvider>();
+            provider.signOut();
           },
         ),
       ],
@@ -203,10 +215,12 @@ class _UserFragmentState extends State<UserFragment> {
       userImage = UserImage(context: context, user: user, size: 52);
     }
 
-    return CircleAvatar(
-      radius: 52,
-      backgroundImage: placeholder,
-      child: userImage,
+    return Skeleton.leaf(
+      child: CircleAvatar(
+        radius: 52,
+        backgroundImage: placeholder,
+        child: userImage,
+      ),
     );
   }
 
