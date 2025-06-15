@@ -13,6 +13,7 @@ import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_media.dart';
+import 'package:archiverse/views/activity_onboarding.dart';
 import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:archiverse/views/activity_series.dart';
@@ -76,6 +77,7 @@ class AppRoutes {
         const ReadingHistorySettingsActivity(),
     SignInActivity.routeName: (context) => const SignInActivity(),
     BackupRestoreActivity.routeName: (context) => const BackupRestoreActivity(),
+    OnboardingActivity.routeName: (context) => const OnboardingActivity(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
