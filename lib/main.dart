@@ -5,6 +5,7 @@
  */
 
 import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
@@ -53,8 +54,8 @@ class Archiverse extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: MaterialTheme(context.textTheme).light(),
+      darkTheme: MaterialTheme(context.textTheme).dark(),
       initialRoute: '/',
       routes: AppRoutes.routes,
       onGenerateRoute: (settings) => AppRoutes.onGenerateRoute(settings),
