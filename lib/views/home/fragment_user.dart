@@ -4,6 +4,7 @@ import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/providers/provider_user.dart';
+import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
 import 'package:archiverse/views/activity_settings.dart';
@@ -23,79 +24,150 @@ class UserFragment extends StatefulWidget {
 class _UserFragmentState extends State<UserFragment> {
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      physics: const BouncingScrollPhysics(),
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          Consumer<UserProvider>(
-            builder: (context, userProvider, child) {
-              return _buildAppBar(userProvider);
-            },
-          ),
-        ];
-      },
-      body: Consumer(
-        builder: (context, UserProvider provider, child) {
-          Pseud? user = provider.user;
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        final user = userProvider.user;
 
-          return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // Cards of options
-              SliverPadding(
-                padding: context.horizontalPadding,
-                sliver: SliverList.list(
-                  children: [
-                    if (user != null) ...[
-                      _buildUserList(),
-                      SizedBox(height: context.commonPaddingHalf),
-                      _buildContentList(),
-                      SizedBox(height: context.commonPaddingHalf),
-                      _buildWorksList(),
+        return NestedScrollView(
+          physics: const BouncingScrollPhysics(),
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[_buildAppBar(userProvider, user)];
+          },
+          body: RefreshIndicator(
+            onRefresh: () => _onRefresh(userProvider),
+            displacement: 20.0,
+            elevation: 0.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: context.horizontalPadding,
+                  sliver: SliverList.list(
+                    children: [
+                      if (user != null) ...[
+                        _buildContentList(),
+                        SizedBox(height: context.commonPaddingHalf / 2),
+                        _buildWorksList(),
+                        SizedBox(height: context.commonPaddingHalf / 2),
+                      ],
+                      _buildSettingsList(),
+                      if (user != null) ...[
+                        SizedBox(height: context.commonPaddingHalf / 2),
+                        _buildAccountList(),
+                      ],
                       SizedBox(height: context.commonPaddingHalf),
                     ],
-                    _buildSettingsList(),
-                    SizedBox(height: context.commonPadding),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildAppBar(UserProvider provider) {
-    Pseud? user = provider.user;
+  Future<void> _onRefresh(UserProvider userProvider) async {
+    // Refresh user data if signed in
+    if (userProvider.user != null) {
+      await userProvider.refresh();
+    }
+  }
 
+  Widget _buildAppBar(UserProvider provider, Pseud? user) {
     return SliverAppBar.large(
       title: Text(user?.name ?? 'User'),
       centerTitle: true,
-      expandedHeight: context.screenHeight * 0.4,
-      shape: RoundedRectangleBorder(),
+      expandedHeight: context.screenHeight * 0.3,
+      shape: const RoundedRectangleBorder(),
       flexibleSpace: FlexibleSpaceBar(
         background: Skeletonizer(
           enabled: provider.isFetching,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: context.screenPadding.top),
-              _buildUserImage(context, provider),
-              SizedBox(height: context.commonPadding * 2),
-              ..._buildHeaderBottom(context, provider),
-            ],
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: context.commonPaddingHalf,
+              vertical: context.commonPaddingDouble,
+            ),
+            child: _buildExpandedHeader(provider, user),
           ),
         ),
       ),
-      actions: [],
+      actions: const [],
     );
   }
 
-  Widget _buildUserList() {
+  Widget _buildExpandedHeader(UserProvider provider, Pseud? user) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.only(right: 8.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            spacing: 8.0,
+            children: [
+              // User avatar
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Skeleton.leaf(child: _buildUserImage(user)),
+              ),
+
+              // User info
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        _getUserName(user),
+                        style: context.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: context.colorScheme.onSurface,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      _buildUserActions(user),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          trailing: Icon(
+            TablerIcons.chevron_right,
+            size: 24,
+            color: context.colorScheme.onSurface.withAlpha(150),
+          ),
+          onTap: () => _handleUserTap(user),
+        ),
+      ],
+    );
+  }
+
+  void _handleUserTap(Pseud? user) {
+    if (user != null) {
+      context.navigator.pushNamed(AuthorActivity.routeName, arguments: user);
+    } else {
+      context.navigator.pushNamed(SignInActivity.routeName);
+    }
+  }
+
+  Widget _buildContentList() {
     return OptionGroup(
       children: [
+        OptionTile(
+          title: 'Bookmarks',
+          icon: TablerIcons.bookmark,
+          onTap: () {
+            // TODO: Navigate to bookmarks
+          },
+        ),
         OptionTile(
           title: 'Subscriptions',
           icon: TablerIcons.star,
@@ -108,35 +180,6 @@ class _UserFragmentState extends State<UserFragment> {
           icon: TablerIcons.history,
           onTap: () {
             // TODO: Navigate to history
-          },
-        ),
-        OptionTile(
-          title: 'Account Settings',
-          icon: TablerIcons.settings,
-          onTap: () {
-            // TODO: Navigate to account settings
-          },
-        ),
-        OptionTile(
-          title: 'Sign Out',
-          icon: TablerIcons.logout,
-          onTap: () {
-            UserProvider provider = context.read<UserProvider>();
-            provider.signOut();
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildContentList() {
-    return OptionGroup(
-      children: [
-        OptionTile(
-          title: 'Bookmarks',
-          icon: TablerIcons.bookmark,
-          onTap: () {
-            // TODO: Navigate to bookmarks
           },
         ),
         OptionTile(
@@ -154,7 +197,7 @@ class _UserFragmentState extends State<UserFragment> {
     return OptionGroup(
       children: [
         OptionTile(
-          title: 'My Works',
+          title: 'Works',
           icon: TablerIcons.pencil,
           onTap: () {
             // TODO: Navigate to works
@@ -202,60 +245,153 @@ class _UserFragmentState extends State<UserFragment> {
     );
   }
 
-  Widget _buildUserImage(BuildContext context, UserProvider provider) {
-    Pseud? user = provider.user;
-    ImageProvider<Object>? placeholder;
-    Widget? userImage;
-
-    if (user == null) {
-      // If user is not signed in, return a placeholder image
-      placeholder = NetworkImage('https://placehold.co/200.jpg');
-    } else {
-      // If user is signed in, use the user's image
-      userImage = UserImage(context: context, user: user, size: 52);
-    }
-
-    return Skeleton.leaf(
-      child: CircleAvatar(
-        radius: 52,
-        backgroundImage: placeholder,
-        child: userImage,
-      ),
+  Widget _buildAccountList() {
+    return OptionGroup(
+      children: [
+        OptionTile(
+          title: 'Account Settings',
+          icon: TablerIcons.user_cog,
+          onTap: () {
+            // TODO: Navigate to account settings
+          },
+        ),
+        OptionTile(
+          title: 'Sign Out',
+          icon: TablerIcons.logout,
+          onTap: () {
+            _showSignOutDialog();
+          },
+        ),
+      ],
     );
   }
 
-  List<Widget> _buildHeaderBottom(BuildContext context, UserProvider provider) {
-    Pseud? user = provider.user;
+  void _showSignOutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: Icon(
+            TablerIcons.logout,
+            size: 28.0,
+            color: context.colorScheme.secondary,
+          ),
+          title: const Text('Sign out of your account?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'You\'ll need to sign in again to access your subscriptions, bookmarks, and other personal content.',
+              ),
+              const SizedBox(height: 24.0),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 48.0,
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          context.read<UserProvider>().signOut();
+                        },
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                        child: const Text('Sign out'),
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    SizedBox(
+                      height: 48.0,
+                      width: double.infinity,
+                      child: FilledButton.tonal(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildUserImage(Pseud? user) {
+    Widget userImage;
+
     if (user == null) {
-      // If user is not signed in, show sign-in button
-      return [
-        FilledButton.tonal(
-          onPressed: () {
-            Navigator.pushNamed(context, SignInActivity.routeName);
-          },
-          child: const Text('Sign in'),
-        ),
-      ];
+      userImage = Icon(
+        TablerIcons.user_question,
+        size: 52,
+        color: context.colorScheme.onPrimaryContainer,
+      );
     } else {
-      // If user is signed in, show username and sign-out button
-      return [
-        Text(
-          user.name,
-          style: context.textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w500,
+      userImage = UserImage(context: context, user: user, size: 52);
+    }
+
+    return Skeleton.leaf(child: CircleAvatar(radius: 48, child: userImage));
+  }
+
+  String _getUserName(Pseud? user) {
+    return user?.name ?? 'Not signed in';
+  }
+
+  Widget _buildUserActions(Pseud? user) {
+    if (user == null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4.0),
+        child: Text(
+          "Sign in to your account to access more features",
+          style: context.textTheme.titleSmall?.copyWith(
+            color: context.colorScheme.onSurface.withAlpha(150),
           ),
         ),
-        SizedBox(height: context.commonPaddingHalf * 2),
-        FilledButton.tonal(
-          onPressed: () {
-            context.navigator.pushNamed(
-              AuthorActivity.routeName,
-              arguments: user,
-            );
-          },
-          child: const Text('View Profile'),
-        ),
-      ];
+      );
     }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Skeleton.replace(
+            replacement: const SizedBox.shrink(),
+            child: Icon(
+              TablerIcons.calendar,
+              size: 16,
+              color: context.colorScheme.onSurface.withAlpha(150),
+            ),
+          ),
+          Skeleton.replace(
+            replacement: const SizedBox.shrink(),
+            child: const SizedBox(width: 6),
+          ),
+          Text(
+            "Joined ${AppUtils.formatDate(context, user.joinDate!)}",
+            style: context.textTheme.titleSmall?.copyWith(
+              color: context.colorScheme.onSurface.withAlpha(150),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
