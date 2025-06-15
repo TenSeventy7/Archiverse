@@ -34,6 +34,7 @@ class _UserFragmentState extends State<UserFragment> {
             return <Widget>[_buildAppBar(userProvider, user)];
           },
           body: RefreshIndicator(
+            notificationPredicate: user != null ? (_) => true : (_) => false,
             onRefresh: () => _onRefresh(userProvider),
             displacement: 20.0,
             elevation: 0.0,
