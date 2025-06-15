@@ -31,7 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  extended_http: ^1.3.12
+  extended_http:
+    git:
+      url: https://github.com/TenSeventy7/extended_http.git
+      ref: main
   floor: ^1.4.2
   flutter_localizations:
     sdk: flutter
