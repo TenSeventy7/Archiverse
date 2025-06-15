@@ -233,6 +233,9 @@ class _SignInActivityState extends State<SignInActivity> {
                           );
                         }
                       : null,
+                  style: TextButton.styleFrom(
+                    foregroundColor: colorScheme.secondary,
+                  ),
                   child: const Text('Forgot Password?'),
                 ),
 
@@ -262,6 +265,9 @@ class _SignInActivityState extends State<SignInActivity> {
                                 );
                               }
                             : null,
+                        style: TextButton.styleFrom(
+                          foregroundColor: colorScheme.tertiary,
+                        ),
                         icon: const Icon(TablerIcons.mailbox),
                         label: const Text(
                           'Request an invitation to join',
