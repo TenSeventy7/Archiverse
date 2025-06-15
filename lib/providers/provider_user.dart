@@ -24,8 +24,6 @@ class UserProvider extends ChangeNotifier {
   Future<void> initializeUser() async {
     String? username = await _api.storage.read(key: "username");
 
-    print("Initializing user with username: $username");
-
     if (username == null) {
       _user = null;
       _isFetching = false;
@@ -43,7 +41,6 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error, e.g., user not found or network issue
-      print("Error loading user: $e");
       _user = null;
       _isFetching = false;
       notifyListeners();
@@ -65,7 +62,6 @@ class UserProvider extends ChangeNotifier {
       return _user;
     } catch (e) {
       // Handle error, e.g., invalid credentials
-      print("Error signing in: $e");
       return null;
     }
   }
@@ -92,7 +88,6 @@ class UserProvider extends ChangeNotifier {
       _api.setUser(_user);
     } catch (e) {
       // Handle error, e.g., network issue
-      print("Error refreshing user: $e");
     } finally {
       _isFetching = false;
       notifyListeners();
