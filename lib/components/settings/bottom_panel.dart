@@ -10,7 +10,7 @@ class SettingsBottomPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding ?? EdgeInsets.all(context.commonPadding),
+      padding: padding ?? EdgeInsets.all(context.commonPaddingDouble),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),

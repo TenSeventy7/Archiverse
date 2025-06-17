@@ -10,6 +10,7 @@ class SliderControl extends StatelessWidget {
   final double min;
   final double max;
   final int? divisions;
+  final EdgeInsets padding;
 
   const SliderControl({
     super.key,
@@ -20,6 +21,7 @@ class SliderControl extends StatelessWidget {
     this.min = 0.8,
     this.max = 2.0,
     this.divisions = 12,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8.0),
   });
 
   @override
@@ -28,7 +30,7 @@ class SliderControl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: context.horizontalPadding,
+          padding: padding,
           child: Row(
             children: [
               Icon(icon, size: 18),
