@@ -279,7 +279,7 @@ class _SliderOptionTile extends OptionTile {
       leading: icon != null ? Icon(icon) : null,
       isThreeLine: true,
       contentPadding: EdgeInsets.symmetric(
-        horizontal: context.commonPadding,
+        horizontal: context.commonPaddingDouble,
         vertical: 8,
       ),
       trailing: Text(
@@ -317,8 +317,24 @@ class _CustomOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: widget,
-      contentPadding: padding ?? EdgeInsets.all(0),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          title != ""
+              ? Padding(
+                  padding: EdgeInsetsGeometry.fromLTRB(
+                    context.commonPaddingDouble,
+                    4.0,
+                    context.commonPaddingDouble,
+                    0.0,
+                  ),
+                  child: Text(title, style: context.textTheme.titleMedium),
+                )
+              : SizedBox.shrink(),
+          widget,
+        ],
+      ),
+      contentPadding: padding ?? EdgeInsets.symmetric(vertical: 4.0),
       leading: icon != null ? Icon(icon) : null,
       enabled: enabled,
       onTap:
