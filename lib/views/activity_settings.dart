@@ -39,14 +39,10 @@ class _SettingsActivityState extends State<SettingsActivity> {
   // Default values
   static const AppThemeMode _defaultThemeMode = AppThemeMode.system;
   static const AppColorScheme _defaultColorScheme = AppColorScheme.red;
-  static const bool _defaultShowStatusBar = true;
-  static const bool _defaultShowNavigationBar = true;
 
   // Current values
   AppThemeMode _themeMode = _defaultThemeMode;
   AppColorScheme _colorScheme = _defaultColorScheme;
-  bool _showStatusBar = _defaultShowStatusBar;
-  bool _showNavigationBar = _defaultShowNavigationBar;
 
   @override
   void initState() {
@@ -66,14 +62,6 @@ class _SettingsActivityState extends State<SettingsActivity> {
             _prefs.getString(Preferences.colorScheme) ??
                 _defaultColorScheme.key,
           );
-          _showStatusBar = _prefs.getBool(
-            Preferences.showStatusBar,
-            defaultValue: _defaultShowStatusBar,
-          );
-          _showNavigationBar = _prefs.getBool(
-            Preferences.showNavigationBar,
-            defaultValue: _defaultShowNavigationBar,
-          );
         });
       }
     });
@@ -87,16 +75,6 @@ class _SettingsActivityState extends State<SettingsActivity> {
   void _updateColorScheme(AppColorScheme scheme) {
     setState(() => _colorScheme = scheme);
     Provider.of<ThemeProvider>(context, listen: false).setColorScheme(scheme);
-  }
-
-  void _updateShowStatusBar(bool value) {
-    setState(() => _showStatusBar = value);
-    _prefs.setBool(Preferences.showStatusBar, value);
-  }
-
-  void _updateShowNavigationBar(bool value) {
-    setState(() => _showNavigationBar = value);
-    _prefs.setBool(Preferences.showNavigationBar, value);
   }
 
   @override
@@ -226,7 +204,6 @@ class _SettingsActivityState extends State<SettingsActivity> {
       children: [
         ..._buildThemeModeOptions(context),
         _buildColorSchemeSelection(context),
-        ..._buildSystemUISettings(context),
       ],
     );
   }
@@ -285,7 +262,11 @@ class _SettingsActivityState extends State<SettingsActivity> {
         icon: TablerIcons.device_desktop,
         value: _themeMode == AppThemeMode.system,
         onChanged: (value) {
-          _updateThemeMode(value ? AppThemeMode.system : AppThemeMode.light);
+          _updateThemeMode(
+            value
+                ? AppThemeMode.system
+                : (context.isDarkMode ? AppThemeMode.dark : AppThemeMode.light),
+          );
         },
       ),
     ];
@@ -441,24 +422,5 @@ class _SettingsActivityState extends State<SettingsActivity> {
         },
       ),
     );
-  }
-
-  List<OptionTile> _buildSystemUISettings(BuildContext context) {
-    return [
-      OptionTile.switcher(
-        title: context.strings.settings_ui_show_status_bar,
-        subtitle: context.strings.settings_ui_show_status_bar_subtitle,
-        icon: TablerIcons.layout_navbar,
-        value: _showStatusBar,
-        onChanged: _updateShowStatusBar,
-      ),
-      OptionTile.switcher(
-        title: context.strings.settings_ui_show_navigation_bar,
-        subtitle: context.strings.settings_ui_show_navigation_bar_subtitle,
-        icon: TablerIcons.layout_bottombar,
-        value: _showNavigationBar,
-        onChanged: _updateShowNavigationBar,
-      ),
-    ];
   }
 }
