@@ -217,7 +217,10 @@
   "settings_category_reading": "Reading Experience",
   "settings_category_storage": "Storage & Data",
   "settings_category_theme": "Theme & Appearance",
-  "settings_common_reset": "Reset to default",
+  "settings_common_reset": "Reset to defaults",
+  "@settings_common_reset": {
+    "description": "Button text to reset settings to default values"
+  },
   "settings_downloads_auto_delete": "Auto-Delete Old Downloads",
   "settings_downloads_auto_delete_subtitle": "Remove downloads older than 30 days",
   "settings_downloads_delete_all": "Delete all downloads",
@@ -227,12 +230,27 @@
   "settings_downloads_settings": "Download Settings",
   "settings_downloads_title": "Downloads",
   "settings_downloads_wifi_only": "Download Over Wi-Fi Only",
-  "settings_font_body_select": "Select a font for body text",
-  "settings_font_heading_select": "Select a font for headings",
+  "settings_font_body_select": "Select font for body text and paragraphs",
+  "@settings_font_body_select": {
+    "description": "Instructions for body font selection"
+  },
+  "settings_font_heading_select": "Select font for headings and titles",
+  "@settings_font_heading_select": {
+    "description": "Instructions for heading font selection"
+  },
   "settings_font_system_default": "System Default",
-  "settings_font_tab_body": "Body",
+  "settings_font_tab_body": "Body Text",
+  "@settings_font_tab_body": {
+    "description": "Tab label for body text fonts"
+  },
   "settings_font_tab_headings": "Headings",
+  "@settings_font_tab_headings": {
+    "description": "Tab label for heading fonts"
+  },
   "settings_font_title": "Font Selection",
+  "@settings_font_title": {
+    "description": "Title for font selection settings"
+  },
   "settings_history_clear": "Clear Reading History",
   "settings_history_clear_subtitle": "Remove all reading history data",
   "settings_history_retention": "History Retention",
@@ -250,10 +268,25 @@
   "settings_history_track": "Track Reading History",
   "settings_history_track_subtitle": "Keep record of works you've read",
   "settings_layout_dual_column": "Dual Column",
+  "@settings_layout_dual_column": {
+    "description": "Dual column layout option"
+  },
   "settings_layout_justify_text": "Justify Text",
-  "settings_layout_line_spacing": "Line spacing",
+  "@settings_layout_justify_text": {
+    "description": "Text justification option"
+  },
+  "settings_layout_line_spacing": "Line Spacing",
+  "@settings_layout_line_spacing": {
+    "description": "Line spacing control label"
+  },
   "settings_layout_paginated": "Paginated",
-  "settings_layout_paragraph_spacing": "Paragraph spacing",
+  "@settings_layout_paginated": {
+    "description": "Paginated layout option"
+  },
+  "settings_layout_paragraph_spacing": "Paragraph Spacing",
+  "@settings_layout_paragraph_spacing": {
+    "description": "Paragraph spacing control label"
+  },
   "settings_layout_preview_format": "{layout} Layout",
   "@settings_layout_preview_format": {
     "placeholders": {
@@ -261,8 +294,17 @@
     }
   },
   "settings_layout_single_column": "Single Column",
+  "@settings_layout_single_column": {
+    "description": "Single column layout option"
+  },
   "settings_layout_title": "Reading Layout",
-  "settings_layout_type": "Layout type",
+  "@settings_layout_title": {
+    "description": "Title for reading layout settings"
+  },
+  "settings_layout_type": "Layout Type",
+  "@settings_layout_type": {
+    "description": "Section title for layout type selection"
+  },
   "settings_rating_age_confirmation": "Require Age Confirmation for Explicit",
   "settings_rating_age_confirmation_subtitle": "Only applies if you're showing explicit content",
   "settings_rating_blur_explicit": "Blur Explicit Thumbnails",
@@ -281,25 +323,90 @@
   "settings_rating_title": "Rating Preferences",
   "settings_rating_visibility": "Rating Visibility",
   "settings_rating_visibility_subtitle": "Show or hide works with the following ratings",
-  "settings_scrolling_animation": "Allow Page Turning Animation",
-  "settings_scrolling_animation_subtitle": "Adds a page turning animation",
+  "settings_scrolling_animation": "Page Animations",
+  "@settings_scrolling_animation": {
+    "description": "Option to enable page turn animations"
+  },
+  "settings_scrolling_animation_subtitle": "Animate page transitions",
+  "@settings_scrolling_animation_subtitle": {
+    "description": "Description of page animation option"
+  },
   "settings_scrolling_continuous": "Continuous",
-  "settings_scrolling_continuous_subtitle": "Standard smooth scrolling",
+  "@settings_scrolling_continuous": {
+    "description": "Continuous scrolling option"
+  },
+  "settings_scrolling_continuous_subtitle": "Scroll smoothly through content",
+  "@settings_scrolling_continuous_subtitle": {
+    "description": "Description of continuous scrolling"
+  },
   "settings_scrolling_keep_screen_on": "Keep Screen On",
-  "settings_scrolling_keep_screen_on_subtitle": "Prevents the screen from turning off",
+  "@settings_scrolling_keep_screen_on": {
+    "description": "Option to keep screen on while reading"
+  },
+  "settings_scrolling_keep_screen_on_subtitle": "Prevent screen from dimming while reading",
+  "@settings_scrolling_keep_screen_on_subtitle": {
+    "description": "Description of keep screen on option"
+  },
   "settings_scrolling_paged": "Paged",
-  "settings_scrolling_paged_options": "Paged Scrolling Options",
-  "settings_scrolling_paged_subtitle": "Swipe to move between pages",
-  "settings_scrolling_physics": "Physics-based Scrolling",
-  "settings_scrolling_physics_subtitle": "Makes scrolling feel more natural with momentum",
+  "@settings_scrolling_paged": {
+    "description": "Paged scrolling option"
+  },
+  "settings_scrolling_paged_options": "Page Options",
+  "@settings_scrolling_paged_options": {
+    "description": "Section title for paged scrolling options"
+  },
+  "settings_scrolling_paged_subtitle": "Turn pages like a book",
+  "@settings_scrolling_paged_subtitle": {
+    "description": "Description of paged scrolling"
+  },
+  "settings_scrolling_physics": "Scroll Physics",
+  "@settings_scrolling_physics": {
+    "description": "Option to enable scroll physics"
+  },
+  "settings_scrolling_physics_subtitle": "Natural scroll bounce and resistance",
+  "@settings_scrolling_physics_subtitle": {
+    "description": "Description of scroll physics option"
+  },
+  "settings_scrolling_physics_title": "Scroll Physics",
+  "@settings_scrolling_physics_title": {
+    "description": "Section title for scroll physics settings"
+  },
+  "settings_scrolling_screen_options": "Screen Options",
+  "@settings_scrolling_screen_options": {
+    "description": "Section title for screen-related options"
+  },
   "settings_scrolling_sensitivity": "Scroll Sensitivity",
+  "@settings_scrolling_sensitivity": {
+    "description": "Scroll sensitivity slider label"
+  },
   "settings_scrolling_show_indicator": "Show Page Indicator",
-  "settings_scrolling_show_indicator_subtitle": "Displays a page indicator at the bottom",
-  "settings_scrolling_tap_edges": "Tap Edges to Turn Page",
-  "settings_scrolling_tap_edges_subtitle": "Tap the edges of the screen to turn pages",
+  "@settings_scrolling_show_indicator": {
+    "description": "Option to show page indicator"
+  },
+  "settings_scrolling_show_indicator_subtitle": "Display page numbers while reading",
+  "@settings_scrolling_show_indicator_subtitle": {
+    "description": "Description of page indicator option"
+  },
+  "settings_scrolling_tap_edges": "Tap to Turn Pages",
+  "@settings_scrolling_tap_edges": {
+    "description": "Option to turn pages by tapping screen edges"
+  },
+  "settings_scrolling_tap_edges_subtitle": "Tap screen edges to navigate pages",
+  "@settings_scrolling_tap_edges_subtitle": {
+    "description": "Description of tap to turn pages option"
+  },
   "settings_scrolling_title": "Scrolling Behavior",
-  "settings_scrolling_type": "Scroll Type",
-  "settings_scrolling_type_subtitle": "Choose your scroll type",
+  "@settings_scrolling_title": {
+    "description": "Title for scrolling behavior settings"
+  },
+  "settings_scrolling_type": "Scrolling Type",
+  "@settings_scrolling_type": {
+    "description": "Section title for scrolling type selection"
+  },
+  "settings_scrolling_type_subtitle": "Choose how content scrolls in the reader",
+  "@settings_scrolling_type_subtitle": {
+    "description": "Subtitle explaining scrolling type options"
+  },
   "settings_tag_filters_add_tag": "Add {mode}ed Tag",
   "@settings_tag_filters_add_tag": {
     "placeholders": {
@@ -325,12 +432,30 @@
   "settings_tag_filters_title": "Tag Filters",
   "settings_tag_filters_whitelist": "Whitelist Mode",
   "settings_tag_filters_whitelist_subtitle": "Only show works with specified tags",
-  "settings_text_size_adjust_label": "Adjust the slider to change the text size throughout the app.",
-  "settings_text_size_body": "This is the body text that you'll see throughout the app. It should be comfortable to read for extended periods of time.",
-  "settings_text_size_heading": "This is a heading",
-  "settings_text_size_preview_title": "Text Size Preview",
-  "settings_text_size_subheading": "This is a subheading that provides more context",
+  "settings_text_size_adjust_label": "Text Size",
+  "@settings_text_size_adjust_label": {
+    "description": "Label for text size adjustment control"
+  },
+  "settings_text_size_body": "This is sample body text that shows how your reading content will appear with the current text size settings. You can adjust the size using the control below.",
+  "@settings_text_size_body": {
+    "description": "Sample body text for preview"
+  },
+  "settings_text_size_heading": "Chapter Heading",
+  "@settings_text_size_heading": {
+    "description": "Sample heading text for preview"
+  },
+  "settings_text_size_preview_title": "Preview",
+  "@settings_text_size_preview_title": {
+    "description": "Title for text size preview section"
+  },
+  "settings_text_size_subheading": "Section Subheading",
+  "@settings_text_size_subheading": {
+    "description": "Sample subheading text for preview"
+  },
   "settings_text_size_title": "Text Size",
+  "@settings_text_size_title": {
+    "description": "Title for text size settings"
+  },
   "settings_theme_color_blue": "Default Blue",
   "settings_theme_color_cyan": "Cool Cyan",
   "settings_theme_color_green": "Forest Green",
@@ -343,6 +468,122 @@
   "settings_theme_system": "Use System Theme",
   "settings_theme_wallpaper_colors": "Use Wallpaper Colors",
   "settings_title": "Settings",
+  "settings_ui_color_blue": "Blue",
+  "@settings_ui_color_blue": {
+    "description": "Blue color scheme option"
+  },
+  "settings_ui_color_dynamic": "Dynamic",
+  "@settings_ui_color_dynamic": {
+    "description": "Dynamic color scheme option"
+  },
+  "settings_ui_color_green": "Green",
+  "@settings_ui_color_green": {
+    "description": "Green color scheme option"
+  },
+  "settings_ui_color_orange": "Orange",
+  "@settings_ui_color_orange": {
+    "description": "Orange color scheme option"
+  },
+  "settings_ui_color_purple": "Purple",
+  "@settings_ui_color_purple": {
+    "description": "Purple color scheme option"
+  },
+  "settings_ui_color_red": "Red",
+  "@settings_ui_color_red": {
+    "description": "Red color scheme option"
+  },
+  "settings_ui_color_scheme": "Color Scheme",
+  "@settings_ui_color_scheme": {
+    "description": "Color scheme selection label"
+  },
+  "settings_ui_colors": "Colors",
+  "@settings_ui_colors": {
+    "description": "Section title for color settings"
+  },
+  "settings_ui_compact_mode": "Compact Mode",
+  "@settings_ui_compact_mode": {
+    "description": "Compact mode option"
+  },
+  "settings_ui_compact_mode_subtitle": "Reduce spacing and padding",
+  "@settings_ui_compact_mode_subtitle": {
+    "description": "Description of compact mode option"
+  },
+  "settings_ui_dynamic_color": "Dynamic Color",
+  "@settings_ui_dynamic_color": {
+    "description": "Dynamic color option"
+  },
+  "settings_ui_dynamic_color_subtitle": "Use colors from your wallpaper (Android 12+)",
+  "@settings_ui_dynamic_color_subtitle": {
+    "description": "Description of dynamic color option"
+  },
+  "settings_ui_interface": "Interface",
+  "@settings_ui_interface": {
+    "description": "Section title for interface settings"
+  },
+  "settings_ui_interface_scale": "Interface Scale",
+  "@settings_ui_interface_scale": {
+    "description": "Interface scale slider label"
+  },
+  "settings_ui_show_navigation_bar": "Show Navigation Bar",
+  "@settings_ui_show_navigation_bar": {
+    "description": "Show navigation bar option"
+  },
+  "settings_ui_show_navigation_bar_subtitle": "Display system navigation bar",
+  "@settings_ui_show_navigation_bar_subtitle": {
+    "description": "Description of show navigation bar option"
+  },
+  "settings_ui_show_status_bar": "Show Status Bar",
+  "@settings_ui_show_status_bar": {
+    "description": "Show status bar option"
+  },
+  "settings_ui_show_status_bar_subtitle": "Display system status bar",
+  "@settings_ui_show_status_bar_subtitle": {
+    "description": "Description of show status bar option"
+  },
+  "settings_ui_system_accent": "System Accent Color",
+  "@settings_ui_system_accent": {
+    "description": "System accent color option"
+  },
+  "settings_ui_system_accent_subtitle": "Use system accent color",
+  "@settings_ui_system_accent_subtitle": {
+    "description": "Description of system accent color option"
+  },
+  "settings_ui_system_ui": "System UI",
+  "@settings_ui_system_ui": {
+    "description": "Section title for system UI settings"
+  },
+  "settings_ui_theme": "Look & Feel",
+  "@settings_ui_theme": {
+    "description": "Section title for theme settings"
+  },
+  "settings_ui_theme_dark": "Dark",
+  "@settings_ui_theme_dark": {
+    "description": "Dark theme option"
+  },
+  "settings_ui_theme_dark_subtitle": "Use dark theme",
+  "@settings_ui_theme_dark_subtitle": {
+    "description": "Description of dark theme option"
+  },
+  "settings_ui_theme_light": "Light",
+  "@settings_ui_theme_light": {
+    "description": "Light theme option"
+  },
+  "settings_ui_theme_light_subtitle": "Use light theme",
+  "@settings_ui_theme_light_subtitle": {
+    "description": "Description of light theme option"
+  },
+  "settings_ui_theme_system": "System Default",
+  "@settings_ui_theme_system": {
+    "description": "System default theme option"
+  },
+  "settings_ui_theme_system_subtitle": "Follow system theme setting",
+  "@settings_ui_theme_system_subtitle": {
+    "description": "Description of system theme option"
+  },
+  "settings_ui_title": "Interface & Appearance",
+  "@settings_ui_title": {
+    "description": "Title for UI settings screen"
+  },
   "settings_warnings_apply": "Archive Warnings Apply",
   "settings_warnings_apply_subtitle": "Works with creator-selected warnings",
   "settings_warnings_autohide": "Auto-hide Explicit Content",

@@ -1070,10 +1070,10 @@ abstract class AppLocalizations {
   /// **'Theme & Appearance'**
   String get settings_category_theme;
 
-  /// No description provided for @settings_common_reset.
+  /// Button text to reset settings to default values
   ///
   /// In en, this message translates to:
-  /// **'Reset to default'**
+  /// **'Reset to defaults'**
   String get settings_common_reset;
 
   /// No description provided for @settings_downloads_auto_delete.
@@ -1130,16 +1130,16 @@ abstract class AppLocalizations {
   /// **'Download Over Wi-Fi Only'**
   String get settings_downloads_wifi_only;
 
-  /// No description provided for @settings_font_body_select.
+  /// Instructions for body font selection
   ///
   /// In en, this message translates to:
-  /// **'Select a font for body text'**
+  /// **'Select font for body text and paragraphs'**
   String get settings_font_body_select;
 
-  /// No description provided for @settings_font_heading_select.
+  /// Instructions for heading font selection
   ///
   /// In en, this message translates to:
-  /// **'Select a font for headings'**
+  /// **'Select font for headings and titles'**
   String get settings_font_heading_select;
 
   /// No description provided for @settings_font_system_default.
@@ -1148,19 +1148,19 @@ abstract class AppLocalizations {
   /// **'System Default'**
   String get settings_font_system_default;
 
-  /// No description provided for @settings_font_tab_body.
+  /// Tab label for body text fonts
   ///
   /// In en, this message translates to:
-  /// **'Body'**
+  /// **'Body Text'**
   String get settings_font_tab_body;
 
-  /// No description provided for @settings_font_tab_headings.
+  /// Tab label for heading fonts
   ///
   /// In en, this message translates to:
   /// **'Headings'**
   String get settings_font_tab_headings;
 
-  /// No description provided for @settings_font_title.
+  /// Title for font selection settings
   ///
   /// In en, this message translates to:
   /// **'Font Selection'**
@@ -1262,34 +1262,34 @@ abstract class AppLocalizations {
   /// **'Keep record of works you\'ve read'**
   String get settings_history_track_subtitle;
 
-  /// No description provided for @settings_layout_dual_column.
+  /// Dual column layout option
   ///
   /// In en, this message translates to:
   /// **'Dual Column'**
   String get settings_layout_dual_column;
 
-  /// No description provided for @settings_layout_justify_text.
+  /// Text justification option
   ///
   /// In en, this message translates to:
   /// **'Justify Text'**
   String get settings_layout_justify_text;
 
-  /// No description provided for @settings_layout_line_spacing.
+  /// Line spacing control label
   ///
   /// In en, this message translates to:
-  /// **'Line spacing'**
+  /// **'Line Spacing'**
   String get settings_layout_line_spacing;
 
-  /// No description provided for @settings_layout_paginated.
+  /// Paginated layout option
   ///
   /// In en, this message translates to:
   /// **'Paginated'**
   String get settings_layout_paginated;
 
-  /// No description provided for @settings_layout_paragraph_spacing.
+  /// Paragraph spacing control label
   ///
   /// In en, this message translates to:
-  /// **'Paragraph spacing'**
+  /// **'Paragraph Spacing'**
   String get settings_layout_paragraph_spacing;
 
   /// No description provided for @settings_layout_preview_format.
@@ -1298,22 +1298,22 @@ abstract class AppLocalizations {
   /// **'{layout} Layout'**
   String settings_layout_preview_format(Object layout);
 
-  /// No description provided for @settings_layout_single_column.
+  /// Single column layout option
   ///
   /// In en, this message translates to:
   /// **'Single Column'**
   String get settings_layout_single_column;
 
-  /// No description provided for @settings_layout_title.
+  /// Title for reading layout settings
   ///
   /// In en, this message translates to:
   /// **'Reading Layout'**
   String get settings_layout_title;
 
-  /// No description provided for @settings_layout_type.
+  /// Section title for layout type selection
   ///
   /// In en, this message translates to:
-  /// **'Layout type'**
+  /// **'Layout Type'**
   String get settings_layout_type;
 
   /// No description provided for @settings_rating_age_confirmation.
@@ -1424,118 +1424,130 @@ abstract class AppLocalizations {
   /// **'Show or hide works with the following ratings'**
   String get settings_rating_visibility_subtitle;
 
-  /// No description provided for @settings_scrolling_animation.
+  /// Option to enable page turn animations
   ///
   /// In en, this message translates to:
-  /// **'Allow Page Turning Animation'**
+  /// **'Page Animations'**
   String get settings_scrolling_animation;
 
-  /// No description provided for @settings_scrolling_animation_subtitle.
+  /// Description of page animation option
   ///
   /// In en, this message translates to:
-  /// **'Adds a page turning animation'**
+  /// **'Animate page transitions'**
   String get settings_scrolling_animation_subtitle;
 
-  /// No description provided for @settings_scrolling_continuous.
+  /// Continuous scrolling option
   ///
   /// In en, this message translates to:
   /// **'Continuous'**
   String get settings_scrolling_continuous;
 
-  /// No description provided for @settings_scrolling_continuous_subtitle.
+  /// Description of continuous scrolling
   ///
   /// In en, this message translates to:
-  /// **'Standard smooth scrolling'**
+  /// **'Scroll smoothly through content'**
   String get settings_scrolling_continuous_subtitle;
 
-  /// No description provided for @settings_scrolling_keep_screen_on.
+  /// Option to keep screen on while reading
   ///
   /// In en, this message translates to:
   /// **'Keep Screen On'**
   String get settings_scrolling_keep_screen_on;
 
-  /// No description provided for @settings_scrolling_keep_screen_on_subtitle.
+  /// Description of keep screen on option
   ///
   /// In en, this message translates to:
-  /// **'Prevents the screen from turning off'**
+  /// **'Prevent screen from dimming while reading'**
   String get settings_scrolling_keep_screen_on_subtitle;
 
-  /// No description provided for @settings_scrolling_paged.
+  /// Paged scrolling option
   ///
   /// In en, this message translates to:
   /// **'Paged'**
   String get settings_scrolling_paged;
 
-  /// No description provided for @settings_scrolling_paged_options.
+  /// Section title for paged scrolling options
   ///
   /// In en, this message translates to:
-  /// **'Paged Scrolling Options'**
+  /// **'Page Options'**
   String get settings_scrolling_paged_options;
 
-  /// No description provided for @settings_scrolling_paged_subtitle.
+  /// Description of paged scrolling
   ///
   /// In en, this message translates to:
-  /// **'Swipe to move between pages'**
+  /// **'Turn pages like a book'**
   String get settings_scrolling_paged_subtitle;
 
-  /// No description provided for @settings_scrolling_physics.
+  /// Option to enable scroll physics
   ///
   /// In en, this message translates to:
-  /// **'Physics-based Scrolling'**
+  /// **'Scroll Physics'**
   String get settings_scrolling_physics;
 
-  /// No description provided for @settings_scrolling_physics_subtitle.
+  /// Description of scroll physics option
   ///
   /// In en, this message translates to:
-  /// **'Makes scrolling feel more natural with momentum'**
+  /// **'Natural scroll bounce and resistance'**
   String get settings_scrolling_physics_subtitle;
 
-  /// No description provided for @settings_scrolling_sensitivity.
+  /// Section title for scroll physics settings
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll Physics'**
+  String get settings_scrolling_physics_title;
+
+  /// Section title for screen-related options
+  ///
+  /// In en, this message translates to:
+  /// **'Screen Options'**
+  String get settings_scrolling_screen_options;
+
+  /// Scroll sensitivity slider label
   ///
   /// In en, this message translates to:
   /// **'Scroll Sensitivity'**
   String get settings_scrolling_sensitivity;
 
-  /// No description provided for @settings_scrolling_show_indicator.
+  /// Option to show page indicator
   ///
   /// In en, this message translates to:
   /// **'Show Page Indicator'**
   String get settings_scrolling_show_indicator;
 
-  /// No description provided for @settings_scrolling_show_indicator_subtitle.
+  /// Description of page indicator option
   ///
   /// In en, this message translates to:
-  /// **'Displays a page indicator at the bottom'**
+  /// **'Display page numbers while reading'**
   String get settings_scrolling_show_indicator_subtitle;
 
-  /// No description provided for @settings_scrolling_tap_edges.
+  /// Option to turn pages by tapping screen edges
   ///
   /// In en, this message translates to:
-  /// **'Tap Edges to Turn Page'**
+  /// **'Tap to Turn Pages'**
   String get settings_scrolling_tap_edges;
 
-  /// No description provided for @settings_scrolling_tap_edges_subtitle.
+  /// Description of tap to turn pages option
   ///
   /// In en, this message translates to:
-  /// **'Tap the edges of the screen to turn pages'**
+  /// **'Tap screen edges to navigate pages'**
   String get settings_scrolling_tap_edges_subtitle;
 
-  /// No description provided for @settings_scrolling_title.
+  /// Title for scrolling behavior settings
   ///
   /// In en, this message translates to:
   /// **'Scrolling Behavior'**
   String get settings_scrolling_title;
 
-  /// No description provided for @settings_scrolling_type.
+  /// Section title for scrolling type selection
   ///
   /// In en, this message translates to:
-  /// **'Scroll Type'**
+  /// **'Scrolling Type'**
   String get settings_scrolling_type;
 
-  /// No description provided for @settings_scrolling_type_subtitle.
+  /// Subtitle explaining scrolling type options
   ///
   /// In en, this message translates to:
-  /// **'Choose your scroll type'**
+  /// **'Choose how content scrolls in the reader'**
   String get settings_scrolling_type_subtitle;
 
   /// No description provided for @settings_tag_filters_add_tag.
@@ -1628,37 +1640,37 @@ abstract class AppLocalizations {
   /// **'Only show works with specified tags'**
   String get settings_tag_filters_whitelist_subtitle;
 
-  /// No description provided for @settings_text_size_adjust_label.
+  /// Label for text size adjustment control
   ///
   /// In en, this message translates to:
-  /// **'Adjust the slider to change the text size throughout the app.'**
+  /// **'Text Size'**
   String get settings_text_size_adjust_label;
 
-  /// No description provided for @settings_text_size_body.
+  /// Sample body text for preview
   ///
   /// In en, this message translates to:
-  /// **'This is the body text that you\'ll see throughout the app. It should be comfortable to read for extended periods of time.'**
+  /// **'This is sample body text that shows how your reading content will appear with the current text size settings. You can adjust the size using the control below.'**
   String get settings_text_size_body;
 
-  /// No description provided for @settings_text_size_heading.
+  /// Sample heading text for preview
   ///
   /// In en, this message translates to:
-  /// **'This is a heading'**
+  /// **'Chapter Heading'**
   String get settings_text_size_heading;
 
-  /// No description provided for @settings_text_size_preview_title.
+  /// Title for text size preview section
   ///
   /// In en, this message translates to:
-  /// **'Text Size Preview'**
+  /// **'Preview'**
   String get settings_text_size_preview_title;
 
-  /// No description provided for @settings_text_size_subheading.
+  /// Sample subheading text for preview
   ///
   /// In en, this message translates to:
-  /// **'This is a subheading that provides more context'**
+  /// **'Section Subheading'**
   String get settings_text_size_subheading;
 
-  /// No description provided for @settings_text_size_title.
+  /// Title for text size settings
   ///
   /// In en, this message translates to:
   /// **'Text Size'**
@@ -1735,6 +1747,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings_title;
+
+  /// Blue color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get settings_ui_color_blue;
+
+  /// Dynamic color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic'**
+  String get settings_ui_color_dynamic;
+
+  /// Green color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get settings_ui_color_green;
+
+  /// Orange color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get settings_ui_color_orange;
+
+  /// Purple color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get settings_ui_color_purple;
+
+  /// Red color scheme option
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get settings_ui_color_red;
+
+  /// Color scheme selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Color Scheme'**
+  String get settings_ui_color_scheme;
+
+  /// Section title for color settings
+  ///
+  /// In en, this message translates to:
+  /// **'Colors'**
+  String get settings_ui_colors;
+
+  /// Compact mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Compact Mode'**
+  String get settings_ui_compact_mode;
+
+  /// Description of compact mode option
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce spacing and padding'**
+  String get settings_ui_compact_mode_subtitle;
+
+  /// Dynamic color option
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic Color'**
+  String get settings_ui_dynamic_color;
+
+  /// Description of dynamic color option
+  ///
+  /// In en, this message translates to:
+  /// **'Use colors from your wallpaper (Android 12+)'**
+  String get settings_ui_dynamic_color_subtitle;
+
+  /// Section title for interface settings
+  ///
+  /// In en, this message translates to:
+  /// **'Interface'**
+  String get settings_ui_interface;
+
+  /// Interface scale slider label
+  ///
+  /// In en, this message translates to:
+  /// **'Interface Scale'**
+  String get settings_ui_interface_scale;
+
+  /// Show navigation bar option
+  ///
+  /// In en, this message translates to:
+  /// **'Show Navigation Bar'**
+  String get settings_ui_show_navigation_bar;
+
+  /// Description of show navigation bar option
+  ///
+  /// In en, this message translates to:
+  /// **'Display system navigation bar'**
+  String get settings_ui_show_navigation_bar_subtitle;
+
+  /// Show status bar option
+  ///
+  /// In en, this message translates to:
+  /// **'Show Status Bar'**
+  String get settings_ui_show_status_bar;
+
+  /// Description of show status bar option
+  ///
+  /// In en, this message translates to:
+  /// **'Display system status bar'**
+  String get settings_ui_show_status_bar_subtitle;
+
+  /// System accent color option
+  ///
+  /// In en, this message translates to:
+  /// **'System Accent Color'**
+  String get settings_ui_system_accent;
+
+  /// Description of system accent color option
+  ///
+  /// In en, this message translates to:
+  /// **'Use system accent color'**
+  String get settings_ui_system_accent_subtitle;
+
+  /// Section title for system UI settings
+  ///
+  /// In en, this message translates to:
+  /// **'System UI'**
+  String get settings_ui_system_ui;
+
+  /// Section title for theme settings
+  ///
+  /// In en, this message translates to:
+  /// **'Look & Feel'**
+  String get settings_ui_theme;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get settings_ui_theme_dark;
+
+  /// Description of dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Use dark theme'**
+  String get settings_ui_theme_dark_subtitle;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get settings_ui_theme_light;
+
+  /// Description of light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Use light theme'**
+  String get settings_ui_theme_light_subtitle;
+
+  /// System default theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get settings_ui_theme_system;
+
+  /// Description of system theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Follow system theme setting'**
+  String get settings_ui_theme_system_subtitle;
+
+  /// Title for UI settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Interface & Appearance'**
+  String get settings_ui_title;
 
   /// No description provided for @settings_warnings_apply.
   ///

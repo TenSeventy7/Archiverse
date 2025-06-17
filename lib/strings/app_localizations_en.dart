@@ -548,7 +548,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_category_theme => 'Theme & Appearance';
 
   @override
-  String get settings_common_reset => 'Reset to default';
+  String get settings_common_reset => 'Reset to defaults';
 
   @override
   String get settings_downloads_auto_delete => 'Auto-Delete Old Downloads';
@@ -580,16 +580,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_downloads_wifi_only => 'Download Over Wi-Fi Only';
 
   @override
-  String get settings_font_body_select => 'Select a font for body text';
+  String get settings_font_body_select =>
+      'Select font for body text and paragraphs';
 
   @override
-  String get settings_font_heading_select => 'Select a font for headings';
+  String get settings_font_heading_select =>
+      'Select font for headings and titles';
 
   @override
   String get settings_font_system_default => 'System Default';
 
   @override
-  String get settings_font_tab_body => 'Body';
+  String get settings_font_tab_body => 'Body Text';
 
   @override
   String get settings_font_tab_headings => 'Headings';
@@ -656,13 +658,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_layout_justify_text => 'Justify Text';
 
   @override
-  String get settings_layout_line_spacing => 'Line spacing';
+  String get settings_layout_line_spacing => 'Line Spacing';
 
   @override
   String get settings_layout_paginated => 'Paginated';
 
   @override
-  String get settings_layout_paragraph_spacing => 'Paragraph spacing';
+  String get settings_layout_paragraph_spacing => 'Paragraph Spacing';
 
   @override
   String settings_layout_preview_format(Object layout) {
@@ -676,7 +678,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_layout_title => 'Reading Layout';
 
   @override
-  String get settings_layout_type => 'Layout type';
+  String get settings_layout_type => 'Layout Type';
 
   @override
   String get settings_rating_age_confirmation =>
@@ -737,41 +739,47 @@ class AppLocalizationsEn extends AppLocalizations {
       'Show or hide works with the following ratings';
 
   @override
-  String get settings_scrolling_animation => 'Allow Page Turning Animation';
+  String get settings_scrolling_animation => 'Page Animations';
 
   @override
   String get settings_scrolling_animation_subtitle =>
-      'Adds a page turning animation';
+      'Animate page transitions';
 
   @override
   String get settings_scrolling_continuous => 'Continuous';
 
   @override
   String get settings_scrolling_continuous_subtitle =>
-      'Standard smooth scrolling';
+      'Scroll smoothly through content';
 
   @override
   String get settings_scrolling_keep_screen_on => 'Keep Screen On';
 
   @override
   String get settings_scrolling_keep_screen_on_subtitle =>
-      'Prevents the screen from turning off';
+      'Prevent screen from dimming while reading';
 
   @override
   String get settings_scrolling_paged => 'Paged';
 
   @override
-  String get settings_scrolling_paged_options => 'Paged Scrolling Options';
+  String get settings_scrolling_paged_options => 'Page Options';
 
   @override
-  String get settings_scrolling_paged_subtitle => 'Swipe to move between pages';
+  String get settings_scrolling_paged_subtitle => 'Turn pages like a book';
 
   @override
-  String get settings_scrolling_physics => 'Physics-based Scrolling';
+  String get settings_scrolling_physics => 'Scroll Physics';
 
   @override
   String get settings_scrolling_physics_subtitle =>
-      'Makes scrolling feel more natural with momentum';
+      'Natural scroll bounce and resistance';
+
+  @override
+  String get settings_scrolling_physics_title => 'Scroll Physics';
+
+  @override
+  String get settings_scrolling_screen_options => 'Screen Options';
 
   @override
   String get settings_scrolling_sensitivity => 'Scroll Sensitivity';
@@ -781,23 +789,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_scrolling_show_indicator_subtitle =>
-      'Displays a page indicator at the bottom';
+      'Display page numbers while reading';
 
   @override
-  String get settings_scrolling_tap_edges => 'Tap Edges to Turn Page';
+  String get settings_scrolling_tap_edges => 'Tap to Turn Pages';
 
   @override
   String get settings_scrolling_tap_edges_subtitle =>
-      'Tap the edges of the screen to turn pages';
+      'Tap screen edges to navigate pages';
 
   @override
   String get settings_scrolling_title => 'Scrolling Behavior';
 
   @override
-  String get settings_scrolling_type => 'Scroll Type';
+  String get settings_scrolling_type => 'Scrolling Type';
 
   @override
-  String get settings_scrolling_type_subtitle => 'Choose your scroll type';
+  String get settings_scrolling_type_subtitle =>
+      'Choose how content scrolls in the reader';
 
   @override
   String settings_tag_filters_add_tag(Object mode) {
@@ -854,22 +863,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only show works with specified tags';
 
   @override
-  String get settings_text_size_adjust_label =>
-      'Adjust the slider to change the text size throughout the app.';
+  String get settings_text_size_adjust_label => 'Text Size';
 
   @override
   String get settings_text_size_body =>
-      'This is the body text that you\'ll see throughout the app. It should be comfortable to read for extended periods of time.';
+      'This is sample body text that shows how your reading content will appear with the current text size settings. You can adjust the size using the control below.';
 
   @override
-  String get settings_text_size_heading => 'This is a heading';
+  String get settings_text_size_heading => 'Chapter Heading';
 
   @override
-  String get settings_text_size_preview_title => 'Text Size Preview';
+  String get settings_text_size_preview_title => 'Preview';
 
   @override
-  String get settings_text_size_subheading =>
-      'This is a subheading that provides more context';
+  String get settings_text_size_subheading => 'Section Subheading';
 
   @override
   String get settings_text_size_title => 'Text Size';
@@ -909,6 +916,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_title => 'Settings';
+
+  @override
+  String get settings_ui_color_blue => 'Blue';
+
+  @override
+  String get settings_ui_color_dynamic => 'Dynamic';
+
+  @override
+  String get settings_ui_color_green => 'Green';
+
+  @override
+  String get settings_ui_color_orange => 'Orange';
+
+  @override
+  String get settings_ui_color_purple => 'Purple';
+
+  @override
+  String get settings_ui_color_red => 'Red';
+
+  @override
+  String get settings_ui_color_scheme => 'Color Scheme';
+
+  @override
+  String get settings_ui_colors => 'Colors';
+
+  @override
+  String get settings_ui_compact_mode => 'Compact Mode';
+
+  @override
+  String get settings_ui_compact_mode_subtitle => 'Reduce spacing and padding';
+
+  @override
+  String get settings_ui_dynamic_color => 'Dynamic Color';
+
+  @override
+  String get settings_ui_dynamic_color_subtitle =>
+      'Use colors from your wallpaper (Android 12+)';
+
+  @override
+  String get settings_ui_interface => 'Interface';
+
+  @override
+  String get settings_ui_interface_scale => 'Interface Scale';
+
+  @override
+  String get settings_ui_show_navigation_bar => 'Show Navigation Bar';
+
+  @override
+  String get settings_ui_show_navigation_bar_subtitle =>
+      'Display system navigation bar';
+
+  @override
+  String get settings_ui_show_status_bar => 'Show Status Bar';
+
+  @override
+  String get settings_ui_show_status_bar_subtitle =>
+      'Display system status bar';
+
+  @override
+  String get settings_ui_system_accent => 'System Accent Color';
+
+  @override
+  String get settings_ui_system_accent_subtitle => 'Use system accent color';
+
+  @override
+  String get settings_ui_system_ui => 'System UI';
+
+  @override
+  String get settings_ui_theme => 'Look & Feel';
+
+  @override
+  String get settings_ui_theme_dark => 'Dark';
+
+  @override
+  String get settings_ui_theme_dark_subtitle => 'Use dark theme';
+
+  @override
+  String get settings_ui_theme_light => 'Light';
+
+  @override
+  String get settings_ui_theme_light_subtitle => 'Use light theme';
+
+  @override
+  String get settings_ui_theme_system => 'System Default';
+
+  @override
+  String get settings_ui_theme_system_subtitle => 'Follow system theme setting';
+
+  @override
+  String get settings_ui_title => 'Interface & Appearance';
 
   @override
   String get settings_warnings_apply => 'Archive Warnings Apply';

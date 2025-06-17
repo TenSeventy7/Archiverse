@@ -1,9 +1,12 @@
 import 'package:archiverse/components/settings/bottom_panel.dart';
 import 'package:archiverse/components/settings/text_size_control.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/preferences.dart';
+import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
 
 class TextSizeSettingsActivity extends CommonActivity {
   static const String routeName = '/settings/text_size';
@@ -15,60 +18,93 @@ class TextSizeSettingsActivity extends CommonActivity {
 }
 
 class _TextSizeSettingsActivityState extends State<TextSizeSettingsActivity> {
-  double _textScale = 1.0; // 1.0 is default
+  late PreferencesProvider _prefs;
+
+  // Default values
+  static const double _defaultTextScale = 1.0;
+
+  // Current values
+  double _textScale = _defaultTextScale;
+
+  @override
+  void initState() {
+    super.initState();
+    _prefs = context.read<PreferencesProvider>();
+    _loadSettings();
+  }
+
+  void _loadSettings() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _textScale = _prefs.getDouble(
+            Preferences.textScaleFactor,
+            defaultValue: _defaultTextScale,
+          );
+        });
+      }
+    });
+  }
+
+  void _resetToDefaults() {
+    setState(() {
+      _textScale = _defaultTextScale;
+    });
+    _saveSettings();
+  }
+
+  void _saveSettings() {
+    _prefs.setDouble(Preferences.textScaleFactor, _textScale);
+  }
+
+  void _updateTextScale(double value) {
+    setState(() => _textScale = value);
+    _prefs.setDouble(Preferences.textScaleFactor, value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          // Top section with app bar and preview
           Expanded(
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(),
               slivers: [
-                SliverAppBar.large(
-                  title: Text(context.strings.settings_text_size_title),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(TablerIcons.rotate_2),
-                      onPressed: () {
-                        setState(() {
-                          _textScale = 1.0;
-                        });
-                      },
-                      tooltip: context.strings.settings_common_reset,
-                    ),
-                  ],
-                  pinned: true,
-                ),
+                _buildAppBar(context),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: context.commonPadding,
                     ),
-                    child: _buildPreviewSection(),
+                    child: _buildPreviewSection(context),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Bottom section with controls - using the reusable component
-          SettingsBottomPanel(
-            child: TextSizeControl(
-              value: _textScale,
-              onChanged: (value) => setState(() => _textScale = value),
-              label: context.strings.settings_text_size_adjust_label,
-            ),
-          ),
+          _buildBottomControls(context),
         ],
       ),
     );
   }
 
-  Widget _buildPreviewSection() {
+  Widget _buildAppBar(BuildContext context) {
+    return SliverAppBar.large(
+      title: Text(context.strings.settings_text_size_title),
+      actions: [
+        IconButton(
+          icon: const Icon(TablerIcons.rotate_2),
+          onPressed: _resetToDefaults,
+          tooltip: context.strings.settings_common_reset,
+        ),
+      ],
+      pinned: true,
+    );
+  }
+
+  Widget _buildPreviewSection(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(8),
@@ -80,38 +116,73 @@ class _TextSizeSettingsActivityState extends State<TextSizeSettingsActivity> {
             context.strings.settings_text_size_preview_title,
             style: context.textTheme.titleLarge,
           ),
-          Divider(height: 24),
-
-          // Display example text at different levels with the applied scale
-          Text(
-            context.strings.settings_text_size_heading,
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontSize: context.textTheme.headlineSmall!.fontSize! * _textScale,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            context.strings.settings_text_size_subheading,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontSize: context.textTheme.titleMedium!.fontSize! * _textScale,
-              color: context.colorScheme.secondary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            context.strings.settings_text_size_body,
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontSize: context.textTheme.bodyMedium!.fontSize! * _textScale,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            context.strings.settings_text_size_body,
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontSize: context.textTheme.bodyMedium!.fontSize! * _textScale,
-            ),
-          ),
+          const Divider(height: 24),
+          _buildTextSizeExamples(context),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextSizeExamples(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildScaledText(
+          context,
+          text: context.strings.settings_text_size_heading,
+          baseStyle: context.textTheme.headlineSmall,
+          spacing: 16,
+        ),
+        _buildScaledText(
+          context,
+          text: context.strings.settings_text_size_subheading,
+          baseStyle: context.textTheme.titleMedium?.copyWith(
+            color: context.colorScheme.secondary,
+          ),
+          spacing: 24,
+        ),
+        _buildScaledText(
+          context,
+          text: context.strings.settings_text_size_body,
+          baseStyle: context.textTheme.bodyMedium,
+          spacing: 16,
+        ),
+        _buildScaledText(
+          context,
+          text: context.strings.settings_text_size_body,
+          baseStyle: context.textTheme.bodyMedium,
+          spacing: 0,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildScaledText(
+    BuildContext context, {
+    required String text,
+    required TextStyle? baseStyle,
+    required double spacing,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: baseStyle?.copyWith(
+            fontSize: (baseStyle.fontSize ?? 14) * _textScale,
+          ),
+        ),
+        if (spacing > 0) SizedBox(height: spacing),
+      ],
+    );
+  }
+
+  Widget _buildBottomControls(BuildContext context) {
+    return SettingsBottomPanel(
+      child: TextSizeControl(
+        value: _textScale,
+        onChanged: _updateTextScale,
+        label: context.strings.settings_text_size_adjust_label,
       ),
     );
   }
