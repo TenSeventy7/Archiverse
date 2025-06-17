@@ -6,9 +6,11 @@
 
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
+import 'package:archiverse/dialogs/reader_settings_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -128,6 +130,18 @@ class _WorkOptionsDialog extends StatelessWidget {
             ),
           ),
         ),
+
+        if (isReader) ...[
+          _buildActionTile(
+            context,
+            icon: TablerIcons.settings,
+            title: "Settings",
+            onTap: () => {
+              Navigator.pop(context),
+              ReaderSettingsDialog.showSheet(context),
+            },
+          ),
+        ],
 
         SizedBox(height: context.screenPadding.bottom + context.commonPadding),
       ],

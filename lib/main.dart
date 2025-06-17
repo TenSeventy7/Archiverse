@@ -8,6 +8,7 @@ import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
+import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
@@ -35,6 +36,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => preferences),
         ChangeNotifierProvider(create: (_) => user),
         ChangeNotifierProvider(create: (context) => ThemeProvider(context)),
+        ChangeNotifierProvider(
+          create: (context) =>
+              ReaderProvider(context.read<PreferencesProvider>()),
+        ),
       ],
       child: const Archiverse(),
     ),

@@ -4,6 +4,7 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
+import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
