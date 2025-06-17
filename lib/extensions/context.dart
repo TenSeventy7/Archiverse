@@ -90,4 +90,18 @@ extension BuildContextExtension on BuildContext {
   bool get isDebugMode {
     return kDebugMode;
   }
+
+  /// Returns a scaled width based on the device's screen width
+  /// @param ratio The ratio to scale the width by (e.g., 0.5 for half the width)
+  /// @return The scaled width
+  double vw(double ratio) {
+    return screenWidth * ratio;
+  }
+
+  /// Returns a scaled height based on the device's screen height
+  /// @param ratio The ratio to scale the height by (e.g., 0.5 for half the height)
+  /// @return The scaled height
+  double vh(double ratio) {
+    return screenHeight * ratio;
+  }
 }
