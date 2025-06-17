@@ -24,37 +24,32 @@ class _ChaptersListDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: CustomScrollView(
-        shrinkWrap: true,
-        slivers: [
-          // Header
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextHeader.medium(
-                    title: "Chapters",
-                    icon: TablerIcons.list,
-                    hasPadding: false,
-                  ),
-                ],
-              ),
+    return Container(
+      constraints: BoxConstraints(maxHeight: context.vh(0.85)),
+      child: Scaffold(
+        backgroundColor: context.colorScheme.surfaceContainer,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight + 9.0),
+          child: Container(
+            color: context.colorScheme.surfaceContainer,
+            child: Column(
+              children: [
+                TextHeader.large(title: "Chapters", icon: TablerIcons.list),
+                Divider(
+                  height: 1,
+                  color: context.colorScheme.surfaceContainerHigh,
+                ),
+              ],
             ),
           ),
-
-          // Chapters list
-          _buildChaptersList(context),
-        ],
+        ),
+        body: _buildChaptersList(context),
       ),
     );
   }
 
   Widget _buildChaptersList(BuildContext context) {
-    return SliverList.separated(
+    return ListView.separated(
       itemCount: chapters.length,
       itemBuilder: _buildListTile,
       separatorBuilder: (context, index) => const Divider(height: 1),
@@ -67,6 +62,7 @@ class _ChaptersListDialog extends StatelessWidget {
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+      tileColor: context.colorScheme.surface,
       leading: Container(
         height: 32,
         width: 32,
@@ -130,7 +126,7 @@ class ChaptersListDialog {
       showDragHandle: true,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: context.colorScheme.surface,
+      backgroundColor: context.colorScheme.surfaceContainer,
       builder: (BuildContext context) => _ChaptersListDialog(
         chapters: chapters,
         currentChapterIndex: currentChapterIndex,
