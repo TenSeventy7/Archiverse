@@ -13,9 +13,9 @@ class OptionGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null)
+        if (title != null) ...[
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
             child: Text(
               title!,
               style: context.textTheme.titleSmall?.copyWith(
@@ -23,6 +23,7 @@ class OptionGroup extends StatelessWidget {
               ),
             ),
           ),
+        ],
         Card.filled(
           clipBehavior: Clip.antiAlias,
           color: context.colorScheme.surfaceContainerLowest,
