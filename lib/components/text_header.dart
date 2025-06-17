@@ -83,33 +83,34 @@ class TextHeader extends StatelessWidget {
         top: (size == TextHeaderSize.small) ? 0.0 : 8.0 + (padding?.top ?? 0.0),
         bottom: padding?.bottom ?? 0.0,
       ),
-      leading:
-          icon != null
-              ? Icon(
-                icon,
-                size:
-                    size == TextHeaderSize.small
-                        ? 20.0
-                        : size == TextHeaderSize.medium
-                        ? 24.0
-                        : 28.0,
-                color: context.colorScheme.primary.withValues(alpha: 0.6),
-              )
-              : null,
-      title: Text(title, style: titleStyle),
-      subtitle:
-          subtitle != null
-              ? Text(
-                subtitle!,
-                style: subtitleStyle?.apply(
-                  color: context.colorScheme.onSurface.withValues(alpha: 0.6),
+      leading: icon != null
+          ? Icon(
+              icon,
+              size: size == TextHeaderSize.small
+                  ? 20.0
+                  : size == TextHeaderSize.medium
+                  ? 24.0
+                  : 28.0,
+              color: context.colorScheme.primary.withValues(alpha: 0.6),
+            )
+          : null,
+      title: Text(
+        title,
+        style: titleStyle?.apply(color: context.colorScheme.onSurfaceVariant),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle!,
+              style: subtitleStyle?.apply(
+                color: context.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.6,
                 ),
-              )
-              : null,
-      trailing:
-          actionText != null
-              ? TextButton(onPressed: onTap, child: actionText!)
-              : null,
+              ),
+            )
+          : null,
+      trailing: actionText != null
+          ? TextButton(onPressed: onTap, child: actionText!)
+          : null,
     );
   }
 }
