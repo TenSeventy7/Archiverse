@@ -4,6 +4,7 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
+import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_backup_settings.dart';
@@ -18,7 +19,8 @@ import 'package:archiverse/views/settings/activity_reading_layout_settings.dart'
 import 'package:archiverse/views/settings/activity_scrolling_behavior_settings.dart';
 import 'package:archiverse/views/settings/activity_tag_filters_settings.dart';
 import 'package:archiverse/views/settings/activity_text_size_settings.dart';
-import 'package:flutter/material.dart' hide ThemeMode, ColorScheme;
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -35,14 +37,14 @@ class _SettingsActivityState extends State<SettingsActivity> {
   late PreferencesProvider _prefs;
 
   // Default values
-  static const ThemeMode _defaultThemeMode = ThemeMode.system;
-  static const ColorScheme _defaultColorScheme = ColorScheme.red;
+  static const AppThemeMode _defaultThemeMode = AppThemeMode.system;
+  static const AppColorScheme _defaultColorScheme = AppColorScheme.red;
   static const bool _defaultShowStatusBar = true;
   static const bool _defaultShowNavigationBar = true;
 
   // Current values
-  ThemeMode _themeMode = _defaultThemeMode;
-  ColorScheme _colorScheme = _defaultColorScheme;
+  AppThemeMode _themeMode = _defaultThemeMode;
+  AppColorScheme _colorScheme = _defaultColorScheme;
   bool _showStatusBar = _defaultShowStatusBar;
   bool _showNavigationBar = _defaultShowNavigationBar;
 
@@ -57,10 +59,10 @@ class _SettingsActivityState extends State<SettingsActivity> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
-          _themeMode = ThemeMode.fromKey(
+          _themeMode = AppThemeMode.fromKey(
             _prefs.getString(Preferences.themeMode) ?? _defaultThemeMode.key,
           );
-          _colorScheme = ColorScheme.fromKey(
+          _colorScheme = AppColorScheme.fromKey(
             _prefs.getString(Preferences.colorScheme) ??
                 _defaultColorScheme.key,
           );
@@ -77,14 +79,14 @@ class _SettingsActivityState extends State<SettingsActivity> {
     });
   }
 
-  void _updateThemeMode(ThemeMode mode) {
+  void _updateThemeMode(AppThemeMode mode) {
     setState(() => _themeMode = mode);
-    _prefs.setString(Preferences.themeMode, mode.key);
+    Provider.of<ThemeProvider>(context, listen: false).setThemeMode(mode);
   }
 
-  void _updateColorScheme(ColorScheme scheme) {
+  void _updateColorScheme(AppColorScheme scheme) {
     setState(() => _colorScheme = scheme);
-    _prefs.setString(Preferences.colorScheme, scheme.key);
+    Provider.of<ThemeProvider>(context, listen: false).setColorScheme(scheme);
   }
 
   void _updateShowStatusBar(bool value) {
@@ -234,11 +236,11 @@ class _SettingsActivityState extends State<SettingsActivity> {
       OptionTile.custom(
         title: "",
         padding: EdgeInsets.zero,
-        enabled: _themeMode != ThemeMode.system,
+        enabled: _themeMode != AppThemeMode.system,
         widget: Opacity(
-          opacity: _themeMode == ThemeMode.system ? 0.5 : 1.0,
+          opacity: _themeMode == AppThemeMode.system ? 0.5 : 1.0,
           child: IgnorePointer(
-            ignoring: _themeMode == ThemeMode.system,
+            ignoring: _themeMode == AppThemeMode.system,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -249,12 +251,12 @@ class _SettingsActivityState extends State<SettingsActivity> {
                   Expanded(
                     child: _buildThemeOption(
                       context: context,
-                      mode: ThemeMode.light,
+                      mode: AppThemeMode.light,
                       icon: TablerIcons.sun,
                       label: context.strings.settings_ui_theme_light,
                       isSelected:
-                          _themeMode == ThemeMode.light ||
-                          (_themeMode == ThemeMode.system &&
+                          _themeMode == AppThemeMode.light ||
+                          (_themeMode == AppThemeMode.system &&
                               !context.isDarkMode),
                     ),
                   ),
@@ -262,12 +264,12 @@ class _SettingsActivityState extends State<SettingsActivity> {
                   Expanded(
                     child: _buildThemeOption(
                       context: context,
-                      mode: ThemeMode.dark,
+                      mode: AppThemeMode.dark,
                       icon: TablerIcons.moon,
                       label: context.strings.settings_ui_theme_dark,
                       isSelected:
-                          _themeMode == ThemeMode.dark ||
-                          (_themeMode == ThemeMode.system &&
+                          _themeMode == AppThemeMode.dark ||
+                          (_themeMode == AppThemeMode.system &&
                               context.isDarkMode),
                     ),
                   ),
@@ -281,9 +283,9 @@ class _SettingsActivityState extends State<SettingsActivity> {
         title: context.strings.settings_ui_theme_system,
         subtitle: context.strings.settings_ui_theme_system_subtitle,
         icon: TablerIcons.device_desktop,
-        value: _themeMode == ThemeMode.system,
+        value: _themeMode == AppThemeMode.system,
         onChanged: (value) {
-          _updateThemeMode(value ? ThemeMode.system : ThemeMode.light);
+          _updateThemeMode(value ? AppThemeMode.system : AppThemeMode.light);
         },
       ),
     ];
@@ -291,7 +293,7 @@ class _SettingsActivityState extends State<SettingsActivity> {
 
   Widget _buildThemeOption({
     required BuildContext context,
-    required ThemeMode mode,
+    required AppThemeMode mode,
     required IconData icon,
     required String label,
     required bool isSelected,
@@ -380,34 +382,63 @@ class _SettingsActivityState extends State<SettingsActivity> {
   OptionTile _buildColorSchemeSelection(BuildContext context) {
     return OptionTile.custom(
       title: context.strings.settings_ui_color_scheme,
-      widget: Padding(
-        padding: const EdgeInsets.only(left: 16, top: 8),
-        child: Wrap(
-          spacing: 8,
-          children: ColorScheme.values.map((scheme) {
-            return ChoiceChip(
-              selected: _colorScheme == scheme,
-              onSelected: (selected) {
-                if (selected) _updateColorScheme(scheme);
-              },
-              showCheckmark: false,
-              labelPadding: EdgeInsets.zero,
-              label: CircleAvatar(
-                backgroundColor: scheme.primaryColor(context),
-                radius: 18.0,
-                child: _colorScheme == scheme
-                    ? Icon(
-                        TablerIcons.check,
-                        color: context.isDarkMode
-                            ? Colors.black87
-                            : Colors.white,
-                        size: 24.0,
-                      )
-                    : null,
-              ),
-            );
-          }).toList(),
-        ),
+      widget: DynamicColorBuilder(
+        builder: (lightScheme, darkScheme) {
+          final dynamicColorScheme = context.isDarkMode
+              ? darkScheme
+              : lightScheme;
+          final isSupportDynamicColor = context
+              .read<ThemeProvider>()
+              .supportsDynamicColor;
+
+          return Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: AppColorScheme.values.map((scheme) {
+                final isDynamic = scheme == AppColorScheme.dynamic;
+                final colorScheme = context.isDarkMode
+                    ? scheme.darkColorScheme
+                    : scheme.lightColorScheme;
+
+                if (isDynamic && !isSupportDynamicColor) {
+                  return const SizedBox.shrink();
+                }
+
+                return ChoiceChip(
+                  selected: _colorScheme == scheme,
+                  onSelected: (selected) {
+                    if (selected) _updateColorScheme(scheme);
+                  },
+                  showCheckmark: false,
+                  labelPadding: EdgeInsets.zero,
+                  label: CircleAvatar(
+                    backgroundColor: isDynamic
+                        ? dynamicColorScheme?.primary
+                        : colorScheme.primary,
+                    radius: 18.0,
+                    child: (_colorScheme == scheme)
+                        ? Icon(
+                            TablerIcons.check,
+                            color: isDynamic
+                                ? dynamicColorScheme?.primaryContainer
+                                : colorScheme.primaryContainer,
+                            size: 24.0,
+                          )
+                        : (isDynamic && _colorScheme != scheme)
+                        ? Icon(
+                            TablerIcons.palette,
+                            color: dynamicColorScheme?.primaryContainer,
+                            size: 24.0,
+                          )
+                        : null,
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        },
       ),
     );
   }

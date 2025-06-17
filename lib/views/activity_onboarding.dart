@@ -12,63 +12,113 @@ class OnboardingActivity extends CommonActivity {
   State<OnboardingActivity> createState() => _OnboardingActivityState();
 }
 
-class _OnboardingActivityState extends State<OnboardingActivity> {
+class _OnboardingActivityState extends State<OnboardingActivity>
+    with TickerProviderStateMixin {
+  late AnimationController _gradientController;
+  late Animation<double> _gradientAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _gradientController = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    );
+    _gradientAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _gradientController, curve: Curves.easeInOut),
+    );
+    _gradientController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _gradientController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primaryContainer.withOpacity(0.3),
-              colorScheme.secondaryContainer.withOpacity(0.5),
-              colorScheme.tertiaryContainer.withOpacity(0.3),
-            ],
-          ),
-        ),
+      body: AnimatedBuilder(
+        animation: _gradientAnimation,
+        builder: (context, child) {
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.lerp(
+                  Alignment.topLeft,
+                  Alignment.topRight,
+                  _gradientAnimation.value,
+                )!,
+                end: Alignment.lerp(
+                  Alignment.bottomRight,
+                  Alignment.bottomLeft,
+                  _gradientAnimation.value,
+                )!,
+                colors: [
+                  colorScheme.primaryContainer.withOpacity(
+                    0.3 + _gradientAnimation.value * 0.2,
+                  ),
+                  colorScheme.secondaryContainer.withOpacity(
+                    0.5 + _gradientAnimation.value * 0.3,
+                  ),
+                  colorScheme.tertiaryContainer.withOpacity(
+                    0.3 + _gradientAnimation.value * 0.2,
+                  ),
+                ],
+                stops: [
+                  0.0 + _gradientAnimation.value * 0.1,
+                  0.5 + _gradientAnimation.value * 0.2,
+                  1.0 - _gradientAnimation.value * 0.1,
+                ],
+              ),
+            ),
+            child: child,
+          );
+        },
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: context.commonPaddingDouble,
-              vertical:
-                  context.commonPaddingDouble +
-                  context.screenPadding.top +
-                  context.screenPadding.bottom,
+              vertical: context.commonPaddingDouble,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                SizedBox(height: context.screenPadding.top),
                 const SizedBox(height: kToolbarHeight),
-                const Spacer(flex: 2),
 
                 // Logo and Title Section
+                const SizedBox(height: 24.0),
                 _buildHeader(colorScheme, theme),
 
-                const Spacer(flex: 4),
+                SizedBox(height: context.vh(0.05)),
 
                 // Features Section
-                _buildFeatureList(context),
-
-                const Spacer(flex: 1),
+                Expanded(child: _buildFeatureList(context)),
 
                 // Action Buttons
                 const SizedBox(height: 24.0),
-                Text(
-                  'Get started reading your favorite stories',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface.withOpacity(0.5),
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Get started reading your favorite stories',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface.withOpacity(0.5),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    _buildActions(theme, colorScheme),
+                  ],
                 ),
-                const SizedBox(height: 16.0),
-                _buildActions(theme, colorScheme),
                 SizedBox(height: context.screenPadding.bottom),
               ],
             ),
@@ -87,8 +137,8 @@ class _OnboardingActivityState extends State<OnboardingActivity> {
         children: [
           // App Icon/Logo
           Container(
-            width: 120,
-            height: 120,
+            width: context.vw(0.3),
+            height: context.vw(0.3),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFFF77062), Color(0xFFFE5196)],
@@ -112,14 +162,15 @@ class _OnboardingActivityState extends State<OnboardingActivity> {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
 
           // Tagline
           Text(
-            'Your gateway to infinite stories',
+            'Your gateway to infinite stories.',
             style: theme.textTheme.headlineLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w700,
+              height: 1.2,
             ),
           ),
         ],
@@ -132,6 +183,7 @@ class _OnboardingActivityState extends State<OnboardingActivity> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(24)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FilledButton.icon(
             onPressed: () {
@@ -185,6 +237,7 @@ class _OnboardingActivityState extends State<OnboardingActivity> {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 8.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _buildFeatureItem(
             context,

@@ -7,6 +7,7 @@ import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_about.dart';
 import 'package:archiverse/views/activity_author.dart';
+import 'package:archiverse/views/activity_onboarding.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_signin.dart';
 import 'package:flutter/material.dart';
@@ -234,7 +235,7 @@ class _UserFragmentState extends State<UserFragment> {
           title: 'Help & Support',
           icon: TablerIcons.help,
           onTap: () {
-            // TODO: Navigate to help
+            context.navigator.pushNamed(OnboardingActivity.routeName);
           },
         ),
         OptionTile(

@@ -6,11 +6,13 @@
 
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
+import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
-import 'package:archiverse/theme.dart';
 import 'package:archiverse/strings/app_localizations.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => preferences),
         ChangeNotifierProvider(create: (_) => user),
+        ChangeNotifierProvider(create: (context) => ThemeProvider(context)),
       ],
       child: const Archiverse(),
     ),
@@ -44,21 +47,39 @@ class Archiverse extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Archiverse',
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        RelativeTimeLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: MaterialTheme(context.textTheme).light(),
-      darkTheme: MaterialTheme(context.textTheme).dark(),
-      initialRoute: '/',
-      routes: AppRoutes.routes,
-      onGenerateRoute: (settings) => AppRoutes.onGenerateRoute(settings),
+    return Consumer<ThemeProvider>(
+      builder: (context, provider, child) {
+        return DynamicColorBuilder(
+          builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+            bool isDynamic = provider.appColorScheme == AppColorScheme.dynamic;
+
+            return MaterialApp(
+              title: 'Archiverse',
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                RelativeTimeLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              theme: provider.getThemeData(
+                context.textTheme,
+                isDynamic ? lightDynamic : provider.lightColorScheme,
+              ),
+              darkTheme: provider.getThemeData(
+                context.textTheme,
+                isDynamic ? darkDynamic : provider.darkColorScheme,
+              ),
+              themeMode: provider.themeMode,
+              initialRoute: '/',
+              routes: AppRoutes.routes,
+              onGenerateRoute: (settings) =>
+                  AppRoutes.onGenerateRoute(settings),
+            );
+          },
+        );
+      },
     );
   }
 }

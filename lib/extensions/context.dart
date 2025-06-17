@@ -6,10 +6,13 @@
  * This extends Flutter's BuildContext class to bring creature comforts
  * developers are used to (like me) in native Android development.
  */
+import 'package:archiverse/models/theming.dart';
+import 'package:archiverse/providers/provider_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:archiverse/strings/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 extension BuildContextExtension on BuildContext {
   AppLocalizations get strings => AppLocalizations.of(this)!;
@@ -22,8 +25,12 @@ extension BuildContextExtension on BuildContext {
 
   // Returns if the current device is in dark mode
   bool get isDarkMode =>
-      WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-      Brightness.dark;
+      Provider.of<ThemeProvider>(this, listen: false).themeMode ==
+          ThemeMode.dark ||
+      (Provider.of<ThemeProvider>(this, listen: false).themeMode ==
+              ThemeMode.system &&
+          WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+              Brightness.dark);
 
   // Returns the current device's screen width
   double get screenWidth => mediaQuery.size.width;
@@ -106,4 +113,9 @@ extension BuildContextExtension on BuildContext {
   double vh(double ratio) {
     return screenHeight * ratio;
   }
+
+  /// Returns the platform the app is running on
+  ///
+  /// @return The platform as a string
+  TargetPlatform get platform => defaultTargetPlatform;
 }

@@ -57,6 +57,8 @@ dependencies:
   shared_preferences: ^2.5.3
   alphabet_list_view: ^1.1.5
   flutter_secure_storage: ^10.0.0-beta.1
+  dynamic_color: ^1.7.0
+  device_info_plus: ^11.5.0
 
 dev_dependencies:
   flutter_test:
