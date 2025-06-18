@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -523,11 +524,11 @@ class _ReaderActivityState extends State<ReaderActivity>
       return const Center(child: Text('No content available'));
     }
 
-    final textStyle = TextStyle(
-      height: settings.lineHeight,
-      color: settings.readerColor.toForegroundColor(context),
-      fontFamily: settings.getFontFamily(settings.bodyFont),
-    );
+    final textStyle =
+        GoogleFonts.getFont(settings.getFontFamily(settings.bodyFont)).copyWith(
+          height: settings.lineHeight,
+          color: settings.readerColor.toForegroundColor(context),
+        );
 
     switch (settings.readingLayout) {
       case ReadingLayout.singleColumn:
@@ -624,10 +625,13 @@ class _ReaderActivityState extends State<ReaderActivity>
           ),
           child: HtmlWidget(
             _currentChapter!.postface!,
-            textStyle: TextStyle(
-              height: settings.lineHeight,
-              fontFamily: settings.getFontFamily(settings.bodyFont),
-              color: settings.readerColor.toForegroundColor(context),
+            textStyle: GoogleFonts.getFont(
+              settings.getFontFamily(settings.bodyFont),
+              textStyle: TextStyle(
+                height: settings.lineHeight,
+                fontFamily: settings.getFontFamily(settings.bodyFont),
+                color: settings.readerColor.toForegroundColor(context),
+              ),
             ),
           ),
         ),
@@ -656,10 +660,13 @@ class _ReaderActivityState extends State<ReaderActivity>
           ? _currentChapter!.title
           : 'Chapter ${_currentChapter!.chapter}',
       textAlign: TextAlign.center,
-      style: context.theme.textTheme.titleLarge?.copyWith(
-        color: settings.readerColor.toForegroundColor(context),
-        fontWeight: FontWeight.bold,
-        fontFamily: settings.getFontFamily(settings.headingFont),
+      style: GoogleFonts.getFont(
+        settings.getFontFamily(settings.headingFont),
+        textStyle: context.theme.textTheme.titleLarge?.copyWith(
+          color: settings.readerColor.toForegroundColor(context),
+          fontWeight: FontWeight.bold,
+          fontFamily: settings.getFontFamily(settings.headingFont),
+        ),
       ),
     );
   }
@@ -671,11 +678,13 @@ class _ReaderActivityState extends State<ReaderActivity>
         Text(
           '${_currentChapterIndex + 1} of ${_chapters.length}',
           textAlign: TextAlign.center,
-          style: context.theme.textTheme.titleSmall?.copyWith(
-            color: settings.readerColor
-                .toForegroundColor(context)
-                .withAlpha(170),
-            fontFamily: settings.getFontFamily(settings.headingFont),
+          style: GoogleFonts.getFont(
+            settings.getFontFamily(settings.bodyFont),
+            textStyle: context.theme.textTheme.titleSmall?.copyWith(
+              color: settings.readerColor
+                  .toForegroundColor(context)
+                  .withAlpha(170),
+            ),
           ),
         ),
         if (_currentChapter!.words > 0) ...[
@@ -701,11 +710,14 @@ class _ReaderActivityState extends State<ReaderActivity>
       SizedBox(height: 16 * settings.paragraphSpacing),
       _buildInfoContainer(
         content: _currentChapter!.summary!,
-        textStyle: context.theme.textTheme.bodyMedium?.copyWith(
-          fontStyle: FontStyle.italic,
-          height: settings.lineHeight,
-          color: settings.readerColor.toForegroundColor(context),
-          fontFamily: settings.getFontFamily(settings.bodyFont),
+        textStyle: GoogleFonts.getFont(
+          settings.getFontFamily(settings.bodyFont),
+          textStyle: context.theme.textTheme.bodyMedium?.copyWith(
+            fontStyle: FontStyle.italic,
+            height: settings.lineHeight,
+            color: settings.readerColor.toForegroundColor(context),
+            fontFamily: settings.getFontFamily(settings.bodyFont),
+          ),
         ),
       ),
     ];
@@ -729,10 +741,13 @@ class _ReaderActivityState extends State<ReaderActivity>
       _buildInfoContainer(
         content: _currentChapter!.preface!,
         backgroundColor: context.theme.colorScheme.tertiaryContainer,
-        textStyle: TextStyle(
-          height: settings.lineHeight,
-          color: settings.readerColor.toForegroundColor(context),
-          fontFamily: settings.getFontFamily(settings.bodyFont),
+        textStyle: GoogleFonts.getFont(
+          settings.getFontFamily(settings.bodyFont),
+          textStyle: TextStyle(
+            height: settings.lineHeight,
+            color: settings.readerColor.toForegroundColor(context),
+            fontFamily: settings.getFontFamily(settings.bodyFont),
+          ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       ),

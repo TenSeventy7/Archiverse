@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/views/activity_common.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 enum FontType {
@@ -23,17 +24,18 @@ enum FontType {
 
 class FontOption {
   final String name;
-  final String? fontFamily;
+  final String fontFamily;
   final bool isSystemDefault;
 
   const FontOption({
     required this.name,
-    this.fontFamily,
+    required this.fontFamily,
     this.isSystemDefault = false,
   });
 
   static const systemDefault = FontOption(
     name: 'System Default',
+    fontFamily: "Roboto",
     isSystemDefault: true,
   );
 }
@@ -60,12 +62,11 @@ class _FontSelectionSettingsActivityState
   // Available fonts
   static const List<FontOption> _availableFonts = [
     FontOption.systemDefault,
-    FontOption(name: 'Roboto', fontFamily: 'Roboto'),
     FontOption(name: 'Open Sans', fontFamily: 'Open Sans'),
     FontOption(name: 'Merriweather', fontFamily: 'Merriweather'),
     FontOption(name: 'Lora', fontFamily: 'Lora'),
-    FontOption(name: 'Source Serif Pro', fontFamily: 'Source Serif Pro'),
-    FontOption(name: 'Playfair Display', fontFamily: 'Playfair Display'),
+    FontOption(name: 'Source Serif', fontFamily: 'Source Serif 4'),
+    FontOption(name: 'Playfair Display', fontFamily: 'Playfair'),
     FontOption(name: 'Montserrat', fontFamily: 'Montserrat'),
   ];
 
@@ -90,16 +91,16 @@ class _FontSelectionSettingsActivityState
           _selectedHeadingFont =
               _prefs.getString(
                 Preferences.readerHeadingFont,
-                defaultValue: FontOption.systemDefault.name,
+                defaultValue: FontOption.systemDefault.fontFamily,
               ) ??
-              FontOption.systemDefault.name;
+              FontOption.systemDefault.fontFamily;
 
           _selectedBodyFont =
               _prefs.getString(
                 Preferences.readerBodyFont,
-                defaultValue: FontOption.systemDefault.name,
+                defaultValue: FontOption.systemDefault.fontFamily,
               ) ??
-              FontOption.systemDefault.name;
+              FontOption.systemDefault.fontFamily;
         });
       }
     });
@@ -107,8 +108,8 @@ class _FontSelectionSettingsActivityState
 
   void _resetToDefaults() {
     setState(() {
-      _selectedHeadingFont = FontOption.systemDefault.name;
-      _selectedBodyFont = FontOption.systemDefault.name;
+      _selectedHeadingFont = FontOption.systemDefault.fontFamily;
+      _selectedBodyFont = FontOption.systemDefault.fontFamily;
     });
     _saveAllSettings();
   }
@@ -143,7 +144,7 @@ class _FontSelectionSettingsActivityState
 
   String? _getFontFamily(String fontName) {
     final fontOption = _availableFonts.firstWhere(
-      (font) => font.name == fontName,
+      (font) => font.fontFamily == fontName,
       orElse: () => FontOption.systemDefault,
     );
     return fontOption.isSystemDefault ? null : fontOption.fontFamily;
@@ -200,32 +201,45 @@ class _FontSelectionSettingsActivityState
         children: [
           Text(
             'The Bookworm',
-            style: context.textTheme.headlineSmall?.copyWith(
-              fontFamily: _getFontFamily(_selectedHeadingFont),
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.getFont(
+              _getFontFamily(_selectedHeadingFont) ?? 'Roboto',
+              textStyle: context.textTheme.headlineSmall?.copyWith(
+                fontFamily: _getFontFamily(_selectedHeadingFont),
+                fontWeight: FontWeight.bold,
+                color: context.colorScheme.primary,
+              ),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'By Arthur Reading',
-            style: context.textTheme.titleMedium?.copyWith(
-              fontFamily: _getFontFamily(_selectedHeadingFont),
-              fontStyle: FontStyle.italic,
-              color: context.colorScheme.secondary,
+            style: GoogleFonts.getFont(
+              _getFontFamily(_selectedHeadingFont) ?? 'Roboto',
+              textStyle: context.textTheme.titleMedium?.copyWith(
+                fontFamily: _getFontFamily(_selectedHeadingFont),
+                fontStyle: FontStyle.italic,
+                color: context.colorScheme.secondary,
+              ),
             ),
           ),
           const Divider(height: 32),
           Text(
             'It was an ordinary Tuesday when Sarah discovered the book that would change her life. Bound in worn leather with faded gold lettering, it seemed to call to her from the dusty shelf in the back corner of the antique store.',
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontFamily: _getFontFamily(_selectedBodyFont),
+            style: GoogleFonts.getFont(
+              _getFontFamily(_selectedBodyFont) ?? 'Roboto',
+              textStyle: context.textTheme.bodyMedium,
+              fontSize: context.textTheme.bodyMedium?.fontSize,
+              color: context.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'As she turned the first yellowed page, the words began to shimmer and dance before her eyes. She blinked, thinking it must be a trick of the light, but when she looked again, the text was transforming right in front of her.',
-            style: context.textTheme.bodyMedium?.copyWith(
-              fontFamily: _getFontFamily(_selectedBodyFont),
+            style: GoogleFonts.getFont(
+              _getFontFamily(_selectedBodyFont) ?? 'Roboto',
+              textStyle: context.textTheme.bodyMedium,
+              fontSize: context.textTheme.bodyMedium?.fontSize,
+              color: context.colorScheme.onSurface,
             ),
           ),
         ],
@@ -305,9 +319,9 @@ class _FontSelectionSettingsActivityState
                 child: _buildFontChip(
                   context,
                   font: font,
-                  isSelected: selectedFont == font.name,
+                  isSelected: selectedFont == font.fontFamily,
                   isHeading: isHeading,
-                  onSelected: () => _updateFont(type, font.name),
+                  onSelected: () => _updateFont(type, font.fontFamily),
                 ),
               );
             },
@@ -329,9 +343,12 @@ class _FontSelectionSettingsActivityState
         font.name,
         style: font.isSystemDefault
             ? null
-            : TextStyle(
-                fontFamily: font.fontFamily,
-                fontWeight: isHeading ? FontWeight.bold : FontWeight.normal,
+            : GoogleFonts.getFont(
+                font.fontFamily ?? 'Roboto',
+                textStyle: TextStyle(
+                  fontFamily: font.fontFamily,
+                  fontWeight: isHeading ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
       ),
       selected: isSelected,

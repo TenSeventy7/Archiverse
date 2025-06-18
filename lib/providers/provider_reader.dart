@@ -101,8 +101,8 @@ class ReaderProvider extends ChangeNotifier {
   );
 
   // Font family helpers
-  String? getFontFamily(String fontName) {
-    if (fontName == 'System Default') return null;
+  String getFontFamily(String fontName) {
+    if (fontName == 'System Default') return "Roboto";
     return fontName;
   }
 
