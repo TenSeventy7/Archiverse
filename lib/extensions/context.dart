@@ -118,4 +118,11 @@ extension BuildContextExtension on BuildContext {
   ///
   /// @return The platform as a string
   TargetPlatform get platform => defaultTargetPlatform;
+
+  /// Gets the Theme Provider from the context. Ensure that the
+  /// ThemeProvider is available in the widget tree
+  ///
+  /// @return The ThemeProvider instance
+  ThemeProvider get themeProvider =>
+      Provider.of<ThemeProvider>(this, listen: false);
 }
