@@ -27,7 +27,7 @@ class _ChaptersListDialog extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(maxHeight: context.vh(0.85)),
       child: Scaffold(
-        backgroundColor: context.colorScheme.surfaceContainer,
+        backgroundColor: context.colorScheme.surface,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight + 9.0),
           child: Container(
