@@ -34,14 +34,19 @@ class ReaderProvider extends ChangeNotifier {
     _prefs.getString(Preferences.readingLayout) ?? 'single_column',
   );
 
-  double get paragraphSpacing =>
-      _prefs.getDouble(Preferences.paragraphSpacing, defaultValue: 1.0);
+  double get paragraphSpacing => _prefs.getDouble(
+    Preferences.paragraphSpacing,
+    defaultValue: Preferences.defaults[Preferences.paragraphSpacing] as double,
+  );
 
-  double get lineHeight =>
-      _prefs.getDouble(Preferences.lineHeight, defaultValue: 1.2);
-
-  bool get justifyText =>
-      _prefs.getBool(Preferences.readerJustifiedText, defaultValue: false);
+  double get lineHeight => _prefs.getDouble(
+    Preferences.lineHeight,
+    defaultValue: Preferences.defaults[Preferences.lineHeight] as double,
+  );
+  bool get justifyText => _prefs.getBool(
+    Preferences.readerJustifiedText,
+    defaultValue: Preferences.defaults[Preferences.readerJustifiedText] as bool,
+  );
 
   // Font Settings
   String get headingFont =>
@@ -59,8 +64,10 @@ class ReaderProvider extends ChangeNotifier {
       'System Default';
 
   // Text Scale
-  double get textScaleFactor =>
-      _prefs.getDouble(Preferences.textScaleFactor, defaultValue: 1.0);
+  double get textScaleFactor => _prefs.getDouble(
+    Preferences.textScaleFactor,
+    defaultValue: Preferences.defaults[Preferences.textScaleFactor] as double,
+  );
 
   // Scrolling Settings
   ScrollingType get scrollingType => ScrollingType.fromKey(
@@ -82,8 +89,10 @@ class ReaderProvider extends ChangeNotifier {
   bool get tapEdges =>
       _prefs.getBool(Preferences.scrollingTapEdges, defaultValue: true);
 
-  bool get keepScreenOn =>
-      _prefs.getBool(Preferences.keepScreenOn, defaultValue: true);
+  bool get keepScreenOn => _prefs.getBool(
+    Preferences.keepScreenOn,
+    defaultValue: Preferences.defaults[Preferences.keepScreenOn] as bool,
+  );
 
   // Font family helpers
   String? getFontFamily(String fontName) {

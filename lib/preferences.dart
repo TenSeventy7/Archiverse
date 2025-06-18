@@ -1,4 +1,32 @@
+import 'package:archiverse/models/reading_layout.dart';
+import 'package:archiverse/models/theming.dart';
+import 'package:archiverse/providers/provider_reader.dart';
+
 class Preferences {
+  // Default values for preferences
+  static const Map<String, dynamic> defaults = {
+    Preferences.useSystemTheme: true,
+    Preferences.forceDarkMode: false,
+    Preferences.useWallpaperColors: true,
+    Preferences.highContrastMode: false,
+    Preferences.colorScheme: AppColorScheme.red,
+    Preferences.themeMode: AppThemeMode.system,
+    Preferences.useSystemAccent: true,
+    Preferences.useDynamicColor: true,
+
+    Preferences.textScaleFactor: 1.0,
+    Preferences.readerHeadingFont: 'System Default',
+    Preferences.readerBodyFont: 'System Default',
+
+    Preferences.readingLayout: ReadingLayout.singleColumn,
+    Preferences.paragraphSpacing: 1.0,
+    Preferences.lineHeight: 1.5,
+    Preferences.readerJustifiedText: false,
+
+    Preferences.scrollingType: ScrollingType.continuous,
+    Preferences.keepScreenOn: true,
+  };
+
   static const String useSystemTheme = 'use_system_theme';
   static const String forceDarkMode = 'force_dark_mode';
   static const String useWallpaperColors = 'use_wallpaper_colors';
@@ -8,10 +36,6 @@ class Preferences {
   static const String themeMode = 'theme_mode';
   static const String useSystemAccent = 'use_system_accent';
   static const String useDynamicColor = 'use_dynamic_colors';
-  static const String showStatusBar = 'show_status_bar';
-  static const String showNavigationBar = 'show_navigation_bar';
-  static const String useCompactMode = 'use_compact_mode';
-  static const String interfaceScale = 'interface_scale';
 
   // Text size preferences
   static const String textScaleFactor = 'text_scale_factor';

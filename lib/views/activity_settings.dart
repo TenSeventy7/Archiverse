@@ -37,13 +37,11 @@ class SettingsActivity extends CommonActivity {
 class _SettingsActivityState extends State<SettingsActivity> {
   late PreferencesProvider _prefs;
 
-  // Default values
-  static const AppThemeMode _defaultThemeMode = AppThemeMode.system;
-  static const AppColorScheme _defaultColorScheme = AppColorScheme.red;
-
   // Current values
-  AppThemeMode _themeMode = _defaultThemeMode;
-  AppColorScheme _colorScheme = _defaultColorScheme;
+  AppThemeMode _themeMode =
+      Preferences.defaults[Preferences.themeMode] as AppThemeMode;
+  AppColorScheme _colorScheme =
+      Preferences.defaults[Preferences.colorScheme] as AppColorScheme;
 
   @override
   void initState() {
@@ -55,13 +53,17 @@ class _SettingsActivityState extends State<SettingsActivity> {
   void _loadSettings() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
+        AppThemeMode defaultThemeMode =
+            Preferences.defaults[Preferences.themeMode] as AppThemeMode;
+        AppColorScheme defaultColorScheme =
+            Preferences.defaults[Preferences.colorScheme] as AppColorScheme;
+
         setState(() {
           _themeMode = AppThemeMode.fromKey(
-            _prefs.getString(Preferences.themeMode) ?? _defaultThemeMode.key,
+            _prefs.getString(Preferences.themeMode) ?? defaultThemeMode.key,
           );
           _colorScheme = AppColorScheme.fromKey(
-            _prefs.getString(Preferences.colorScheme) ??
-                _defaultColorScheme.key,
+            _prefs.getString(Preferences.colorScheme) ?? defaultColorScheme.key,
           );
         });
       }

@@ -22,17 +22,14 @@ class _ReadingLayoutSettingsActivityState
     extends State<ReadingLayoutSettingsActivity> {
   late PreferencesProvider _prefs;
 
-  // Default values
-  static const ReadingLayout _defaultLayout = ReadingLayout.singleColumn;
-  static const double _defaultParagraphSpacing = 1.0;
-  static const double _defaultLineSpacing = 1.2;
-  static const bool _defaultJustifyText = false;
-
   // Current values
-  ReadingLayout _selectedLayout = _defaultLayout;
-  double _paragraphSpacing = _defaultParagraphSpacing;
-  double _lineSpacing = _defaultLineSpacing;
-  bool _justifyText = _defaultJustifyText;
+  ReadingLayout _selectedLayout =
+      Preferences.defaults[Preferences.readingLayout] as ReadingLayout;
+  double _paragraphSpacing =
+      Preferences.defaults[Preferences.paragraphSpacing] as double;
+  double _lineSpacing = Preferences.defaults[Preferences.lineHeight] as double;
+  bool _justifyText =
+      Preferences.defaults[Preferences.readerJustifiedText] as bool;
 
   @override
   void initState() {
@@ -46,19 +43,25 @@ class _ReadingLayoutSettingsActivityState
       if (mounted) {
         setState(() {
           _selectedLayout = ReadingLayout.fromKey(
-            _prefs.getString(Preferences.readingLayout) ?? _defaultLayout.key,
+            _prefs.getString(Preferences.readingLayout) ??
+                (Preferences.defaults[Preferences.readingLayout]
+                        as ReadingLayout)
+                    .key,
           );
           _paragraphSpacing = _prefs.getDouble(
             Preferences.paragraphSpacing,
-            defaultValue: _defaultParagraphSpacing,
+            defaultValue:
+                Preferences.defaults[Preferences.paragraphSpacing] as double,
           );
           _lineSpacing = _prefs.getDouble(
             Preferences.lineHeight,
-            defaultValue: _defaultLineSpacing,
+            defaultValue:
+                Preferences.defaults[Preferences.lineHeight] as double,
           );
           _justifyText = _prefs.getBool(
             Preferences.readerJustifiedText,
-            defaultValue: _defaultJustifyText,
+            defaultValue:
+                Preferences.defaults[Preferences.readerJustifiedText] as bool,
           );
         });
       }
@@ -67,10 +70,13 @@ class _ReadingLayoutSettingsActivityState
 
   void _resetToDefaults() {
     setState(() {
-      _selectedLayout = _defaultLayout;
-      _paragraphSpacing = _defaultParagraphSpacing;
-      _lineSpacing = _defaultLineSpacing;
-      _justifyText = _defaultJustifyText;
+      _selectedLayout =
+          Preferences.defaults[Preferences.readingLayout] as ReadingLayout;
+      _paragraphSpacing =
+          Preferences.defaults[Preferences.paragraphSpacing] as double;
+      _lineSpacing = Preferences.defaults[Preferences.lineHeight] as double;
+      _justifyText =
+          Preferences.defaults[Preferences.readerJustifiedText] as bool;
     });
     _saveAllSettings();
   }

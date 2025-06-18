@@ -20,11 +20,9 @@ class TextSizeSettingsActivity extends CommonActivity {
 class _TextSizeSettingsActivityState extends State<TextSizeSettingsActivity> {
   late PreferencesProvider _prefs;
 
-  // Default values
-  static const double _defaultTextScale = 1.0;
-
   // Current values
-  double _textScale = _defaultTextScale;
+  double _textScale =
+      Preferences.defaults[Preferences.textScaleFactor] as double;
 
   @override
   void initState() {
@@ -39,7 +37,8 @@ class _TextSizeSettingsActivityState extends State<TextSizeSettingsActivity> {
         setState(() {
           _textScale = _prefs.getDouble(
             Preferences.textScaleFactor,
-            defaultValue: _defaultTextScale,
+            defaultValue:
+                Preferences.defaults[Preferences.textScaleFactor] as double,
           );
         });
       }
@@ -48,7 +47,7 @@ class _TextSizeSettingsActivityState extends State<TextSizeSettingsActivity> {
 
   void _resetToDefaults() {
     setState(() {
-      _textScale = _defaultTextScale;
+      _textScale = Preferences.defaults[Preferences.textScaleFactor] as double;
     });
     _saveSettings();
   }
