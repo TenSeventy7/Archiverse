@@ -1,3 +1,4 @@
+import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/reading_layout.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_reader.dart';
@@ -25,6 +26,8 @@ class Preferences {
 
     Preferences.scrollingType: ScrollingType.continuous,
     Preferences.keepScreenOn: true,
+
+    Preferences.readerBackgroundColor: ReaderColor.system,
   };
 
   static const String useSystemTheme = 'use_system_theme';
@@ -49,6 +52,7 @@ class Preferences {
   static const String paragraphSpacing = 'reader_paragraph_spacing';
   static const String lineHeight = 'reader_line_height';
   static const String readerJustifiedText = 'reader_justified_text';
+  static const String readerBackgroundColor = 'reader_background_color';
 
   // Add these to your Preferences class:
   static const String scrollingType = 'scrolling_type';

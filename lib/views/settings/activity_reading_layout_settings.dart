@@ -1,5 +1,6 @@
 import 'package:archiverse/components/settings/bottom_panel.dart';
 import 'package:archiverse/components/settings/slider_control.dart';
+import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/reading_layout.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
@@ -30,6 +31,8 @@ class _ReadingLayoutSettingsActivityState
   double _lineSpacing = Preferences.defaults[Preferences.lineHeight] as double;
   bool _justifyText =
       Preferences.defaults[Preferences.readerJustifiedText] as bool;
+  ReaderColor _readerBackgroundColor =
+      Preferences.defaults[Preferences.readerBackgroundColor] as ReaderColor;
 
   @override
   void initState() {
@@ -63,6 +66,12 @@ class _ReadingLayoutSettingsActivityState
             defaultValue:
                 Preferences.defaults[Preferences.readerJustifiedText] as bool,
           );
+          _readerBackgroundColor = ReaderColor.fromKey(
+            _prefs.getString(Preferences.readerBackgroundColor) ??
+                (Preferences.defaults[Preferences.readerBackgroundColor]
+                        as ReaderColor)
+                    .toString(),
+          );
         });
       }
     });
@@ -77,6 +86,9 @@ class _ReadingLayoutSettingsActivityState
       _lineSpacing = Preferences.defaults[Preferences.lineHeight] as double;
       _justifyText =
           Preferences.defaults[Preferences.readerJustifiedText] as bool;
+      _readerBackgroundColor =
+          Preferences.defaults[Preferences.readerBackgroundColor]
+              as ReaderColor;
     });
     _saveAllSettings();
   }
@@ -86,6 +98,10 @@ class _ReadingLayoutSettingsActivityState
     _prefs.setDouble(Preferences.paragraphSpacing, _paragraphSpacing);
     _prefs.setDouble(Preferences.lineHeight, _lineSpacing);
     _prefs.setBool(Preferences.readerJustifiedText, _justifyText);
+    _prefs.setString(
+      Preferences.readerBackgroundColor,
+      _readerBackgroundColor.toString(),
+    );
   }
 
   void _updateLayout(ReadingLayout layout) {
@@ -108,9 +124,15 @@ class _ReadingLayoutSettingsActivityState
     _prefs.setBool(Preferences.readerJustifiedText, value);
   }
 
+  void _updateReaderBackgroundColor(ReaderColor color) {
+    setState(() => _readerBackgroundColor = color);
+    _prefs.setString(Preferences.readerBackgroundColor, color.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _readerBackgroundColor.toBackgroundColor(context),
       body: Column(
         children: [
           Expanded(
@@ -139,6 +161,8 @@ class _ReadingLayoutSettingsActivityState
   Widget _buildAppBar(BuildContext context) {
     return SliverAppBar.large(
       title: Text(context.strings.settings_layout_title),
+      backgroundColor: _readerBackgroundColor.toBackgroundColor(context),
+      foregroundColor: _readerBackgroundColor.toForegroundColor(context),
       actions: [
         IconButton(
           icon: const Icon(TablerIcons.rotate_2),
@@ -158,7 +182,10 @@ class _ReadingLayoutSettingsActivityState
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildPreviewHeader(context),
-          const Divider(height: 24),
+          Divider(
+            height: 24,
+            color: _readerBackgroundColor.toForegroundColor(context),
+          ),
           _buildLayoutPreview(context),
         ],
       ),
@@ -171,13 +198,13 @@ class _ReadingLayoutSettingsActivityState
         Icon(
           _selectedLayout.icon,
           size: 16,
-          color: Theme.of(context).colorScheme.primary,
+          color: _readerBackgroundColor.toForegroundColor(context),
         ),
         const SizedBox(width: 8),
         Text(
           _getLayoutDisplayName(context, _selectedLayout),
           style: context.textTheme.titleMedium?.copyWith(
-            color: context.colorScheme.primary,
+            color: _readerBackgroundColor.toForegroundColor(context),
           ),
         ),
       ],
@@ -193,6 +220,8 @@ class _ReadingLayoutSettingsActivityState
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            _buildReaderBackgroundSelection(context),
+            const Divider(height: 24),
             _buildLayoutSelection(context),
             const Divider(height: 24),
             _buildSpacingControls(context),
@@ -201,6 +230,69 @@ class _ReadingLayoutSettingsActivityState
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildReaderBackgroundSelection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: context.horizontalPaddingDouble,
+          child: Row(
+            children: [
+              const Icon(TablerIcons.palette, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  "Background Color",
+                  style: context.textTheme.titleSmall,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(
+            horizontal: context.commonPaddingDouble,
+          ),
+          child: Row(
+            children: ReaderColor.values.map((color) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  selected: _readerBackgroundColor == color,
+                  onSelected: (selected) {
+                    if (selected) _updateReaderBackgroundColor(color);
+                  },
+                  backgroundColor: color.toBackgroundColor(context),
+                  showCheckmark: false,
+                  labelPadding: EdgeInsets.zero,
+                  label: CircleAvatar(
+                    backgroundColor: color.toBackgroundColor(context),
+                    radius: 18.0,
+                    child: (_readerBackgroundColor == color)
+                        ? Icon(
+                            TablerIcons.check,
+                            color: color.toForegroundColor(context),
+                            size: 24.0,
+                          )
+                        : Icon(
+                            color == ReaderColor.system
+                                ? TablerIcons.sun_moon
+                                : TablerIcons.letter_a,
+                            color: color.toForegroundColor(context),
+                            size: 24.0,
+                          ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -296,7 +388,12 @@ class _ReadingLayoutSettingsActivityState
   }
 
   Widget _buildLayoutPreview(BuildContext context) {
-    final textStyle = TextStyle(height: _lineSpacing, fontSize: 16);
+    final color = _readerBackgroundColor.toForegroundColor(context);
+    final textStyle = TextStyle(
+      height: _lineSpacing,
+      fontSize: 16,
+      color: color,
+    );
     final textAlign = _justifyText ? TextAlign.justify : TextAlign.start;
 
     final paragraph1 = Text(

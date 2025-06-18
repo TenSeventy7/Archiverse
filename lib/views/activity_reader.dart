@@ -360,9 +360,10 @@ class _ReaderActivityState extends State<ReaderActivity>
           ).copyWith(textScaler: TextScaler.linear(settings.textScaleFactor)),
           child: Scaffold(
             appBar: _buildAnimatedAppBar(),
+            backgroundColor: settings.readerColor.toBackgroundColor(context),
             extendBody: true,
             extendBodyBehindAppBar: true,
-            body: _buildBody(),
+            body: _buildBody(settings),
             bottomNavigationBar: _buildAnimatedBottomNavBar(),
           ),
         );
@@ -417,9 +418,13 @@ class _ReaderActivityState extends State<ReaderActivity>
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(ReaderProvider settings) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: CircularProgressIndicator(
+          color: settings.readerColor.toForegroundColor(context),
+        ),
+      );
     }
 
     if (_error != null) {
@@ -498,7 +503,15 @@ class _ReaderActivityState extends State<ReaderActivity>
         SizedBox(height: kToolbarHeight + context.screenPadding.top + 16.0),
         _buildChapterHeader(settings),
         SizedBox(height: 24 * settings.paragraphSpacing),
-        _buildChapterBody(settings),
+        Theme(
+          data: Theme.of(context).copyWith(
+            progressIndicatorTheme: ProgressIndicatorThemeData(
+              color: settings.readerColor.toForegroundColor(context),
+              year2023: false,
+            ),
+          ),
+          child: _buildChapterBody(settings),
+        ),
         _buildChapterPostface(settings),
         SizedBox(height: kToolbarHeight + context.screenPadding.bottom + 16.0),
       ],
@@ -512,6 +525,7 @@ class _ReaderActivityState extends State<ReaderActivity>
 
     final textStyle = TextStyle(
       height: settings.lineHeight,
+      color: settings.readerColor.toForegroundColor(context),
       fontFamily: settings.getFontFamily(settings.bodyFont),
     );
 
@@ -520,7 +534,7 @@ class _ReaderActivityState extends State<ReaderActivity>
         return HtmlWidget(
           _currentChapter!.content!,
           key: ValueKey(
-            'html_${settings.justifyText ? 'justified' : 'normal'}',
+            'html_${settings.justifyText ? 'justified' : 'normal'}_${settings.readerColor.toString()}',
           ),
           textStyle: textStyle.copyWith(height: settings.lineHeight),
           customStylesBuilder: (element) {
@@ -596,7 +610,11 @@ class _ReaderActivityState extends State<ReaderActivity>
         SizedBox(height: 16 * settings.paragraphSpacing),
         Opacity(
           opacity: 0.7,
-          child: TextHeader.small(title: "Notes", hasPadding: false),
+          child: TextHeader.small(
+            title: "Notes",
+            hasPadding: false,
+            color: settings.readerColor.toForegroundColor(context),
+          ),
         ),
         Container(
           padding: const EdgeInsets.all(16),
@@ -609,6 +627,7 @@ class _ReaderActivityState extends State<ReaderActivity>
             textStyle: TextStyle(
               height: settings.lineHeight,
               fontFamily: settings.getFontFamily(settings.bodyFont),
+              color: settings.readerColor.toForegroundColor(context),
             ),
           ),
         ),
@@ -638,6 +657,7 @@ class _ReaderActivityState extends State<ReaderActivity>
           : 'Chapter ${_currentChapter!.chapter}',
       textAlign: TextAlign.center,
       style: context.theme.textTheme.titleLarge?.copyWith(
+        color: settings.readerColor.toForegroundColor(context),
         fontWeight: FontWeight.bold,
         fontFamily: settings.getFontFamily(settings.headingFont),
       ),
@@ -652,7 +672,9 @@ class _ReaderActivityState extends State<ReaderActivity>
           '${_currentChapterIndex + 1} of ${_chapters.length}',
           textAlign: TextAlign.center,
           style: context.theme.textTheme.titleSmall?.copyWith(
-            color: context.theme.colorScheme.onSurfaceVariant,
+            color: settings.readerColor
+                .toForegroundColor(context)
+                .withAlpha(170),
             fontFamily: settings.getFontFamily(settings.headingFont),
           ),
         ),
@@ -679,10 +701,10 @@ class _ReaderActivityState extends State<ReaderActivity>
       SizedBox(height: 16 * settings.paragraphSpacing),
       _buildInfoContainer(
         content: _currentChapter!.summary!,
-        backgroundColor: context.theme.colorScheme.surfaceVariant,
         textStyle: context.theme.textTheme.bodyMedium?.copyWith(
           fontStyle: FontStyle.italic,
           height: settings.lineHeight,
+          color: settings.readerColor.toForegroundColor(context),
           fontFamily: settings.getFontFamily(settings.bodyFont),
         ),
       ),
@@ -698,28 +720,38 @@ class _ReaderActivityState extends State<ReaderActivity>
       SizedBox(height: 16 * settings.paragraphSpacing),
       Opacity(
         opacity: 0.7,
-        child: TextHeader.small(title: "Notes", hasPadding: false),
+        child: TextHeader.small(
+          title: "Notes",
+          hasPadding: false,
+          color: settings.readerColor.toForegroundColor(context),
+        ),
       ),
       _buildInfoContainer(
         content: _currentChapter!.preface!,
         backgroundColor: context.theme.colorScheme.tertiaryContainer,
         textStyle: TextStyle(
           height: settings.lineHeight,
+          color: settings.readerColor.toForegroundColor(context),
           fontFamily: settings.getFontFamily(settings.bodyFont),
         ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       ),
     ];
   }
 
   Widget _buildInfoContainer({
     required String content,
-    required Color backgroundColor,
+    Color? backgroundColor,
     TextStyle? textStyle,
+    EdgeInsetsGeometry padding = const EdgeInsets.symmetric(
+      horizontal: 4.0,
+      vertical: 16.0,
+    ),
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 16.0),
+      padding: padding,
       decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.3),
+        color: backgroundColor?.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: HtmlWidget(

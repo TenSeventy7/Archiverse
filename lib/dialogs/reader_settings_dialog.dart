@@ -2,6 +2,7 @@ import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/reading_layout.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
@@ -58,6 +59,8 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
               child: ListView(
                 children: [
                   const SizedBox(height: 16.0),
+                  _buildReaderColorSection(settings),
+                  const SizedBox(height: 16.0),
                   _buildTextSizeSection(settings),
                   const SizedBox(height: 16),
                   _buildReadingLayoutSection(settings),
@@ -72,6 +75,59 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildReaderColorSection(ReaderProvider settings) {
+    return OptionGroup(
+      title: "Reader Color",
+      children: [
+        OptionTile.custom(
+          title: "",
+          widget: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: ReaderColor.values.map((color) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    selected: settings.readerColor == color,
+                    onSelected: (selected) {
+                      if (selected) {
+                        _prefs.setString(
+                          Preferences.readerBackgroundColor,
+                          color.toString(),
+                        );
+                        _readerProvider.refresh();
+                      }
+                    },
+                    backgroundColor: color.toBackgroundColor(context),
+                    showCheckmark: false,
+                    labelPadding: EdgeInsets.zero,
+                    label: CircleAvatar(
+                      backgroundColor: color.toBackgroundColor(context),
+                      radius: 18.0,
+                      child: (settings.readerColor == color)
+                          ? Icon(
+                              TablerIcons.check,
+                              color: color.toForegroundColor(context),
+                              size: 24.0,
+                            )
+                          : Icon(
+                              color == ReaderColor.system
+                                  ? TablerIcons.sun_moon
+                                  : TablerIcons.letter_a,
+                              color: color.toForegroundColor(context),
+                              size: 24.0,
+                            ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

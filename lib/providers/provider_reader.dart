@@ -1,3 +1,4 @@
+import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/reading_layout.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
@@ -46,6 +47,11 @@ class ReaderProvider extends ChangeNotifier {
   bool get justifyText => _prefs.getBool(
     Preferences.readerJustifiedText,
     defaultValue: Preferences.defaults[Preferences.readerJustifiedText] as bool,
+  );
+
+  ReaderColor get readerColor => ReaderColor.fromKey(
+    _prefs.getString(Preferences.readerBackgroundColor) ??
+        ReaderColor.system.toString(),
   );
 
   // Font Settings
