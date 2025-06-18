@@ -28,7 +28,7 @@ class ThemeProvider extends ChangeNotifier {
     );
   }
 
-  _initSupport(BuildContext context) async {
+  Future<void> _initSupport(BuildContext context) async {
     // If running iOS, auto-support dynamic color
     if (context.platform == TargetPlatform.iOS) {
       _supportsDynamicColor = true;
