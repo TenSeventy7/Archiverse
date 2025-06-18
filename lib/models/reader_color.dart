@@ -60,4 +60,19 @@ enum ReaderColor {
         return const Color(0xFF5F4B32);
     }
   }
+
+  Color toContainerColor(BuildContext context) {
+    switch (this) {
+      case ReaderColor.system:
+        return context.colorScheme.tertiaryContainer;
+      case ReaderColor.light:
+        return context.themeProvider.lightColorScheme.tertiaryContainer;
+      case ReaderColor.dark:
+        return context.themeProvider.darkColorScheme.tertiaryContainer;
+      case ReaderColor.gray:
+        return Colors.grey.shade700;
+      case ReaderColor.sepia:
+        return const Color(0xffc79d67);
+    }
+  }
 }

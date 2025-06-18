@@ -620,7 +620,9 @@ class _ReaderActivityState extends State<ReaderActivity>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: context.theme.colorScheme.tertiaryContainer.withOpacity(0.3),
+            color: settings.readerColor
+                .toContainerColor(context)
+                .withOpacity(0.3),
             borderRadius: BorderRadius.circular(8),
           ),
           child: HtmlWidget(
@@ -740,7 +742,7 @@ class _ReaderActivityState extends State<ReaderActivity>
       ),
       _buildInfoContainer(
         content: _currentChapter!.preface!,
-        backgroundColor: context.theme.colorScheme.tertiaryContainer,
+        backgroundColor: settings.readerColor.toContainerColor(context),
         textStyle: GoogleFonts.getFont(
           settings.getFontFamily(settings.bodyFont),
           textStyle: TextStyle(
