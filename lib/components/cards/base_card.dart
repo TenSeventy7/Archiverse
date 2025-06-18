@@ -1,3 +1,4 @@
+import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
 
 abstract class BaseCard<T> extends StatelessWidget {
@@ -21,6 +22,7 @@ abstract class BaseCard<T> extends StatelessWidget {
     return Card.outlined(
       elevation: elevation ?? 0,
       clipBehavior: Clip.antiAlias,
+      color: context.colorScheme.surfaceContainerLowest,
       child: isSelectable
           ? InkWell(
               borderRadius: borderRadius,
