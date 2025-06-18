@@ -50,16 +50,20 @@ class ThemeProvider extends ChangeNotifier {
   ColorScheme get darkColorScheme => _colorScheme.darkColorScheme;
 
   ThemeData? getThemeData(TextTheme textTheme, ColorScheme? colorScheme) {
+    bool isDynamic =
+        _colorScheme == AppColorScheme.dynamic && _supportsDynamicColor;
+
     return ThemeData(
       useMaterial3: true,
       brightness: colorScheme?.brightness,
-      colorScheme: colorScheme,
+      colorSchemeSeed: isDynamic ? colorScheme?.primary : null,
+      colorScheme: isDynamic ? null : colorScheme,
       textTheme: textTheme.apply(
         bodyColor: colorScheme?.onSurface,
         displayColor: colorScheme?.onSurface,
       ),
-      scaffoldBackgroundColor: colorScheme?.background,
-      canvasColor: colorScheme?.surface,
+      scaffoldBackgroundColor: isDynamic ? null : colorScheme?.surface,
+      canvasColor: isDynamic ? null : colorScheme?.surface,
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
@@ -75,8 +79,6 @@ class ThemeProvider extends ChangeNotifier {
           textDirection: TextDirection.rtl,
         ),
       ),
-
-      // Temporarily set this to false to use new Material 3 progress indicators
       progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
     );
   }
