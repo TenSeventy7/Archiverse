@@ -4,7 +4,6 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
-import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:archiverse/views/settings/activity_author_filters_settings.dart';
@@ -13,13 +12,11 @@ import 'package:archiverse/views/settings/activity_blocked_content_settings.dart
 import 'package:archiverse/views/settings/activity_cache_management.dart';
 import 'package:archiverse/views/settings/activity_content_warnings_settings.dart';
 import 'package:archiverse/views/settings/activity_downloads.dart';
-import 'package:archiverse/views/settings/activity_font_selection.dart';
 import 'package:archiverse/views/settings/activity_rating_preferences.dart';
+import 'package:archiverse/views/settings/activity_reading_experience_settings.dart';
 import 'package:archiverse/views/settings/activity_reading_history_settings.dart';
-import 'package:archiverse/views/settings/activity_reading_layout_settings.dart';
-import 'package:archiverse/views/settings/activity_scrolling_behavior_settings.dart';
 import 'package:archiverse/views/settings/activity_tag_filters_settings.dart';
-import 'package:archiverse/views/settings/activity_text_size_settings.dart';
+import 'package:archiverse/views/settings/activity_typography_settings.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -117,24 +114,14 @@ class _SettingsActivityState extends State<SettingsActivity> {
       title: context.strings.settings_category_reading,
       children: [
         OptionTile(
-          title: context.strings.settings_text_size_title,
-          icon: TablerIcons.text_size,
-          routeName: TextSizeSettingsActivity.routeName,
-        ),
-        OptionTile(
-          title: context.strings.settings_font_title,
+          title: "Text and Fonts",
           icon: TablerIcons.typography,
-          routeName: FontSelectionSettingsActivity.routeName,
+          routeName: TextFontsSettingsActivity.routeName,
         ),
         OptionTile(
-          title: context.strings.settings_layout_title,
-          icon: TablerIcons.layout,
-          routeName: ReadingLayoutSettingsActivity.routeName,
-        ),
-        OptionTile(
-          title: context.strings.settings_scrolling_title,
-          icon: TablerIcons.swipe_down,
-          routeName: ScrollingBehaviorSettingsActivity.routeName,
+          title: "Reading Experience",
+          icon: TablerIcons.book_2,
+          routeName: ReadingExperienceSettingsActivity.routeName,
         ),
       ],
     );

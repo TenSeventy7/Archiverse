@@ -1,9 +1,10 @@
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
+import 'package:archiverse/components/settings/font_selection.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/reader_color.dart';
-import 'package:archiverse/models/reading_layout.dart';
+import 'package:archiverse/models/reader_font.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/providers/provider_reader.dart';
@@ -32,7 +33,7 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.5),
+      constraints: BoxConstraints(maxHeight: context.screenHeight * 0.6),
       child: Consumer<ReaderProvider>(
         builder: (context, settings, child) {
           return Scaffold(
@@ -55,17 +56,15 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
               ),
             ),
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 4.0),
               child: ListView(
                 children: [
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 4.0),
                   _buildReaderColorSection(settings),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 24.0),
                   _buildTextSizeSection(settings),
                   const SizedBox(height: 16),
                   _buildReadingLayoutSection(settings),
-                  const SizedBox(height: 16),
-                  _buildScrollingSection(settings),
                   const SizedBox(height: 16),
                   _buildDisplaySection(settings),
                   SizedBox(height: 16 + context.screenPadding.bottom),
@@ -79,52 +78,49 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
   }
 
   Widget _buildReaderColorSection(ReaderProvider settings) {
-    return OptionGroup(
-      title: "Reader Color",
+    return Column(
       children: [
-        OptionTile.custom(
-          title: "",
-          widget: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: ReaderColor.values.map((color) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    selected: settings.readerColor == color,
-                    onSelected: (selected) {
-                      if (selected) {
-                        _prefs.setString(
-                          Preferences.readerBackgroundColor,
-                          color.toString(),
-                        );
-                        _readerProvider.refresh();
-                      }
-                    },
+        TextHeader.small(title: "Background Color"),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: ReaderColor.values.map((color) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  selected: settings.readerColor == color,
+                  onSelected: (selected) {
+                    if (selected) {
+                      _prefs.setString(
+                        Preferences.readerBackgroundColor,
+                        color.toString(),
+                      );
+                      _readerProvider.refresh();
+                    }
+                  },
+                  backgroundColor: color.toBackgroundColor(context),
+                  showCheckmark: false,
+                  labelPadding: EdgeInsets.zero,
+                  label: CircleAvatar(
                     backgroundColor: color.toBackgroundColor(context),
-                    showCheckmark: false,
-                    labelPadding: EdgeInsets.zero,
-                    label: CircleAvatar(
-                      backgroundColor: color.toBackgroundColor(context),
-                      radius: 18.0,
-                      child: (settings.readerColor == color)
-                          ? Icon(
-                              TablerIcons.check,
-                              color: color.toForegroundColor(context),
-                              size: 24.0,
-                            )
-                          : Icon(
-                              color == ReaderColor.system
-                                  ? TablerIcons.sun_moon
-                                  : TablerIcons.letter_a,
-                              color: color.toForegroundColor(context),
-                              size: 24.0,
-                            ),
-                    ),
+                    radius: 18.0,
+                    child: (settings.readerColor == color)
+                        ? Icon(
+                            TablerIcons.check,
+                            color: color.toForegroundColor(context),
+                            size: 24.0,
+                          )
+                        : Icon(
+                            color == ReaderColor.system
+                                ? TablerIcons.sun_moon
+                                : TablerIcons.letter_a,
+                            color: color.toForegroundColor(context),
+                            size: 24.0,
+                          ),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],
@@ -133,7 +129,7 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
 
   Widget _buildTextSizeSection(ReaderProvider settings) {
     return OptionGroup(
-      title: "Text Size",
+      title: "Text and Fonts",
       children: [
         OptionTile.slider(
           title: context.strings.settings_text_size_adjust_label,
@@ -147,6 +143,30 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
           max: 2.5,
           divisions: 20,
         ),
+        OptionTile.custom(
+          title: "Header Font",
+          widget: FontSelectionWidget(
+            fonts: ReaderFont.values,
+            selectedFont: settings.headingFont,
+            onFontSelected: (font) {
+              _prefs.setString(Preferences.readerHeadingFont, font.key);
+              _readerProvider.refresh();
+            },
+            isHeading: true,
+          ),
+        ),
+        OptionTile.custom(
+          title: "Body Font",
+          widget: FontSelectionWidget(
+            fonts: ReaderFont.values,
+            selectedFont: settings.bodyFont,
+            onFontSelected: (font) {
+              _prefs.setString(Preferences.readerBodyFont, font.key);
+              _readerProvider.refresh();
+            },
+            isHeading: false,
+          ),
+        ),
       ],
     );
   }
@@ -155,21 +175,6 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
     return OptionGroup(
       title: "Reading Layout",
       children: [
-        OptionTile.list(
-          title: context.strings.settings_layout_type,
-          icon: TablerIcons.layout,
-          entries: [
-            context.strings.settings_layout_single_column,
-            context.strings.settings_layout_dual_column,
-            context.strings.settings_layout_paginated,
-          ],
-          values: ReadingLayout.values,
-          selectedValue: settings.readingLayout,
-          onChanged: (value) {
-            _prefs.setString(Preferences.readingLayout, value.key);
-            _readerProvider.refresh();
-          },
-        ),
         OptionTile.slider(
           title: context.strings.settings_layout_line_spacing,
           icon: TablerIcons.line_height,
@@ -178,9 +183,21 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
             _prefs.setDouble(Preferences.lineHeight, value);
             _readerProvider.refresh();
           },
-          min: 1.0,
+          min: 0.8,
           max: 2.0,
-          divisions: 10,
+          divisions: 12,
+        ),
+        OptionTile.slider(
+          title: context.strings.settings_layout_paragraph_spacing,
+          icon: TablerIcons.spacing_vertical,
+          value: settings.paragraphSpacing,
+          onChanged: (value) {
+            _prefs.setDouble(Preferences.paragraphSpacing, value);
+            _readerProvider.refresh();
+          },
+          min: 0.8,
+          max: 2.0,
+          divisions: 12,
         ),
         OptionTile.switcher(
           title: context.strings.settings_layout_justify_text,
@@ -191,49 +208,6 @@ class _ReaderSettingsDialogState extends State<_ReaderSettingsDialog> {
             _readerProvider.refresh();
           },
         ),
-      ],
-    );
-  }
-
-  Widget _buildScrollingSection(ReaderProvider settings) {
-    return OptionGroup(
-      title: "Scrolling",
-      children: [
-        OptionTile.list(
-          title: context.strings.settings_scrolling_type,
-          icon: TablerIcons.arrows_vertical,
-          entries: [
-            context.strings.settings_scrolling_continuous,
-            context.strings.settings_scrolling_paged,
-          ],
-          values: ScrollingType.values,
-          selectedValue: settings.scrollingType,
-          onChanged: (value) {
-            _prefs.setString(Preferences.scrollingType, value.key);
-            _readerProvider.refresh();
-          },
-        ),
-        if (settings.scrollingType == ScrollingType.paged) ...[
-          OptionTile.switcher(
-            title: context.strings.settings_scrolling_tap_edges,
-            subtitle: context.strings.settings_scrolling_tap_edges_subtitle,
-            icon: TablerIcons.hand_click,
-            value: settings.tapEdges,
-            onChanged: (value) {
-              _prefs.setBool(Preferences.scrollingTapEdges, value);
-              _readerProvider.refresh();
-            },
-          ),
-          OptionTile.switcher(
-            title: context.strings.settings_scrolling_animation,
-            icon: TablerIcons.keyframes,
-            value: settings.useScrollAnimation,
-            onChanged: (value) {
-              _prefs.setBool(Preferences.scrollingAnimation, value);
-              _readerProvider.refresh();
-            },
-          ),
-        ],
       ],
     );
   }

@@ -5,7 +5,6 @@ import 'package:archiverse/dialogs/chapters_list.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/chapter.dart';
-import 'package:archiverse/models/reading_layout.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/views/activity_common.dart';
@@ -65,10 +64,6 @@ class _ReaderActivityState extends State<ReaderActivity>
   final ScrollController _scrollController = ScrollController();
   double _lastScrollOffset = 0.0;
 
-  // Page controller for paged scrolling
-  PageController? _pageController;
-  int _currentPage = 0;
-
   @override
   void initState() {
     super.initState();
@@ -82,7 +77,6 @@ class _ReaderActivityState extends State<ReaderActivity>
   void dispose() {
     _uiAnimationController.dispose();
     _scrollController.dispose();
-    _pageController?.dispose();
     _restoreScreenSettings();
     super.dispose();
   }
@@ -139,19 +133,8 @@ class _ReaderActivityState extends State<ReaderActivity>
         _currentChapter = chapterWithContent;
         _isLoading = false;
       });
-
-      _initializePageController();
     } catch (e) {
       _setErrorState(e.toString());
-    }
-  }
-
-  void _initializePageController() {
-    final settings = context.read<ReaderProvider>();
-    if (settings.scrollingType == ScrollingType.paged) {
-      _pageController?.dispose();
-      _pageController = PageController();
-      _currentPage = 0;
     }
   }
 
@@ -204,34 +187,6 @@ class _ReaderActivityState extends State<ReaderActivity>
     }
   }
 
-  void _previousPage() {
-    if (_pageController != null && _currentPage > 0) {
-      final settings = context.read<ReaderProvider>();
-      if (settings.useScrollAnimation) {
-        _pageController!.previousPage(
-          duration: _animationDuration,
-          curve: Curves.easeInOut,
-        );
-      } else {
-        _pageController!.jumpToPage(_currentPage - 1);
-      }
-    }
-  }
-
-  void _nextPage() {
-    if (_pageController != null) {
-      final settings = context.read<ReaderProvider>();
-      if (settings.useScrollAnimation) {
-        _pageController!.nextPage(
-          duration: _animationDuration,
-          curve: Curves.easeInOut,
-        );
-      } else {
-        _pageController!.jumpToPage(_currentPage + 1);
-      }
-    }
-  }
-
   // UI interaction methods
   void _onScroll() {
     final currentOffset = _scrollController.offset;
@@ -264,22 +219,6 @@ class _ReaderActivityState extends State<ReaderActivity>
   }
 
   void _onContentTap(TapUpDetails details) {
-    final settings = context.read<ReaderProvider>();
-
-    if (settings.scrollingType == ScrollingType.paged && settings.tapEdges) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      final tapX = details.localPosition.dx;
-      final edgeThreshold = screenWidth * 0.2;
-
-      if (tapX < edgeThreshold) {
-        _previousPage();
-        return;
-      } else if (tapX > screenWidth - edgeThreshold) {
-        _nextPage();
-        return;
-      }
-    }
-
     _toggleUI();
   }
 
@@ -307,21 +246,11 @@ class _ReaderActivityState extends State<ReaderActivity>
     _resetDragState();
 
     final velocity = details.primaryVelocity ?? 0;
-    final settings = context.read<ReaderProvider>();
-    final adjustedVelocity = velocity * settings.scrollSensitivity;
 
-    if (adjustedVelocity > _dragVelocityThreshold) {
-      if (settings.scrollingType == ScrollingType.paged) {
-        _previousPage();
-      } else {
-        _previousChapter();
-      }
-    } else if (adjustedVelocity < -_dragVelocityThreshold) {
-      if (settings.scrollingType == ScrollingType.paged) {
-        _nextPage();
-      } else {
-        _nextChapter();
-      }
+    if (velocity > _dragVelocityThreshold) {
+      _previousChapter();
+    } else if (velocity < -_dragVelocityThreshold) {
+      _nextChapter();
     }
   }
 
@@ -355,18 +284,24 @@ class _ReaderActivityState extends State<ReaderActivity>
 
     return Consumer<ReaderProvider>(
       builder: (context, settings, child) {
-        return MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(settings.textScaleFactor)),
-          child: Scaffold(
-            appBar: _buildAnimatedAppBar(),
-            backgroundColor: settings.readerColor.toBackgroundColor(context),
-            extendBody: true,
-            extendBodyBehindAppBar: true,
-            body: _buildBody(settings),
-            bottomNavigationBar: _buildAnimatedBottomNavBar(),
+        if (settings.keepScreenOn) {
+          WakelockPlus.enable();
+        } else {
+          WakelockPlus.disable();
+        }
+
+        return Scaffold(
+          appBar: _buildAnimatedAppBar(),
+          backgroundColor: settings.readerColor.toBackgroundColor(context),
+          extendBody: true,
+          extendBodyBehindAppBar: true,
+          body: MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(settings.textScaleFactor)),
+            child: _buildBody(settings),
           ),
+          bottomNavigationBar: _buildAnimatedBottomNavBar(),
         );
       },
     );
@@ -461,39 +396,15 @@ class _ReaderActivityState extends State<ReaderActivity>
   }
 
   Widget _buildScrollContent(ReaderProvider settings) {
-    if (settings.scrollingType == ScrollingType.paged) {
-      return _buildPagedContent(settings);
-    }
-    return _buildContinuousContent(settings);
-  }
-
-  Widget _buildContinuousContent(ReaderProvider settings) {
     return SingleChildScrollView(
       key: ValueKey(_currentChapterIndex),
       controller: _scrollController,
-      physics: settings.scrollPhysics,
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
         vertical: 8.0,
         horizontal: context.commonPaddingDouble,
       ),
       child: _buildChapterContent(settings),
-    );
-  }
-
-  Widget _buildPagedContent(ReaderProvider settings) {
-    return PageView(
-      controller: _pageController,
-      physics: settings.scrollPhysics,
-      onPageChanged: (index) => setState(() => _currentPage = index),
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 8.0,
-            horizontal: context.commonPaddingDouble,
-          ),
-          child: _buildChapterContent(settings),
-        ),
-      ],
     );
   }
 
@@ -524,79 +435,23 @@ class _ReaderActivityState extends State<ReaderActivity>
       return const Center(child: Text('No content available'));
     }
 
-    final textStyle =
-        GoogleFonts.getFont(settings.getFontFamily(settings.bodyFont)).copyWith(
-          height: settings.lineHeight,
-          color: settings.readerColor.toForegroundColor(context),
-        );
-
-    switch (settings.readingLayout) {
-      case ReadingLayout.singleColumn:
-        return HtmlWidget(
-          _currentChapter!.content!,
-          key: ValueKey(
-            'html_${settings.justifyText ? 'justified' : 'normal'}_${settings.readerColor.toString()}',
-          ),
-          textStyle: textStyle.copyWith(height: settings.lineHeight),
-          customStylesBuilder: (element) {
-            if (settings.justifyText) {
-              return {'text-align': 'justify'};
-            }
-            return {};
-          },
-        );
-
-      case ReadingLayout.dualColumn:
-        return _buildDualColumnContent(settings, textStyle);
-
-      case ReadingLayout.paginated:
-        return _buildPaginatedContent(settings, textStyle);
-    }
-  }
-
-  Widget _buildDualColumnContent(ReaderProvider settings, TextStyle textStyle) {
-    // For dual column, we'll split the content roughly in half
-    // This is a simplified implementation - you might want to implement
-    // more sophisticated column balancing
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: HtmlWidget(_currentChapter!.content!, textStyle: textStyle),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Container(), // Placeholder for second column
-        ),
-      ],
+    final textStyle = GoogleFonts.getFont(settings.bodyFontFamily).copyWith(
+      height: settings.lineHeight,
+      color: settings.readerColor.toForegroundColor(context),
     );
-  }
 
-  Widget _buildPaginatedContent(ReaderProvider settings, TextStyle textStyle) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(8),
+    return HtmlWidget(
+      _currentChapter!.content!,
+      key: ValueKey(
+        'html_${settings.justifyText ? 'justified' : 'normal'}_${settings.readerColor.toString()}',
       ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          HtmlWidget(_currentChapter!.content!, textStyle: textStyle),
-          if (settings.showScrollIndicator) ...[
-            SizedBox(height: 16 * settings.paragraphSpacing),
-            Center(
-              child: Text(
-                '— ${_currentPage + 1} —',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontFamily: settings.getFontFamily(settings.bodyFont),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
+      textStyle: textStyle.copyWith(height: settings.lineHeight),
+      customStylesBuilder: (element) {
+        if (settings.justifyText) {
+          return {'text-align': 'justify'};
+        }
+        return {};
+      },
     );
   }
 
@@ -628,10 +483,10 @@ class _ReaderActivityState extends State<ReaderActivity>
           child: HtmlWidget(
             _currentChapter!.postface!,
             textStyle: GoogleFonts.getFont(
-              settings.getFontFamily(settings.bodyFont),
+              settings.bodyFontFamily,
               textStyle: TextStyle(
                 height: settings.lineHeight,
-                fontFamily: settings.getFontFamily(settings.bodyFont),
+                fontFamily: settings.bodyFontFamily,
                 color: settings.readerColor.toForegroundColor(context),
               ),
             ),
@@ -663,11 +518,11 @@ class _ReaderActivityState extends State<ReaderActivity>
           : 'Chapter ${_currentChapter!.chapter}',
       textAlign: TextAlign.center,
       style: GoogleFonts.getFont(
-        settings.getFontFamily(settings.headingFont),
+        settings.headingFontFamily,
         textStyle: context.theme.textTheme.titleLarge?.copyWith(
           color: settings.readerColor.toForegroundColor(context),
           fontWeight: FontWeight.bold,
-          fontFamily: settings.getFontFamily(settings.headingFont),
+          fontFamily: settings.headingFontFamily,
         ),
       ),
     );
@@ -681,7 +536,7 @@ class _ReaderActivityState extends State<ReaderActivity>
           '${_currentChapterIndex + 1} of ${_chapters.length}',
           textAlign: TextAlign.center,
           style: GoogleFonts.getFont(
-            settings.getFontFamily(settings.bodyFont),
+            settings.bodyFontFamily,
             textStyle: context.theme.textTheme.titleSmall?.copyWith(
               color: settings.readerColor
                   .toForegroundColor(context)
@@ -695,7 +550,7 @@ class _ReaderActivityState extends State<ReaderActivity>
             '${_currentChapter!.words} words',
             style: context.theme.textTheme.bodySmall?.copyWith(
               color: context.theme.colorScheme.onSurfaceVariant,
-              fontFamily: settings.getFontFamily(settings.bodyFont),
+              fontFamily: settings.bodyFontFamily,
             ),
           ),
         ],
@@ -713,12 +568,12 @@ class _ReaderActivityState extends State<ReaderActivity>
       _buildInfoContainer(
         content: _currentChapter!.summary!,
         textStyle: GoogleFonts.getFont(
-          settings.getFontFamily(settings.bodyFont),
+          settings.bodyFontFamily,
           textStyle: context.theme.textTheme.bodyMedium?.copyWith(
             fontStyle: FontStyle.italic,
             height: settings.lineHeight,
             color: settings.readerColor.toForegroundColor(context),
-            fontFamily: settings.getFontFamily(settings.bodyFont),
+            fontFamily: settings.bodyFontFamily,
           ),
         ),
       ),
@@ -744,11 +599,11 @@ class _ReaderActivityState extends State<ReaderActivity>
         content: _currentChapter!.preface!,
         backgroundColor: settings.readerColor.toContainerColor(context),
         textStyle: GoogleFonts.getFont(
-          settings.getFontFamily(settings.bodyFont),
+          settings.bodyFontFamily,
           textStyle: TextStyle(
             height: settings.lineHeight,
             color: settings.readerColor.toForegroundColor(context),
-            fontFamily: settings.getFontFamily(settings.bodyFont),
+            fontFamily: settings.bodyFontFamily,
           ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
@@ -794,25 +649,14 @@ class _ReaderActivityState extends State<ReaderActivity>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (settings.scrollingType == ScrollingType.paged) ...[
-                  _buildNavigationButton(
-                    icon: TablerIcons.chevron_left,
-                    onPressed: _currentPage > 0 ? _previousPage : null,
-                  ),
-                  _buildNavigationButton(
-                    icon: TablerIcons.chevron_right,
-                    onPressed: _nextPage,
-                  ),
-                ] else ...[
-                  _buildNavigationButton(
-                    icon: TablerIcons.chevron_left,
-                    onPressed: hasPrevious ? _previousChapter : null,
-                  ),
-                  _buildNavigationButton(
-                    icon: TablerIcons.chevron_right,
-                    onPressed: hasNext ? _nextChapter : null,
-                  ),
-                ],
+                _buildNavigationButton(
+                  icon: TablerIcons.chevron_left,
+                  onPressed: hasPrevious ? _previousChapter : null,
+                ),
+                _buildNavigationButton(
+                  icon: TablerIcons.chevron_right,
+                  onPressed: hasNext ? _nextChapter : null,
+                ),
                 _buildChapterListButton(),
                 _buildBookmarkButton(),
                 _buildOptionsButton(),

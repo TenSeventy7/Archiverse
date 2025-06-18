@@ -34,13 +34,11 @@ import 'package:archiverse/views/settings/activity_blocked_content_settings.dart
 import 'package:archiverse/views/settings/activity_cache_management.dart';
 import 'package:archiverse/views/settings/activity_content_warnings_settings.dart';
 import 'package:archiverse/views/settings/activity_downloads.dart';
-import 'package:archiverse/views/settings/activity_font_selection.dart';
-import 'package:archiverse/views/settings/activity_rating_preferences.dart';
+import 'package:archiverse/views/settings/activity_reading_experience_settings.dart';
 import 'package:archiverse/views/settings/activity_reading_history_settings.dart';
-import 'package:archiverse/views/settings/activity_reading_layout_settings.dart';
-import 'package:archiverse/views/settings/activity_scrolling_behavior_settings.dart';
 import 'package:archiverse/views/settings/activity_tag_filters_settings.dart';
-import 'package:archiverse/views/settings/activity_text_size_settings.dart';
+import 'package:archiverse/views/settings/activity_typography_settings.dart';
+import 'package:archiverse/views/settings/activity_rating_preferences.dart';
 import 'package:flutter/material.dart';
 
 import 'package:archiverse/views/activity_home.dart';
@@ -51,14 +49,10 @@ class AppRoutes {
     SearchActivity.routeName: (context) => const SearchActivity(),
     AboutActivity.routeName: (context) => const AboutActivity(),
     SettingsActivity.routeName: (context) => const SettingsActivity(),
-    TextSizeSettingsActivity.routeName: (context) =>
-        const TextSizeSettingsActivity(),
-    FontSelectionSettingsActivity.routeName: (context) =>
-        const FontSelectionSettingsActivity(),
-    ReadingLayoutSettingsActivity.routeName: (context) =>
-        const ReadingLayoutSettingsActivity(),
-    ScrollingBehaviorSettingsActivity.routeName: (context) =>
-        const ScrollingBehaviorSettingsActivity(),
+    TextFontsSettingsActivity.routeName: (context) =>
+        const TextFontsSettingsActivity(),
+    ReadingExperienceSettingsActivity.routeName: (context) =>
+        const ReadingExperienceSettingsActivity(),
     ContentWarningsSettingsActivity.routeName: (context) =>
         const ContentWarningsSettingsActivity(),
     RatingPreferencesActivity.routeName: (context) =>
