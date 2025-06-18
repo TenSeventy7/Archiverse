@@ -8,6 +8,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/authors_list_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/mixins/mixin_common_paginated_list.dart';
 import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/loading_states.dart';
 import 'package:archiverse/models/pseud.dart';
@@ -34,28 +35,25 @@ class SeriesActivity extends CommonDetailActivity<Series> {
   SeriesDetailState createState() => SeriesDetailState();
 }
 
-class SeriesDetailState extends CommonDetailActivityState<Series> {
+class SeriesDetailState extends CommonDetailActivityState<Series>
+    with CommonPaginatedListMixin<Work> {
   SeriesDetailState() : super(Fillers.series);
 
   // State variables
   List<Bookmark>? _bookmarks;
-  final PagingController<int, Work> _worksController = PagingController(
-    firstPageKey: 1,
-  );
-  final int _pageSize = 20;
   bool _isBookmarked = false;
-  bool _showAllWorks = false; // Add this line
-  List<Work> _initialWorks = []; // Add this line
+  bool _showAllWorks = false;
+  List<Work> _initialWorks = [];
 
   @override
   void initState() {
     super.initState();
-    _worksController.addPageRequestListener(_fetchWorks);
+    initializePagination();
   }
 
   @override
   void dispose() {
-    _worksController.dispose();
+    disposePagination();
     super.dispose();
   }
 
@@ -64,6 +62,26 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
     // Fetch initial works when item is loaded
     _fetchInitialWorks();
     _fetchBookmarks();
+  }
+
+  @override
+  bool get hasNextPage {
+    // If API already returns no more works, we don't need to check further
+    if (!hasNextPageInternal) return false;
+
+    // If we come across a situation where pageCount == current number of works,
+    // we need to infer from somewhere else if there are more works.
+    // For series, we can check the works reported in the series metadata.
+    if (itemsCount >= item.works) {
+      return false; // No more works than the series count
+    }
+
+    return hasNextPageInternal;
+  }
+
+  @override
+  Future<List<Work>> fetchItems(int page) async {
+    return await Ao3Api().getWorksFromSeries(item, page: page);
   }
 
   void _fetchBookmarks() async {
@@ -86,7 +104,6 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
     }
   }
 
-  // Add this method
   Future<void> _fetchInitialWorks() async {
     try {
       final works = await Ao3Api().getWorksFromSeries(item, page: 1);
@@ -98,27 +115,11 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
     }
   }
 
-  Future<void> _fetchWorks(int page) async {
-    try {
-      final works = await Ao3Api().getWorksFromSeries(item, page: page);
-
-      final isLastPage = works.length < _pageSize;
-      if (isLastPage) {
-        _worksController.appendLastPage(works);
-      } else {
-        _worksController.appendPage(works, page + 1);
-      }
-    } catch (e) {
-      _worksController.error = e;
-    }
-  }
-
-  // Add this method
   void _toggleAllWorks() {
     setState(() {
       _showAllWorks = true;
     });
-    _worksController.refresh();
+    refreshPagination();
   }
 
   void _toggleBookmark() {
@@ -647,45 +648,50 @@ class SeriesDetailState extends CommonDetailActivityState<Series> {
             ),
         ] else ...[
           // Show paginated list when "See all" is tapped
-          PagedSliverList<int, Work>(
-            pagingController: _worksController,
-            builderDelegate: PagedChildBuilderDelegate<Work>(
-              itemBuilder: (context, work, index) => Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 4.0,
-                ),
-                child: WorkCard(work: work),
-              ),
-              firstPageErrorIndicatorBuilder: (context) => Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: LoadError.small(
-                    onPressed: () => _worksController.refresh(),
+          PagingListener<int, Work>(
+            controller: pagingController,
+            builder: (context, state, fetchNextPage) =>
+                PagedSliverList<int, Work>(
+                  state: state,
+                  fetchNextPage: fetchNextPage,
+                  builderDelegate: PagedChildBuilderDelegate<Work>(
+                    itemBuilder: (context, work, index) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 4.0,
+                      ),
+                      child: WorkCard(work: work),
+                    ),
+                    firstPageErrorIndicatorBuilder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: LoadError.small(
+                          onPressed: () => pagingController.refresh(),
+                        ),
+                      ),
+                    ),
+                    newPageErrorIndicatorBuilder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: LoadError.small(
+                          onPressed: () => fetchNextPage(),
+                        ),
+                      ),
+                    ),
+                    noItemsFoundIndicatorBuilder: (context) => Center(
+                      child: ItemPlaceholder.small(
+                        message: "No works in this series yet",
+                        icon: TablerIcons.books_off,
+                      ),
+                    ),
+                    firstPageProgressIndicatorBuilder: (context) =>
+                        _buildLoadingList(context),
+                    newPageProgressIndicatorBuilder: (context) => Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
                   ),
                 ),
-              ),
-              newPageErrorIndicatorBuilder: (context) => Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: LoadError.small(
-                    onPressed: () => _worksController.retryLastFailedRequest(),
-                  ),
-                ),
-              ),
-              noItemsFoundIndicatorBuilder: (context) => Center(
-                child: ItemPlaceholder.small(
-                  message: "No works in this series yet",
-                  icon: TablerIcons.books_off,
-                ),
-              ),
-              firstPageProgressIndicatorBuilder: (context) =>
-                  _buildLoadingList(context),
-              newPageProgressIndicatorBuilder: (context) => Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            ),
           ),
         ],
       ],

@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/mixins/mixin_common_paginated_list.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 abstract class CommonListActivity<T> extends CommonActivity {
   const CommonListActivity({super.key});
@@ -14,17 +16,13 @@ abstract class CommonListActivity<T> extends CommonActivity {
   CommonListActivityState<T> createState();
 }
 
-abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
-  final PagingController<int, T> _controller = PagingController(
-    firstPageKey: 1,
-  );
-
+abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
+    with CommonPaginatedListMixin<T> {
   // Abstract methods for extending classes to implement
+  @override
   Future<List<T>> fetchItems(int page);
-  List<T> _lastItems = [];
   Widget buildItemWidget(BuildContext context, T item, int index);
   void onItemTap(T item) => {}; // Optional callback for item tap
-  int get pageSize => 20; // AO3 typically shows 20 works per page
   Widget buildTitle(BuildContext context);
 
   // Optional overridable methods
@@ -39,37 +37,17 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
   @override
   void initState() {
     super.initState();
-    _controller.addPageRequestListener(_fetchItems);
+    initializePagination();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    disposePagination();
     super.dispose();
   }
 
-  Future<void> _fetchItems(int page) async {
-    try {
-      final items = await fetchItems(page);
-
-      final isLastPage =
-          items.length < pageSize ||
-          items.isEmpty ||
-          _lastItems.isNotEmpty &&
-              items.every((item) => _lastItems.contains(item));
-      if (isLastPage) {
-        _controller.appendLastPage(items);
-      } else {
-        _controller.appendPage(items, page + 1);
-        _lastItems = items;
-      }
-    } catch (error) {
-      _controller.error = error;
-    }
-  }
-
   void refreshList() {
-    _controller.refresh();
+    refreshPagination();
   }
 
   @override
@@ -158,68 +136,71 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>> {
   }
 
   Widget _buildList(BuildContext context) {
-    final separator = buildSeparator(context, 0);
+    return PagingListener<int, T>(
+      controller: pagingController,
+      builder: (context, state, fetchNextPage) {
+        final separator = buildSeparator(context, 0);
 
-    if (separator != null) {
-      return PagedListView<int, T>.separated(
-        pagingController: _controller,
-        padding: EdgeInsets.only(bottom: context.screenPadding.bottom),
-        builderDelegate: PagedChildBuilderDelegate<T>(
-          itemBuilder: _buildItemWidget,
-          firstPageErrorIndicatorBuilder: (context) =>
-              LoadError(onPressed: () => _controller.refresh()),
-          newPageErrorIndicatorBuilder: (context) => Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: LoadError.small(
-                onPressed: () => _controller.retryLastFailedRequest(),
+        if (separator != null) {
+          return PagedListView<int, T>.separated(
+            state: state,
+            fetchNextPage: fetchNextPage,
+            padding: EdgeInsets.only(bottom: context.screenPadding.bottom),
+            builderDelegate: PagedChildBuilderDelegate<T>(
+              itemBuilder: _buildItemWidget,
+              firstPageErrorIndicatorBuilder: (context) =>
+                  LoadError(onPressed: () => pagingController.refresh()),
+              newPageErrorIndicatorBuilder: (context) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: LoadError.small(onPressed: () => fetchNextPage()),
+                ),
+              ),
+              firstPageProgressIndicatorBuilder: (context) =>
+                  const Center(child: CircularProgressIndicator()),
+              newPageProgressIndicatorBuilder: (context) => const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              noItemsFoundIndicatorBuilder: (context) => const Center(
+                child: ItemPlaceholder(
+                  message: 'Looks empty for now',
+                  icon: TablerIcons.template,
+                ),
               ),
             ),
-          ),
-          firstPageProgressIndicatorBuilder: (context) =>
-              const Center(child: CircularProgressIndicator()),
-          newPageProgressIndicatorBuilder: (context) => const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-          noItemsFoundIndicatorBuilder: (context) => const Center(
-            child: ItemPlaceholder(
-              message: 'Looks empty for now',
-              icon: TablerIcons.template,
-            ),
-          ),
-        ),
-        separatorBuilder: (context, index) => separator,
-      );
-    } else {
-      return PagedListView<int, T>(
-        pagingController: _controller,
-        builderDelegate: PagedChildBuilderDelegate<T>(
-          itemBuilder: buildItemWidget,
-          firstPageErrorIndicatorBuilder: (context) =>
-              LoadError(onPressed: () => _controller.refresh()),
-          newPageErrorIndicatorBuilder: (context) => Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: LoadError.small(
-                onPressed: () => _controller.retryLastFailedRequest(),
+            separatorBuilder: (context, index) => separator,
+          );
+        } else {
+          return PagedListView<int, T>(
+            state: state,
+            fetchNextPage: fetchNextPage,
+            builderDelegate: PagedChildBuilderDelegate<T>(
+              itemBuilder: buildItemWidget,
+              firstPageErrorIndicatorBuilder: (context) =>
+                  LoadError(onPressed: () => pagingController.refresh()),
+              newPageErrorIndicatorBuilder: (context) => Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: LoadError.small(onPressed: () => fetchNextPage()),
+                ),
+              ),
+              firstPageProgressIndicatorBuilder: (context) =>
+                  const Center(child: CircularProgressIndicator()),
+              newPageProgressIndicatorBuilder: (context) => const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              noItemsFoundIndicatorBuilder: (context) => const Center(
+                child: ItemPlaceholder(
+                  message: 'Looks empty for now',
+                  icon: TablerIcons.template,
+                ),
               ),
             ),
-          ),
-          firstPageProgressIndicatorBuilder: (context) =>
-              const Center(child: CircularProgressIndicator()),
-          newPageProgressIndicatorBuilder: (context) => const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-          noItemsFoundIndicatorBuilder: (context) => const Center(
-            child: ItemPlaceholder(
-              message: 'Looks empty for now',
-              icon: TablerIcons.template,
-            ),
-          ),
-        ),
-      );
-    }
+          );
+        }
+      },
+    );
   }
 }

@@ -10,6 +10,7 @@
 
 import 'dart:async';
 
+import 'package:archiverse/mixins/mixin_common_paginated_list.dart';
 import 'package:archiverse/providers/provider_search.dart';
 import 'package:archiverse/views/search/fragment_search_common.dart';
 import 'package:flutter/material.dart';
@@ -32,59 +33,48 @@ class CommonKindSearchFragment<T> extends CommonSearchFragment {
 }
 
 class CommonKindSearchFragmentState<T>
-    extends State<CommonKindSearchFragment<T>> {
+    extends State<CommonKindSearchFragment<T>>
+    with CommonPaginatedListMixin<T> {
   late SearchProvider _provider;
-  final PagingController<int, T> _controller = PagingController(
-    firstPageKey: 1,
-  );
-  final int _pageSize = 20; // Results on Ao3 are paginated by 20
-  Completer<void> _completer = Completer<void>();
+
+  @override
+  Future<List<T>> fetchItems(int page) async {
+    return await widget.fetcher(_provider.query, page);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PagedListView<int, T>.separated(
-      padding: EdgeInsets.zero,
-      pagingController: _controller,
-      builderDelegate: PagedChildBuilderDelegate<T>(
-        itemBuilder: widget.itemBuilder,
-      ),
-      separatorBuilder: (BuildContext context, int index) =>
-          const Divider(height: 1),
+    return PagingListener<int, T>(
+      controller: pagingController,
+      builder: (context, state, fetchNextPage) =>
+          PagedListView<int, T>.separated(
+            padding: EdgeInsets.zero,
+            state: state,
+            fetchNextPage: fetchNextPage,
+            builderDelegate: PagedChildBuilderDelegate<T>(
+              itemBuilder: widget.itemBuilder,
+            ),
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(height: 1),
+          ),
     );
   }
 
   @override
   void initState() {
     super.initState();
-    _controller.addPageRequestListener((page) {
-      _fetchItems(page);
-    });
+    initializePagination();
+  }
+
+  @override
+  void dispose() {
+    disposePagination();
+    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _provider = Provider.of<SearchProvider>(context);
-  }
-
-  Future<void> _fetchItems(int key) async {
-    try {
-      final items = await widget.fetcher(_provider.query, key);
-
-      final isLastPage = items.length < _pageSize;
-      if (isLastPage) {
-        _controller.appendLastPage(items);
-      } else {
-        _controller.appendPage(items, key + 1);
-      }
-
-      // Complete the refresh operation if it's the first page
-      if (key == 1) {
-        _completer.complete();
-        _completer = Completer<void>();
-      }
-    } catch (error) {
-      _controller.error = error;
-    }
   }
 }
