@@ -16,6 +16,7 @@ import 'package:archiverse/strings/app_localizations.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:relative_time/relative_time.dart';
 
@@ -29,6 +30,11 @@ void main() async {
 
   // Initialize providers
   await preferences.initialize();
+
+  // Disable fetching of Google Fonts (online) at runtime
+  // We ship the TTFs with the app to avoid runtime fetching
+  // Hi, 200MB app xD
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(
     MultiProvider(
