@@ -9,20 +9,15 @@ class SettingsBottomPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding ?? EdgeInsets.all(context.commonPaddingDouble),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+    return Material(
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      elevation: 4,
+      shadowColor: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+      child: Padding(
+        padding: padding ?? EdgeInsets.all(context.commonPaddingDouble),
+        child: child,
       ),
-      child: child,
     );
   }
 }
