@@ -13,6 +13,11 @@ class UserProvider extends ChangeNotifier {
   bool _isFetching = true;
   bool get isFetching => _isFetching;
 
+  bool _isSignedIn = false;
+  bool get isSignedIn => _isSignedIn;
+
+  bool get isLoadingError => _isSignedIn && _user == null && !_isFetching;
+
   /// Constructor
   UserProvider() {
     // Initialize the user state when the provider is created
@@ -30,6 +35,8 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
+
+    _isSignedIn = true;
 
     try {
       _user = await _api.getUser(

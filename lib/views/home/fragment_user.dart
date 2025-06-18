@@ -114,7 +114,7 @@ class _UserFragmentState extends State<UserFragment> {
               // User avatar
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Skeleton.leaf(child: _buildUserImage(user)),
+                child: Skeleton.leaf(child: _buildUserImage(provider)),
               ),
 
               // User info
@@ -126,7 +126,7 @@ class _UserFragmentState extends State<UserFragment> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        _getUserName(user),
+                        _getUserName(provider),
                         style: context.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: context.colorScheme.onSurface,
@@ -134,7 +134,7 @@ class _UserFragmentState extends State<UserFragment> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      _buildUserActions(user),
+                      _buildUserActions(provider),
                     ],
                   ),
                 ),
@@ -146,13 +146,21 @@ class _UserFragmentState extends State<UserFragment> {
             size: 24,
             color: context.colorScheme.onSurface.withAlpha(150),
           ),
-          onTap: () => _handleUserTap(user),
+          onTap: () => _handleUserTap(provider),
         ),
       ],
     );
   }
 
-  void _handleUserTap(Pseud? user) {
+  void _handleUserTap(UserProvider provider) {
+    final user = provider.user;
+
+    // Refresh if loading error
+    if (provider.isLoadingError) {
+      provider.refresh();
+      return;
+    }
+
     if (user != null) {
       context.navigator.pushNamed(AuthorActivity.routeName, arguments: user);
     } else {
@@ -336,10 +344,17 @@ class _UserFragmentState extends State<UserFragment> {
     );
   }
 
-  Widget _buildUserImage(Pseud? user) {
+  Widget _buildUserImage(UserProvider provider) {
+    final user = provider.user;
     Widget userImage;
 
-    if (user == null) {
+    if (provider.isLoadingError) {
+      userImage = Icon(
+        TablerIcons.user_x,
+        size: 52,
+        color: context.colorScheme.onPrimaryContainer,
+      );
+    } else if (user == null) {
       userImage = Icon(
         TablerIcons.user_question,
         size: 52,
@@ -352,16 +367,24 @@ class _UserFragmentState extends State<UserFragment> {
     return Skeleton.leaf(child: CircleAvatar(radius: 48, child: userImage));
   }
 
-  String _getUserName(Pseud? user) {
-    return user?.name ?? 'Not signed in';
+  String _getUserName(UserProvider provider) {
+    if (provider.isLoadingError) {
+      return "Could not load";
+    }
+
+    return provider.user?.name ?? 'Not signed in';
   }
 
-  Widget _buildUserActions(Pseud? user) {
-    if (user == null) {
+  Widget _buildUserActions(UserProvider provider) {
+    final user = provider.user;
+
+    if (provider.isLoadingError || user == null) {
       return Padding(
         padding: const EdgeInsets.only(top: 4.0),
         child: Text(
-          "Sign in to your account to access more features",
+          provider.isLoadingError
+              ? "Tap to try again"
+              : "Sign in to your account to access more features",
           style: context.textTheme.titleSmall?.copyWith(
             color: context.colorScheme.onSurface.withAlpha(150),
           ),
