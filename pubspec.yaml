@@ -59,6 +59,7 @@ dependencies:
   flutter_secure_storage: ^10.0.0-beta.1
   dynamic_color: ^1.7.0
   device_info_plus: ^11.5.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -120,3 +121,4 @@ flutter:
     - assets/raw-night/
     - assets/drawable/
     - assets/drawable-night/
+    - assets/fonts/
