@@ -39,10 +39,7 @@ class UserProvider extends ChangeNotifier {
     _isSignedIn = true;
 
     try {
-      _user = await _api.getUser(
-        Pseud(name: username, pseud: username),
-        refresh: true,
-      );
+      _user = await _api.getUserInfo(username, firstTime: true);
       _api.setUser(_user);
       _isFetching = false;
       notifyListeners();
@@ -91,7 +88,8 @@ class UserProvider extends ChangeNotifier {
     _isFetching = true;
     notifyListeners();
     try {
-      _user = await _api.getUser(_user!, refresh: true);
+      // Fetch the latest user information
+      _user = await _api.getUserInfo(user?.name, refresh: true);
       _api.setUser(_user);
     } catch (e) {
       // Handle error, e.g., network issue
