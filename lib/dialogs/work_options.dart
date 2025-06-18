@@ -132,14 +132,27 @@ class _WorkOptionsDialog extends StatelessWidget {
         ),
 
         if (isReader) ...[
-          _buildActionTile(
-            context,
-            icon: TablerIcons.settings,
-            title: "Settings",
-            onTap: () => {
-              Navigator.pop(context),
-              ReaderSettingsDialog.showSheet(context),
-            },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Card(
+              elevation: 0,
+              color: colorScheme.surfaceContainer,
+              margin: const EdgeInsets.symmetric(vertical: 4.0),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.settings,
+                    title: "Settings",
+                    onTap: () => {
+                      Navigator.pop(context),
+                      ReaderSettingsDialog.showSheet(context),
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
 
