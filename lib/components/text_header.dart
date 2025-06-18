@@ -19,6 +19,7 @@ class TextHeader extends StatelessWidget {
   final TextHeaderSize size;
   final EdgeInsets? padding;
   final bool hasPadding;
+  final Color? color;
   const TextHeader.small({
     super.key,
     required this.title,
@@ -28,6 +29,7 @@ class TextHeader extends StatelessWidget {
     this.onTap,
     this.padding,
     this.hasPadding = true,
+    this.color,
   }) : size = TextHeaderSize.small;
 
   const TextHeader.medium({
@@ -39,6 +41,7 @@ class TextHeader extends StatelessWidget {
     this.onTap,
     this.padding,
     this.hasPadding = true,
+    this.color,
   }) : size = TextHeaderSize.medium;
 
   const TextHeader.large({
@@ -50,6 +53,7 @@ class TextHeader extends StatelessWidget {
     this.onTap,
     this.padding,
     this.hasPadding = true,
+    this.color,
   }) : size = TextHeaderSize.large;
 
   @override
@@ -91,20 +95,24 @@ class TextHeader extends StatelessWidget {
                   : size == TextHeaderSize.medium
                   ? 24.0
                   : 28.0,
-              color: context.colorScheme.primary.withValues(alpha: 0.6),
+              color:
+                  color?.withValues(alpha: 0.6) ??
+                  context.colorScheme.primary.withValues(alpha: 0.6),
             )
           : null,
       title: Text(
         title,
-        style: titleStyle?.apply(color: context.colorScheme.onSurfaceVariant),
+        style: titleStyle?.apply(
+          color: color ?? context.colorScheme.onSurfaceVariant,
+        ),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle!,
               style: subtitleStyle?.apply(
-                color: context.colorScheme.onSurfaceVariant.withValues(
-                  alpha: 0.6,
-                ),
+                color:
+                    color?.withValues(alpha: 0.6) ??
+                    context.colorScheme.primary.withValues(alpha: 0.6),
               ),
             )
           : null,
