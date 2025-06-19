@@ -65,7 +65,10 @@ class Archiverse extends StatelessWidget {
       builder: (context, provider, child) {
         return DynamicColorBuilder(
           builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-            bool isDynamic = provider.appColorScheme == AppColorScheme.dynamic;
+            provider.setDynamicColorScheme(
+              lightDynamic ?? provider.lightColorScheme,
+              darkDynamic ?? provider.darkColorScheme,
+            );
 
             return MaterialApp(
               title: 'Archiverse',
@@ -79,11 +82,11 @@ class Archiverse extends StatelessWidget {
               supportedLocales: AppLocalizations.supportedLocales,
               theme: provider.getThemeData(
                 context.textTheme,
-                isDynamic ? lightDynamic : provider.lightColorScheme,
+                provider.lightColorScheme,
               ),
               darkTheme: provider.getThemeData(
                 context.textTheme,
-                isDynamic ? darkDynamic : provider.darkColorScheme,
+                provider.darkColorScheme,
               ),
               themeMode: provider.themeMode,
               initialRoute: '/',

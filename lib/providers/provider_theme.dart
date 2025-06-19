@@ -46,24 +46,46 @@ class ThemeProvider extends ChangeNotifier {
   AppColorScheme get appColorScheme => _colorScheme;
 
   ThemeMode get themeMode => _themeMode.toThemeMode();
-  ColorScheme get lightColorScheme => _colorScheme.lightColorScheme;
-  ColorScheme get darkColorScheme => _colorScheme.darkColorScheme;
+  ColorScheme get lightColorScheme =>
+      _colorScheme == AppColorScheme.dynamic && _supportsDynamicColor
+      ? _lightDynamicColorScheme
+      : _colorScheme.lightColorScheme;
+
+  ColorScheme get darkColorScheme =>
+      _colorScheme == AppColorScheme.dynamic && _supportsDynamicColor
+      ? _darkDynamicColorScheme
+      : _colorScheme.darkColorScheme;
+
+  late ColorScheme _lightDynamicColorScheme = _colorScheme.lightColorScheme;
+  late ColorScheme _darkDynamicColorScheme = _colorScheme.darkColorScheme;
+
+  void setDynamicColorScheme(
+    ColorScheme lightScheme,
+    ColorScheme darkScheme,
+  ) async {
+    _lightDynamicColorScheme = ThemeData(
+      brightness: Brightness.light,
+      colorSchemeSeed: lightScheme.primary,
+    ).colorScheme;
+
+    _darkDynamicColorScheme = ThemeData(
+      brightness: Brightness.dark,
+      colorSchemeSeed: darkScheme.primary,
+    ).colorScheme;
+    notifyListeners();
+  }
 
   ThemeData? getThemeData(TextTheme textTheme, ColorScheme? colorScheme) {
-    bool isDynamic =
-        _colorScheme == AppColorScheme.dynamic && _supportsDynamicColor;
-
-    return ThemeData(
+    ThemeData data = ThemeData(
       useMaterial3: true,
       brightness: colorScheme?.brightness,
-      colorSchemeSeed: isDynamic ? colorScheme?.primary : null,
-      colorScheme: isDynamic ? null : colorScheme,
+      colorScheme: colorScheme,
       textTheme: textTheme.apply(
         bodyColor: colorScheme?.onSurface,
         displayColor: colorScheme?.onSurface,
       ),
-      scaffoldBackgroundColor: isDynamic ? null : colorScheme?.surface,
-      canvasColor: isDynamic ? null : colorScheme?.surface,
+      scaffoldBackgroundColor: colorScheme?.surface,
+      canvasColor: colorScheme?.surface,
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
@@ -80,6 +102,16 @@ class ThemeProvider extends ChangeNotifier {
         ),
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(year2023: false),
+    );
+
+    ColorScheme effectiveScheme = data.colorScheme;
+
+    return data.copyWith(
+      chipTheme: ChipThemeData(
+        color: MaterialStateProperty.all(
+          effectiveScheme.surfaceContainerLowest,
+        ),
+      ),
     );
   }
 
