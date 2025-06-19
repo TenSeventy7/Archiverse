@@ -75,6 +75,37 @@ class _ReaderActivityState extends State<ReaderActivity>
 
   @override
   void dispose() {
+    // Save read history with scroll position if available
+    if (_currentChapter != null && _scrollController.hasClients) {
+      try {
+        final scrollPosition = _scrollController.offset.toInt();
+        final maxScrollExtent = _scrollController.position.maxScrollExtent
+            .toInt();
+
+        AppApi().saveReadHistory(
+          work: work,
+          chapter: _currentChapter!,
+          scrollPosition: scrollPosition,
+          totalScrollPosition: maxScrollExtent,
+        );
+      } catch (e) {
+        // Fallback: save without scroll position
+        AppApi().saveReadHistory(
+          work: work,
+          chapter: _currentChapter!,
+          scrollPosition: 0,
+        );
+        debugPrint('Error saving scroll position in read history: $e');
+      }
+    } else if (_currentChapter != null) {
+      // Save without scroll position if controller isn't attached
+      AppApi().saveReadHistory(
+        work: work,
+        chapter: _currentChapter!,
+        scrollPosition: 0,
+      );
+    }
+
     _uiAnimationController.dispose();
     _scrollController.dispose();
     _restoreScreenSettings();
@@ -115,7 +146,7 @@ class _ReaderActivityState extends State<ReaderActivity>
       _setLoadingState();
 
       _chapters = await _api.getChapterList(work);
-      _setInitialChapterIndex();
+      await _setInitialChapterIndex();
 
       await _loadCurrentChapter();
     } catch (e) {
@@ -153,10 +184,20 @@ class _ReaderActivityState extends State<ReaderActivity>
     });
   }
 
-  void _setInitialChapterIndex() {
+  Future<void> _setInitialChapterIndex() async {
     if (widget.chapter != null) {
       _currentChapterIndex = _chapters.indexWhere(
         (c) => c.id == widget.chapter!.id,
+      );
+      if (_currentChapterIndex == -1) _currentChapterIndex = 0;
+      return;
+    }
+
+    // Get chapter from read history if available
+    final readHistory = await AppApi().getReadHistory(work);
+    if (readHistory != null) {
+      _currentChapterIndex = _chapters.indexWhere(
+        (c) => c.id == readHistory.chapter?.id,
       );
       if (_currentChapterIndex == -1) _currentChapterIndex = 0;
     }
