@@ -23,8 +23,9 @@ class BookmarksCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card.filled(
+    return Card.outlined(
       margin: EdgeInsets.zero,
+      color: Theme.of(context).colorScheme.surfaceContainerLowest,
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
@@ -55,10 +56,9 @@ class BookmarksCard extends StatelessWidget {
             ? TablerIcons.lock
             : TablerIcons.bookmark,
         size: 20,
-        color:
-            bookmark.type == BookmarkType.RECOMMENDATION
-                ? Colors.amber
-                : Theme.of(context).colorScheme.primary,
+        color: bookmark.type == BookmarkType.RECOMMENDATION
+            ? Colors.amber
+            : Theme.of(context).colorScheme.primary,
       ),
       onTap: () {
         // TODO: Navigate to user profile

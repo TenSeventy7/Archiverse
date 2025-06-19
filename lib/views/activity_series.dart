@@ -496,12 +496,15 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card.outlined(
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         margin: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            Container(
+              width: double.infinity,
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              color: Theme.of(context).colorScheme.surfaceContainer,
               child: Text(
                 "Series Information",
                 style: context.textTheme.titleMedium?.copyWith(

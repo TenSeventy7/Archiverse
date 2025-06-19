@@ -702,17 +702,18 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   Widget _buildMetadataSection(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Card.outlined(
         margin: EdgeInsets.zero,
+        color: context.colorScheme.surfaceContainerLowest,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            Container(
+              width: double.infinity,
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              color: context.colorScheme.surfaceContainer,
               child: Text(
                 "Work Information",
                 style: context.textTheme.titleMedium?.copyWith(
@@ -723,7 +724,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
             Divider(
               height: 1,
-              color: theme.colorScheme.outlineVariant.withOpacity(0.3),
+              color: context.colorScheme.outlineVariant.withOpacity(0.3),
             ),
 
             // Grid of metadata items

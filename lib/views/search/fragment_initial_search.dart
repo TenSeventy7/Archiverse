@@ -94,6 +94,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
     return Card.outlined(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
+      color: context.colorScheme.surfaceContainerLowest,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
