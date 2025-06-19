@@ -24,8 +24,8 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
         return <Widget>[
           DiscoverHeader(
             userName: "John",
-            onSearchTap:
-                () => context.navigator.pushNamed(SearchActivity.routeName),
+            onSearchTap: () =>
+                context.navigator.pushNamed(SearchActivity.routeName),
           ),
         ];
       },
@@ -36,10 +36,7 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
             padding: context.horizontalPadding,
             sliver: SliverList.list(
               children: [
-                ContinueReadingCard(
-                  work: Fillers.work,
-                  history: Fillers.history,
-                ),
+                ContinueReadingCard(),
 
                 TextHeader.large(title: "Suggested for you"),
                 // Dummy works

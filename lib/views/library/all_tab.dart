@@ -2,7 +2,6 @@ import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +27,7 @@ class LibraryAllTab extends StatelessWidget {
               ),
 
               // A single continue reading card
-              ContinueReadingCard(work: Fillers.work, history: Fillers.history),
+              ContinueReadingCard(),
 
               // Recently Added Section
               TextHeader.medium(
