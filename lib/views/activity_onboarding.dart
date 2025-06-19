@@ -83,7 +83,7 @@ class _OnboardingActivityState extends State<OnboardingActivity>
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: context.commonPaddingDouble,
-              vertical: context.commonPaddingDouble,
+              vertical: context.commonPadding,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -117,6 +117,15 @@ class _OnboardingActivityState extends State<OnboardingActivity>
                     ),
                     const SizedBox(height: 16.0),
                     _buildActions(theme, colorScheme),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      "This app is not affliated nor endorsed by Archive of Our Own (AO3). By using this app, you agree to tenseventyseven's terms of service and privacy policy.",
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: colorScheme.onSurface.withOpacity(0.5),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: context.screenPadding.bottom),
