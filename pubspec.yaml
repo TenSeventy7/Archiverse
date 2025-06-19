@@ -35,7 +35,6 @@ dependencies:
     git:
       url: https://github.com/TenSeventy7/extended_http.git
       ref: main
-  floor: ^1.4.2
   flutter_localizations:
     sdk: flutter
   flutter_tabler_icons: ^1.43.0
@@ -60,6 +59,11 @@ dependencies:
   dynamic_color: ^1.7.0
   device_info_plus: ^11.5.0
   google_fonts: ^6.2.1
+  sqlite3_flutter_libs: ^0.5.34
+  path: ^1.9.1
+  drift: ^2.26.1
+  drift_flutter: ^0.2.4
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -70,9 +74,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  build_runner: ^2.1.2
-  floor_generator: ^1.4.2
   flutter_lints: ^6.0.0
+  drift_dev: ^2.26.1
+  build_runner: ^2.4.15
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
