@@ -138,6 +138,13 @@ class SearchProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshTopFandoms() async {
+    isFandomsLoading = true;
+    isFandomsError = false;
+    notifyListeners();
+    await loadTopFandoms();
+  }
+
   /// Saves recent searches to SharedPreferences
   Future<void> _saveRecentSearches() async {
     try {

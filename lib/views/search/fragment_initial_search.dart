@@ -52,7 +52,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
           // Trending tags section
           TextHeader.medium(icon: TablerIcons.arrows_random, title: 'Fandoms'),
           if (provider.isFandomsError) ...[
-            LoadError.small(onPressed: () => provider.loadTopFandoms()),
+            LoadError.small(onPressed: () => {provider.refreshTopFandoms()}),
           ] else if (provider.isFandomsLoading) ...[
             Center(
               child: Padding(
