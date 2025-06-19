@@ -10,7 +10,7 @@ class CharactersResultSection extends TagsResultSection {
   CharactersResultSection()
     : super(
         title: 'Characters',
-        icon: TablerIcons.user_square_rounded,
+        icon: TablerIcons.users,
         routeName: CharacterSearchFragment.routeName,
       );
 

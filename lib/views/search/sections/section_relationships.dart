@@ -10,7 +10,7 @@ class RelationshipsResultSection extends TagsResultSection {
   RelationshipsResultSection()
     : super(
         title: 'Relationships',
-        icon: TablerIcons.user_heart,
+        icon: TablerIcons.hearts,
         routeName: RelationshipSearchFragment.routeName,
       );
 

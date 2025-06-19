@@ -50,7 +50,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
           const PaddedDivider(padding: EdgeInsets.symmetric(horizontal: 8.0)),
 
           // Trending tags section
-          TextHeader.medium(icon: TablerIcons.arrows_random, title: 'Fandoms'),
+          TextHeader.medium(icon: TablerIcons.books, title: 'Popular Fandoms'),
           if (provider.isFandomsError) ...[
             LoadError.small(onPressed: () => {provider.refreshTopFandoms()}),
           ] else if (provider.isFandomsLoading) ...[

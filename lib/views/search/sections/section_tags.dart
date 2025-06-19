@@ -11,7 +11,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 class TagsResultSection extends SearchResultSection<Tag> {
   TagsResultSection({
     super.title = "Tags",
-    super.icon = TablerIcons.tag,
+    super.icon = TablerIcons.tags,
     super.routeName = TagSearchFragment.routeName,
   });
 

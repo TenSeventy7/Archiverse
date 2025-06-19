@@ -10,7 +10,7 @@ class FandomsResultSection extends TagsResultSection {
   FandomsResultSection()
     : super(
         title: 'Fandoms',
-        icon: TablerIcons.arrows_random,
+        icon: TablerIcons.books,
         routeName: FandomSearchFragment.routeName,
       );
 
