@@ -3,22 +3,56 @@
  * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
 import 'package:archiverse/dialogs/reader_settings_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/utils.dart';
+import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_work.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class _WorkOptionsDialog extends StatelessWidget {
+class _WorkOptionsDialog extends StatefulWidget {
   final Work work;
   final bool isReader; // Flag to indicate if this is for the reader activity
   const _WorkOptionsDialog({required this.work, this.isReader = false});
+
+  @override
+  State<_WorkOptionsDialog> createState() => _WorkOptionsDialogState();
+}
+
+class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
+  ReadHistory? _readHistory;
+  bool _isLoadingHistory = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReadHistory();
+  }
+
+  Future<void> _loadReadHistory() async {
+    try {
+      final history = await AppApi().getLatestReadHistory(widget.work);
+      if (mounted) {
+        setState(() {
+          _readHistory = history;
+          _isLoadingHistory = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingHistory = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +75,8 @@ class _WorkOptionsDialog extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                if (!isReader) ...[
-                  _buildActionTile(
-                    context,
-                    icon: TablerIcons.book_2,
-                    title: 'Read',
-                    subtitle: 'Continue from Chapter ${null ?? 1}',
-                    isHighlighted: true,
-                    onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.pushNamed(context, ReaderActivity.routeName, arguments: work);
-                    },
-                  ),
+                if (!widget.isReader) ...[
+                  _buildReadAction(context),
                 ] else ...[
                   _buildActionTile(
                     context,
@@ -64,7 +88,7 @@ class _WorkOptionsDialog extends StatelessWidget {
                       context.navigator.pop();
                       context.navigator.pushNamed(
                         WorkActivity.routeName,
-                        arguments: work,
+                        arguments: widget.work,
                       );
                     },
                   ),
@@ -131,7 +155,7 @@ class _WorkOptionsDialog extends StatelessWidget {
           ),
         ),
 
-        if (isReader) ...[
+        if (widget.isReader) ...[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Card(
@@ -161,6 +185,59 @@ class _WorkOptionsDialog extends StatelessWidget {
     );
   }
 
+  Widget _buildReadAction(BuildContext context) {
+    if (_isLoadingHistory) {
+      return _buildActionTile(
+        context,
+        icon: TablerIcons.book_2,
+        title: 'Read',
+        subtitle: 'Loading...',
+        isHighlighted: true,
+        onTap: () {},
+      );
+    }
+
+    if (_readHistory != null) {
+      final completionPercentage = (_readHistory!.completion * 100).toInt();
+      final chapterText = _readHistory!.chapter != null
+          ? 'Chapter ${_readHistory!.chapter!.chapter}'
+          : 'Beginning';
+
+      return _buildActionTile(
+        context,
+        icon: TablerIcons.book_2,
+        title: 'Continue Reading',
+        subtitle:
+            'Resume from $chapterText • ${completionPercentage}% complete',
+        isHighlighted: true,
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.pushNamed(
+            context,
+            ReaderActivity.routeName,
+            arguments: {'work': widget.work, 'chapter': _readHistory!.chapter},
+          );
+        },
+      );
+    } else {
+      return _buildActionTile(
+        context,
+        icon: TablerIcons.book_2,
+        title: 'Start Reading',
+        subtitle: 'Begin from Chapter 1',
+        isHighlighted: true,
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.pushNamed(
+            context,
+            ReaderActivity.routeName,
+            arguments: {'work': widget.work, 'chapter': null},
+          );
+        },
+      );
+    }
+  }
+
   Widget _buildWorkHeader(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -180,14 +257,14 @@ class _WorkOptionsDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      work.title,
+                      widget.work.title,
                       style: context.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      AppUtils.formatAuthorList(work.authors),
+                      AppUtils.formatAuthorList(widget.work.authors),
                       style: context.textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -195,7 +272,7 @@ class _WorkOptionsDialog extends StatelessWidget {
                   ],
                 ),
               ),
-              RatingBadges(work: work),
+              RatingBadges(work: widget.work),
             ],
           ),
 
@@ -209,7 +286,7 @@ class _WorkOptionsDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              AppUtils.formatFandomsList(work.fandoms),
+              AppUtils.formatFandomsList(widget.work.fandoms),
               style: context.textTheme.labelSmall?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -284,10 +361,19 @@ class _WorkOptionsDialog extends StatelessWidget {
     return Row(
       spacing: 12.0,
       children: [
-        CompactTextIcon(icon: TablerIcons.book, statistic: work.chapters),
-        CompactTextIcon(icon: TablerIcons.align_left, statistic: work.words),
-        CompactTextIcon(icon: TablerIcons.message, statistic: work.comments),
-        CompactTextIcon(icon: TablerIcons.heart, statistic: work.kudos),
+        CompactTextIcon(
+          icon: TablerIcons.book,
+          statistic: widget.work.chapters,
+        ),
+        CompactTextIcon(
+          icon: TablerIcons.align_left,
+          statistic: widget.work.words,
+        ),
+        CompactTextIcon(
+          icon: TablerIcons.message,
+          statistic: widget.work.comments,
+        ),
+        CompactTextIcon(icon: TablerIcons.heart, statistic: widget.work.kudos),
       ],
     );
   }
