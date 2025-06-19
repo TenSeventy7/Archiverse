@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/components/items/tag_item.dart';
 import 'package:archiverse/models/tag.dart';
@@ -29,7 +29,7 @@ class TagSearchFragment extends StatelessWidget {
   }
 
   Future<List<Tag>> fetchItems(String query, int page) async {
-    return await Ao3Api().searchTags(query, page: page, type: TagType.FREEFORM);
+    return await AppApi().searchTags(query, page: page, type: TagType.FREEFORM);
   }
 
   Widget _buildItems(BuildContext context, Tag tag, int index) {

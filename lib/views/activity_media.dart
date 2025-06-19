@@ -1,5 +1,5 @@
 import 'package:alphabet_list_view/alphabet_list_view.dart';
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -74,7 +74,7 @@ class _MediaActivityState extends State<MediaActivity> {
   }
 
   Future<List<AlphabetListViewItemGroup>> _fetchTags() async {
-    List<Tag> tags = await Ao3Api().getTagsFromFandomType(media);
+    List<Tag> tags = await AppApi().getTagsFromFandomType(media);
     _allTags = tags;
     return _buildGroupsFromTags(tags);
   }

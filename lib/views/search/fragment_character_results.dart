@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/views/search/fragment_tag_results.dart';
@@ -15,7 +15,7 @@ class CharacterSearchFragment extends TagSearchFragment {
 
   @override
   Future<List<Tag>> fetchItems(String query, int page) async {
-    return await Ao3Api().searchTags(
+    return await AppApi().searchTags(
       query,
       page: page,
       type: TagType.CHARACTER,

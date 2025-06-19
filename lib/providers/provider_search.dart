@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/views/search/fragment_author_results.dart';
@@ -125,7 +125,7 @@ class SearchProvider extends ChangeNotifier {
     if (!isFandomsLoading) return;
 
     try {
-      final fandoms = await Ao3Api().getTopFandoms();
+      final fandoms = await AppApi().getTopFandoms();
       this.fandoms = fandoms;
       isFandomsLoading = false;
       notifyListeners();
@@ -252,7 +252,7 @@ class SearchProvider extends ChangeNotifier {
 
     try {
       // Get suggestions from the API
-      final apiSuggestions = await Ao3Api().getAutocompleteSuggestions(input);
+      final apiSuggestions = await AppApi().getAutocompleteSuggestions(input);
 
       // Only update if the input is still relevant
       if (controller.text == input) {

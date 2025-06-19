@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
@@ -70,7 +70,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     });
 
     try {
-      final works = await Ao3Api().getWorksByUser(item);
+      final works = await AppApi().getWorksByUser(item);
 
       if (mounted) {
         setState(() {
@@ -93,7 +93,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     });
 
     try {
-      final bookmarks = await Ao3Api().getBookmarksByUser(item);
+      final bookmarks = await AppApi().getBookmarksByUser(item);
 
       if (mounted) {
         setState(() {
@@ -117,7 +117,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     });
 
     try {
-      final series = await Ao3Api().getSeriesByUser(item);
+      final series = await AppApi().getSeriesByUser(item);
 
       if (mounted) {
         setState(() {
@@ -142,10 +142,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
   @override
   Future<Pseud> fetchItem() {
     if (item.isPseud) {
-      return Ao3Api().getPseud(item);
+      return AppApi().getPseud(item);
     }
 
-    return Ao3Api().getUser(item);
+    return AppApi().getUser(item);
   }
 
   @override
@@ -285,7 +285,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
                         radius: 20,
                         backgroundColor: colorScheme.primaryContainer,
                         child: EnhancedFutureBuilder(
-                          future: Ao3Api().getPseud(pseud),
+                          future: AppApi().getPseud(pseud),
                           rememberFutureResult: true,
                           whenDone: (author) => UserImage(
                             context: context,

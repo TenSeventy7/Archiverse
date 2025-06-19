@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
@@ -22,7 +22,7 @@ import 'package:relative_time/relative_time.dart';
 
 void main() async {
   // Initialize the Ao3Api instance
-  await Ao3Api().initFlutter();
+  await AppApi().initFlutter();
 
   // Initialize the preferences provider
   final preferences = PreferencesProvider();

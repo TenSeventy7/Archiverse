@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/tag.dart';
@@ -23,7 +23,7 @@ class TagWorksActivityState extends CommonListActivityState<Work> {
 
   @override
   Future<List<Work>> fetchItems(int page) async {
-    return await Ao3Api().getWorksFromTag(tag, page: page - 1);
+    return await AppApi().getWorksFromTag(tag, page: page - 1);
   }
 
   @override

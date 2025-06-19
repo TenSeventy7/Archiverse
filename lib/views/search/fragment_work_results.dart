@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/models/work.dart';
@@ -25,7 +25,7 @@ class WorkSearchFragment extends StatelessWidget {
   }
 
   Future<List<Work>> _fetchItems(String query, int page) async {
-    return await Ao3Api().searchWorks(query, page: page);
+    return await AppApi().searchWorks(query, page: page);
   }
 
   Widget _buildItems(BuildContext context, Work work, int index) {

@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/bookmark_item.dart';
 import 'package:archiverse/components/rating_badges.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -25,7 +25,7 @@ class WorkBookmarksActivityState extends CommonListActivityState<Bookmark> {
 
   @override
   Future<List<Bookmark>> fetchItems(int page) async {
-    return await Ao3Api().getBookmarksFromWork(work, page: page - 1);
+    return await AppApi().getBookmarksFromWork(work, page: page - 1);
   }
 
   @override

@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/bookmark_item.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/bookmark.dart';
@@ -24,7 +24,7 @@ class SeriesBookmarksActivityState extends CommonListActivityState<Bookmark> {
 
   @override
   Future<List<Bookmark>> fetchItems(int page) async {
-    return await Ao3Api().getBookmarksFromSeries(series, page: page - 1);
+    return await AppApi().getBookmarksFromSeries(series, page: page - 1);
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'dart:isolate';
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/tag_bookmark_item.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/tag.dart';
@@ -27,7 +27,7 @@ class TagBookmarksActivityState extends CommonListActivityState<TagBookmark> {
 
   @override
   Future<List<TagBookmark>> fetchItems(int page) async {
-    return await Ao3Api().getBookmarksFromTag(tag, page: page - 1);
+    return await AppApi().getBookmarksFromTag(tag, page: page - 1);
   }
 
   @override

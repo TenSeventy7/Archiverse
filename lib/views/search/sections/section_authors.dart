@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/suggestions/author_suggestions.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/placeholders.dart';
@@ -18,7 +18,7 @@ class AuthorsResultSection extends SearchResultSection<Pseud> {
   @override
   Future<void> fetchData(String query) async {
     try {
-      results = await Ao3Api().searchUsers(query, page: 1);
+      results = await AppApi().searchUsers(query, page: 1);
     } catch (e) {
       results = [];
     }

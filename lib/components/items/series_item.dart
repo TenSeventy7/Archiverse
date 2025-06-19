@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/placeholders.dart';
@@ -28,7 +28,7 @@ class SeriesItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     Future<Series>? future;
     if (small && series.authors.isEmpty) {
-      future = Ao3Api().getSeries(series);
+      future = AppApi().getSeries(series);
     }
 
     return Column(

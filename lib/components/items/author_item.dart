@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';

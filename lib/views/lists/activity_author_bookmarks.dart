@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/bookmark_item.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -26,7 +26,7 @@ class AuthorBookmarksActivityState extends CommonListActivityState<Bookmark> {
 
   @override
   Future<List<Bookmark>> fetchItems(int page) async {
-    return await Ao3Api().getBookmarksByUser(author, page: page - 1);
+    return await AppApi().getBookmarksByUser(author, page: page - 1);
   }
 
   @override
@@ -94,7 +94,7 @@ class AuthorBookmarksActivityState extends CommonListActivityState<Bookmark> {
               maxRadius: 32.0,
               backgroundColor: context.colorScheme.primaryContainer,
               child: EnhancedFutureBuilder(
-                future: Ao3Api().getPseud(author),
+                future: AppApi().getPseud(author),
                 rememberFutureResult: false,
                 whenDone: (author) =>
                     UserImage(context: context, user: author, size: 32),

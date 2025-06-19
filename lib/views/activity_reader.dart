@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/dialogs/chapters_list.dart';

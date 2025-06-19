@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/bookmarks_card.dart';
 import 'package:archiverse/components/cards/series_card.dart';
 import 'package:archiverse/components/items/series_item.dart';
@@ -85,7 +85,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     try {
       List<SeriesWork> fetched = [];
       for (var part in item.series) {
-        Series series = await Ao3Api().getSeries(part.series);
+        Series series = await AppApi().getSeries(part.series);
         fetched.add(part.copyWith(series: series));
       }
 
@@ -105,7 +105,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   void _fetchBookmarks() async {
     try {
-      List<Bookmark> bookmarks = await Ao3Api().getBookmarksFromWork(
+      List<Bookmark> bookmarks = await AppApi().getBookmarksFromWork(
         item,
         page: 1,
       );
@@ -151,7 +151,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   @override
   Future<Work> fetchItem() {
-    return Ao3Api().getWork(item);
+    return AppApi().getWork(item);
   }
 
   @override
@@ -442,7 +442,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                           child: CircleAvatar(
                             radius: 24,
                             child: EnhancedFutureBuilder(
-                              future: Ao3Api().getPseud(item.authors[i]),
+                              future: AppApi().getPseud(item.authors[i]),
                               rememberFutureResult: true,
                               whenDone: (author) => UserImage(
                                 context: context,

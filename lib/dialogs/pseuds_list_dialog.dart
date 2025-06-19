@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
@@ -18,7 +18,7 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 class _PseudsListDialog extends StatelessWidget {
   final Pseud author;
   _PseudsListDialog({required this.author});
-  late Future<List<Pseud>> pseuds = Ao3Api().getUserPseuds(author);
+  late Future<List<Pseud>> pseuds = AppApi().getUserPseuds(author);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class _PseudsListDialog extends StatelessWidget {
 
   Widget _buildPseudsList(BuildContext context) {
     return EnhancedFutureBuilder<List<Pseud>>(
-      future: Ao3Api().getUserPseuds(author),
+      future: AppApi().getUserPseuds(author),
       rememberFutureResult: true,
       whenDone: (pseuds) => _buildPseudsContent(context, pseuds),
       whenNotDone: const SliverToBoxAdapter(
@@ -73,7 +73,7 @@ class _PseudsListDialog extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: LoadError(
               onPressed: () {
-                pseuds = Ao3Api().getUserPseuds(author);
+                pseuds = AppApi().getUserPseuds(author);
               },
             ),
           ),
@@ -149,7 +149,7 @@ class _PseudsListDialog extends StatelessWidget {
           radius: 24,
           backgroundColor: context.colorScheme.primaryContainer,
           child: EnhancedFutureBuilder(
-            future: Ao3Api().getPseud(pseud),
+            future: AppApi().getPseud(pseud),
             rememberFutureResult: true,
             whenDone: (author) =>
                 UserImage(context: context, user: author, size: 24),

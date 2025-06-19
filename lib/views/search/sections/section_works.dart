@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
@@ -18,7 +18,7 @@ class WorksResultSection extends SearchResultSection<Work> {
   @override
   Future<void> fetchData(String query) async {
     try {
-      results = await Ao3Api().searchWorks(query, page: 1);
+      results = await AppApi().searchWorks(query, page: 1);
     } catch (e) {
       results = [];
     }

@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
@@ -60,7 +60,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
     });
 
     try {
-      final works = await Ao3Api().getWorksFromTag(item);
+      final works = await AppApi().getWorksFromTag(item);
 
       if (mounted) {
         setState(() {
@@ -83,7 +83,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
     });
 
     try {
-      final bookmarks = await Ao3Api().getBookmarksFromTag(item);
+      final bookmarks = await AppApi().getBookmarksFromTag(item);
 
       if (mounted) {
         setState(() {
@@ -107,7 +107,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
   @override
   Future<Tag> fetchItem() {
-    return Ao3Api().getTag(item);
+    return AppApi().getTag(item);
   }
 
   @override

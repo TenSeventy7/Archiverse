@@ -3,7 +3,7 @@
  * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/authors_list_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -62,11 +62,10 @@ class AuthorTile extends StatelessWidget {
               maxRadius: 16.0,
               backgroundColor: context.colorScheme.primaryContainer,
               child: EnhancedFutureBuilder(
-                future: Ao3Api().getUser(author),
+                future: AppApi().getUser(author),
                 rememberFutureResult: false,
-                whenDone:
-                    (author) =>
-                        UserImage(context: context, user: author, size: 8),
+                whenDone: (author) =>
+                    UserImage(context: context, user: author, size: 8),
                 whenNotDone: UserImage(context: context, user: author, size: 5),
               ),
             ),

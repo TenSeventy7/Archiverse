@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -63,7 +63,7 @@ class _AuthorsListDialog extends StatelessWidget {
       leading: CircleAvatar(
         radius: 20,
         child: EnhancedFutureBuilder(
-          future: Ao3Api().getPseud(authors[index]),
+          future: AppApi().getPseud(authors[index]),
           rememberFutureResult: true,
           whenDone: (author) =>
               UserImage(context: context, user: author, size: 20),

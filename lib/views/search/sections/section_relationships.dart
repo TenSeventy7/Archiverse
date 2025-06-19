@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/placeholders.dart';
@@ -17,7 +17,7 @@ class RelationshipsResultSection extends TagsResultSection {
   @override
   Future<void> fetchData(String query) async {
     try {
-      results = await Ao3Api().searchTags(
+      results = await AppApi().searchTags(
         query,
         page: 1,
         type: TagType.RELATIONSHIP,

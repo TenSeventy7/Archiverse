@@ -1,4 +1,4 @@
-import 'package:archiverse/api/ao3_api.dart';
+import 'package:archiverse/api.dart';
 import 'package:archiverse/components/items/series_item.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -25,7 +25,7 @@ class TagWorksActivityState extends CommonListActivityState<Series> {
 
   @override
   Future<List<Series>> fetchItems(int page) async {
-    return await Ao3Api().getSeriesByUser(author, page: page - 1);
+    return await AppApi().getSeriesByUser(author, page: page - 1);
   }
 
   @override
@@ -75,7 +75,7 @@ class TagWorksActivityState extends CommonListActivityState<Series> {
               maxRadius: 32.0,
               backgroundColor: context.colorScheme.primaryContainer,
               child: EnhancedFutureBuilder(
-                future: Ao3Api().getPseud(author),
+                future: AppApi().getPseud(author),
                 rememberFutureResult: false,
                 whenDone: (author) =>
                     UserImage(context: context, user: author, size: 32),
