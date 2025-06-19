@@ -16,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   bool _isSignedIn = false;
   bool get isSignedIn => _isSignedIn;
 
-  bool get isLoadingError => _isSignedIn && _user == null && !_isFetching;
+  bool get isLoadingError => _isSignedIn && !_isFetching && _user == null;
 
   /// Constructor
   UserProvider() {
@@ -37,6 +37,8 @@ class UserProvider extends ChangeNotifier {
     }
 
     _isSignedIn = true;
+    _isFetching = true;
+    notifyListeners();
 
     try {
       _user = await _api.getUserInfo(username, firstTime: true);
@@ -82,11 +84,13 @@ class UserProvider extends ChangeNotifier {
 
   /// Refresh the user information
   Future<void> refresh() async {
-    if (_user == null) {
+    if (!_isSignedIn && _user == null) {
       return;
     }
+
     _isFetching = true;
     notifyListeners();
+
     try {
       // Fetch the latest user information
       _user = await _api.getUserInfo(user?.name, refresh: true);
