@@ -5,12 +5,19 @@
  */
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/api/ao3_api_impl.dart';
+import 'package:archiverse/database/repository.dart';
+import 'package:archiverse/database/repository/work.dart';
+import 'package:archiverse/models/work.dart';
 
 // Re-export everything so callers can use the extension methods directly
 export 'package:archiverse/api/ao3_api.dart';
 
+// Export extensions specific for AppApi
+export 'package:archiverse/extensions/api_read_history.dart';
+
 class AppApi extends Ao3Api {
   static final AppApi _instance = AppApi._internal();
+
   late final Ao3ApiImpl _ao3Api;
 
   AppApi._internal() : super.generative() {
@@ -18,4 +25,20 @@ class AppApi extends Ao3Api {
   }
 
   factory AppApi() => _instance;
+
+  Future<Work> getWork(Work work) async {
+    try {
+      // Check database first
+      Work? cachedWork = await WorkRepository.getWork(work.id);
+      if (cachedWork != null) {
+        return cachedWork;
+      }
+
+      Work fullWork = await _ao3Api.getWork(work);
+
+      return fullWork;
+    } catch (e) {
+      return await _ao3Api.getWork(work);
+    }
+  }
 }

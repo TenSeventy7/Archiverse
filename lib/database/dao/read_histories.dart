@@ -312,4 +312,188 @@ extension ReadHistoryDao on AppDatabase {
 
     return histories;
   }
+
+  // Get read history with pagination for date range
+  Future<List<ReadHistory>> getReadHistoryByDateRange(
+    DateTime startDate,
+    DateTime endDate, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final historyRecords =
+        await (select(readHistoriesTable)
+              ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
+              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
+              ..limit(limit, offset: offset))
+            .get();
+
+    final histories = <ReadHistory>[];
+    for (final record in historyRecords) {
+      final history = await getReadHistory(record.workId);
+      if (history != null) {
+        histories.add(history);
+      }
+    }
+
+    return histories;
+  }
+
+  // Get grouped read history by date periods
+  Future<Map<String, List<ReadHistory>>> getGroupedReadHistory({
+    int daysBack = 30,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final now = DateTime.now();
+    final endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    final startDate = endDate.subtract(Duration(days: daysBack));
+
+    final historyRecords =
+        await (select(readHistoriesTable)
+              ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
+              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
+              ..limit(limit, offset: offset))
+            .get();
+
+    final groupedHistories = <String, List<ReadHistory>>{};
+
+    for (final record in historyRecords) {
+      final history = await getReadHistory(record.workId);
+      if (history != null) {
+        final dateKey = _getDateGroupKey(history.timestamp, now);
+        if (!groupedHistories.containsKey(dateKey)) {
+          groupedHistories[dateKey] = [];
+        }
+        groupedHistories[dateKey]!.add(history);
+      }
+    }
+
+    return groupedHistories;
+  }
+
+  // Helper method to determine date group with relative days
+  String _getDateGroupKey(DateTime timestamp, DateTime referenceDate) {
+    final referenceDay = DateTime(
+      referenceDate.year,
+      referenceDate.month,
+      referenceDate.day,
+    );
+    final timestampDay = DateTime(
+      timestamp.year,
+      timestamp.month,
+      timestamp.day,
+    );
+
+    final daysDifference = referenceDay.difference(timestampDay).inDays;
+
+    if (daysDifference == 0) {
+      return 'Today';
+    } else if (daysDifference == 1) {
+      return 'Yesterday';
+    } else if (daysDifference <= 7) {
+      return '$daysDifference days ago';
+    } else {
+      // Format as "Month Day, Year" for older dates
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+      return '${months[timestamp.month - 1]} ${timestamp.day}, ${timestamp.year}';
+    }
+  }
+
+  // Get paginated read history with relative time-based grouping
+  Future<List<Map<String, dynamic>>> getPaginatedGroupedHistory({
+    int offset = 0,
+  }) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // Calculate the date range for this "page" (relative day)
+    final startDate = today.subtract(Duration(days: offset));
+    final endDate = today
+        .subtract(Duration(days: offset))
+        .add(const Duration(days: 1, seconds: -1));
+
+    print('Fetching history for days $offset ago'); // Debug log
+    print(
+      'Date range: ${startDate.toIso8601String()} to ${endDate.toIso8601String()}',
+    ); // Debug log
+
+    final historyRecords =
+        await (select(readHistoriesTable)
+              ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
+              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
+            .get();
+
+    print('Found ${historyRecords.length} history records'); // Debug log
+
+    if (historyRecords.isEmpty) {
+      return [];
+    }
+
+    final groupMap = <String, List<ReadHistory>>{};
+
+    // Build groups based on the reference date (today)
+    for (final record in historyRecords) {
+      final history = await getReadHistory(record.workId);
+      if (history != null) {
+        final groupKey = _getDateGroupKey(history.timestamp, now);
+
+        if (!groupMap.containsKey(groupKey)) {
+          groupMap[groupKey] = [];
+        }
+        groupMap[groupKey]!.add(history);
+      }
+    }
+
+    print(
+      'Created ${groupMap.length} groups: ${groupMap.keys.toList()}',
+    ); // Debug log
+
+    // Convert groups to the expected format, maintaining chronological order
+    final result = <Map<String, dynamic>>[];
+
+    // Sort groups by their relative time (most recent first)
+    final sortedGroups = groupMap.entries.toList()
+      ..sort((a, b) {
+        final aDays = _getRelativeDays(a.key, now);
+        final bDays = _getRelativeDays(b.key, now);
+        return aDays.compareTo(bDays);
+      });
+
+    for (final entry in sortedGroups) {
+      if (entry.value.isNotEmpty) {
+        result.add({'group': entry.key, 'items': entry.value});
+      }
+    }
+
+    return result;
+  }
+
+  // Helper method to get relative days from group key
+  int _getRelativeDays(String groupKey, DateTime referenceDate) {
+    switch (groupKey) {
+      case 'Today':
+        return 0;
+      case 'Yesterday':
+        return 1;
+      default:
+        if (groupKey.endsWith('days ago')) {
+          final daysStr = groupKey.split(' ')[0];
+          return int.tryParse(daysStr) ?? 999;
+        }
+        return 999; // For dated entries, treat as very old
+    }
+  }
 }

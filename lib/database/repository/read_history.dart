@@ -101,4 +101,66 @@ extension ReadHistoryRepository on DataRepository {
   static Future<List<ReadHistory>> searchReadHistory(String query) async {
     return await DataRepository.database.searchReadHistory(query);
   }
+
+  static Future<List<ReadHistory>> getReadHistoryByDateRange(
+    DateTime startDate,
+    DateTime endDate, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    return await DataRepository.database.getReadHistoryByDateRange(
+      startDate,
+      endDate,
+      limit: limit,
+      offset: offset,
+    );
+  }
+
+  static Future<Map<String, List<ReadHistory>>> getGroupedReadHistory({
+    int daysBack = 30,
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    return await DataRepository.database.getGroupedReadHistory(
+      daysBack: daysBack,
+      limit: limit,
+      offset: offset,
+    );
+  }
+
+  static Future<List<ReadHistory>> getReadHistoryForToday() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    return await DataRepository.database.getWorksReadInDateRange(
+      startOfDay,
+      endOfDay,
+    );
+  }
+
+  static Future<List<ReadHistory>> getReadHistoryForYesterday() async {
+    final now = DateTime.now();
+    final yesterday = now.subtract(const Duration(days: 1));
+    final startOfDay = DateTime(yesterday.year, yesterday.month, yesterday.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+
+    return await DataRepository.database.getWorksReadInDateRange(
+      startOfDay,
+      endOfDay,
+    );
+  }
+
+  static Future<List<ReadHistory>> getReadHistoryForLastWeek() async {
+    final now = DateTime.now();
+    final lastWeek = now.subtract(const Duration(days: 7));
+    final yesterday = now.subtract(const Duration(days: 1));
+    final startOfWeek = DateTime(lastWeek.year, lastWeek.month, lastWeek.day);
+    final endOfWeek = DateTime(yesterday.year, yesterday.month, yesterday.day);
+
+    return await DataRepository.database.getWorksReadInDateRange(
+      startOfWeek,
+      endOfWeek,
+    );
+  }
 }
