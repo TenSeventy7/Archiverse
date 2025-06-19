@@ -205,7 +205,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
       return _buildActionTile(
         context,
-        icon: TablerIcons.book_2,
+        textIcon: _readHistory!.chapter?.chapter.toString(),
         title: 'Continue reading',
         subtitle: "Resume from '$chapterText'",
         isHighlighted: true,
@@ -306,7 +306,8 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
   Widget _buildActionTile(
     BuildContext context, {
-    required IconData icon,
+    IconData? icon,
+    String? textIcon,
     required String title,
     String? subtitle,
     Widget? trailing,
@@ -315,6 +316,11 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
     required VoidCallback onTap,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    // Ensure only either textIcon or icon is used
+    if (icon != null && textIcon != null) {
+      throw ArgumentError('Only one of icon or textIcon should be provided.');
+    }
 
     return ListTile(
       onTap: onTap,
@@ -336,6 +342,18 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                 color: isHighlighted
                     ? colorScheme.onPrimaryContainer
                     : colorScheme.onSurface,
+              )
+            : textIcon != null
+            ? Text(
+                textIcon,
+                style: context.textTheme.titleMedium
+                    ?.copyWith(
+                      color: isHighlighted
+                          ? colorScheme.onPrimaryContainer
+                          : colorScheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                    )
+                    .apply(fontSizeDelta: 1.0),
               )
             : Icon(
                 icon,
