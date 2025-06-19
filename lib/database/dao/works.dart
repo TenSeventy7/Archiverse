@@ -52,8 +52,82 @@ extension WorksDao on AppDatabase {
     });
   }
 
+  // Insert or update a Work with all related data
+  Future<void> insertOrUpdateWorkComplete(Work work) async {
+    final exists = await workExists(work.id);
+
+    if (exists) {
+      // Update existing work
+      await updateWorkComplete(work);
+    } else {
+      // Insert new work
+      await insertWorkComplete(work);
+    }
+  }
+
+  // Update existing work completely
+  Future<void> updateWorkComplete(Work work) async {
+    await transaction(() async {
+      // Update the work
+      await (update(worksTable)..where((w) => w.id.equals(work.id))).write(
+        WorksTableCompanion(
+          title: Value(work.title),
+          summary: Value(work.summary),
+          requiresAuth: Value(work.requiresAuth),
+          updateDate: Value(work.updateDate),
+          words: Value(work.words),
+          chapters: Value(work.chapters),
+          comments: Value(work.comments),
+          kudos: Value(work.kudos),
+          bookmarks: Value(work.bookmarks),
+          hits: Value(work.hits),
+          totalChapters: Value(work.totalChapters),
+          language: Value(work.language),
+          finished: Value(work.finished),
+          rating: Value(work.rating.name),
+          relationship: Value(
+            jsonEncode(work.relationship.map((r) => r.name).toList()),
+          ),
+          warnings: Value(
+            jsonEncode(work.warnings.map((w) => w.name).toList()),
+          ),
+          publishDate: Value(work.publishDate),
+          completedDate: Value(work.completedDate),
+          notes: Value(work.notes),
+          giftMessage: Value(work.giftMessage),
+          subscriptions: Value(work.subscriptions),
+        ),
+      );
+
+      // Delete existing relationships
+      await (delete(
+        workAuthorsTable,
+      )..where((wa) => wa.workId.equals(work.id))).go();
+      await (delete(
+        workFandomsTable,
+      )..where((wf) => wf.workId.equals(work.id))).go();
+      await (delete(
+        workRelationshipsTable,
+      )..where((wr) => wr.workId.equals(work.id))).go();
+      await (delete(
+        workCharactersTable,
+      )..where((wc) => wc.workId.equals(work.id))).go();
+      await (delete(
+        workTagsTable,
+      )..where((wt) => wt.workId.equals(work.id))).go();
+
+      // Re-insert relationships
+      await _insertWorkAuthors(work);
+      await _insertWorkTags(work.id, work.fandoms, 'fandoms');
+      await _insertWorkTags(work.id, work.relationships, 'relationships');
+      await _insertWorkTags(work.id, work.characters, 'characters');
+      await _insertWorkTags(work.id, work.tags, 'tags');
+    });
+  }
+
   Future<void> _insertWorkAuthors(Work work) async {
     for (final author in work.authors) {
+      // Insert or update the author
       await into(authorsTable).insertOnConflictUpdate(
         AuthorsTableCompanion(
           name: Value(author.name),
@@ -70,20 +144,25 @@ extension WorksDao on AppDatabase {
         ),
       );
 
-      // Link work to author
+      // Get the author record - use getSingleOrNull and handle potential duplicates
       final authorRecord =
-          await (select(authorsTable)..where(
-                (a) =>
-                    a.name.equals(author.name) & a.pseud.equals(author.pseud),
-              ))
-              .getSingle();
+          await (select(authorsTable)
+                ..where(
+                  (a) =>
+                      a.name.equals(author.name) & a.pseud.equals(author.pseud),
+                )
+                ..limit(1))
+              .getSingleOrNull();
 
-      await into(workAuthorsTable).insertOnConflictUpdate(
-        WorkAuthorsTableCompanion(
-          workId: Value(work.id),
-          authorId: Value(authorRecord.id),
-        ),
-      );
+      if (authorRecord != null) {
+        // Link work to author - only insert if the relationship doesn't already exist
+        await into(workAuthorsTable).insertOnConflictUpdate(
+          WorkAuthorsTableCompanion(
+            workId: Value(work.id),
+            authorId: Value(authorRecord.id),
+          ),
+        );
+      }
     }
   }
 
@@ -377,10 +456,12 @@ extension WorksDao on AppDatabase {
 
   // Check if work exists
   Future<bool> workExists(int workId) async {
-    final work = await (select(
-      worksTable,
-    )..where((w) => w.id.equals(workId))).getSingleOrNull();
-    return work != null;
+    final count =
+        await (selectOnly(worksTable)
+              ..addColumns([worksTable.id.count()])
+              ..where(worksTable.id.equals(workId)))
+            .getSingle();
+    return (count.read(worksTable.id.count()) ?? 0) > 0;
   }
 
   // Get work count

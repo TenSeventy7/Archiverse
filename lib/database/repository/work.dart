@@ -4,7 +4,7 @@ import 'package:archiverse/models/work.dart';
 
 extension WorkRepository on DataRepository {
   static Future<void> saveWork(Work work) async {
-    await DataRepository.database.insertWorkComplete(work);
+    await DataRepository.database.insertOrUpdateWorkComplete(work);
   }
 
   static Future<Work?> getWork(int workId) async {
