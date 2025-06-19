@@ -1,10 +1,15 @@
-import 'package:archiverse/api.dart';
 import 'package:archiverse/components/cards/work_card.dart';
+import 'package:archiverse/components/item_placeholder.dart';
+import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/read_history.dart';
+import 'package:archiverse/providers/provider_read_history.dart';
+import 'package:archiverse/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 
 class LibraryHistoryTab extends StatefulWidget {
   const LibraryHistoryTab({Key? key}) : super(key: key);
@@ -14,13 +19,12 @@ class LibraryHistoryTab extends StatefulWidget {
 }
 
 class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
-  final AppApi _api = AppApi();
-  late final PagingController<int, Map<String, dynamic>> _pagingController;
+  late final PagingController<int, Map<int, List<ReadHistory>>> _controller;
 
   @override
   void initState() {
     super.initState();
-    _pagingController = PagingController<int, Map<String, dynamic>>(
+    _controller = PagingController<int, Map<int, List<ReadHistory>>>(
       getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
       fetchPage: (pageKey) => _fetchPage(pageKey),
     );
@@ -28,70 +32,84 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
 
   @override
   void dispose() {
-    _pagingController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  Future<List<Map<String, dynamic>>> _fetchPage(int pageKey) async {
-    final newItems = await _api.getPaginatedGroupedHistory(offset: pageKey - 1);
+  Future<List<Map<int, List<ReadHistory>>>> _fetchPage(int pageKey) async {
+    final provider = context.read<ReadHistoryProvider>();
+    final newItems = await provider.loadPaginatedGroupedHistory(
+      offset: pageKey - 1,
+    );
 
-    if (newItems.isEmpty) {
-      _pagingController.value = _pagingController.value.copyWith(
-        hasNextPage: false,
-      );
+    if (newItems.values.first.isEmpty) {
+      _controller.value = _controller.value.copyWith(hasNextPage: false);
+      return [];
     }
 
-    return newItems;
+    return [newItems];
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => Future.sync(() => _pagingController.refresh()),
-      child: PagingListener<int, Map<String, dynamic>>(
-        controller: _pagingController,
-        builder: (context, state, fetchNextPage) =>
-            PagedListView<int, Map<String, dynamic>>(
-              physics: const BouncingScrollPhysics(),
-              state: state,
-              fetchNextPage: fetchNextPage,
-              builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
-                itemBuilder: (context, item, index) => _buildHistoryGroup(item),
-                firstPageErrorIndicatorBuilder: (context) =>
-                    _buildErrorIndicator(fetchNextPage),
-                newPageErrorIndicatorBuilder: (context) =>
-                    _buildErrorIndicator(fetchNextPage),
-                firstPageProgressIndicatorBuilder: (context) =>
-                    _buildLoadingIndicator(),
-                newPageProgressIndicatorBuilder: (context) =>
-                    _buildLoadingIndicator(),
-                noItemsFoundIndicatorBuilder: (context) => _buildEmptyState(),
-              ),
-            ),
-      ),
+    return Consumer<ReadHistoryProvider>(
+      builder: (context, provider, child) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            await provider.refresh();
+            _controller.refresh();
+          },
+          child: PagingListener<int, Map<int, List<ReadHistory>>>(
+            controller: _controller,
+            builder: (context, state, fetchNextPage) =>
+                PagedListView<int, Map<int, List<ReadHistory>>>(
+                  physics: const BouncingScrollPhysics(),
+                  state: state,
+                  fetchNextPage: fetchNextPage,
+                  builderDelegate:
+                      PagedChildBuilderDelegate<Map<int, List<ReadHistory>>>(
+                        itemBuilder: (context, item, index) =>
+                            _buildHistoryItem(index, item.values.first),
+                        firstPageErrorIndicatorBuilder: (context) =>
+                            _buildErrorIndicator(fetchNextPage),
+                        newPageErrorIndicatorBuilder: (context) =>
+                            _buildErrorIndicator(fetchNextPage),
+                        firstPageProgressIndicatorBuilder: (context) =>
+                            _buildLoadingIndicator(),
+                        newPageProgressIndicatorBuilder: (context) =>
+                            _buildLoadingIndicator(),
+                        noItemsFoundIndicatorBuilder: (context) =>
+                            _buildEmptyState(),
+                      ),
+                ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildHistoryGroup(Map<String, dynamic> groupData) {
-    final String groupName = groupData['group'] as String;
-    final List<ReadHistory> items = groupData['items'] as List<ReadHistory>;
+  Widget _buildHistoryItem(int offset, List<ReadHistory> history) {
+    // Get date from today to offset
+    DateTime date = DateTime.now().subtract(Duration(days: offset));
 
-    return Padding(
-      padding: context.horizontalPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextHeader.medium(title: groupName),
-          const SizedBox(height: 8),
-          ...items.map(
-            (history) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: WorkCard(work: history.work),
-            ),
+    return Column(
+      children: [
+        TextHeader.small(title: AppUtils.formatDate(context, date)),
+
+        Padding(
+          padding: context.horizontalPadding,
+          child: ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: history.length,
+            itemBuilder: (context, index) {
+              ReadHistory readHistory = history[index];
+              return WorkCard(work: readHistory.work);
+            },
+            separatorBuilder: (context, index) => const SizedBox(height: 8.0),
           ),
-          const SizedBox(height: 16),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -105,52 +123,18 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
   Widget _buildErrorIndicator(VoidCallback onRetry) {
     return Padding(
       padding: context.horizontalPadding,
-      child: Column(
-        children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Something went wrong',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(onPressed: onRetry, child: const Text('Try Again')),
-        ],
-      ),
+      child: LoadError.small(onPressed: onRetry),
     );
   }
 
   Widget _buildEmptyState() {
     return Padding(
-      padding: context.horizontalPadding,
-      child: const Column(
-        children: [
-          Icon(Icons.history, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'No reading history yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Start reading some works to see your history here',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
+      padding: EdgeInsetsGeometry.all(24.0),
+      child: ItemPlaceholder.small(
+        icon: TablerIcons.history_off,
+        message: "No reading history yet",
+        subtitle: "Start reading some works to see your history here",
       ),
-    );
-  }
-
-  void _onWorkTap(ReadHistory history) {
-    // Navigate to work reader with the saved position
-    // You can implement this based on your navigation structure
-    print(
-      'Tapped work: ${history.work.title} at ${history.completion * 100}% completion',
     );
   }
 }

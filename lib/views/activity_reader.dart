@@ -6,6 +6,7 @@ import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/work.dart';
+import 'package:archiverse/providers/provider_read_history.dart';
 import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class ReaderActivity extends CommonActivity {
 }
 
 class _ReaderActivityState extends State<ReaderActivity>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   // Constants
   static const double _iconSize = 22.0;
   static const double _dragThreshold = 0.3;
@@ -49,6 +50,7 @@ class _ReaderActivityState extends State<ReaderActivity>
   // State management
   bool _isLoading = true;
   String? _error;
+  bool _isDisposed = false;
 
   // UI animation
   late AnimationController _uiAnimationController;
@@ -67,6 +69,7 @@ class _ReaderActivityState extends State<ReaderActivity>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeAnimations();
     _setupScrollListener();
     _loadChapters();
@@ -75,41 +78,72 @@ class _ReaderActivityState extends State<ReaderActivity>
 
   @override
   void dispose() {
-    // Save read history with scroll position if available
-    if (_currentChapter != null && _scrollController.hasClients) {
-      try {
-        final scrollPosition = _scrollController.offset.toInt();
-        final maxScrollExtent = _scrollController.position.maxScrollExtent
-            .toInt();
-
-        AppApi().saveReadHistory(
-          work: work,
-          chapter: _currentChapter!,
-          scrollPosition: scrollPosition,
-          totalScrollPosition: maxScrollExtent,
-        );
-      } catch (e) {
-        // Fallback: save without scroll position
-        AppApi().saveReadHistory(
-          work: work,
-          chapter: _currentChapter!,
-          scrollPosition: 0,
-        );
-        debugPrint('Error saving scroll position in read history: $e');
-      }
-    } else if (_currentChapter != null) {
-      // Save without scroll position if controller isn't attached
-      AppApi().saveReadHistory(
-        work: work,
-        chapter: _currentChapter!,
-        scrollPosition: 0,
-      );
-    }
-
+    _isDisposed = true;
+    WidgetsBinding.instance.removeObserver(this);
+    _saveReadHistoryBeforeDispose();
     _uiAnimationController.dispose();
     _scrollController.dispose();
     _restoreScreenSettings();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    // Save read history when app goes to background
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _saveReadHistoryBeforeDispose();
+    }
+  }
+
+  @override
+  void deactivate() {
+    // Save read history when widget is being deactivated (navigation away)
+    _saveReadHistoryBeforeDispose();
+    super.deactivate();
+  }
+
+  // Safe method to save read history
+  void _saveReadHistoryBeforeDispose() {
+    if (_isDisposed || _currentChapter == null) return;
+
+    try {
+      // Use a future that doesn't depend on the widget context
+      final provider = Provider.of<ReadHistoryProvider>(context, listen: false);
+
+      if (_scrollController.hasClients) {
+        final scrollPosition = _scrollController.offset.toInt();
+        final maxScrollExtent = _scrollController.position.maxScrollExtent
+            .toInt();
+
+        // Save asynchronously without awaiting
+        provider
+            .saveReadHistory(
+              work: work,
+              chapter: _currentChapter!,
+              scrollPosition: scrollPosition,
+              totalScrollPosition: maxScrollExtent,
+            )
+            .catchError((error) {
+              debugPrint('Error saving read history: $error');
+            });
+      } else {
+        // Save without scroll position if controller isn't attached
+        provider
+            .saveReadHistory(
+              work: work,
+              chapter: _currentChapter!,
+              scrollPosition: 0,
+            )
+            .catchError((error) {
+              debugPrint('Error saving read history: $error');
+            });
+      }
+    } catch (e) {
+      debugPrint('Error accessing provider or saving read history: $e');
+    }
   }
 
   // Initialization methods
@@ -160,28 +194,36 @@ class _ReaderActivityState extends State<ReaderActivity>
         _chapters[_currentChapterIndex],
       );
 
-      setState(() {
-        _currentChapter = chapterWithContent;
-        _isLoading = false;
-      });
+      if (!_isDisposed) {
+        setState(() {
+          _currentChapter = chapterWithContent;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      _setErrorState(e.toString());
+      if (!_isDisposed) {
+        _setErrorState(e.toString());
+      }
     }
   }
 
   // State management methods
   void _setLoadingState() {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    if (!_isDisposed) {
+      setState(() {
+        _isLoading = true;
+        _error = null;
+      });
+    }
   }
 
   void _setErrorState(String error) {
-    setState(() {
-      _error = error;
-      _isLoading = false;
-    });
+    if (!_isDisposed) {
+      setState(() {
+        _error = error;
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _setInitialChapterIndex() async {
@@ -194,7 +236,9 @@ class _ReaderActivityState extends State<ReaderActivity>
     }
 
     // Get chapter from read history if available
-    final readHistory = await AppApi().getReadHistory(work);
+    final readHistory = await context
+        .read<ReadHistoryProvider>()
+        .getReadHistory(work);
     if (readHistory != null) {
       _currentChapterIndex = _chapters.indexWhere(
         (c) => c.id == readHistory.chapter?.id,
@@ -207,11 +251,16 @@ class _ReaderActivityState extends State<ReaderActivity>
   Future<void> _navigateToChapter(int index) async {
     if (index < 0 || index >= _chapters.length) return;
 
-    setState(() {
-      _currentChapterIndex = index;
-      _isLoading = true;
-      _currentChapter = null;
-    });
+    // Save current progress before switching chapters
+    _saveReadHistoryBeforeDispose();
+
+    if (!_isDisposed) {
+      setState(() {
+        _currentChapterIndex = index;
+        _isLoading = true;
+        _currentChapter = null;
+      });
+    }
 
     await _loadCurrentChapter();
   }
@@ -246,6 +295,8 @@ class _ReaderActivityState extends State<ReaderActivity>
   }
 
   void _toggleUI([bool? show]) {
+    if (_isDisposed) return;
+
     final shouldShow = show ?? !_isUiVisible;
 
     if (shouldShow != _isUiVisible) {
@@ -265,13 +316,17 @@ class _ReaderActivityState extends State<ReaderActivity>
 
   // Drag handling methods
   void _onHorizontalDragStart(DragStartDetails details) {
-    setState(() {
-      _isDragging = true;
-      _dragStartX = details.localPosition.dx;
-    });
+    if (!_isDisposed) {
+      setState(() {
+        _isDragging = true;
+        _dragStartX = details.localPosition.dx;
+      });
+    }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    if (_isDisposed) return;
+
     final screenWidth = MediaQuery.of(context).size.width;
     final dragDistance = (details.localPosition.dx - _dragStartX).abs();
     final dragProgress = (dragDistance / (screenWidth * _dragThreshold)).clamp(
@@ -298,10 +353,12 @@ class _ReaderActivityState extends State<ReaderActivity>
   void _onHorizontalDragCancel() => _resetDragState();
 
   void _resetDragState() {
-    setState(() {
-      _isDragging = false;
-      _dragOpacity = 1.0;
-    });
+    if (!_isDisposed) {
+      setState(() {
+        _isDragging = false;
+        _dragOpacity = 1.0;
+      });
+    }
   }
 
   // Dialog methods
@@ -318,7 +375,7 @@ class _ReaderActivityState extends State<ReaderActivity>
     WorkOptionsDialog.showSheet(context, work: work, isReader: true);
   }
 
-  // Build methods
+  // ...existing build methods remain the same...
   @override
   Widget build(BuildContext context) {
     context.setNavigationBarColor(Colors.transparent);

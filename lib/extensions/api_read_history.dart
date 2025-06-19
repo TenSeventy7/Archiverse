@@ -45,7 +45,7 @@ extension AppApiReadHistory on AppApi {
         completion = (chapter.chapter / work.totalChapters!).clamp(0, 1);
       } else {
         // If no total chapters, assume completion is based on current chapter count
-        completion = (chapter.chapter + 1) / work.chapters;
+        completion = chapter.chapter / work.chapters;
       }
 
       ReadHistory readHistory = ReadHistory(
@@ -128,63 +128,17 @@ extension AppApiReadHistory on AppApi {
   /// Fetches paginated grouped read history.
   ///
   /// Returns a list of maps containing group names and their items.
-  Future<List<Map<String, dynamic>>> getPaginatedGroupedHistory({
+  Future<Map<int, List<ReadHistory>>> getPaginatedGroupedHistory({
     int offset = 0,
   }) async {
     try {
-      return await DataRepository.database.getPaginatedGroupedHistory(
+      List<ReadHistory> list = await ReadHistoryRepository.getReadHistoryList(
         offset: offset,
       );
+      DateTime date = DateTime.now().subtract(Duration(days: offset));
+      return {date.millisecondsSinceEpoch: list};
     } catch (e) {
       print('Error fetching paginated grouped history: $e');
-      return [];
-    }
-  }
-
-  /// Fetches read history for today.
-  Future<List<ReadHistory>> getReadHistoryForToday() async {
-    try {
-      return await ReadHistoryRepository.getReadHistoryForToday();
-    } catch (e) {
-      print('Error fetching read history for today: $e');
-      return [];
-    }
-  }
-
-  /// Fetches read history for yesterday.
-  Future<List<ReadHistory>> getReadHistoryForYesterday() async {
-    try {
-      return await ReadHistoryRepository.getReadHistoryForYesterday();
-    } catch (e) {
-      print('Error fetching read history for yesterday: $e');
-      return [];
-    }
-  }
-
-  /// Fetches read history for last week.
-  Future<List<ReadHistory>> getReadHistoryForLastWeek() async {
-    try {
-      return await ReadHistoryRepository.getReadHistoryForLastWeek();
-    } catch (e) {
-      print('Error fetching read history for last week: $e');
-      return [];
-    }
-  }
-
-  /// Fetches grouped read history with pagination.
-  Future<Map<String, List<ReadHistory>>> getGroupedReadHistory({
-    int daysBack = 30,
-    int limit = 20,
-    int offset = 0,
-  }) async {
-    try {
-      return await ReadHistoryRepository.getGroupedReadHistory(
-        daysBack: daysBack,
-        limit: limit,
-        offset: offset,
-      );
-    } catch (e) {
-      print('Error fetching grouped read history: $e');
       return {};
     }
   }

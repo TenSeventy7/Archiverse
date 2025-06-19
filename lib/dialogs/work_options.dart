@@ -190,25 +190,24 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
       return _buildActionTile(
         context,
         icon: TablerIcons.book_2,
-        title: 'Read',
+        title: 'Continue reading',
         subtitle: 'Loading...',
         isHighlighted: true,
+        isLoading: true,
         onTap: () {},
       );
     }
 
     if (_readHistory != null) {
-      final completionPercentage = (_readHistory!.completion * 100).toInt();
       final chapterText = _readHistory!.chapter != null
-          ? 'Chapter ${_readHistory!.chapter!.chapter}'
+          ? _readHistory!.chapter!.title
           : 'Beginning';
 
       return _buildActionTile(
         context,
         icon: TablerIcons.book_2,
-        title: 'Continue Reading',
-        subtitle:
-            'Resume from $chapterText • ${completionPercentage}% complete',
+        title: 'Continue reading',
+        subtitle: "Resume from '$chapterText'",
         isHighlighted: true,
         onTap: () {
           Navigator.pop(context);
@@ -223,8 +222,8 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
       return _buildActionTile(
         context,
         icon: TablerIcons.book_2,
-        title: 'Start Reading',
-        subtitle: 'Begin from Chapter 1',
+        title: 'Read',
+        subtitle: "Start from the beginning",
         isHighlighted: true,
         onTap: () {
           Navigator.pop(context);
@@ -312,6 +311,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
     String? subtitle,
     Widget? trailing,
     bool isHighlighted = false,
+    bool isLoading = false,
     required VoidCallback onTap,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -329,13 +329,21 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
-        child: Icon(
-          icon,
-          size: 20,
-          color: isHighlighted
-              ? colorScheme.onPrimaryContainer
-              : colorScheme.onSurface,
-        ),
+        child: isLoading
+            ? CircularProgressIndicator(
+                padding: EdgeInsets.all(8.0),
+                strokeWidth: 3.0,
+                color: isHighlighted
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurface,
+              )
+            : Icon(
+                icon,
+                size: 20,
+                color: isHighlighted
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurface,
+              ),
       ),
       title: Text(
         title,

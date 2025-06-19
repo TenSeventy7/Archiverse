@@ -63,6 +63,8 @@ class _LibraryFragmentState extends State<LibraryFragment>
               tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
               indicatorSize: TabBarIndicatorSize.label,
               dividerColor: Colors.transparent,
+              isScrollable: true,
+              padding: EdgeInsets.zero,
             ),
           ),
         ];

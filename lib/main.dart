@@ -8,6 +8,7 @@ import 'package:archiverse/api.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
+import 'package:archiverse/providers/provider_read_history.dart';
 import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/providers/provider_user.dart';
@@ -27,6 +28,7 @@ void main() async {
   // Initialize the preferences provider
   final preferences = PreferencesProvider();
   final user = UserProvider();
+  final readHistory = ReadHistoryProvider();
 
   // Initialize providers
   await preferences.initialize();
@@ -46,6 +48,7 @@ void main() async {
           create: (context) =>
               ReaderProvider(context.read<PreferencesProvider>()),
         ),
+        ChangeNotifierProvider(create: (_) => readHistory),
       ],
       child: const Archiverse(),
     ),
