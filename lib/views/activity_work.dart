@@ -707,6 +707,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       child: Card.outlined(
         margin: EdgeInsets.zero,
         color: context.colorScheme.surfaceContainerLowest,
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
