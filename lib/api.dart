@@ -6,7 +6,7 @@
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/api/ao3_api_impl.dart';
 import 'package:archiverse/database/repository.dart';
-import 'package:archiverse/database/repository/work.dart';
+import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/work.dart';
 
 // Re-export everything so callers can use the extension methods directly
@@ -28,17 +28,29 @@ class AppApi extends Ao3Api {
 
   Future<Work> getWork(Work work) async {
     try {
-      // Check database first
+      // Check database first if it's cached
       Work? cachedWork = await WorkRepository.getWork(work.id);
       if (cachedWork != null) {
         return cachedWork;
       }
 
-      Work fullWork = await _ao3Api.getWork(work);
-
-      return fullWork;
+      return _ao3Api.getWork(work);
     } catch (e) {
-      return await _ao3Api.getWork(work);
+      return _ao3Api.getWork(work);
+    }
+  }
+
+  Future<Chapter> getChapter(Chapter chapter) async {
+    try {
+      // Check database first if it's cached
+      Chapter? cachedChapter = await ChapterRepository.getChapter(chapter.id);
+      if (cachedChapter != null) {
+        return cachedChapter;
+      }
+
+      return _ao3Api.getChapter(chapter);
+    } catch (e) {
+      return _ao3Api.getChapter(chapter);
     }
   }
 }
