@@ -498,6 +498,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
       child: Card.outlined(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
