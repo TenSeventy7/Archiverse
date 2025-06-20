@@ -59,10 +59,7 @@ class ThemeProvider extends ChangeNotifier {
   late ColorScheme _lightDynamicColorScheme = _colorScheme.lightColorScheme;
   late ColorScheme _darkDynamicColorScheme = _colorScheme.darkColorScheme;
 
-  void setDynamicColorScheme(
-    ColorScheme lightScheme,
-    ColorScheme darkScheme,
-  ) async {
+  void setDynamicColorScheme(ColorScheme lightScheme, ColorScheme darkScheme) {
     _lightDynamicColorScheme = ThemeData(
       brightness: Brightness.light,
       colorSchemeSeed: lightScheme.primary,
@@ -72,7 +69,6 @@ class ThemeProvider extends ChangeNotifier {
       brightness: Brightness.dark,
       colorSchemeSeed: darkScheme.primary,
     ).colorScheme;
-    notifyListeners();
   }
 
   ThemeData? getThemeData(TextTheme textTheme, ColorScheme? colorScheme) {

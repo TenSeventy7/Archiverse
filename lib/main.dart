@@ -61,15 +61,15 @@ class Archiverse extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, provider, child) {
-        return DynamicColorBuilder(
-          builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-            provider.setDynamicColorScheme(
-              lightDynamic ?? provider.lightColorScheme,
-              darkDynamic ?? provider.darkColorScheme,
-            );
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        context.themeProvider.setDynamicColorScheme(
+          lightDynamic ?? context.themeProvider.lightColorScheme,
+          darkDynamic ?? context.themeProvider.darkColorScheme,
+        );
 
+        return Consumer<ThemeProvider>(
+          builder: (context, provider, child) {
             return MaterialApp(
               title: 'Archiverse',
               localizationsDelegates: const [
