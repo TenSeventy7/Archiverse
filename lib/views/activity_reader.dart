@@ -342,7 +342,10 @@ class _ReaderActivityState extends State<ReaderActivity>
     final shouldShow = show ?? !_isUiVisible;
 
     if (shouldShow != _isUiVisible) {
-      setState(() => _isUiVisible = shouldShow);
+      setState(() {
+        _isUiVisible = shouldShow;
+        _setStatusBarColor(shouldShow);
+      });
 
       if (shouldShow) {
         _uiAnimationController.forward();
@@ -350,9 +353,6 @@ class _ReaderActivityState extends State<ReaderActivity>
         _uiAnimationController.reverse();
       }
     }
-
-    // Add this line to update status bar color immediately
-    _setStatusBarColor();
   }
 
   void _onContentTap(TapUpDetails details) {
@@ -516,11 +516,14 @@ class _ReaderActivityState extends State<ReaderActivity>
     context.setNavigationBarColor(Colors.transparent);
   }
 
-  void _setStatusBarColor() {
-    if (_isUiVisible) {
+  void _setStatusBarColor(bool reset) async {
+    if (reset) {
       _resetStatusBarColor();
       return;
     }
+
+    // Sleep for a short duration to ensure UI updates
+    await Future.delayed(const Duration(milliseconds: 300));
 
     switch (_currentColor) {
       case ReaderColor.light:
@@ -529,6 +532,7 @@ class _ReaderActivityState extends State<ReaderActivity>
           SystemUiOverlayStyle.light.copyWith(
             statusBarColor: Colors.transparent,
             systemNavigationBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.light,
             statusBarIconBrightness: Brightness.dark,
           ),
         );
@@ -539,6 +543,7 @@ class _ReaderActivityState extends State<ReaderActivity>
           SystemUiOverlayStyle.dark.copyWith(
             statusBarColor: Colors.transparent,
             systemNavigationBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.dark,
             statusBarIconBrightness: Brightness.light,
           ),
         );
