@@ -10,6 +10,7 @@ import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/providers/provider_read_history.dart';
 import 'package:archiverse/providers/provider_reader.dart';
+import 'package:archiverse/providers/provider_recommendations.dart';
 import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
@@ -29,9 +30,11 @@ void main() async {
   final preferences = PreferencesProvider();
   final user = UserProvider();
   final readHistory = ReadHistoryProvider();
+  final recommendations = RecommendationsProvider();
 
   // Initialize providers
   await preferences.initialize();
+  recommendations.initialize();
 
   // Disable fetching of Google Fonts (online) at runtime
   // We ship the TTFs with the app to avoid runtime fetching
@@ -44,6 +47,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => preferences),
         ChangeNotifierProvider(create: (_) => user),
         ChangeNotifierProvider(create: (context) => ThemeProvider(context)),
+        ChangeNotifierProvider(create: (_) => recommendations),
         ChangeNotifierProvider(
           create: (context) =>
               ReaderProvider(context.read<PreferencesProvider>()),
