@@ -110,6 +110,7 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
           builder: (context, state, fetchNextPage) =>
               PagedListView<int, RecommendationResult>(
                 physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.zero,
                 state: state,
                 fetchNextPage: fetchNextPage,
                 builderDelegate:
