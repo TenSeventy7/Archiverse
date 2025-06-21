@@ -35,6 +35,7 @@ void main() async {
   // Initialize providers
   await preferences.initialize();
   recommendations.initialize();
+  readHistory.loadMostRecentHistory();
 
   // Disable fetching of Google Fonts (online) at runtime
   // We ship the TTFs with the app to avoid runtime fetching
