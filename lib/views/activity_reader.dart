@@ -5,6 +5,7 @@ import 'package:archiverse/dialogs/chapters_list.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/chapter.dart';
+import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/providers/provider_read_history.dart';
 import 'package:archiverse/providers/provider_reader.dart';
@@ -56,6 +57,7 @@ class _ReaderActivityState extends State<ReaderActivity>
   late AnimationController _uiAnimationController;
   late Animation<double> _uiAnimation;
   bool _isUiVisible = true;
+  ReaderColor _currentColor = ReaderColor.system;
 
   // Drag interaction
   double _dragOpacity = 1.0;
@@ -108,6 +110,9 @@ class _ReaderActivityState extends State<ReaderActivity>
   // Safe method to save read history
   void _saveReadHistoryBeforeDispose() {
     if (_isDisposed || _currentChapter == null) return;
+
+    // Also try to reset system UI state
+    _resetStatusBarColor();
 
     try {
       // Use a future that doesn't depend on the widget context
@@ -308,6 +313,9 @@ class _ReaderActivityState extends State<ReaderActivity>
         _uiAnimationController.reverse();
       }
     }
+
+    // Add this line to update status bar color immediately
+    _setStatusBarColor();
   }
 
   void _onContentTap(TapUpDetails details) {
@@ -375,11 +383,8 @@ class _ReaderActivityState extends State<ReaderActivity>
     WorkOptionsDialog.showSheet(context, work: work, isReader: true);
   }
 
-  // ...existing build methods remain the same...
   @override
   Widget build(BuildContext context) {
-    context.setNavigationBarColor(Colors.transparent);
-
     return Consumer<ReaderProvider>(
       builder: (context, settings, child) {
         if (settings.keepScreenOn) {
@@ -387,6 +392,8 @@ class _ReaderActivityState extends State<ReaderActivity>
         } else {
           WakelockPlus.disable();
         }
+
+        _currentColor = settings.readerColor;
 
         return Scaffold(
           appBar: _buildAnimatedAppBar(),
@@ -468,6 +475,43 @@ class _ReaderActivityState extends State<ReaderActivity>
     return _buildContent();
   }
 
+  void _resetStatusBarColor() {
+    context.setNavigationBarColor(Colors.transparent);
+  }
+
+  void _setStatusBarColor() {
+    if (_isUiVisible) {
+      _resetStatusBarColor();
+      return;
+    }
+
+    switch (_currentColor) {
+      case ReaderColor.light:
+      case ReaderColor.sepia:
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle.light.copyWith(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+          ),
+        );
+        break;
+      case ReaderColor.dark:
+      case ReaderColor.gray:
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+        );
+        break;
+      case ReaderColor.system:
+        _resetStatusBarColor();
+        break;
+    }
+  }
+
   Widget _buildContent() {
     return Consumer<ReaderProvider>(
       builder: (context, settings, child) {
@@ -494,15 +538,78 @@ class _ReaderActivityState extends State<ReaderActivity>
   }
 
   Widget _buildScrollContent(ReaderProvider settings) {
-    return SingleChildScrollView(
-      key: ValueKey(_currentChapterIndex),
-      controller: _scrollController,
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(
-        vertical: 8.0,
-        horizontal: context.commonPaddingDouble,
+    return Theme(
+      data: Theme.of(context).copyWith(
+        scrollbarTheme: ScrollbarThemeData(
+          thumbColor: WidgetStateProperty.all(
+            settings.readerColor.toForegroundColor(context).withOpacity(0.5),
+          ),
+          trackColor: WidgetStateProperty.all(
+            settings.readerColor.toContainerColor(context).withOpacity(0.3),
+          ),
+        ),
       ),
-      child: _buildChapterContent(settings),
+      child: Stack(
+        children: [
+          Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: false,
+            radius: const Radius.circular(4.0),
+            child: SingleChildScrollView(
+              key: ValueKey(_currentChapterIndex),
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: context.commonPaddingDouble,
+              ),
+              child: _buildChapterContent(settings),
+            ),
+          ),
+          // Top shadow
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: context.screenPadding.top + kToolbarHeight,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    settings.readerColor.toBackgroundColor(context),
+                    settings.readerColor
+                        .toBackgroundColor(context)
+                        .withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Bottom shadow
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: context.screenPadding.bottom + 48.0,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    settings.readerColor.toBackgroundColor(context),
+                    settings.readerColor
+                        .toBackgroundColor(context)
+                        .withOpacity(0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
