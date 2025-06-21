@@ -5,6 +5,7 @@
  */
 import 'package:archiverse/api/ao3_api.dart';
 import 'package:archiverse/api/ao3_api_impl.dart';
+import 'package:archiverse/database/database.dart';
 import 'package:archiverse/database/repository.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/work.dart';
@@ -17,6 +18,7 @@ export 'package:archiverse/extensions/api_read_history.dart';
 
 class AppApi extends Ao3Api {
   static final AppApi _instance = AppApi._internal();
+  AppDatabase database = DataRepository.database;
 
   late final Ao3ApiImpl _ao3Api;
 
