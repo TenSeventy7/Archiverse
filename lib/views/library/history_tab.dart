@@ -66,6 +66,7 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
             builder: (context, state, fetchNextPage) =>
                 PagedListView<int, Map<int, List<ReadHistory>>>(
                   physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   state: state,
                   fetchNextPage: fetchNextPage,
                   builderDelegate:
@@ -108,6 +109,7 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
           padding: context.horizontalPadding,
           child: ListView.separated(
             shrinkWrap: true,
+            padding: EdgeInsets.only(bottom: context.commonPadding),
             physics: const NeverScrollableScrollPhysics(),
             itemCount: history.length,
             itemBuilder: (context, index) {
