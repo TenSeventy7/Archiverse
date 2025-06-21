@@ -95,7 +95,6 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           DiscoverHeader(
-            userName: "John",
             onSearchTap: () =>
                 context.navigator.pushNamed(SearchActivity.routeName),
           ),

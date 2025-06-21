@@ -1,19 +1,16 @@
 import 'package:archiverse/components/padded_column.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/providers/provider_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DiscoverHeader extends StatelessWidget {
-  final String userName;
   final VoidCallback? onSearchTap;
   final VoidCallback? onNotificationTap;
 
-  const DiscoverHeader({
-    super.key,
-    this.userName = 'Explorer',
-    this.onSearchTap,
-    this.onNotificationTap,
-  });
+  const DiscoverHeader({super.key, this.onSearchTap, this.onNotificationTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +34,20 @@ class DiscoverHeader extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          Text(
-            '$userName! 👋',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Consumer<UserProvider>(
+            builder: (context, userProvider, child) {
+              return Skeletonizer(
+                enabled: userProvider.isFetching,
+                child: Text(
+                  "${userProvider.user?.name ?? "Explorer"}!",
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            },
           ),
         ],
       ),
