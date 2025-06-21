@@ -47,6 +47,7 @@ class _ReaderActivityState extends State<ReaderActivity>
   List<Chapter> _chapters = [];
   int _currentChapterIndex = 0;
   Chapter? _currentChapter;
+  bool _hasRecordedInitialHistory = false;
 
   // State management
   bool _isLoading = true;
@@ -95,7 +96,8 @@ class _ReaderActivityState extends State<ReaderActivity>
 
     // Save read history when app goes to background
     if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
       _saveReadHistoryBeforeDispose();
     }
   }
@@ -115,7 +117,6 @@ class _ReaderActivityState extends State<ReaderActivity>
     _resetStatusBarColor();
 
     try {
-      // Use a future that doesn't depend on the widget context
       final provider = Provider.of<ReadHistoryProvider>(context, listen: false);
 
       if (_scrollController.hasClients) {
@@ -204,11 +205,43 @@ class _ReaderActivityState extends State<ReaderActivity>
           _currentChapter = chapterWithContent;
           _isLoading = false;
         });
+
+        // Record initial history when first chapter loads successfully
+        if (!_hasRecordedInitialHistory) {
+          _recordInitialHistory();
+          _hasRecordedInitialHistory = true;
+        }
       }
     } catch (e) {
       if (!_isDisposed) {
         _setErrorState(e.toString());
       }
+    }
+  }
+
+  void _recordInitialHistory() {
+    if (_currentChapter == null) return;
+
+    try {
+      final provider = Provider.of<ReadHistoryProvider>(context, listen: false);
+
+      // Record that user started reading this work/chapter
+      provider
+          .saveReadHistory(
+            work: work,
+            chapter: _currentChapter!,
+            scrollPosition: 0,
+            totalScrollPosition: 0,
+          )
+          .catchError((error) {
+            debugPrint('Error recording initial read history: $error');
+          });
+
+      debugPrint(
+        'Recorded initial read history for: ${work.title} - ${_currentChapter!.title}',
+      );
+    } catch (e) {
+      debugPrint('Error accessing provider for initial history: $e');
     }
   }
 
