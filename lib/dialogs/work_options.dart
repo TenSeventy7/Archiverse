@@ -117,23 +117,43 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                _buildActionTile(
-                  context,
-                  icon: TablerIcons.heart,
-                  title: context.strings.work_kudos,
-                  onTap: () {},
-                ),
+                if (widget.isReader) ...[
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.heart,
+                    title: context.strings.work_kudos,
+                    onTap: () {},
+                  ),
 
-                _buildDivider(),
+                  _buildDivider(),
 
-                _buildActionTile(
-                  context,
-                  icon: TablerIcons.message,
-                  title: context.strings.work_comment,
-                  onTap: () {},
-                ),
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.message,
+                    title: context.strings.work_comment,
+                    onTap: () {},
+                  ),
 
-                _buildDivider(),
+                  _buildDivider(),
+                ] else ...[
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.library_plus,
+                    title: "Mark for later",
+                    onTap: () {},
+                  ),
+
+                  _buildDivider(),
+
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.bookmark,
+                    title: "Bookmark",
+                    onTap: () {},
+                  ),
+
+                  _buildDivider(),
+                ],
 
                 _buildActionTile(
                   context,
@@ -156,6 +176,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
         ),
 
         if (widget.isReader) ...[
+          const SizedBox(height: 8.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Card(
