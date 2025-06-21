@@ -1,5 +1,4 @@
 import 'package:archiverse/api.dart';
-import 'package:archiverse/database/dao.dart';
 import 'package:archiverse/database/repository.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/read_history.dart';
@@ -136,10 +135,6 @@ extension AppApiReadHistory on AppApi {
         offset: offset,
       );
 
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final targetDate = today.subtract(Duration(days: offset));
-
       return {offset: list};
     } catch (e) {
       print('Error fetching paginated grouped history: $e');
@@ -152,7 +147,7 @@ extension AppApiReadHistory on AppApi {
     try {
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
-      final nextDate = today.subtract(Duration(days: currentOffset + 1));
+      final nextDate = today.subtract(Duration(days: currentOffset));
 
       return await ReadHistoryRepository.hasHistoryBeyondDate(nextDate);
     } catch (e) {
