@@ -71,10 +71,7 @@ class _UserFragmentState extends State<UserFragment> {
   }
 
   Future<void> _onRefresh(UserProvider userProvider) async {
-    // Refresh user data if signed in
-    if (userProvider.user != null) {
-      await userProvider.refresh();
-    }
+    await userProvider.refresh();
   }
 
   Widget _buildAppBar(UserProvider provider, Pseud? user) {
