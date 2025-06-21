@@ -160,4 +160,22 @@ extension AppApiReadHistory on AppApi {
       return false;
     }
   }
+
+  /// Gets the total count of read history entries.
+  Future<int> getReadHistoryCount() async {
+    try {
+      return await ReadHistoryRepository.getReadHistoryCount();
+    } catch (e) {
+      print('Error fetching read history count: $e');
+      return 0;
+    }
+  }
+
+  Future<void> addHit(int workId, {int hits = 1}) async {
+    try {
+      await ReadHistoryRepository.addHit(workId, hits: hits);
+    } catch (e) {
+      print('Error adding hit: $e');
+    }
+  }
 }

@@ -109,4 +109,12 @@ extension ReadHistoryRepository on DataRepository {
   static Future<bool> hasHistoryBeyondDate(DateTime date) async {
     return await DataRepository.database.hasHistoryBeyondDate(date);
   }
+
+  static Future<void> addHit(int workId, {int hits = 1}) async {
+    await DataRepository.database.addHit(workId, hits: hits);
+  }
+
+  static Future<int> getCount() async {
+    return await DataRepository.database.getReadHistoryCount();
+  }
 }

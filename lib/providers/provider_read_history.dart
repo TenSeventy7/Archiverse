@@ -31,6 +31,7 @@ class ReadHistoryProvider extends ChangeNotifier {
         scrollPosition: scrollPosition,
         totalScrollPosition: totalScrollPosition,
       );
+      await _api.addHit(work.id);
 
       // Clear cache to force refresh
       _mostRecentHistory = null;
@@ -109,6 +110,16 @@ class ReadHistoryProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
       return false;
+    }
+  }
+
+  Future<int> getCount() async {
+    try {
+      return await _api.getReadHistoryCount();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return 0;
     }
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:archiverse/database/dao.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,7 +37,22 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 3) {
+          // Migration for adding hits column
+          await m.addColumn(readHistoriesTable, readHistoriesTable.hits);
+        }
+      },
+    );
+  }
 }
 
 LazyDatabase _openConnection() {

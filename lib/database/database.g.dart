@@ -4168,6 +4168,16 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _hitsMeta = const VerificationMeta('hits');
+  @override
+  late final GeneratedColumn<int> hits = GeneratedColumn<int>(
+    'hits',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     workId,
@@ -4176,6 +4186,7 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
     position,
     status,
     completion,
+    hits,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4233,6 +4244,12 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
     } else if (isInserting) {
       context.missing(_completionMeta);
     }
+    if (data.containsKey('hits')) {
+      context.handle(
+        _hitsMeta,
+        hits.isAcceptableOrUnknown(data['hits']!, _hitsMeta),
+      );
+    }
     return context;
   }
 
@@ -4266,6 +4283,10 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
         DriftSqlType.double,
         data['${effectivePrefix}completion'],
       )!,
+      hits: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hits'],
+      )!,
     );
   }
 
@@ -4283,6 +4304,7 @@ class ReadHistoriesTableData extends DataClass
   final int position;
   final String status;
   final double completion;
+  final int hits;
   const ReadHistoriesTableData({
     required this.workId,
     this.chapterId,
@@ -4290,6 +4312,7 @@ class ReadHistoriesTableData extends DataClass
     required this.position,
     required this.status,
     required this.completion,
+    required this.hits,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4302,6 +4325,7 @@ class ReadHistoriesTableData extends DataClass
     map['position'] = Variable<int>(position);
     map['status'] = Variable<String>(status);
     map['completion'] = Variable<double>(completion);
+    map['hits'] = Variable<int>(hits);
     return map;
   }
 
@@ -4315,6 +4339,7 @@ class ReadHistoriesTableData extends DataClass
       position: Value(position),
       status: Value(status),
       completion: Value(completion),
+      hits: Value(hits),
     );
   }
 
@@ -4330,6 +4355,7 @@ class ReadHistoriesTableData extends DataClass
       position: serializer.fromJson<int>(json['position']),
       status: serializer.fromJson<String>(json['status']),
       completion: serializer.fromJson<double>(json['completion']),
+      hits: serializer.fromJson<int>(json['hits']),
     );
   }
   @override
@@ -4342,6 +4368,7 @@ class ReadHistoriesTableData extends DataClass
       'position': serializer.toJson<int>(position),
       'status': serializer.toJson<String>(status),
       'completion': serializer.toJson<double>(completion),
+      'hits': serializer.toJson<int>(hits),
     };
   }
 
@@ -4352,6 +4379,7 @@ class ReadHistoriesTableData extends DataClass
     int? position,
     String? status,
     double? completion,
+    int? hits,
   }) => ReadHistoriesTableData(
     workId: workId ?? this.workId,
     chapterId: chapterId.present ? chapterId.value : this.chapterId,
@@ -4359,6 +4387,7 @@ class ReadHistoriesTableData extends DataClass
     position: position ?? this.position,
     status: status ?? this.status,
     completion: completion ?? this.completion,
+    hits: hits ?? this.hits,
   );
   ReadHistoriesTableData copyWithCompanion(ReadHistoriesTableCompanion data) {
     return ReadHistoriesTableData(
@@ -4370,6 +4399,7 @@ class ReadHistoriesTableData extends DataClass
       completion: data.completion.present
           ? data.completion.value
           : this.completion,
+      hits: data.hits.present ? data.hits.value : this.hits,
     );
   }
 
@@ -4381,14 +4411,22 @@ class ReadHistoriesTableData extends DataClass
           ..write('timestamp: $timestamp, ')
           ..write('position: $position, ')
           ..write('status: $status, ')
-          ..write('completion: $completion')
+          ..write('completion: $completion, ')
+          ..write('hits: $hits')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(workId, chapterId, timestamp, position, status, completion);
+  int get hashCode => Object.hash(
+    workId,
+    chapterId,
+    timestamp,
+    position,
+    status,
+    completion,
+    hits,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4398,7 +4436,8 @@ class ReadHistoriesTableData extends DataClass
           other.timestamp == this.timestamp &&
           other.position == this.position &&
           other.status == this.status &&
-          other.completion == this.completion);
+          other.completion == this.completion &&
+          other.hits == this.hits);
 }
 
 class ReadHistoriesTableCompanion
@@ -4409,6 +4448,7 @@ class ReadHistoriesTableCompanion
   final Value<int> position;
   final Value<String> status;
   final Value<double> completion;
+  final Value<int> hits;
   const ReadHistoriesTableCompanion({
     this.workId = const Value.absent(),
     this.chapterId = const Value.absent(),
@@ -4416,6 +4456,7 @@ class ReadHistoriesTableCompanion
     this.position = const Value.absent(),
     this.status = const Value.absent(),
     this.completion = const Value.absent(),
+    this.hits = const Value.absent(),
   });
   ReadHistoriesTableCompanion.insert({
     this.workId = const Value.absent(),
@@ -4424,6 +4465,7 @@ class ReadHistoriesTableCompanion
     required int position,
     required String status,
     required double completion,
+    this.hits = const Value.absent(),
   }) : timestamp = Value(timestamp),
        position = Value(position),
        status = Value(status),
@@ -4435,6 +4477,7 @@ class ReadHistoriesTableCompanion
     Expression<int>? position,
     Expression<String>? status,
     Expression<double>? completion,
+    Expression<int>? hits,
   }) {
     return RawValuesInsertable({
       if (workId != null) 'work_id': workId,
@@ -4443,6 +4486,7 @@ class ReadHistoriesTableCompanion
       if (position != null) 'position': position,
       if (status != null) 'status': status,
       if (completion != null) 'completion': completion,
+      if (hits != null) 'hits': hits,
     });
   }
 
@@ -4453,6 +4497,7 @@ class ReadHistoriesTableCompanion
     Value<int>? position,
     Value<String>? status,
     Value<double>? completion,
+    Value<int>? hits,
   }) {
     return ReadHistoriesTableCompanion(
       workId: workId ?? this.workId,
@@ -4461,6 +4506,7 @@ class ReadHistoriesTableCompanion
       position: position ?? this.position,
       status: status ?? this.status,
       completion: completion ?? this.completion,
+      hits: hits ?? this.hits,
     );
   }
 
@@ -4485,6 +4531,9 @@ class ReadHistoriesTableCompanion
     if (completion.present) {
       map['completion'] = Variable<double>(completion.value);
     }
+    if (hits.present) {
+      map['hits'] = Variable<int>(hits.value);
+    }
     return map;
   }
 
@@ -4496,7 +4545,8 @@ class ReadHistoriesTableCompanion
           ..write('timestamp: $timestamp, ')
           ..write('position: $position, ')
           ..write('status: $status, ')
-          ..write('completion: $completion')
+          ..write('completion: $completion, ')
+          ..write('hits: $hits')
           ..write(')'))
         .toString();
   }
@@ -10961,6 +11011,7 @@ typedef $$ReadHistoriesTableTableCreateCompanionBuilder =
       required int position,
       required String status,
       required double completion,
+      Value<int> hits,
     });
 typedef $$ReadHistoriesTableTableUpdateCompanionBuilder =
     ReadHistoriesTableCompanion Function({
@@ -10970,6 +11021,7 @@ typedef $$ReadHistoriesTableTableUpdateCompanionBuilder =
       Value<int> position,
       Value<String> status,
       Value<double> completion,
+      Value<int> hits,
     });
 
 final class $$ReadHistoriesTableTableReferences
@@ -11056,6 +11108,11 @@ class $$ReadHistoriesTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get hits => $composableBuilder(
+    column: $table.hits,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$WorksTableTableFilterComposer get workId {
     final $$WorksTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -11132,6 +11189,11 @@ class $$ReadHistoriesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get hits => $composableBuilder(
+    column: $table.hits,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$WorksTableTableOrderingComposer get workId {
     final $$WorksTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -11201,6 +11263,9 @@ class $$ReadHistoriesTableTableAnnotationComposer
     column: $table.completion,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get hits =>
+      $composableBuilder(column: $table.hits, builder: (column) => column);
 
   $$WorksTableTableAnnotationComposer get workId {
     final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
@@ -11288,6 +11353,7 @@ class $$ReadHistoriesTableTableTableManager
                 Value<int> position = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<double> completion = const Value.absent(),
+                Value<int> hits = const Value.absent(),
               }) => ReadHistoriesTableCompanion(
                 workId: workId,
                 chapterId: chapterId,
@@ -11295,6 +11361,7 @@ class $$ReadHistoriesTableTableTableManager
                 position: position,
                 status: status,
                 completion: completion,
+                hits: hits,
               ),
           createCompanionCallback:
               ({
@@ -11304,6 +11371,7 @@ class $$ReadHistoriesTableTableTableManager
                 required int position,
                 required String status,
                 required double completion,
+                Value<int> hits = const Value.absent(),
               }) => ReadHistoriesTableCompanion.insert(
                 workId: workId,
                 chapterId: chapterId,
@@ -11311,6 +11379,7 @@ class $$ReadHistoriesTableTableTableManager
                 position: position,
                 status: status,
                 completion: completion,
+                hits: hits,
               ),
           withReferenceMapper: (p0) => p0
               .map(

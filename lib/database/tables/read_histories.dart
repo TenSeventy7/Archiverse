@@ -13,6 +13,7 @@ class ReadHistoriesTable extends Table {
   IntColumn get position => integer()();
   TextColumn get status => text()(); // ReadStatus enum as string
   RealColumn get completion => real()();
+  IntColumn get hits => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {workId};

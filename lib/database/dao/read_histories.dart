@@ -353,4 +353,12 @@ extension ReadHistoryDao on AppDatabase {
     final historyCount = count.read(readHistoriesTable.workId.count()) ?? 0;
     return historyCount > 0;
   }
+
+  Future<void> addHit(int workId, {int hits = 1}) async {
+    // Increment the hits count for the work
+    await customUpdate(
+      'UPDATE read_histories SET hits = hits + ? WHERE work_id = ?',
+      variables: [Variable<int>(hits), Variable<int>(workId)],
+    );
+  }
 }
