@@ -88,9 +88,11 @@ extension BuildContextExtension on BuildContext {
       style.copyWith(
         systemNavigationBarColor: color,
         statusBarColor: Colors.transparent,
+        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
         statusBarIconBrightness: isDarkMode
             ? Brightness.light
             : Brightness.dark,
+        systemStatusBarContrastEnforced: false,
       ),
     );
   }
