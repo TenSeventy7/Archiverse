@@ -32,6 +32,7 @@ class UserProvider extends ChangeNotifier {
     if (username == null) {
       _user = null;
       _isFetching = false;
+      _isSignedIn = false;
       notifyListeners();
       return;
     }
@@ -74,11 +75,14 @@ class UserProvider extends ChangeNotifier {
 
   /// Sign out the current user
   Future<bool> signOut() async {
+    _isFetching = true;
+    notifyListeners();
+
     bool result = await _api.signOut();
-    if (result) {
-      _user = null;
-      notifyListeners();
-    }
+    _user = null;
+    _isSignedIn = false;
+    _isFetching = false;
+    notifyListeners();
     return result;
   }
 
