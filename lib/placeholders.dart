@@ -111,7 +111,7 @@ class Fillers {
   // Work
   static Work get work => Work(
     id: -1,
-    title: longName,
+    title: shortName,
     summary: loremIpsum,
     authors: [user],
     words: largeNumber,
