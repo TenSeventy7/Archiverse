@@ -101,6 +101,17 @@ class ReadHistoryProvider extends ChangeNotifier {
     }
   }
 
+  /// Checks if there's more history beyond the current offset
+  Future<bool> hasMoreHistory(int currentOffset) async {
+    try {
+      return await _api.hasMoreHistory(currentOffset);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Deletes read history for a work
   Future<bool> deleteReadHistory(Work work) async {
     try {

@@ -12,7 +12,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 class LibraryHistoryTab extends StatefulWidget {
-  const LibraryHistoryTab({Key? key}) : super(key: key);
+  const LibraryHistoryTab({super.key});
 
   @override
   State<LibraryHistoryTab> createState() => _LibraryHistoryTabState();
@@ -42,9 +42,11 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
       offset: pageKey - 1,
     );
 
-    if (newItems.values.first.isEmpty) {
+    // Check if we have more history beyond this point
+    final hasMore = await provider.hasMoreHistory(pageKey - 1);
+
+    if (!hasMore) {
       _controller.value = _controller.value.copyWith(hasNextPage: false);
-      return [];
     }
 
     return [newItems];
@@ -89,8 +91,14 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
   }
 
   Widget _buildHistoryItem(int offset, List<ReadHistory> history) {
+    if (history.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     // Get date from today to offset
-    DateTime date = DateTime.now().subtract(Duration(days: offset));
+    DateTime date = DateTime.now().toUtc();
+    date = DateTime.utc(date.year, date.month, date.day);
+    date = date.subtract(Duration(days: offset));
 
     return Column(
       children: [

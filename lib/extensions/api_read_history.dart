@@ -135,11 +135,29 @@ extension AppApiReadHistory on AppApi {
       List<ReadHistory> list = await ReadHistoryRepository.getReadHistoryList(
         offset: offset,
       );
-      DateTime date = DateTime.now().subtract(Duration(days: offset));
-      return {date.millisecondsSinceEpoch: list};
+
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final targetDate = today.subtract(Duration(days: offset));
+
+      return {offset: list};
     } catch (e) {
       print('Error fetching paginated grouped history: $e');
       return {};
+    }
+  }
+
+  /// Checks if there's more history beyond the current pagination
+  Future<bool> hasMoreHistory(int currentOffset) async {
+    try {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final nextDate = today.subtract(Duration(days: currentOffset + 1));
+
+      return await ReadHistoryRepository.hasHistoryBeyondDate(nextDate);
+    } catch (e) {
+      print('Error checking for more history: $e');
+      return false;
     }
   }
 }

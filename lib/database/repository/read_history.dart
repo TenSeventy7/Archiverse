@@ -105,4 +105,8 @@ extension ReadHistoryRepository on DataRepository {
   static Future<List<ReadHistory>> getReadHistoryList({int offset = 0}) async {
     return await DataRepository.database.getReadHistoryList(offset: offset);
   }
+
+  static Future<bool> hasHistoryBeyondDate(DateTime date) async {
+    return await DataRepository.database.hasHistoryBeyondDate(date);
+  }
 }

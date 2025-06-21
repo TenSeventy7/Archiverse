@@ -315,30 +315,21 @@ extension ReadHistoryDao on AppDatabase {
 
   // Get paginated read history grouped by date
   Future<List<ReadHistory>> getReadHistoryList({int offset = 0}) async {
-    final now = DateTime.now().toUtc();
-    final today = DateTime.utc(now.year, now.month, now.day);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-    // Calculate the date range for this "page" (relative day)
+    // Calculate the date range for this "page" (specific day)
     final targetDate = today.subtract(Duration(days: offset));
     final startDate = targetDate;
-    final endDate = targetDate.add(const Duration(days: 1, seconds: -1));
-
-    print('Fetching history for day $offset ago'); // Debug log
-    print(
-      'Date range: ${startDate.toIso8601String()} to ${endDate.toIso8601String()}',
-    ); // Debug log
+    final endDate = targetDate
+        .add(const Duration(days: 1))
+        .subtract(const Duration(microseconds: 1));
 
     final historyRecords =
         await (select(readHistoriesTable)
               ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
               ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
             .get();
-
-    print('Found ${historyRecords.length} history records'); // Debug log
-
-    if (historyRecords.isEmpty) {
-      return [];
-    }
 
     final histories = <ReadHistory>[];
     for (final record in historyRecords) {
@@ -348,11 +339,18 @@ extension ReadHistoryDao on AppDatabase {
       }
     }
 
-    if (histories.isEmpty) {
-      return [];
-    }
-
-    // Return single group with the target date as header
     return histories;
+  }
+
+  // Helper method to check if there's any history beyond a certain date
+  Future<bool> hasHistoryBeyondDate(DateTime date) async {
+    final count =
+        await (selectOnly(readHistoriesTable)
+              ..addColumns([readHistoriesTable.workId.count()])
+              ..where(readHistoriesTable.timestamp.isSmallerThanValue(date)))
+            .getSingle();
+
+    final historyCount = count.read(readHistoriesTable.workId.count()) ?? 0;
+    return historyCount > 0;
   }
 }
