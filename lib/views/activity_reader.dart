@@ -210,6 +210,10 @@ class _ReaderActivityState extends State<ReaderActivity>
         if (!_hasRecordedInitialHistory) {
           _recordInitialHistory();
           _hasRecordedInitialHistory = true;
+
+          // Post hit to API for analytics
+          // This is done only once when the first chapter is loaded
+          AppApi().postHit(work);
         }
       }
     } catch (e) {
