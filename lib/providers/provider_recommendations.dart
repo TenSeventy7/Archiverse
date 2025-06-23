@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:archiverse/database/dao.dart';
 import 'package:archiverse/recommendations/base_recommendation.dart';
 import 'package:archiverse/recommendations/continue_reading_recommendation.dart';
 import 'package:archiverse/recommendations/popular_in_fandom_recommendations.dart';
@@ -86,7 +85,9 @@ class RecommendationsProvider extends ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      _workHistory = await _api.database.getRecentReadHistory(limit: 100);
+      _workHistory = await _api.database.readHistoriesDao.getRecentReadHistory(
+        limit: 100,
+      );
 
       _isLoading = false;
       notifyListeners();
@@ -114,7 +115,7 @@ class RecommendationsProvider extends ChangeNotifier {
     }
 
     // Handle continue reading card as pageKey 1
-    if (pageKey == 1) {
+    if (pageKey == 1 && _workHistory != null && _workHistory!.isNotEmpty) {
       final continueReadingResult = const ContinueReadingRecommendation(
         items: [],
       );
@@ -191,6 +192,10 @@ class RecommendationsProvider extends ChangeNotifier {
     final errorResult = const RandomDiscoveryRecommendation(items: []);
     _cache[pageKey] = errorResult;
     return errorResult;
+  }
+
+  bool get hasHistory {
+    return _workHistory != null && _workHistory!.isNotEmpty;
   }
 
   /// Clear cache and refresh recommendations

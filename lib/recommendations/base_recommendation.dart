@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/api.dart';
-import 'package:archiverse/components/text_header.dart';
 
 class RecommendationResult<T> {
   final List<T> items;
