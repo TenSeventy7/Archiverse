@@ -1,13 +1,13 @@
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/views/library/all_tab.dart';
-import 'package:archiverse/views/library/bookmarks_tab.dart';
-import 'package:archiverse/views/library/downloads_tab.dart';
-import 'package:archiverse/views/library/history_tab.dart';
+import 'package:archiverse/views/library/fragment_library_all.dart';
+import 'package:archiverse/views/library/fragment_library_bookmarks.dart';
+import 'package:archiverse/views/library/fragment_library_downloads.dart';
+import 'package:archiverse/views/library/fragment_library_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class LibraryFragment extends StatefulWidget {
-  const LibraryFragment({Key? key}) : super(key: key);
+  const LibraryFragment({super.key});
 
   @override
   State<LibraryFragment> createState() => _LibraryFragmentState();
@@ -72,10 +72,10 @@ class _LibraryFragmentState extends State<LibraryFragment>
       body: TabBarView(
         controller: _tabController,
         children: const [
-          LibraryAllTab(),
-          LibraryBookmarksTab(),
-          LibraryHistoryTab(),
-          LibraryDownloadsTab(),
+          LibraryAllFragment(),
+          LibraryBookmarksFragment(),
+          LibraryHistoryFragment(),
+          LibraryDownloadsFragment(),
         ],
       ),
     );

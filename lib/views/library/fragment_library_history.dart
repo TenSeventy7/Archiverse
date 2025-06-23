@@ -11,14 +11,14 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
-class LibraryHistoryTab extends StatefulWidget {
-  const LibraryHistoryTab({super.key});
+class LibraryHistoryFragment extends StatefulWidget {
+  const LibraryHistoryFragment({super.key});
 
   @override
-  State<LibraryHistoryTab> createState() => _LibraryHistoryTabState();
+  State<LibraryHistoryFragment> createState() => _LibraryHistoryFragmentState();
 }
 
-class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
+class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
   late final PagingController<int, Map<int, List<ReadHistory>>> _controller;
 
   @override

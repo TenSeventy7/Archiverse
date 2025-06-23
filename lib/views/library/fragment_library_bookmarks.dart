@@ -6,8 +6,8 @@ import 'package:archiverse/placeholders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class LibraryBookmarksTab extends StatelessWidget {
-  const LibraryBookmarksTab({Key? key}) : super(key: key);
+class LibraryBookmarksFragment extends StatelessWidget {
+  const LibraryBookmarksFragment({super.key});
 
   @override
   Widget build(BuildContext context) {

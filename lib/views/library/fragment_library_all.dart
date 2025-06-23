@@ -5,8 +5,8 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:flutter/material.dart';
 
-class LibraryAllTab extends StatelessWidget {
-  const LibraryAllTab({Key? key}) : super(key: key);
+class LibraryAllFragment extends StatelessWidget {
+  const LibraryAllFragment({super.key});
 
   @override
   Widget build(BuildContext context) {
