@@ -21,7 +21,7 @@ class SameFandomRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "More works in the ${title ?? 'your favorite'} universe";
+    return "Explore more in the ${title ?? 'your favorite'} universe";
   }
 
   @override

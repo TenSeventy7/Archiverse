@@ -20,7 +20,7 @@ class SameAuthorRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Check out more works by ${title ?? 'your favorite author'}";
+    return "More gems from ${title ?? 'your favorite author'}";
   }
 
   @override

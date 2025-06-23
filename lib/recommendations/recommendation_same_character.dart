@@ -21,8 +21,7 @@ class SameCharacterRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    // return "More works in the ${title ?? 'your favorite'} universe";
-    return "Looking for more ${title ?? 'of your favorite character'}?";
+    return "Fans of ${title ?? 'this character'} also enjoyed these";
   }
 
   @override

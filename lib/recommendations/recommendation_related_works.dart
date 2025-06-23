@@ -22,7 +22,7 @@ class RelatedWorksRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Because you read ${title ?? 'something you liked'}";
+    return "Enjoyed ${title ?? 'this'}? Try these next.";
   }
 
   @override

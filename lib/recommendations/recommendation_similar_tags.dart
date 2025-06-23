@@ -21,7 +21,7 @@ class SimilarTagsRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "More works tagged with ${title ?? 'your favorite tag'}";
+    return "If you like ${title ?? 'this tag'}, you'll love these";
   }
 
   @override

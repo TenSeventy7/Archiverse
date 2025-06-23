@@ -21,7 +21,7 @@ class SameRelationshipRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Fall in love with more ${title ?? 'of your favorite characters'}";
+    return "More stories featuring ${title ?? 'your favorite pairing'}";
   }
 
   @override

@@ -18,7 +18,7 @@ class RandomDiscoveryRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Discover your new favorite works";
+    return "Fresh picks you might love";
   }
 
   @override

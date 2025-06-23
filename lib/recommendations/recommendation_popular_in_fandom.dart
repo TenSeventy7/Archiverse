@@ -21,7 +21,7 @@ class PopularInFandomRecommendation extends BaseRecommendation<Work> {
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Works getting hits in the ${title ?? 'your favorite fandom'} universe";
+    return "Trending in ${title ?? 'your favorite fandom'}";
   }
 
   @override
