@@ -3,6 +3,7 @@ import 'package:archiverse/components/suggestions/base_suggestions.dart';
 import 'package:archiverse/models/work.dart';
 
 class WorkSuggestions extends BaseSuggestions<Work, WorkCard> {
+  final int itemCount;
   const WorkSuggestions({
     super.key,
     required List<Work> works,
@@ -10,7 +11,8 @@ class WorkSuggestions extends BaseSuggestions<Work, WorkCard> {
     super.header,
     super.footer,
     super.elevation,
-  }) : super(items: works, maxItems: 5);
+    this.itemCount = 5,
+  }) : super(items: works, maxItems: itemCount);
 
   @override
   WorkCard buildCard(Work work, double elevation) {
