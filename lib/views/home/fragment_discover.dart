@@ -101,30 +101,36 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
           await context.read<RecommendationsProvider>().refresh();
           _pagingController.refresh();
         },
-        child: PagingListener<int, BaseRecommendation>(
-          controller: _pagingController,
-          builder: (context, state, fetchNextPage) =>
-              PagedListView<int, BaseRecommendation>(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.zero,
-                state: state,
-                fetchNextPage: fetchNextPage,
-                builderDelegate: PagedChildBuilderDelegate<BaseRecommendation>(
-                  itemBuilder: _buildItem,
-                  firstPageErrorIndicatorBuilder: (context) =>
-                      _buildErrorIndicator(fetchNextPage),
-                  newPageErrorIndicatorBuilder: (context) =>
-                      _buildErrorIndicator(fetchNextPage),
-                  firstPageProgressIndicatorBuilder: (context) =>
-                      _buildLoadingIndicator(),
-                  newPageProgressIndicatorBuilder: (context) =>
-                      _buildLoadingIndicator(),
-                  noItemsFoundIndicatorBuilder: (context) =>
-                      _buildNoItemsIndicator(),
-                ),
-              ),
-        ),
+        child: context.read<RecommendationsProvider>().hasHistory
+            ? _buildRecommendations()
+            : _buildNoItemsIndicator(),
       ),
+    );
+  }
+
+  PagingListener<int, BaseRecommendation<dynamic>> _buildRecommendations() {
+    return PagingListener<int, BaseRecommendation>(
+      controller: _pagingController,
+      builder: (context, state, fetchNextPage) =>
+          PagedListView<int, BaseRecommendation>(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.zero,
+            state: state,
+            fetchNextPage: fetchNextPage,
+            builderDelegate: PagedChildBuilderDelegate<BaseRecommendation>(
+              itemBuilder: _buildItem,
+              firstPageErrorIndicatorBuilder: (context) =>
+                  _buildErrorIndicator(fetchNextPage),
+              newPageErrorIndicatorBuilder: (context) =>
+                  _buildErrorIndicator(fetchNextPage),
+              firstPageProgressIndicatorBuilder: (context) =>
+                  _buildLoadingIndicator(),
+              newPageProgressIndicatorBuilder: (context) =>
+                  _buildLoadingIndicator(),
+              noItemsFoundIndicatorBuilder: (context) =>
+                  _buildNoItemsIndicator(),
+            ),
+          ),
     );
   }
 
@@ -171,10 +177,11 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
   Widget _buildNoItemsIndicator() {
     return Padding(
       padding: context.horizontalPadding,
-      child: ItemPlaceholder.small(
-        icon: Icons.search_off,
-        message: 'No recommendations found',
-        subtitle: 'Try reading some works to get personalized recommendations',
+      child: ItemPlaceholder.medium(
+        icon: TablerIcons.brand_ao3,
+        message: 'Welcome to Archiverse!',
+        subtitle:
+            'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',
       ),
     );
   }
