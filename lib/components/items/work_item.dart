@@ -13,8 +13,14 @@ import 'package:skeletonizer/skeletonizer.dart';
 class WorkItem extends StatelessWidget {
   final Work work;
   final bool small;
-  const WorkItem({super.key, required this.work}) : small = false;
-  const WorkItem.small({super.key, required this.work}) : small = true;
+  final bool mini;
+  const WorkItem({super.key, required this.work}) : small = false, mini = false;
+  const WorkItem.small({super.key, required this.work})
+    : small = true,
+      mini = false;
+  const WorkItem.mini({super.key, required this.work})
+    : small = true,
+      mini = true;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +31,17 @@ class WorkItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Header with last updated + rating
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildLastUpdatedRow(context),
-            Skeleton.unite(child: RatingBadges(work: work)),
-          ],
-        ),
-
-        const SizedBox(height: 14.0),
+        if (!mini) ...[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildLastUpdatedRow(context),
+              Skeleton.unite(child: RatingBadges(work: work)),
+            ],
+          ),
+          const SizedBox(height: 14.0),
+        ],
 
         // Title and author section
         Row(
@@ -47,10 +54,14 @@ class WorkItem extends StatelessWidget {
                 children: [
                   Text(
                     work.title,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style:
+                        (!mini
+                                ? context.textTheme.titleMedium
+                                : context.textTheme.titleLarge)
+                            ?.copyWith(
+                              fontSize: !mini ? 18 : 22,
+                              fontWeight: FontWeight.w600,
+                            ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -66,18 +77,20 @@ class WorkItem extends StatelessWidget {
             ),
 
             // Options button
-            Skeleton.leaf(
-              child: IconButton.filledTonal(
-                visualDensity: VisualDensity.compact,
-                onPressed: () =>
-                    WorkOptionsDialog.showSheet(context, work: work),
-                icon: Icon(
-                  TablerIcons.dots_vertical,
-                  size: 18.0,
-                  color: colorScheme.onSurfaceVariant,
+            if (!mini) ...[
+              Skeleton.leaf(
+                child: IconButton.filledTonal(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () =>
+                      WorkOptionsDialog.showSheet(context, work: work),
+                  icon: Icon(
+                    TablerIcons.dots_vertical,
+                    size: 18.0,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
 
@@ -122,8 +135,10 @@ class WorkItem extends StatelessWidget {
         ],
 
         // Stats row
-        const SizedBox(height: 14.0),
-        _buildWorkStatistics(context),
+        if (!mini) ...[
+          const SizedBox(height: 14.0),
+          _buildWorkStatistics(context),
+        ],
       ],
     );
   }
@@ -143,6 +158,7 @@ class WorkItem extends StatelessWidget {
           AppUtils.formatWorkLastUpdated(context, work),
           style: context.textTheme.labelMedium?.copyWith(
             color: colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ],
