@@ -151,7 +151,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   @override
   Future<Work> fetchItem() {
-    return AppApi().getWork(item);
+    return AppApi().getWork(item, priority: RequestPriority.high);
   }
 
   @override
