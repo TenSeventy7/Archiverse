@@ -131,13 +131,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   void _startReading() {
-    context.navigator.pushNamed(
-      ReaderActivity.routeName,
-      arguments: {
-        "work": item,
-        "chapter": null, // TODO: Implement getting recent chapter
-      },
-    );
+    context.navigator.pushNamed(ReaderActivity.routeName, arguments: item);
   }
 
   void _downloadWork() {
