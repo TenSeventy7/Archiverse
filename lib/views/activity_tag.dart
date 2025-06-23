@@ -106,8 +106,18 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
   }
 
   @override
-  Future<Tag> fetchItem() {
-    return AppApi().getTag(item, priority: RequestPriority.high);
+  Future<Tag> fetchItem({bool refresh = false}) {
+    return AppApi().getTag(
+      item,
+      priority: RequestPriority.high,
+      refresh: refresh,
+    );
+  }
+
+  @override
+  Future<void> onRefreshContent() async {
+    _fetchWorks();
+    _fetchBookmarks();
   }
 
   @override
