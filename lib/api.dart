@@ -27,35 +27,4 @@ class AppApi extends Ao3Api {
   }
 
   factory AppApi() => _instance;
-
-  Future<Work> getWork(
-    Work work, {
-    RequestPriority priority = RequestPriority.normal,
-  }) async {
-    try {
-      // Check database first if it's cached
-      Work? cachedWork = await WorkRepository.getWork(work.id);
-      if (cachedWork != null) {
-        return cachedWork;
-      }
-
-      return _ao3Api.getWork(work, priority: priority);
-    } catch (e) {
-      return _ao3Api.getWork(work, priority: priority);
-    }
-  }
-
-  Future<Chapter> getChapter(Chapter chapter) async {
-    try {
-      // Check database first if it's cached
-      Chapter? cachedChapter = await ChapterRepository.getChapter(chapter.id);
-      if (cachedChapter != null) {
-        return cachedChapter;
-      }
-
-      return _ao3Api.getChapter(chapter);
-    } catch (e) {
-      return _ao3Api.getChapter(chapter);
-    }
-  }
 }
