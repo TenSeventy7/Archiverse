@@ -65,6 +65,13 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
   }
 
   @override
+  Future<void> onRefreshContent() async {
+    // Refresh bookmarks and initial works when content is refreshed
+    _fetchBookmarks();
+    _fetchInitialWorks();
+  }
+
+  @override
   bool get hasNextPage {
     // If API already returns no more works, we don't need to check further
     if (!hasNextPageInternal) return false;
@@ -139,8 +146,12 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
   }
 
   @override
-  Future<Series> fetchItem() {
-    return AppApi().getSeries(item);
+  Future<Series> fetchItem({bool refresh = false}) {
+    return AppApi().getSeries(
+      item,
+      refresh: refresh,
+      priority: RequestPriority.high,
+    );
   }
 
   @override
