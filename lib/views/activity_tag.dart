@@ -107,7 +107,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
   @override
   Future<Tag> fetchItem() {
-    return AppApi().getTag(item);
+    return AppApi().getTag(item, priority: RequestPriority.high);
   }
 
   @override
