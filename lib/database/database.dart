@@ -62,12 +62,12 @@ LazyDatabase _openConnection() {
     final dbFolder = await getApplicationDocumentsDirectory();
 
     // Delete old database file if it exists
-    final oldFile = File(p.join(dbFolder.path, 'archiverse_database.db'));
-    if (await oldFile.exists()) {
-      await oldFile.delete();
-    }
+    // final oldFile = File(p.join(dbFolder.path, 'archiverse_database_2.db'));
+    // if (await oldFile.exists()) {
+    //   await oldFile.delete();
+    // }
 
-    final file = File(p.join(dbFolder.path, 'archiverse_database_2.db'));
+    final file = File(p.join(dbFolder.path, 'archiverse.db'));
     return NativeDatabase.createInBackground(file);
   });
 }
