@@ -1,7 +1,7 @@
 import 'package:archiverse/database/tables/works.dart';
 import 'package:drift/drift.dart';
 
-class AuthorsTable extends Table {
+class DbAuthors extends Table {
   @override
   String get tableName => 'authors';
 
@@ -19,12 +19,12 @@ class AuthorsTable extends Table {
   BoolColumn get guest => boolean().withDefault(const Constant(false))();
 }
 
-class WorkAuthorsTable extends Table {
+class DbWorkAuthors extends Table {
   @override
   String get tableName => 'work_authors';
 
-  IntColumn get workId => integer().references(WorksTable, #id)();
-  IntColumn get authorId => integer().references(AuthorsTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
+  IntColumn get authorId => integer().references(DbAuthors, #id)();
 
   @override
   Set<Column> get primaryKey => {workId, authorId};

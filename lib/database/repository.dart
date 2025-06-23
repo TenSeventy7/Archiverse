@@ -1,8 +1,8 @@
 import 'package:archiverse/database/database.dart';
 
-export 'package:archiverse/database/repository/chapter.dart';
-export 'package:archiverse/database/repository/read_history.dart';
-export 'package:archiverse/database/repository/work.dart';
+export 'package:archiverse/database/repository/repository_chapters.dart';
+export 'package:archiverse/database/repository/repository_read_histories.dart';
+export 'package:archiverse/database/repository/repository_works.dart';
 
 class DataRepository {
   static final DataRepository _instance = DataRepository._internal();

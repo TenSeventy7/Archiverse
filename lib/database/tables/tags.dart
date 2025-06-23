@@ -1,7 +1,7 @@
 import 'package:archiverse/database/tables/works.dart';
 import 'package:drift/drift.dart';
 
-class TagsTable extends Table {
+class DbTags extends Table {
   @override
   String get tableName => 'tags';
 
@@ -15,49 +15,49 @@ class TagsTable extends Table {
   Set<Column> get primaryKey => {name}; // Use name as primary key
 }
 
-class WorkFandomsTable extends Table {
+class DbWorkFandoms extends Table {
   @override
   String get tableName => 'work_fandoms';
 
-  IntColumn get workId => integer().references(WorksTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
   TextColumn get tagName =>
-      text().references(TagsTable, #name)(); // Reference tag by name
+      text().references(DbTags, #name)(); // Reference tag by name
 
   @override
   Set<Column> get primaryKey => {workId, tagName};
 }
 
-class WorkRelationshipsTable extends Table {
+class DbWorkRelationships extends Table {
   @override
   String get tableName => 'work_relationships';
 
-  IntColumn get workId => integer().references(WorksTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
   TextColumn get tagName =>
-      text().references(TagsTable, #name)(); // Reference tag by name
+      text().references(DbTags, #name)(); // Reference tag by name
 
   @override
   Set<Column> get primaryKey => {workId, tagName};
 }
 
-class WorkCharactersTable extends Table {
+class DbWorkCharacters extends Table {
   @override
   String get tableName => 'work_characters';
 
-  IntColumn get workId => integer().references(WorksTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
   TextColumn get tagName =>
-      text().references(TagsTable, #name)(); // Reference tag by name
+      text().references(DbTags, #name)(); // Reference tag by name
 
   @override
   Set<Column> get primaryKey => {workId, tagName};
 }
 
-class WorkTagsTable extends Table {
+class DbWorkTags extends Table {
   @override
   String get tableName => 'work_tags';
 
-  IntColumn get workId => integer().references(WorksTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
   TextColumn get tagName =>
-      text().references(TagsTable, #name)(); // Reference tag by name
+      text().references(DbTags, #name)(); // Reference tag by name
 
   @override
   Set<Column> get primaryKey => {workId, tagName};

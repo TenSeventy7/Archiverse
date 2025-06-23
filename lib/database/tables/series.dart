@@ -1,7 +1,7 @@
 import 'package:archiverse/database/tables/works.dart';
 import 'package:drift/drift.dart';
 
-class SeriesTable extends Table {
+class DbSeries extends Table {
   @override
   String get tableName => 'series';
 
@@ -20,9 +20,9 @@ class SeriesTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-class WorkSeries extends Table {
-  IntColumn get workId => integer().references(WorksTable, #id)();
-  IntColumn get seriesId => integer().references(SeriesTable, #id)();
+class DbWorkSeries extends Table {
+  IntColumn get workId => integer().references(DbWorks, #id)();
+  IntColumn get seriesId => integer().references(DbSeries, #id)();
   IntColumn get part => integer()();
 
   @override

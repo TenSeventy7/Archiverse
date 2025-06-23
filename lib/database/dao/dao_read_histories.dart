@@ -1,55 +1,54 @@
-import 'package:archiverse/database/dao.dart';
 import 'package:archiverse/database/database.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:drift/drift.dart';
+import 'dao_base.dart';
 
-extension ReadHistoryDao on AppDatabase {
-  // Insert or update read history
-  Future<void> insertOrUpdateReadHistory(ReadHistory history) async {
-    await into(readHistoriesTable).insertOnConflictUpdate(
-      ReadHistoriesTableCompanion(
-        workId: Value(history.work.id),
-        chapterId: Value(history.chapter?.id),
-        timestamp: Value(history.timestamp),
-        position: Value(history.position),
-        status: Value(history.status.name),
-        completion: Value(history.completion),
-      ),
+@DriftAccessor(tables: [DbReadHistories, DbWorks, DbChapters])
+class ReadHistoriesDao
+    extends BaseDao<DbReadHistories, DbReadHistory, ReadHistory> {
+  ReadHistoriesDao(super.db);
+
+  @override
+  TableInfo<DbReadHistories, DbReadHistory> get table => db.dbReadHistories;
+
+  @override
+  Insertable<DbReadHistory> toCompanion(ReadHistory history) {
+    return DbReadHistoriesCompanion(
+      workId: Value(history.work.id),
+      chapterId: Value(history.chapter?.id),
+      timestamp: Value(history.timestamp),
+      position: Value(history.position),
+      status: Value(history.status.name),
+      completion: Value(history.completion),
     );
   }
 
-  // Get read history for a specific work
-  Future<ReadHistory?> getReadHistory(int workId) async {
-    final historyData = await (select(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).getSingleOrNull();
+  @override
+  ReadHistory fromRow(DbReadHistory row) {
+    // Note: This returns a basic ReadHistory without complete Work/Chapter data
+    // Use getReadHistoryComplete for full data with relationships
+    throw UnimplementedError(
+      'Use getReadHistoryComplete instead - ReadHistory requires Work object',
+    );
+  }
 
+  // Get read history with complete work and chapter data
+  Future<ReadHistory?> getReadHistoryComplete(int workId) async {
+    final historyData = await getSingle((h) => h.workId.equals(workId));
     if (historyData == null) return null;
 
-    final work = await getWorkComplete(workId);
+    // Get complete work data using WorksDao
+    final work = await db.worksDao.getWorkComplete(workId);
     if (work == null) return null;
 
     Chapter? chapter;
     if (historyData.chapterId != null) {
-      final chapterData = await (select(
-        chaptersTable,
-      )..where((c) => c.id.equals(historyData.chapterId!))).getSingleOrNull();
+      final chapterData = await db.chaptersDao.getSingle(
+        (c) => c.id.equals(historyData.chapterId!),
+      );
       if (chapterData != null) {
-        chapter = Chapter(
-          oneshot: chapterData.oneshot,
-          workId: chapterData.workId,
-          id: chapterData.id,
-          chapter: chapterData.chapter,
-          title: chapterData.title,
-          publishDate: chapterData.publishDate,
-          summary: chapterData.summary,
-          preface: chapterData.preface,
-          postface: chapterData.postface,
-          content: chapterData.content,
-          words: chapterData.words,
-          comments: chapterData.comments,
-        );
+        chapter = db.chaptersDao.fromRow(chapterData);
       }
     }
 
@@ -60,16 +59,17 @@ extension ReadHistoryDao on AppDatabase {
       position: historyData.position,
       status: ReadStatus.values.firstWhere((s) => s.name == historyData.status),
       completion: historyData.completion,
+      hits: historyData.hits ?? 1, // Default to 1 if hits is null
     );
   }
 
-  // Get all read history
-  Future<List<ReadHistory>> getAllReadHistory() async {
-    final historyRecords = await select(readHistoriesTable).get();
+  // Get all read history with complete data
+  Future<List<ReadHistory>> getAllReadHistoryComplete() async {
+    final historyRecords = await getAll();
     final histories = <ReadHistory>[];
 
     for (final record in historyRecords) {
-      final history = await getReadHistory(record.workId);
+      final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
         histories.add(history);
       }
@@ -81,14 +81,14 @@ extension ReadHistoryDao on AppDatabase {
   // Get read history ordered by timestamp (most recent first)
   Future<List<ReadHistory>> getRecentReadHistory({int limit = 50}) async {
     final historyRecords =
-        await (select(readHistoriesTable)
+        await (select(table)
               ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
               ..limit(limit))
             .get();
 
     final histories = <ReadHistory>[];
     for (final record in historyRecords) {
-      final history = await getReadHistory(record.workId);
+      final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
         histories.add(history);
       }
@@ -98,16 +98,20 @@ extension ReadHistoryDao on AppDatabase {
   }
 
   // Get read history by status
-  Future<List<ReadHistory>> getReadHistoryByStatus(ReadStatus status) async {
+  Future<List<ReadHistory>> getReadHistoryByStatus(
+    ReadStatus status, {
+    int limit = 50,
+  }) async {
     final historyRecords =
-        await (select(readHistoriesTable)
+        await (select(table)
               ..where((h) => h.status.equals(status.name))
-              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
+              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
+              ..limit(limit))
             .get();
 
     final histories = <ReadHistory>[];
     for (final record in historyRecords) {
-      final history = await getReadHistory(record.workId);
+      final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
         histories.add(history);
       }
@@ -132,10 +136,8 @@ extension ReadHistoryDao on AppDatabase {
     int position, {
     int? chapterId,
   }) async {
-    await (update(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).write(
-      ReadHistoriesTableCompanion(
+    await (update(table)..where((h) => h.workId.equals(workId))).write(
+      DbReadHistoriesCompanion(
         position: Value(position),
         chapterId: chapterId != null ? Value(chapterId) : const Value.absent(),
         timestamp: Value(DateTime.now()),
@@ -149,10 +151,8 @@ extension ReadHistoryDao on AppDatabase {
     ReadStatus status, {
     double? completion,
   }) async {
-    await (update(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).write(
-      ReadHistoriesTableCompanion(
+    await (update(table)..where((h) => h.workId.equals(workId))).write(
+      DbReadHistoriesCompanion(
         status: Value(status.name),
         completion: completion != null
             ? Value(completion)
@@ -164,10 +164,8 @@ extension ReadHistoryDao on AppDatabase {
 
   // Update completion percentage
   Future<void> updateCompletion(int workId, double completion) async {
-    await (update(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).write(
-      ReadHistoriesTableCompanion(
+    await (update(table)..where((h) => h.workId.equals(workId))).write(
+      DbReadHistoriesCompanion(
         completion: Value(completion),
         timestamp: Value(DateTime.now()),
       ),
@@ -181,34 +179,21 @@ extension ReadHistoryDao on AppDatabase {
 
   // Start reading a work
   Future<void> startReading(int workId, {int? chapterId}) async {
-    final existingHistory = await getReadHistory(workId);
+    final existingHistory = await getReadHistoryComplete(workId);
     if (existingHistory != null) {
       // Update existing history
       await updateReadingStatus(workId, ReadStatus.IN_PROGRESS);
     } else {
       // Create new history entry
-      final work = await getWorkComplete(workId);
+      final work = await db.worksDao.getWorkComplete(workId);
       if (work != null) {
         Chapter? chapter;
         if (chapterId != null) {
-          final chapterData = await (select(
-            chaptersTable,
-          )..where((c) => c.id.equals(chapterId))).getSingleOrNull();
+          final chapterData = await db.chaptersDao.getSingle(
+            (c) => c.id.equals(chapterId),
+          );
           if (chapterData != null) {
-            chapter = Chapter(
-              oneshot: chapterData.oneshot,
-              workId: chapterData.workId,
-              id: chapterData.id,
-              chapter: chapterData.chapter,
-              title: chapterData.title,
-              publishDate: chapterData.publishDate,
-              summary: chapterData.summary,
-              preface: chapterData.preface,
-              postface: chapterData.postface,
-              content: chapterData.content,
-              words: chapterData.words,
-              comments: chapterData.comments,
-            );
+            chapter = db.chaptersDao.fromRow(chapterData);
           }
         }
 
@@ -221,42 +206,19 @@ extension ReadHistoryDao on AppDatabase {
           completion: 0.0,
         );
 
-        await insertOrUpdateReadHistory(newHistory);
+        await insertOrUpdate(newHistory);
       }
     }
   }
 
-  // Delete read history
-  Future<void> deleteReadHistory(int workId) async {
-    await (delete(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).go();
-  }
-
   // Check if work has read history
   Future<bool> hasReadHistory(int workId) async {
-    final history = await (select(
-      readHistoriesTable,
-    )..where((h) => h.workId.equals(workId))).getSingleOrNull();
-    return history != null;
-  }
-
-  // Get read history count
-  Future<int> getReadHistoryCount() async {
-    final result = await (selectOnly(
-      readHistoriesTable,
-    )..addColumns([readHistoriesTable.workId.count()])).getSingle();
-    return result.read(readHistoriesTable.workId.count()) ?? 0;
+    return await exists((h) => h.workId.equals(workId));
   }
 
   // Get read history count by status
   Future<int> getReadHistoryCountByStatus(ReadStatus status) async {
-    final result =
-        await (selectOnly(readHistoriesTable)
-              ..addColumns([readHistoriesTable.workId.count()])
-              ..where(readHistoriesTable.status.equals(status.name)))
-            .getSingle();
-    return result.read(readHistoriesTable.workId.count()) ?? 0;
+    return await getCount((h) => h.status.equals(status.name));
   }
 
   // Get reading statistics
@@ -277,14 +239,14 @@ extension ReadHistoryDao on AppDatabase {
     DateTime end,
   ) async {
     final historyRecords =
-        await (select(readHistoriesTable)
+        await (select(table)
               ..where((h) => h.timestamp.isBetweenValues(start, end))
               ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
             .get();
 
     final histories = <ReadHistory>[];
     for (final record in historyRecords) {
-      final history = await getReadHistory(record.workId);
+      final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
         histories.add(history);
       }
@@ -296,7 +258,7 @@ extension ReadHistoryDao on AppDatabase {
   // Search read history by work title
   Future<List<ReadHistory>> searchReadHistory(String query) async {
     final workIds =
-        await (select(worksTable)..where(
+        await (select(db.dbWorks)..where(
               (w) => w.title.contains(query) | w.summary.contains(query),
             ))
             .map((w) => w.id)
@@ -304,7 +266,7 @@ extension ReadHistoryDao on AppDatabase {
 
     final histories = <ReadHistory>[];
     for (final workId in workIds) {
-      final history = await getReadHistory(workId);
+      final history = await getReadHistoryComplete(workId);
       if (history != null) {
         histories.add(history);
       }
@@ -326,14 +288,14 @@ extension ReadHistoryDao on AppDatabase {
         .subtract(const Duration(microseconds: 1));
 
     final historyRecords =
-        await (select(readHistoriesTable)
+        await (select(table)
               ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
               ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
             .get();
 
     final histories = <ReadHistory>[];
     for (final record in historyRecords) {
-      final history = await getReadHistory(record.workId);
+      final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
         histories.add(history);
       }
@@ -344,21 +306,103 @@ extension ReadHistoryDao on AppDatabase {
 
   // Helper method to check if there's any history beyond a certain date
   Future<bool> hasHistoryBeyondDate(DateTime date) async {
-    final count =
-        await (selectOnly(readHistoriesTable)
-              ..addColumns([readHistoriesTable.workId.count()])
-              ..where(readHistoriesTable.timestamp.isSmallerThanValue(date)))
-            .getSingle();
-
-    final historyCount = count.read(readHistoriesTable.workId.count()) ?? 0;
-    return historyCount > 0;
+    final count = await getCount((h) => h.timestamp.isSmallerThanValue(date));
+    return count > 0;
   }
 
+  // Add hit to work history
+  // Increments the hit count for a work in the read history.
+  // This is separate from a work's general hit count, as this is instead used
+  // to track how many times a work has been read by the user.
+  // This is useful for analytics and personalized recommendations.
   Future<void> addHit(int workId, {int hits = 1}) async {
-    // Increment the hits count for the work
     await customUpdate(
-      'UPDATE read_histories SET hits = hits + ? WHERE work_id = ?',
+      'UPDATE read_histories SET hits = hits + ? WHERE id = ?',
       variables: [Variable<int>(hits), Variable<int>(workId)],
     );
+  }
+
+  // Enhanced insert/update that handles complete ReadHistory with Work
+  Future<void> insertOrUpdateReadHistoryComplete(ReadHistory history) async {
+    await transaction(() async {
+      // Ensure the work exists (insert/update it)
+      await db.worksDao.insertOrUpdateWorkComplete(history.work);
+
+      // If there's a chapter, ensure it exists
+      if (history.chapter != null) {
+        await db.chaptersDao.insertOrUpdate(history.chapter!);
+      }
+
+      // Insert/update the read history
+      await insertOrUpdate(history);
+    });
+  }
+
+  // Bulk operations for better performance
+  Future<List<ReadHistory>> getReadHistoriesByWorkIds(List<int> workIds) async {
+    if (workIds.isEmpty) return [];
+
+    final historyRecords = await (select(
+      table,
+    )..where((h) => h.workId.isIn(workIds))).get();
+
+    final histories = <ReadHistory>[];
+    for (final record in historyRecords) {
+      final history = await getReadHistoryComplete(record.workId);
+      if (history != null) {
+        histories.add(history);
+      }
+    }
+
+    return histories;
+  }
+
+  // Get read history with lightweight work data (without all relationships)
+  Future<List<ReadHistory>> getReadHistoryLightweight({int limit = 50}) async {
+    final query =
+        select(table).join([
+            innerJoin(
+              db.dbWorks,
+              db.dbWorks.id.equalsExp(table.asDslTable.workId),
+            ),
+          ])
+          ..orderBy([OrderingTerm.desc(table.asDslTable.timestamp)])
+          ..limit(limit);
+
+    final results = await query.get();
+
+    final histories = <ReadHistory>[];
+    for (final row in results) {
+      final historyData = row.readTable(table);
+      final workData = row.readTable(db.dbWorks);
+
+      // Create a lightweight work object
+      final work = db.worksDao.fromRow(workData);
+
+      Chapter? chapter;
+      if (historyData.chapterId != null) {
+        final chapterData = await db.chaptersDao.getSingle(
+          (c) => c.id.equals(historyData.chapterId!),
+        );
+        if (chapterData != null) {
+          chapter = db.chaptersDao.fromRow(chapterData);
+        }
+      }
+
+      histories.add(
+        ReadHistory(
+          work: work,
+          chapter: chapter,
+          timestamp: historyData.timestamp,
+          position: historyData.position,
+          status: ReadStatus.values.firstWhere(
+            (s) => s.name == historyData.status,
+          ),
+          completion: historyData.completion,
+        ),
+      );
+    }
+
+    return histories;
   }
 }

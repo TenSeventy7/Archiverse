@@ -1,12 +1,12 @@
 import 'package:archiverse/database/tables/works.dart';
 import 'package:drift/drift.dart';
 
-class ChaptersTable extends Table {
+class DbChapters extends Table {
   @override
   String get tableName => 'chapters';
 
   IntColumn get id => integer()();
-  IntColumn get workId => integer().references(WorksTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
   IntColumn get chapter => integer()();
   TextColumn get title => text()();
   DateTimeColumn get publishDate => dateTime().nullable()();

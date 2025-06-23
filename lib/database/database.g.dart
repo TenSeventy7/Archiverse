@@ -3,12 +3,11 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $WorksTableTable extends WorksTable
-    with TableInfo<$WorksTableTable, WorksTableData> {
+class $DbWorksTable extends DbWorks with TableInfo<$DbWorksTable, DbWork> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorksTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -277,7 +276,7 @@ class $WorksTableTable extends WorksTable
   static const String $name = 'works';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorksTableData> instance, {
+    Insertable<DbWork> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -466,9 +465,9 @@ class $WorksTableTable extends WorksTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  WorksTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbWork map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorksTableData(
+    return DbWork(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -561,12 +560,12 @@ class $WorksTableTable extends WorksTable
   }
 
   @override
-  $WorksTableTable createAlias(String alias) {
-    return $WorksTableTable(attachedDatabase, alias);
+  $DbWorksTable createAlias(String alias) {
+    return $DbWorksTable(attachedDatabase, alias);
   }
 }
 
-class WorksTableData extends DataClass implements Insertable<WorksTableData> {
+class DbWork extends DataClass implements Insertable<DbWork> {
   final int id;
   final String title;
   final String summary;
@@ -589,7 +588,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
   final String? notes;
   final String? giftMessage;
   final int subscriptions;
-  const WorksTableData({
+  const DbWork({
     required this.id,
     required this.title,
     required this.summary,
@@ -653,8 +652,8 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
     return map;
   }
 
-  WorksTableCompanion toCompanion(bool nullToAbsent) {
-    return WorksTableCompanion(
+  DbWorksCompanion toCompanion(bool nullToAbsent) {
+    return DbWorksCompanion(
       id: Value(id),
       title: Value(title),
       summary: Value(summary),
@@ -692,12 +691,12 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
     );
   }
 
-  factory WorksTableData.fromJson(
+  factory DbWork.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorksTableData(
+    return DbWork(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       summary: serializer.fromJson<String>(json['summary']),
@@ -751,7 +750,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
     };
   }
 
-  WorksTableData copyWith({
+  DbWork copyWith({
     int? id,
     String? title,
     String? summary,
@@ -774,7 +773,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
     Value<String?> notes = const Value.absent(),
     Value<String?> giftMessage = const Value.absent(),
     int? subscriptions,
-  }) => WorksTableData(
+  }) => DbWork(
     id: id ?? this.id,
     title: title ?? this.title,
     summary: summary ?? this.summary,
@@ -802,8 +801,8 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
     giftMessage: giftMessage.present ? giftMessage.value : this.giftMessage,
     subscriptions: subscriptions ?? this.subscriptions,
   );
-  WorksTableData copyWithCompanion(WorksTableCompanion data) {
-    return WorksTableData(
+  DbWork copyWithCompanion(DbWorksCompanion data) {
+    return DbWork(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       summary: data.summary.present ? data.summary.value : this.summary,
@@ -847,7 +846,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('WorksTableData(')
+    return (StringBuffer('DbWork(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('summary: $summary, ')
@@ -902,7 +901,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorksTableData &&
+      (other is DbWork &&
           other.id == this.id &&
           other.title == this.title &&
           other.summary == this.summary &&
@@ -927,7 +926,7 @@ class WorksTableData extends DataClass implements Insertable<WorksTableData> {
           other.subscriptions == this.subscriptions);
 }
 
-class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
+class DbWorksCompanion extends UpdateCompanion<DbWork> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> summary;
@@ -950,7 +949,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
   final Value<String?> notes;
   final Value<String?> giftMessage;
   final Value<int> subscriptions;
-  const WorksTableCompanion({
+  const DbWorksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.summary = const Value.absent(),
@@ -974,7 +973,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
     this.giftMessage = const Value.absent(),
     this.subscriptions = const Value.absent(),
   });
-  WorksTableCompanion.insert({
+  DbWorksCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String summary,
@@ -1011,7 +1010,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
        rating = Value(rating),
        relationship = Value(relationship),
        warnings = Value(warnings);
-  static Insertable<WorksTableData> custom({
+  static Insertable<DbWork> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? summary,
@@ -1061,7 +1060,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
     });
   }
 
-  WorksTableCompanion copyWith({
+  DbWorksCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
     Value<String>? summary,
@@ -1085,7 +1084,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
     Value<String?>? giftMessage,
     Value<int>? subscriptions,
   }) {
-    return WorksTableCompanion(
+    return DbWorksCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       summary: summary ?? this.summary,
@@ -1185,7 +1184,7 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('WorksTableCompanion(')
+    return (StringBuffer('DbWorksCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('summary: $summary, ')
@@ -1213,12 +1212,12 @@ class WorksTableCompanion extends UpdateCompanion<WorksTableData> {
   }
 }
 
-class $AuthorsTableTable extends AuthorsTable
-    with TableInfo<$AuthorsTableTable, AuthorsTableData> {
+class $DbAuthorsTable extends DbAuthors
+    with TableInfo<$DbAuthorsTable, DbAuthor> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AuthorsTableTable(this.attachedDatabase, [this._alias]);
+  $DbAuthorsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1365,7 +1364,7 @@ class $AuthorsTableTable extends AuthorsTable
   static const String $name = 'authors';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AuthorsTableData> instance, {
+    Insertable<DbAuthor> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1452,9 +1451,9 @@ class $AuthorsTableTable extends AuthorsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AuthorsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbAuthor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AuthorsTableData(
+    return DbAuthor(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1507,13 +1506,12 @@ class $AuthorsTableTable extends AuthorsTable
   }
 
   @override
-  $AuthorsTableTable createAlias(String alias) {
-    return $AuthorsTableTable(attachedDatabase, alias);
+  $DbAuthorsTable createAlias(String alias) {
+    return $DbAuthorsTable(attachedDatabase, alias);
   }
 }
 
-class AuthorsTableData extends DataClass
-    implements Insertable<AuthorsTableData> {
+class DbAuthor extends DataClass implements Insertable<DbAuthor> {
   final int id;
   final String name;
   final String pseud;
@@ -1526,7 +1524,7 @@ class AuthorsTableData extends DataClass
   final int? collections;
   final int? gifts;
   final bool guest;
-  const AuthorsTableData({
+  const DbAuthor({
     required this.id,
     required this.name,
     required this.pseud,
@@ -1574,8 +1572,8 @@ class AuthorsTableData extends DataClass
     return map;
   }
 
-  AuthorsTableCompanion toCompanion(bool nullToAbsent) {
-    return AuthorsTableCompanion(
+  DbAuthorsCompanion toCompanion(bool nullToAbsent) {
+    return DbAuthorsCompanion(
       id: Value(id),
       name: Value(name),
       pseud: Value(pseud),
@@ -1605,12 +1603,12 @@ class AuthorsTableData extends DataClass
     );
   }
 
-  factory AuthorsTableData.fromJson(
+  factory DbAuthor.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AuthorsTableData(
+    return DbAuthor(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       pseud: serializer.fromJson<String>(json['pseud']),
@@ -1644,7 +1642,7 @@ class AuthorsTableData extends DataClass
     };
   }
 
-  AuthorsTableData copyWith({
+  DbAuthor copyWith({
     int? id,
     String? name,
     String? pseud,
@@ -1657,7 +1655,7 @@ class AuthorsTableData extends DataClass
     Value<int?> collections = const Value.absent(),
     Value<int?> gifts = const Value.absent(),
     bool? guest,
-  }) => AuthorsTableData(
+  }) => DbAuthor(
     id: id ?? this.id,
     name: name ?? this.name,
     pseud: pseud ?? this.pseud,
@@ -1671,8 +1669,8 @@ class AuthorsTableData extends DataClass
     gifts: gifts.present ? gifts.value : this.gifts,
     guest: guest ?? this.guest,
   );
-  AuthorsTableData copyWithCompanion(AuthorsTableCompanion data) {
-    return AuthorsTableData(
+  DbAuthor copyWithCompanion(DbAuthorsCompanion data) {
+    return DbAuthor(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       pseud: data.pseud.present ? data.pseud.value : this.pseud,
@@ -1692,7 +1690,7 @@ class AuthorsTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('AuthorsTableData(')
+    return (StringBuffer('DbAuthor(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('pseud: $pseud, ')
@@ -1727,7 +1725,7 @@ class AuthorsTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AuthorsTableData &&
+      (other is DbAuthor &&
           other.id == this.id &&
           other.name == this.name &&
           other.pseud == this.pseud &&
@@ -1742,7 +1740,7 @@ class AuthorsTableData extends DataClass
           other.guest == this.guest);
 }
 
-class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
+class DbAuthorsCompanion extends UpdateCompanion<DbAuthor> {
   final Value<int> id;
   final Value<String> name;
   final Value<String> pseud;
@@ -1755,7 +1753,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
   final Value<int?> collections;
   final Value<int?> gifts;
   final Value<bool> guest;
-  const AuthorsTableCompanion({
+  const DbAuthorsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.pseud = const Value.absent(),
@@ -1769,7 +1767,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
     this.gifts = const Value.absent(),
     this.guest = const Value.absent(),
   });
-  AuthorsTableCompanion.insert({
+  DbAuthorsCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required String pseud,
@@ -1784,7 +1782,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
     this.guest = const Value.absent(),
   }) : name = Value(name),
        pseud = Value(pseud);
-  static Insertable<AuthorsTableData> custom({
+  static Insertable<DbAuthor> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? pseud,
@@ -1814,7 +1812,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
     });
   }
 
-  AuthorsTableCompanion copyWith({
+  DbAuthorsCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String>? pseud,
@@ -1828,7 +1826,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
     Value<int?>? gifts,
     Value<bool>? guest,
   }) {
-    return AuthorsTableCompanion(
+    return DbAuthorsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       pseud: pseud ?? this.pseud,
@@ -1888,7 +1886,7 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('AuthorsTableCompanion(')
+    return (StringBuffer('DbAuthorsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('pseud: $pseud, ')
@@ -1906,12 +1904,12 @@ class AuthorsTableCompanion extends UpdateCompanion<AuthorsTableData> {
   }
 }
 
-class $WorkAuthorsTableTable extends WorkAuthorsTable
-    with TableInfo<$WorkAuthorsTableTable, WorkAuthorsTableData> {
+class $DbWorkAuthorsTable extends DbWorkAuthors
+    with TableInfo<$DbWorkAuthorsTable, DbWorkAuthor> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkAuthorsTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorkAuthorsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -1947,7 +1945,7 @@ class $WorkAuthorsTableTable extends WorkAuthorsTable
   static const String $name = 'work_authors';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkAuthorsTableData> instance, {
+    Insertable<DbWorkAuthor> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1974,9 +1972,9 @@ class $WorkAuthorsTableTable extends WorkAuthorsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, authorId};
   @override
-  WorkAuthorsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbWorkAuthor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkAuthorsTableData(
+    return DbWorkAuthor(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -1989,16 +1987,15 @@ class $WorkAuthorsTableTable extends WorkAuthorsTable
   }
 
   @override
-  $WorkAuthorsTableTable createAlias(String alias) {
-    return $WorkAuthorsTableTable(attachedDatabase, alias);
+  $DbWorkAuthorsTable createAlias(String alias) {
+    return $DbWorkAuthorsTable(attachedDatabase, alias);
   }
 }
 
-class WorkAuthorsTableData extends DataClass
-    implements Insertable<WorkAuthorsTableData> {
+class DbWorkAuthor extends DataClass implements Insertable<DbWorkAuthor> {
   final int workId;
   final int authorId;
-  const WorkAuthorsTableData({required this.workId, required this.authorId});
+  const DbWorkAuthor({required this.workId, required this.authorId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2007,19 +2004,19 @@ class WorkAuthorsTableData extends DataClass
     return map;
   }
 
-  WorkAuthorsTableCompanion toCompanion(bool nullToAbsent) {
-    return WorkAuthorsTableCompanion(
+  DbWorkAuthorsCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkAuthorsCompanion(
       workId: Value(workId),
       authorId: Value(authorId),
     );
   }
 
-  factory WorkAuthorsTableData.fromJson(
+  factory DbWorkAuthor.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkAuthorsTableData(
+    return DbWorkAuthor(
       workId: serializer.fromJson<int>(json['workId']),
       authorId: serializer.fromJson<int>(json['authorId']),
     );
@@ -2033,13 +2030,12 @@ class WorkAuthorsTableData extends DataClass
     };
   }
 
-  WorkAuthorsTableData copyWith({int? workId, int? authorId}) =>
-      WorkAuthorsTableData(
-        workId: workId ?? this.workId,
-        authorId: authorId ?? this.authorId,
-      );
-  WorkAuthorsTableData copyWithCompanion(WorkAuthorsTableCompanion data) {
-    return WorkAuthorsTableData(
+  DbWorkAuthor copyWith({int? workId, int? authorId}) => DbWorkAuthor(
+    workId: workId ?? this.workId,
+    authorId: authorId ?? this.authorId,
+  );
+  DbWorkAuthor copyWithCompanion(DbWorkAuthorsCompanion data) {
+    return DbWorkAuthor(
       workId: data.workId.present ? data.workId.value : this.workId,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
     );
@@ -2047,7 +2043,7 @@ class WorkAuthorsTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('WorkAuthorsTableData(')
+    return (StringBuffer('DbWorkAuthor(')
           ..write('workId: $workId, ')
           ..write('authorId: $authorId')
           ..write(')'))
@@ -2059,27 +2055,27 @@ class WorkAuthorsTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkAuthorsTableData &&
+      (other is DbWorkAuthor &&
           other.workId == this.workId &&
           other.authorId == this.authorId);
 }
 
-class WorkAuthorsTableCompanion extends UpdateCompanion<WorkAuthorsTableData> {
+class DbWorkAuthorsCompanion extends UpdateCompanion<DbWorkAuthor> {
   final Value<int> workId;
   final Value<int> authorId;
   final Value<int> rowid;
-  const WorkAuthorsTableCompanion({
+  const DbWorkAuthorsCompanion({
     this.workId = const Value.absent(),
     this.authorId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkAuthorsTableCompanion.insert({
+  DbWorkAuthorsCompanion.insert({
     required int workId,
     required int authorId,
     this.rowid = const Value.absent(),
   }) : workId = Value(workId),
        authorId = Value(authorId);
-  static Insertable<WorkAuthorsTableData> custom({
+  static Insertable<DbWorkAuthor> custom({
     Expression<int>? workId,
     Expression<int>? authorId,
     Expression<int>? rowid,
@@ -2091,12 +2087,12 @@ class WorkAuthorsTableCompanion extends UpdateCompanion<WorkAuthorsTableData> {
     });
   }
 
-  WorkAuthorsTableCompanion copyWith({
+  DbWorkAuthorsCompanion copyWith({
     Value<int>? workId,
     Value<int>? authorId,
     Value<int>? rowid,
   }) {
-    return WorkAuthorsTableCompanion(
+    return DbWorkAuthorsCompanion(
       workId: workId ?? this.workId,
       authorId: authorId ?? this.authorId,
       rowid: rowid ?? this.rowid,
@@ -2120,7 +2116,7 @@ class WorkAuthorsTableCompanion extends UpdateCompanion<WorkAuthorsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('WorkAuthorsTableCompanion(')
+    return (StringBuffer('DbWorkAuthorsCompanion(')
           ..write('workId: $workId, ')
           ..write('authorId: $authorId, ')
           ..write('rowid: $rowid')
@@ -2129,12 +2125,11 @@ class WorkAuthorsTableCompanion extends UpdateCompanion<WorkAuthorsTableData> {
   }
 }
 
-class $TagsTableTable extends TagsTable
-    with TableInfo<$TagsTableTable, TagsTableData> {
+class $DbTagsTable extends DbTags with TableInfo<$DbTagsTable, DbTag> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TagsTableTable(this.attachedDatabase, [this._alias]);
+  $DbTagsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -2204,7 +2199,7 @@ class $TagsTableTable extends TagsTable
   static const String $name = 'tags';
   @override
   VerificationContext validateIntegrity(
-    Insertable<TagsTableData> instance, {
+    Insertable<DbTag> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2254,9 +2249,9 @@ class $TagsTableTable extends TagsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {name};
   @override
-  TagsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbTag map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TagsTableData(
+    return DbTag(
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -2281,18 +2276,18 @@ class $TagsTableTable extends TagsTable
   }
 
   @override
-  $TagsTableTable createAlias(String alias) {
-    return $TagsTableTable(attachedDatabase, alias);
+  $DbTagsTable createAlias(String alias) {
+    return $DbTagsTable(attachedDatabase, alias);
   }
 }
 
-class TagsTableData extends DataClass implements Insertable<TagsTableData> {
+class DbTag extends DataClass implements Insertable<DbTag> {
   final String name;
   final String localizedName;
   final int count;
   final bool canonical;
   final String type;
-  const TagsTableData({
+  const DbTag({
     required this.name,
     required this.localizedName,
     required this.count,
@@ -2310,8 +2305,8 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
     return map;
   }
 
-  TagsTableCompanion toCompanion(bool nullToAbsent) {
-    return TagsTableCompanion(
+  DbTagsCompanion toCompanion(bool nullToAbsent) {
+    return DbTagsCompanion(
       name: Value(name),
       localizedName: Value(localizedName),
       count: Value(count),
@@ -2320,12 +2315,12 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
     );
   }
 
-  factory TagsTableData.fromJson(
+  factory DbTag.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TagsTableData(
+    return DbTag(
       name: serializer.fromJson<String>(json['name']),
       localizedName: serializer.fromJson<String>(json['localizedName']),
       count: serializer.fromJson<int>(json['count']),
@@ -2345,21 +2340,21 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
     };
   }
 
-  TagsTableData copyWith({
+  DbTag copyWith({
     String? name,
     String? localizedName,
     int? count,
     bool? canonical,
     String? type,
-  }) => TagsTableData(
+  }) => DbTag(
     name: name ?? this.name,
     localizedName: localizedName ?? this.localizedName,
     count: count ?? this.count,
     canonical: canonical ?? this.canonical,
     type: type ?? this.type,
   );
-  TagsTableData copyWithCompanion(TagsTableCompanion data) {
-    return TagsTableData(
+  DbTag copyWithCompanion(DbTagsCompanion data) {
+    return DbTag(
       name: data.name.present ? data.name.value : this.name,
       localizedName: data.localizedName.present
           ? data.localizedName.value
@@ -2372,7 +2367,7 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('TagsTableData(')
+    return (StringBuffer('DbTag(')
           ..write('name: $name, ')
           ..write('localizedName: $localizedName, ')
           ..write('count: $count, ')
@@ -2387,7 +2382,7 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TagsTableData &&
+      (other is DbTag &&
           other.name == this.name &&
           other.localizedName == this.localizedName &&
           other.count == this.count &&
@@ -2395,14 +2390,14 @@ class TagsTableData extends DataClass implements Insertable<TagsTableData> {
           other.type == this.type);
 }
 
-class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
+class DbTagsCompanion extends UpdateCompanion<DbTag> {
   final Value<String> name;
   final Value<String> localizedName;
   final Value<int> count;
   final Value<bool> canonical;
   final Value<String> type;
   final Value<int> rowid;
-  const TagsTableCompanion({
+  const DbTagsCompanion({
     this.name = const Value.absent(),
     this.localizedName = const Value.absent(),
     this.count = const Value.absent(),
@@ -2410,7 +2405,7 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
     this.type = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  TagsTableCompanion.insert({
+  DbTagsCompanion.insert({
     required String name,
     required String localizedName,
     this.count = const Value.absent(),
@@ -2420,7 +2415,7 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
   }) : name = Value(name),
        localizedName = Value(localizedName),
        type = Value(type);
-  static Insertable<TagsTableData> custom({
+  static Insertable<DbTag> custom({
     Expression<String>? name,
     Expression<String>? localizedName,
     Expression<int>? count,
@@ -2438,7 +2433,7 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
     });
   }
 
-  TagsTableCompanion copyWith({
+  DbTagsCompanion copyWith({
     Value<String>? name,
     Value<String>? localizedName,
     Value<int>? count,
@@ -2446,7 +2441,7 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
     Value<String>? type,
     Value<int>? rowid,
   }) {
-    return TagsTableCompanion(
+    return DbTagsCompanion(
       name: name ?? this.name,
       localizedName: localizedName ?? this.localizedName,
       count: count ?? this.count,
@@ -2482,7 +2477,7 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('TagsTableCompanion(')
+    return (StringBuffer('DbTagsCompanion(')
           ..write('name: $name, ')
           ..write('localizedName: $localizedName, ')
           ..write('count: $count, ')
@@ -2494,12 +2489,12 @@ class TagsTableCompanion extends UpdateCompanion<TagsTableData> {
   }
 }
 
-class $WorkFandomsTableTable extends WorkFandomsTable
-    with TableInfo<$WorkFandomsTableTable, WorkFandomsTableData> {
+class $DbWorkFandomsTable extends DbWorkFandoms
+    with TableInfo<$DbWorkFandomsTable, DbWorkFandom> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkFandomsTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorkFandomsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -2535,7 +2530,7 @@ class $WorkFandomsTableTable extends WorkFandomsTable
   static const String $name = 'work_fandoms';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkFandomsTableData> instance, {
+    Insertable<DbWorkFandom> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2562,9 +2557,9 @@ class $WorkFandomsTableTable extends WorkFandomsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, tagName};
   @override
-  WorkFandomsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbWorkFandom map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkFandomsTableData(
+    return DbWorkFandom(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -2577,16 +2572,15 @@ class $WorkFandomsTableTable extends WorkFandomsTable
   }
 
   @override
-  $WorkFandomsTableTable createAlias(String alias) {
-    return $WorkFandomsTableTable(attachedDatabase, alias);
+  $DbWorkFandomsTable createAlias(String alias) {
+    return $DbWorkFandomsTable(attachedDatabase, alias);
   }
 }
 
-class WorkFandomsTableData extends DataClass
-    implements Insertable<WorkFandomsTableData> {
+class DbWorkFandom extends DataClass implements Insertable<DbWorkFandom> {
   final int workId;
   final String tagName;
-  const WorkFandomsTableData({required this.workId, required this.tagName});
+  const DbWorkFandom({required this.workId, required this.tagName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2595,19 +2589,19 @@ class WorkFandomsTableData extends DataClass
     return map;
   }
 
-  WorkFandomsTableCompanion toCompanion(bool nullToAbsent) {
-    return WorkFandomsTableCompanion(
+  DbWorkFandomsCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkFandomsCompanion(
       workId: Value(workId),
       tagName: Value(tagName),
     );
   }
 
-  factory WorkFandomsTableData.fromJson(
+  factory DbWorkFandom.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkFandomsTableData(
+    return DbWorkFandom(
       workId: serializer.fromJson<int>(json['workId']),
       tagName: serializer.fromJson<String>(json['tagName']),
     );
@@ -2621,13 +2615,12 @@ class WorkFandomsTableData extends DataClass
     };
   }
 
-  WorkFandomsTableData copyWith({int? workId, String? tagName}) =>
-      WorkFandomsTableData(
-        workId: workId ?? this.workId,
-        tagName: tagName ?? this.tagName,
-      );
-  WorkFandomsTableData copyWithCompanion(WorkFandomsTableCompanion data) {
-    return WorkFandomsTableData(
+  DbWorkFandom copyWith({int? workId, String? tagName}) => DbWorkFandom(
+    workId: workId ?? this.workId,
+    tagName: tagName ?? this.tagName,
+  );
+  DbWorkFandom copyWithCompanion(DbWorkFandomsCompanion data) {
+    return DbWorkFandom(
       workId: data.workId.present ? data.workId.value : this.workId,
       tagName: data.tagName.present ? data.tagName.value : this.tagName,
     );
@@ -2635,7 +2628,7 @@ class WorkFandomsTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('WorkFandomsTableData(')
+    return (StringBuffer('DbWorkFandom(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName')
           ..write(')'))
@@ -2647,27 +2640,27 @@ class WorkFandomsTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkFandomsTableData &&
+      (other is DbWorkFandom &&
           other.workId == this.workId &&
           other.tagName == this.tagName);
 }
 
-class WorkFandomsTableCompanion extends UpdateCompanion<WorkFandomsTableData> {
+class DbWorkFandomsCompanion extends UpdateCompanion<DbWorkFandom> {
   final Value<int> workId;
   final Value<String> tagName;
   final Value<int> rowid;
-  const WorkFandomsTableCompanion({
+  const DbWorkFandomsCompanion({
     this.workId = const Value.absent(),
     this.tagName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkFandomsTableCompanion.insert({
+  DbWorkFandomsCompanion.insert({
     required int workId,
     required String tagName,
     this.rowid = const Value.absent(),
   }) : workId = Value(workId),
        tagName = Value(tagName);
-  static Insertable<WorkFandomsTableData> custom({
+  static Insertable<DbWorkFandom> custom({
     Expression<int>? workId,
     Expression<String>? tagName,
     Expression<int>? rowid,
@@ -2679,12 +2672,12 @@ class WorkFandomsTableCompanion extends UpdateCompanion<WorkFandomsTableData> {
     });
   }
 
-  WorkFandomsTableCompanion copyWith({
+  DbWorkFandomsCompanion copyWith({
     Value<int>? workId,
     Value<String>? tagName,
     Value<int>? rowid,
   }) {
-    return WorkFandomsTableCompanion(
+    return DbWorkFandomsCompanion(
       workId: workId ?? this.workId,
       tagName: tagName ?? this.tagName,
       rowid: rowid ?? this.rowid,
@@ -2708,7 +2701,7 @@ class WorkFandomsTableCompanion extends UpdateCompanion<WorkFandomsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('WorkFandomsTableCompanion(')
+    return (StringBuffer('DbWorkFandomsCompanion(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName, ')
           ..write('rowid: $rowid')
@@ -2717,12 +2710,12 @@ class WorkFandomsTableCompanion extends UpdateCompanion<WorkFandomsTableData> {
   }
 }
 
-class $WorkRelationshipsTableTable extends WorkRelationshipsTable
-    with TableInfo<$WorkRelationshipsTableTable, WorkRelationshipsTableData> {
+class $DbWorkRelationshipsTable extends DbWorkRelationships
+    with TableInfo<$DbWorkRelationshipsTable, DbWorkRelationship> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkRelationshipsTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorkRelationshipsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -2758,7 +2751,7 @@ class $WorkRelationshipsTableTable extends WorkRelationshipsTable
   static const String $name = 'work_relationships';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkRelationshipsTableData> instance, {
+    Insertable<DbWorkRelationship> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2785,12 +2778,9 @@ class $WorkRelationshipsTableTable extends WorkRelationshipsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, tagName};
   @override
-  WorkRelationshipsTableData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
+  DbWorkRelationship map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkRelationshipsTableData(
+    return DbWorkRelationship(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -2803,19 +2793,16 @@ class $WorkRelationshipsTableTable extends WorkRelationshipsTable
   }
 
   @override
-  $WorkRelationshipsTableTable createAlias(String alias) {
-    return $WorkRelationshipsTableTable(attachedDatabase, alias);
+  $DbWorkRelationshipsTable createAlias(String alias) {
+    return $DbWorkRelationshipsTable(attachedDatabase, alias);
   }
 }
 
-class WorkRelationshipsTableData extends DataClass
-    implements Insertable<WorkRelationshipsTableData> {
+class DbWorkRelationship extends DataClass
+    implements Insertable<DbWorkRelationship> {
   final int workId;
   final String tagName;
-  const WorkRelationshipsTableData({
-    required this.workId,
-    required this.tagName,
-  });
+  const DbWorkRelationship({required this.workId, required this.tagName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2824,19 +2811,19 @@ class WorkRelationshipsTableData extends DataClass
     return map;
   }
 
-  WorkRelationshipsTableCompanion toCompanion(bool nullToAbsent) {
-    return WorkRelationshipsTableCompanion(
+  DbWorkRelationshipsCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkRelationshipsCompanion(
       workId: Value(workId),
       tagName: Value(tagName),
     );
   }
 
-  factory WorkRelationshipsTableData.fromJson(
+  factory DbWorkRelationship.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkRelationshipsTableData(
+    return DbWorkRelationship(
       workId: serializer.fromJson<int>(json['workId']),
       tagName: serializer.fromJson<String>(json['tagName']),
     );
@@ -2850,15 +2837,13 @@ class WorkRelationshipsTableData extends DataClass
     };
   }
 
-  WorkRelationshipsTableData copyWith({int? workId, String? tagName}) =>
-      WorkRelationshipsTableData(
+  DbWorkRelationship copyWith({int? workId, String? tagName}) =>
+      DbWorkRelationship(
         workId: workId ?? this.workId,
         tagName: tagName ?? this.tagName,
       );
-  WorkRelationshipsTableData copyWithCompanion(
-    WorkRelationshipsTableCompanion data,
-  ) {
-    return WorkRelationshipsTableData(
+  DbWorkRelationship copyWithCompanion(DbWorkRelationshipsCompanion data) {
+    return DbWorkRelationship(
       workId: data.workId.present ? data.workId.value : this.workId,
       tagName: data.tagName.present ? data.tagName.value : this.tagName,
     );
@@ -2866,7 +2851,7 @@ class WorkRelationshipsTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('WorkRelationshipsTableData(')
+    return (StringBuffer('DbWorkRelationship(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName')
           ..write(')'))
@@ -2878,28 +2863,27 @@ class WorkRelationshipsTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkRelationshipsTableData &&
+      (other is DbWorkRelationship &&
           other.workId == this.workId &&
           other.tagName == this.tagName);
 }
 
-class WorkRelationshipsTableCompanion
-    extends UpdateCompanion<WorkRelationshipsTableData> {
+class DbWorkRelationshipsCompanion extends UpdateCompanion<DbWorkRelationship> {
   final Value<int> workId;
   final Value<String> tagName;
   final Value<int> rowid;
-  const WorkRelationshipsTableCompanion({
+  const DbWorkRelationshipsCompanion({
     this.workId = const Value.absent(),
     this.tagName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkRelationshipsTableCompanion.insert({
+  DbWorkRelationshipsCompanion.insert({
     required int workId,
     required String tagName,
     this.rowid = const Value.absent(),
   }) : workId = Value(workId),
        tagName = Value(tagName);
-  static Insertable<WorkRelationshipsTableData> custom({
+  static Insertable<DbWorkRelationship> custom({
     Expression<int>? workId,
     Expression<String>? tagName,
     Expression<int>? rowid,
@@ -2911,12 +2895,12 @@ class WorkRelationshipsTableCompanion
     });
   }
 
-  WorkRelationshipsTableCompanion copyWith({
+  DbWorkRelationshipsCompanion copyWith({
     Value<int>? workId,
     Value<String>? tagName,
     Value<int>? rowid,
   }) {
-    return WorkRelationshipsTableCompanion(
+    return DbWorkRelationshipsCompanion(
       workId: workId ?? this.workId,
       tagName: tagName ?? this.tagName,
       rowid: rowid ?? this.rowid,
@@ -2940,7 +2924,7 @@ class WorkRelationshipsTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('WorkRelationshipsTableCompanion(')
+    return (StringBuffer('DbWorkRelationshipsCompanion(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName, ')
           ..write('rowid: $rowid')
@@ -2949,12 +2933,12 @@ class WorkRelationshipsTableCompanion
   }
 }
 
-class $WorkCharactersTableTable extends WorkCharactersTable
-    with TableInfo<$WorkCharactersTableTable, WorkCharactersTableData> {
+class $DbWorkCharactersTable extends DbWorkCharacters
+    with TableInfo<$DbWorkCharactersTable, DbWorkCharacter> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkCharactersTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorkCharactersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -2990,7 +2974,7 @@ class $WorkCharactersTableTable extends WorkCharactersTable
   static const String $name = 'work_characters';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkCharactersTableData> instance, {
+    Insertable<DbWorkCharacter> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3017,12 +3001,9 @@ class $WorkCharactersTableTable extends WorkCharactersTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, tagName};
   @override
-  WorkCharactersTableData map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
+  DbWorkCharacter map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkCharactersTableData(
+    return DbWorkCharacter(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -3035,16 +3016,15 @@ class $WorkCharactersTableTable extends WorkCharactersTable
   }
 
   @override
-  $WorkCharactersTableTable createAlias(String alias) {
-    return $WorkCharactersTableTable(attachedDatabase, alias);
+  $DbWorkCharactersTable createAlias(String alias) {
+    return $DbWorkCharactersTable(attachedDatabase, alias);
   }
 }
 
-class WorkCharactersTableData extends DataClass
-    implements Insertable<WorkCharactersTableData> {
+class DbWorkCharacter extends DataClass implements Insertable<DbWorkCharacter> {
   final int workId;
   final String tagName;
-  const WorkCharactersTableData({required this.workId, required this.tagName});
+  const DbWorkCharacter({required this.workId, required this.tagName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3053,19 +3033,19 @@ class WorkCharactersTableData extends DataClass
     return map;
   }
 
-  WorkCharactersTableCompanion toCompanion(bool nullToAbsent) {
-    return WorkCharactersTableCompanion(
+  DbWorkCharactersCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkCharactersCompanion(
       workId: Value(workId),
       tagName: Value(tagName),
     );
   }
 
-  factory WorkCharactersTableData.fromJson(
+  factory DbWorkCharacter.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkCharactersTableData(
+    return DbWorkCharacter(
       workId: serializer.fromJson<int>(json['workId']),
       tagName: serializer.fromJson<String>(json['tagName']),
     );
@@ -3079,13 +3059,12 @@ class WorkCharactersTableData extends DataClass
     };
   }
 
-  WorkCharactersTableData copyWith({int? workId, String? tagName}) =>
-      WorkCharactersTableData(
-        workId: workId ?? this.workId,
-        tagName: tagName ?? this.tagName,
-      );
-  WorkCharactersTableData copyWithCompanion(WorkCharactersTableCompanion data) {
-    return WorkCharactersTableData(
+  DbWorkCharacter copyWith({int? workId, String? tagName}) => DbWorkCharacter(
+    workId: workId ?? this.workId,
+    tagName: tagName ?? this.tagName,
+  );
+  DbWorkCharacter copyWithCompanion(DbWorkCharactersCompanion data) {
+    return DbWorkCharacter(
       workId: data.workId.present ? data.workId.value : this.workId,
       tagName: data.tagName.present ? data.tagName.value : this.tagName,
     );
@@ -3093,7 +3072,7 @@ class WorkCharactersTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('WorkCharactersTableData(')
+    return (StringBuffer('DbWorkCharacter(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName')
           ..write(')'))
@@ -3105,28 +3084,27 @@ class WorkCharactersTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkCharactersTableData &&
+      (other is DbWorkCharacter &&
           other.workId == this.workId &&
           other.tagName == this.tagName);
 }
 
-class WorkCharactersTableCompanion
-    extends UpdateCompanion<WorkCharactersTableData> {
+class DbWorkCharactersCompanion extends UpdateCompanion<DbWorkCharacter> {
   final Value<int> workId;
   final Value<String> tagName;
   final Value<int> rowid;
-  const WorkCharactersTableCompanion({
+  const DbWorkCharactersCompanion({
     this.workId = const Value.absent(),
     this.tagName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkCharactersTableCompanion.insert({
+  DbWorkCharactersCompanion.insert({
     required int workId,
     required String tagName,
     this.rowid = const Value.absent(),
   }) : workId = Value(workId),
        tagName = Value(tagName);
-  static Insertable<WorkCharactersTableData> custom({
+  static Insertable<DbWorkCharacter> custom({
     Expression<int>? workId,
     Expression<String>? tagName,
     Expression<int>? rowid,
@@ -3138,12 +3116,12 @@ class WorkCharactersTableCompanion
     });
   }
 
-  WorkCharactersTableCompanion copyWith({
+  DbWorkCharactersCompanion copyWith({
     Value<int>? workId,
     Value<String>? tagName,
     Value<int>? rowid,
   }) {
-    return WorkCharactersTableCompanion(
+    return DbWorkCharactersCompanion(
       workId: workId ?? this.workId,
       tagName: tagName ?? this.tagName,
       rowid: rowid ?? this.rowid,
@@ -3167,7 +3145,7 @@ class WorkCharactersTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('WorkCharactersTableCompanion(')
+    return (StringBuffer('DbWorkCharactersCompanion(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName, ')
           ..write('rowid: $rowid')
@@ -3176,12 +3154,12 @@ class WorkCharactersTableCompanion
   }
 }
 
-class $WorkTagsTableTable extends WorkTagsTable
-    with TableInfo<$WorkTagsTableTable, WorkTagsTableData> {
+class $DbWorkTagsTable extends DbWorkTags
+    with TableInfo<$DbWorkTagsTable, DbWorkTag> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkTagsTableTable(this.attachedDatabase, [this._alias]);
+  $DbWorkTagsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -3217,7 +3195,7 @@ class $WorkTagsTableTable extends WorkTagsTable
   static const String $name = 'work_tags';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkTagsTableData> instance, {
+    Insertable<DbWorkTag> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3244,9 +3222,9 @@ class $WorkTagsTableTable extends WorkTagsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, tagName};
   @override
-  WorkTagsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbWorkTag map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkTagsTableData(
+    return DbWorkTag(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -3259,16 +3237,15 @@ class $WorkTagsTableTable extends WorkTagsTable
   }
 
   @override
-  $WorkTagsTableTable createAlias(String alias) {
-    return $WorkTagsTableTable(attachedDatabase, alias);
+  $DbWorkTagsTable createAlias(String alias) {
+    return $DbWorkTagsTable(attachedDatabase, alias);
   }
 }
 
-class WorkTagsTableData extends DataClass
-    implements Insertable<WorkTagsTableData> {
+class DbWorkTag extends DataClass implements Insertable<DbWorkTag> {
   final int workId;
   final String tagName;
-  const WorkTagsTableData({required this.workId, required this.tagName});
+  const DbWorkTag({required this.workId, required this.tagName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3277,19 +3254,16 @@ class WorkTagsTableData extends DataClass
     return map;
   }
 
-  WorkTagsTableCompanion toCompanion(bool nullToAbsent) {
-    return WorkTagsTableCompanion(
-      workId: Value(workId),
-      tagName: Value(tagName),
-    );
+  DbWorkTagsCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkTagsCompanion(workId: Value(workId), tagName: Value(tagName));
   }
 
-  factory WorkTagsTableData.fromJson(
+  factory DbWorkTag.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkTagsTableData(
+    return DbWorkTag(
       workId: serializer.fromJson<int>(json['workId']),
       tagName: serializer.fromJson<String>(json['tagName']),
     );
@@ -3303,13 +3277,12 @@ class WorkTagsTableData extends DataClass
     };
   }
 
-  WorkTagsTableData copyWith({int? workId, String? tagName}) =>
-      WorkTagsTableData(
-        workId: workId ?? this.workId,
-        tagName: tagName ?? this.tagName,
-      );
-  WorkTagsTableData copyWithCompanion(WorkTagsTableCompanion data) {
-    return WorkTagsTableData(
+  DbWorkTag copyWith({int? workId, String? tagName}) => DbWorkTag(
+    workId: workId ?? this.workId,
+    tagName: tagName ?? this.tagName,
+  );
+  DbWorkTag copyWithCompanion(DbWorkTagsCompanion data) {
+    return DbWorkTag(
       workId: data.workId.present ? data.workId.value : this.workId,
       tagName: data.tagName.present ? data.tagName.value : this.tagName,
     );
@@ -3317,7 +3290,7 @@ class WorkTagsTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('WorkTagsTableData(')
+    return (StringBuffer('DbWorkTag(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName')
           ..write(')'))
@@ -3329,27 +3302,27 @@ class WorkTagsTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkTagsTableData &&
+      (other is DbWorkTag &&
           other.workId == this.workId &&
           other.tagName == this.tagName);
 }
 
-class WorkTagsTableCompanion extends UpdateCompanion<WorkTagsTableData> {
+class DbWorkTagsCompanion extends UpdateCompanion<DbWorkTag> {
   final Value<int> workId;
   final Value<String> tagName;
   final Value<int> rowid;
-  const WorkTagsTableCompanion({
+  const DbWorkTagsCompanion({
     this.workId = const Value.absent(),
     this.tagName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkTagsTableCompanion.insert({
+  DbWorkTagsCompanion.insert({
     required int workId,
     required String tagName,
     this.rowid = const Value.absent(),
   }) : workId = Value(workId),
        tagName = Value(tagName);
-  static Insertable<WorkTagsTableData> custom({
+  static Insertable<DbWorkTag> custom({
     Expression<int>? workId,
     Expression<String>? tagName,
     Expression<int>? rowid,
@@ -3361,12 +3334,12 @@ class WorkTagsTableCompanion extends UpdateCompanion<WorkTagsTableData> {
     });
   }
 
-  WorkTagsTableCompanion copyWith({
+  DbWorkTagsCompanion copyWith({
     Value<int>? workId,
     Value<String>? tagName,
     Value<int>? rowid,
   }) {
-    return WorkTagsTableCompanion(
+    return DbWorkTagsCompanion(
       workId: workId ?? this.workId,
       tagName: tagName ?? this.tagName,
       rowid: rowid ?? this.rowid,
@@ -3390,7 +3363,7 @@ class WorkTagsTableCompanion extends UpdateCompanion<WorkTagsTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('WorkTagsTableCompanion(')
+    return (StringBuffer('DbWorkTagsCompanion(')
           ..write('workId: $workId, ')
           ..write('tagName: $tagName, ')
           ..write('rowid: $rowid')
@@ -3399,12 +3372,12 @@ class WorkTagsTableCompanion extends UpdateCompanion<WorkTagsTableData> {
   }
 }
 
-class $ChaptersTableTable extends ChaptersTable
-    with TableInfo<$ChaptersTableTable, ChaptersTableData> {
+class $DbChaptersTable extends DbChapters
+    with TableInfo<$DbChaptersTable, DbChapter> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChaptersTableTable(this.attachedDatabase, [this._alias]);
+  $DbChaptersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3560,7 +3533,7 @@ class $ChaptersTableTable extends ChaptersTable
   static const String $name = 'chapters';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChaptersTableData> instance, {
+    Insertable<DbChapter> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3649,9 +3622,9 @@ class $ChaptersTableTable extends ChaptersTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChaptersTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbChapter map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChaptersTableData(
+    return DbChapter(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -3704,13 +3677,12 @@ class $ChaptersTableTable extends ChaptersTable
   }
 
   @override
-  $ChaptersTableTable createAlias(String alias) {
-    return $ChaptersTableTable(attachedDatabase, alias);
+  $DbChaptersTable createAlias(String alias) {
+    return $DbChaptersTable(attachedDatabase, alias);
   }
 }
 
-class ChaptersTableData extends DataClass
-    implements Insertable<ChaptersTableData> {
+class DbChapter extends DataClass implements Insertable<DbChapter> {
   final int id;
   final int workId;
   final int chapter;
@@ -3723,7 +3695,7 @@ class ChaptersTableData extends DataClass
   final int words;
   final int comments;
   final bool oneshot;
-  const ChaptersTableData({
+  const DbChapter({
     required this.id,
     required this.workId,
     required this.chapter,
@@ -3765,8 +3737,8 @@ class ChaptersTableData extends DataClass
     return map;
   }
 
-  ChaptersTableCompanion toCompanion(bool nullToAbsent) {
-    return ChaptersTableCompanion(
+  DbChaptersCompanion toCompanion(bool nullToAbsent) {
+    return DbChaptersCompanion(
       id: Value(id),
       workId: Value(workId),
       chapter: Value(chapter),
@@ -3792,12 +3764,12 @@ class ChaptersTableData extends DataClass
     );
   }
 
-  factory ChaptersTableData.fromJson(
+  factory DbChapter.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChaptersTableData(
+    return DbChapter(
       id: serializer.fromJson<int>(json['id']),
       workId: serializer.fromJson<int>(json['workId']),
       chapter: serializer.fromJson<int>(json['chapter']),
@@ -3831,7 +3803,7 @@ class ChaptersTableData extends DataClass
     };
   }
 
-  ChaptersTableData copyWith({
+  DbChapter copyWith({
     int? id,
     int? workId,
     int? chapter,
@@ -3844,7 +3816,7 @@ class ChaptersTableData extends DataClass
     int? words,
     int? comments,
     bool? oneshot,
-  }) => ChaptersTableData(
+  }) => DbChapter(
     id: id ?? this.id,
     workId: workId ?? this.workId,
     chapter: chapter ?? this.chapter,
@@ -3858,8 +3830,8 @@ class ChaptersTableData extends DataClass
     comments: comments ?? this.comments,
     oneshot: oneshot ?? this.oneshot,
   );
-  ChaptersTableData copyWithCompanion(ChaptersTableCompanion data) {
-    return ChaptersTableData(
+  DbChapter copyWithCompanion(DbChaptersCompanion data) {
+    return DbChapter(
       id: data.id.present ? data.id.value : this.id,
       workId: data.workId.present ? data.workId.value : this.workId,
       chapter: data.chapter.present ? data.chapter.value : this.chapter,
@@ -3879,7 +3851,7 @@ class ChaptersTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ChaptersTableData(')
+    return (StringBuffer('DbChapter(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('chapter: $chapter, ')
@@ -3914,7 +3886,7 @@ class ChaptersTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChaptersTableData &&
+      (other is DbChapter &&
           other.id == this.id &&
           other.workId == this.workId &&
           other.chapter == this.chapter &&
@@ -3929,7 +3901,7 @@ class ChaptersTableData extends DataClass
           other.oneshot == this.oneshot);
 }
 
-class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
+class DbChaptersCompanion extends UpdateCompanion<DbChapter> {
   final Value<int> id;
   final Value<int> workId;
   final Value<int> chapter;
@@ -3942,7 +3914,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
   final Value<int> words;
   final Value<int> comments;
   final Value<bool> oneshot;
-  const ChaptersTableCompanion({
+  const DbChaptersCompanion({
     this.id = const Value.absent(),
     this.workId = const Value.absent(),
     this.chapter = const Value.absent(),
@@ -3956,7 +3928,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
     this.comments = const Value.absent(),
     this.oneshot = const Value.absent(),
   });
-  ChaptersTableCompanion.insert({
+  DbChaptersCompanion.insert({
     this.id = const Value.absent(),
     required int workId,
     required int chapter,
@@ -3972,7 +3944,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
   }) : workId = Value(workId),
        chapter = Value(chapter),
        title = Value(title);
-  static Insertable<ChaptersTableData> custom({
+  static Insertable<DbChapter> custom({
     Expression<int>? id,
     Expression<int>? workId,
     Expression<int>? chapter,
@@ -4002,7 +3974,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
     });
   }
 
-  ChaptersTableCompanion copyWith({
+  DbChaptersCompanion copyWith({
     Value<int>? id,
     Value<int>? workId,
     Value<int>? chapter,
@@ -4016,7 +3988,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
     Value<int>? comments,
     Value<bool>? oneshot,
   }) {
-    return ChaptersTableCompanion(
+    return DbChaptersCompanion(
       id: id ?? this.id,
       workId: workId ?? this.workId,
       chapter: chapter ?? this.chapter,
@@ -4076,7 +4048,7 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChaptersTableCompanion(')
+    return (StringBuffer('DbChaptersCompanion(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('chapter: $chapter, ')
@@ -4094,12 +4066,12 @@ class ChaptersTableCompanion extends UpdateCompanion<ChaptersTableData> {
   }
 }
 
-class $ReadHistoriesTableTable extends ReadHistoriesTable
-    with TableInfo<$ReadHistoriesTableTable, ReadHistoriesTableData> {
+class $DbReadHistoriesTable extends DbReadHistories
+    with TableInfo<$DbReadHistoriesTable, DbReadHistory> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ReadHistoriesTableTable(this.attachedDatabase, [this._alias]);
+  $DbReadHistoriesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -4195,7 +4167,7 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
   static const String $name = 'read_histories';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ReadHistoriesTableData> instance, {
+    Insertable<DbReadHistory> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -4256,9 +4228,9 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
   @override
   Set<GeneratedColumn> get $primaryKey => {workId};
   @override
-  ReadHistoriesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbReadHistory map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ReadHistoriesTableData(
+    return DbReadHistory(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -4291,13 +4263,12 @@ class $ReadHistoriesTableTable extends ReadHistoriesTable
   }
 
   @override
-  $ReadHistoriesTableTable createAlias(String alias) {
-    return $ReadHistoriesTableTable(attachedDatabase, alias);
+  $DbReadHistoriesTable createAlias(String alias) {
+    return $DbReadHistoriesTable(attachedDatabase, alias);
   }
 }
 
-class ReadHistoriesTableData extends DataClass
-    implements Insertable<ReadHistoriesTableData> {
+class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   final int workId;
   final int? chapterId;
   final DateTime timestamp;
@@ -4305,7 +4276,7 @@ class ReadHistoriesTableData extends DataClass
   final String status;
   final double completion;
   final int hits;
-  const ReadHistoriesTableData({
+  const DbReadHistory({
     required this.workId,
     this.chapterId,
     required this.timestamp,
@@ -4329,8 +4300,8 @@ class ReadHistoriesTableData extends DataClass
     return map;
   }
 
-  ReadHistoriesTableCompanion toCompanion(bool nullToAbsent) {
-    return ReadHistoriesTableCompanion(
+  DbReadHistoriesCompanion toCompanion(bool nullToAbsent) {
+    return DbReadHistoriesCompanion(
       workId: Value(workId),
       chapterId: chapterId == null && nullToAbsent
           ? const Value.absent()
@@ -4343,12 +4314,12 @@ class ReadHistoriesTableData extends DataClass
     );
   }
 
-  factory ReadHistoriesTableData.fromJson(
+  factory DbReadHistory.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ReadHistoriesTableData(
+    return DbReadHistory(
       workId: serializer.fromJson<int>(json['workId']),
       chapterId: serializer.fromJson<int?>(json['chapterId']),
       timestamp: serializer.fromJson<DateTime>(json['timestamp']),
@@ -4372,7 +4343,7 @@ class ReadHistoriesTableData extends DataClass
     };
   }
 
-  ReadHistoriesTableData copyWith({
+  DbReadHistory copyWith({
     int? workId,
     Value<int?> chapterId = const Value.absent(),
     DateTime? timestamp,
@@ -4380,7 +4351,7 @@ class ReadHistoriesTableData extends DataClass
     String? status,
     double? completion,
     int? hits,
-  }) => ReadHistoriesTableData(
+  }) => DbReadHistory(
     workId: workId ?? this.workId,
     chapterId: chapterId.present ? chapterId.value : this.chapterId,
     timestamp: timestamp ?? this.timestamp,
@@ -4389,8 +4360,8 @@ class ReadHistoriesTableData extends DataClass
     completion: completion ?? this.completion,
     hits: hits ?? this.hits,
   );
-  ReadHistoriesTableData copyWithCompanion(ReadHistoriesTableCompanion data) {
-    return ReadHistoriesTableData(
+  DbReadHistory copyWithCompanion(DbReadHistoriesCompanion data) {
+    return DbReadHistory(
       workId: data.workId.present ? data.workId.value : this.workId,
       chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
       timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
@@ -4405,7 +4376,7 @@ class ReadHistoriesTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ReadHistoriesTableData(')
+    return (StringBuffer('DbReadHistory(')
           ..write('workId: $workId, ')
           ..write('chapterId: $chapterId, ')
           ..write('timestamp: $timestamp, ')
@@ -4430,7 +4401,7 @@ class ReadHistoriesTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ReadHistoriesTableData &&
+      (other is DbReadHistory &&
           other.workId == this.workId &&
           other.chapterId == this.chapterId &&
           other.timestamp == this.timestamp &&
@@ -4440,8 +4411,7 @@ class ReadHistoriesTableData extends DataClass
           other.hits == this.hits);
 }
 
-class ReadHistoriesTableCompanion
-    extends UpdateCompanion<ReadHistoriesTableData> {
+class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   final Value<int> workId;
   final Value<int?> chapterId;
   final Value<DateTime> timestamp;
@@ -4449,7 +4419,7 @@ class ReadHistoriesTableCompanion
   final Value<String> status;
   final Value<double> completion;
   final Value<int> hits;
-  const ReadHistoriesTableCompanion({
+  const DbReadHistoriesCompanion({
     this.workId = const Value.absent(),
     this.chapterId = const Value.absent(),
     this.timestamp = const Value.absent(),
@@ -4458,7 +4428,7 @@ class ReadHistoriesTableCompanion
     this.completion = const Value.absent(),
     this.hits = const Value.absent(),
   });
-  ReadHistoriesTableCompanion.insert({
+  DbReadHistoriesCompanion.insert({
     this.workId = const Value.absent(),
     this.chapterId = const Value.absent(),
     required DateTime timestamp,
@@ -4470,7 +4440,7 @@ class ReadHistoriesTableCompanion
        position = Value(position),
        status = Value(status),
        completion = Value(completion);
-  static Insertable<ReadHistoriesTableData> custom({
+  static Insertable<DbReadHistory> custom({
     Expression<int>? workId,
     Expression<int>? chapterId,
     Expression<DateTime>? timestamp,
@@ -4490,7 +4460,7 @@ class ReadHistoriesTableCompanion
     });
   }
 
-  ReadHistoriesTableCompanion copyWith({
+  DbReadHistoriesCompanion copyWith({
     Value<int>? workId,
     Value<int?>? chapterId,
     Value<DateTime>? timestamp,
@@ -4499,7 +4469,7 @@ class ReadHistoriesTableCompanion
     Value<double>? completion,
     Value<int>? hits,
   }) {
-    return ReadHistoriesTableCompanion(
+    return DbReadHistoriesCompanion(
       workId: workId ?? this.workId,
       chapterId: chapterId ?? this.chapterId,
       timestamp: timestamp ?? this.timestamp,
@@ -4539,7 +4509,7 @@ class ReadHistoriesTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('ReadHistoriesTableCompanion(')
+    return (StringBuffer('DbReadHistoriesCompanion(')
           ..write('workId: $workId, ')
           ..write('chapterId: $chapterId, ')
           ..write('timestamp: $timestamp, ')
@@ -4552,12 +4522,11 @@ class ReadHistoriesTableCompanion
   }
 }
 
-class $SeriesTableTable extends SeriesTable
-    with TableInfo<$SeriesTableTable, SeriesTableData> {
+class $DbSeriesTable extends DbSeries with TableInfo<$DbSeriesTable, DbSery> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $SeriesTableTable(this.attachedDatabase, [this._alias]);
+  $DbSeriesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -4685,7 +4654,7 @@ class $SeriesTableTable extends SeriesTable
   static const String $name = 'series';
   @override
   VerificationContext validateIntegrity(
-    Insertable<SeriesTableData> instance, {
+    Insertable<DbSery> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -4758,9 +4727,9 @@ class $SeriesTableTable extends SeriesTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  SeriesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbSery map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SeriesTableData(
+    return DbSery(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -4805,12 +4774,12 @@ class $SeriesTableTable extends SeriesTable
   }
 
   @override
-  $SeriesTableTable createAlias(String alias) {
-    return $SeriesTableTable(attachedDatabase, alias);
+  $DbSeriesTable createAlias(String alias) {
+    return $DbSeriesTable(attachedDatabase, alias);
   }
 }
 
-class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
+class DbSery extends DataClass implements Insertable<DbSery> {
   final int id;
   final String title;
   final String summary;
@@ -4821,7 +4790,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
   final bool? finished;
   final DateTime? publishDate;
   final String? notes;
-  const SeriesTableData({
+  const DbSery({
     required this.id,
     required this.title,
     required this.summary,
@@ -4857,8 +4826,8 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
     return map;
   }
 
-  SeriesTableCompanion toCompanion(bool nullToAbsent) {
-    return SeriesTableCompanion(
+  DbSeriesCompanion toCompanion(bool nullToAbsent) {
+    return DbSeriesCompanion(
       id: Value(id),
       title: Value(title),
       summary: Value(summary),
@@ -4880,12 +4849,12 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
     );
   }
 
-  factory SeriesTableData.fromJson(
+  factory DbSery.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SeriesTableData(
+    return DbSery(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       summary: serializer.fromJson<String>(json['summary']),
@@ -4915,7 +4884,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
     };
   }
 
-  SeriesTableData copyWith({
+  DbSery copyWith({
     int? id,
     String? title,
     String? summary,
@@ -4926,7 +4895,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
     Value<bool?> finished = const Value.absent(),
     Value<DateTime?> publishDate = const Value.absent(),
     Value<String?> notes = const Value.absent(),
-  }) => SeriesTableData(
+  }) => DbSery(
     id: id ?? this.id,
     title: title ?? this.title,
     summary: summary ?? this.summary,
@@ -4938,8 +4907,8 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
     publishDate: publishDate.present ? publishDate.value : this.publishDate,
     notes: notes.present ? notes.value : this.notes,
   );
-  SeriesTableData copyWithCompanion(SeriesTableCompanion data) {
-    return SeriesTableData(
+  DbSery copyWithCompanion(DbSeriesCompanion data) {
+    return DbSery(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       summary: data.summary.present ? data.summary.value : this.summary,
@@ -4959,7 +4928,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('SeriesTableData(')
+    return (StringBuffer('DbSery(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('summary: $summary, ')
@@ -4990,7 +4959,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is SeriesTableData &&
+      (other is DbSery &&
           other.id == this.id &&
           other.title == this.title &&
           other.summary == this.summary &&
@@ -5003,7 +4972,7 @@ class SeriesTableData extends DataClass implements Insertable<SeriesTableData> {
           other.notes == this.notes);
 }
 
-class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
+class DbSeriesCompanion extends UpdateCompanion<DbSery> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> summary;
@@ -5014,7 +4983,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
   final Value<bool?> finished;
   final Value<DateTime?> publishDate;
   final Value<String?> notes;
-  const SeriesTableCompanion({
+  const DbSeriesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.summary = const Value.absent(),
@@ -5026,7 +4995,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
     this.publishDate = const Value.absent(),
     this.notes = const Value.absent(),
   });
-  SeriesTableCompanion.insert({
+  DbSeriesCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     this.summary = const Value.absent(),
@@ -5038,7 +5007,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
     this.publishDate = const Value.absent(),
     this.notes = const Value.absent(),
   }) : title = Value(title);
-  static Insertable<SeriesTableData> custom({
+  static Insertable<DbSery> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? summary,
@@ -5064,7 +5033,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
     });
   }
 
-  SeriesTableCompanion copyWith({
+  DbSeriesCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
     Value<String>? summary,
@@ -5076,7 +5045,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
     Value<DateTime?>? publishDate,
     Value<String?>? notes,
   }) {
-    return SeriesTableCompanion(
+    return DbSeriesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       summary: summary ?? this.summary,
@@ -5128,7 +5097,7 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('SeriesTableCompanion(')
+    return (StringBuffer('DbSeriesCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('summary: $summary, ')
@@ -5144,12 +5113,12 @@ class SeriesTableCompanion extends UpdateCompanion<SeriesTableData> {
   }
 }
 
-class $WorkSeriesTable extends WorkSeries
-    with TableInfo<$WorkSeriesTable, WorkSery> {
+class $DbWorkSeriesTable extends DbWorkSeries
+    with TableInfo<$DbWorkSeriesTable, DbWorkSery> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WorkSeriesTable(this.attachedDatabase, [this._alias]);
+  $DbWorkSeriesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -5191,10 +5160,10 @@ class $WorkSeriesTable extends WorkSeries
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'work_series';
+  static const String $name = 'db_work_series';
   @override
   VerificationContext validateIntegrity(
-    Insertable<WorkSery> instance, {
+    Insertable<DbWorkSery> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -5229,9 +5198,9 @@ class $WorkSeriesTable extends WorkSeries
   @override
   Set<GeneratedColumn> get $primaryKey => {workId, seriesId};
   @override
-  WorkSery map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbWorkSery map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WorkSery(
+    return DbWorkSery(
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -5248,16 +5217,16 @@ class $WorkSeriesTable extends WorkSeries
   }
 
   @override
-  $WorkSeriesTable createAlias(String alias) {
-    return $WorkSeriesTable(attachedDatabase, alias);
+  $DbWorkSeriesTable createAlias(String alias) {
+    return $DbWorkSeriesTable(attachedDatabase, alias);
   }
 }
 
-class WorkSery extends DataClass implements Insertable<WorkSery> {
+class DbWorkSery extends DataClass implements Insertable<DbWorkSery> {
   final int workId;
   final int seriesId;
   final int part;
-  const WorkSery({
+  const DbWorkSery({
     required this.workId,
     required this.seriesId,
     required this.part,
@@ -5271,20 +5240,20 @@ class WorkSery extends DataClass implements Insertable<WorkSery> {
     return map;
   }
 
-  WorkSeriesCompanion toCompanion(bool nullToAbsent) {
-    return WorkSeriesCompanion(
+  DbWorkSeriesCompanion toCompanion(bool nullToAbsent) {
+    return DbWorkSeriesCompanion(
       workId: Value(workId),
       seriesId: Value(seriesId),
       part: Value(part),
     );
   }
 
-  factory WorkSery.fromJson(
+  factory DbWorkSery.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return WorkSery(
+    return DbWorkSery(
       workId: serializer.fromJson<int>(json['workId']),
       seriesId: serializer.fromJson<int>(json['seriesId']),
       part: serializer.fromJson<int>(json['part']),
@@ -5300,13 +5269,13 @@ class WorkSery extends DataClass implements Insertable<WorkSery> {
     };
   }
 
-  WorkSery copyWith({int? workId, int? seriesId, int? part}) => WorkSery(
+  DbWorkSery copyWith({int? workId, int? seriesId, int? part}) => DbWorkSery(
     workId: workId ?? this.workId,
     seriesId: seriesId ?? this.seriesId,
     part: part ?? this.part,
   );
-  WorkSery copyWithCompanion(WorkSeriesCompanion data) {
-    return WorkSery(
+  DbWorkSery copyWithCompanion(DbWorkSeriesCompanion data) {
+    return DbWorkSery(
       workId: data.workId.present ? data.workId.value : this.workId,
       seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
       part: data.part.present ? data.part.value : this.part,
@@ -5315,7 +5284,7 @@ class WorkSery extends DataClass implements Insertable<WorkSery> {
 
   @override
   String toString() {
-    return (StringBuffer('WorkSery(')
+    return (StringBuffer('DbWorkSery(')
           ..write('workId: $workId, ')
           ..write('seriesId: $seriesId, ')
           ..write('part: $part')
@@ -5328,24 +5297,24 @@ class WorkSery extends DataClass implements Insertable<WorkSery> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is WorkSery &&
+      (other is DbWorkSery &&
           other.workId == this.workId &&
           other.seriesId == this.seriesId &&
           other.part == this.part);
 }
 
-class WorkSeriesCompanion extends UpdateCompanion<WorkSery> {
+class DbWorkSeriesCompanion extends UpdateCompanion<DbWorkSery> {
   final Value<int> workId;
   final Value<int> seriesId;
   final Value<int> part;
   final Value<int> rowid;
-  const WorkSeriesCompanion({
+  const DbWorkSeriesCompanion({
     this.workId = const Value.absent(),
     this.seriesId = const Value.absent(),
     this.part = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  WorkSeriesCompanion.insert({
+  DbWorkSeriesCompanion.insert({
     required int workId,
     required int seriesId,
     required int part,
@@ -5353,7 +5322,7 @@ class WorkSeriesCompanion extends UpdateCompanion<WorkSery> {
   }) : workId = Value(workId),
        seriesId = Value(seriesId),
        part = Value(part);
-  static Insertable<WorkSery> custom({
+  static Insertable<DbWorkSery> custom({
     Expression<int>? workId,
     Expression<int>? seriesId,
     Expression<int>? part,
@@ -5367,13 +5336,13 @@ class WorkSeriesCompanion extends UpdateCompanion<WorkSery> {
     });
   }
 
-  WorkSeriesCompanion copyWith({
+  DbWorkSeriesCompanion copyWith({
     Value<int>? workId,
     Value<int>? seriesId,
     Value<int>? part,
     Value<int>? rowid,
   }) {
-    return WorkSeriesCompanion(
+    return DbWorkSeriesCompanion(
       workId: workId ?? this.workId,
       seriesId: seriesId ?? this.seriesId,
       part: part ?? this.part,
@@ -5401,7 +5370,7 @@ class WorkSeriesCompanion extends UpdateCompanion<WorkSery> {
 
   @override
   String toString() {
-    return (StringBuffer('WorkSeriesCompanion(')
+    return (StringBuffer('DbWorkSeriesCompanion(')
           ..write('workId: $workId, ')
           ..write('seriesId: $seriesId, ')
           ..write('part: $part, ')
@@ -5411,12 +5380,12 @@ class WorkSeriesCompanion extends UpdateCompanion<WorkSery> {
   }
 }
 
-class $BookmarksTableTable extends BookmarksTable
-    with TableInfo<$BookmarksTableTable, BookmarksTableData> {
+class $DbBookmarksTable extends DbBookmarks
+    with TableInfo<$DbBookmarksTable, DbBookmark> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BookmarksTableTable(this.attachedDatabase, [this._alias]);
+  $DbBookmarksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -5536,7 +5505,7 @@ class $BookmarksTableTable extends BookmarksTable
   static const String $name = 'bookmarks';
   @override
   VerificationContext validateIntegrity(
-    Insertable<BookmarksTableData> instance, {
+    Insertable<DbBookmark> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -5607,9 +5576,9 @@ class $BookmarksTableTable extends BookmarksTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BookmarksTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbBookmark map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return BookmarksTableData(
+    return DbBookmark(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -5650,13 +5619,12 @@ class $BookmarksTableTable extends BookmarksTable
   }
 
   @override
-  $BookmarksTableTable createAlias(String alias) {
-    return $BookmarksTableTable(attachedDatabase, alias);
+  $DbBookmarksTable createAlias(String alias) {
+    return $DbBookmarksTable(attachedDatabase, alias);
   }
 }
 
-class BookmarksTableData extends DataClass
-    implements Insertable<BookmarksTableData> {
+class DbBookmark extends DataClass implements Insertable<DbBookmark> {
   final int id;
   final int? workId;
   final int? seriesId;
@@ -5666,7 +5634,7 @@ class BookmarksTableData extends DataClass
   final String? notes;
   final String? privateNotes;
   final String? recNotes;
-  const BookmarksTableData({
+  const DbBookmark({
     required this.id,
     this.workId,
     this.seriesId,
@@ -5702,8 +5670,8 @@ class BookmarksTableData extends DataClass
     return map;
   }
 
-  BookmarksTableCompanion toCompanion(bool nullToAbsent) {
-    return BookmarksTableCompanion(
+  DbBookmarksCompanion toCompanion(bool nullToAbsent) {
+    return DbBookmarksCompanion(
       id: Value(id),
       workId: workId == null && nullToAbsent
           ? const Value.absent()
@@ -5726,12 +5694,12 @@ class BookmarksTableData extends DataClass
     );
   }
 
-  factory BookmarksTableData.fromJson(
+  factory DbBookmark.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return BookmarksTableData(
+    return DbBookmark(
       id: serializer.fromJson<int>(json['id']),
       workId: serializer.fromJson<int?>(json['workId']),
       seriesId: serializer.fromJson<int?>(json['seriesId']),
@@ -5759,7 +5727,7 @@ class BookmarksTableData extends DataClass
     };
   }
 
-  BookmarksTableData copyWith({
+  DbBookmark copyWith({
     int? id,
     Value<int?> workId = const Value.absent(),
     Value<int?> seriesId = const Value.absent(),
@@ -5769,7 +5737,7 @@ class BookmarksTableData extends DataClass
     Value<String?> notes = const Value.absent(),
     Value<String?> privateNotes = const Value.absent(),
     Value<String?> recNotes = const Value.absent(),
-  }) => BookmarksTableData(
+  }) => DbBookmark(
     id: id ?? this.id,
     workId: workId.present ? workId.value : this.workId,
     seriesId: seriesId.present ? seriesId.value : this.seriesId,
@@ -5780,8 +5748,8 @@ class BookmarksTableData extends DataClass
     privateNotes: privateNotes.present ? privateNotes.value : this.privateNotes,
     recNotes: recNotes.present ? recNotes.value : this.recNotes,
   );
-  BookmarksTableData copyWithCompanion(BookmarksTableCompanion data) {
-    return BookmarksTableData(
+  DbBookmark copyWithCompanion(DbBookmarksCompanion data) {
+    return DbBookmark(
       id: data.id.present ? data.id.value : this.id,
       workId: data.workId.present ? data.workId.value : this.workId,
       seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
@@ -5798,7 +5766,7 @@ class BookmarksTableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('BookmarksTableData(')
+    return (StringBuffer('DbBookmark(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('seriesId: $seriesId, ')
@@ -5827,7 +5795,7 @@ class BookmarksTableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is BookmarksTableData &&
+      (other is DbBookmark &&
           other.id == this.id &&
           other.workId == this.workId &&
           other.seriesId == this.seriesId &&
@@ -5839,7 +5807,7 @@ class BookmarksTableData extends DataClass
           other.recNotes == this.recNotes);
 }
 
-class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
+class DbBookmarksCompanion extends UpdateCompanion<DbBookmark> {
   final Value<int> id;
   final Value<int?> workId;
   final Value<int?> seriesId;
@@ -5849,7 +5817,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
   final Value<String?> notes;
   final Value<String?> privateNotes;
   final Value<String?> recNotes;
-  const BookmarksTableCompanion({
+  const DbBookmarksCompanion({
     this.id = const Value.absent(),
     this.workId = const Value.absent(),
     this.seriesId = const Value.absent(),
@@ -5860,7 +5828,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
     this.privateNotes = const Value.absent(),
     this.recNotes = const Value.absent(),
   });
-  BookmarksTableCompanion.insert({
+  DbBookmarksCompanion.insert({
     this.id = const Value.absent(),
     this.workId = const Value.absent(),
     this.seriesId = const Value.absent(),
@@ -5873,7 +5841,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
   }) : userId = Value(userId),
        date = Value(date),
        type = Value(type);
-  static Insertable<BookmarksTableData> custom({
+  static Insertable<DbBookmark> custom({
     Expression<int>? id,
     Expression<int>? workId,
     Expression<int>? seriesId,
@@ -5897,7 +5865,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
     });
   }
 
-  BookmarksTableCompanion copyWith({
+  DbBookmarksCompanion copyWith({
     Value<int>? id,
     Value<int?>? workId,
     Value<int?>? seriesId,
@@ -5908,7 +5876,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
     Value<String?>? privateNotes,
     Value<String?>? recNotes,
   }) {
-    return BookmarksTableCompanion(
+    return DbBookmarksCompanion(
       id: id ?? this.id,
       workId: workId ?? this.workId,
       seriesId: seriesId ?? this.seriesId,
@@ -5956,7 +5924,7 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
 
   @override
   String toString() {
-    return (StringBuffer('BookmarksTableCompanion(')
+    return (StringBuffer('DbBookmarksCompanion(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('seriesId: $seriesId, ')
@@ -5974,49 +5942,52 @@ class BookmarksTableCompanion extends UpdateCompanion<BookmarksTableData> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $WorksTableTable worksTable = $WorksTableTable(this);
-  late final $AuthorsTableTable authorsTable = $AuthorsTableTable(this);
-  late final $WorkAuthorsTableTable workAuthorsTable = $WorkAuthorsTableTable(
+  late final $DbWorksTable dbWorks = $DbWorksTable(this);
+  late final $DbAuthorsTable dbAuthors = $DbAuthorsTable(this);
+  late final $DbWorkAuthorsTable dbWorkAuthors = $DbWorkAuthorsTable(this);
+  late final $DbTagsTable dbTags = $DbTagsTable(this);
+  late final $DbWorkFandomsTable dbWorkFandoms = $DbWorkFandomsTable(this);
+  late final $DbWorkRelationshipsTable dbWorkRelationships =
+      $DbWorkRelationshipsTable(this);
+  late final $DbWorkCharactersTable dbWorkCharacters = $DbWorkCharactersTable(
     this,
   );
-  late final $TagsTableTable tagsTable = $TagsTableTable(this);
-  late final $WorkFandomsTableTable workFandomsTable = $WorkFandomsTableTable(
+  late final $DbWorkTagsTable dbWorkTags = $DbWorkTagsTable(this);
+  late final $DbChaptersTable dbChapters = $DbChaptersTable(this);
+  late final $DbReadHistoriesTable dbReadHistories = $DbReadHistoriesTable(
     this,
   );
-  late final $WorkRelationshipsTableTable workRelationshipsTable =
-      $WorkRelationshipsTableTable(this);
-  late final $WorkCharactersTableTable workCharactersTable =
-      $WorkCharactersTableTable(this);
-  late final $WorkTagsTableTable workTagsTable = $WorkTagsTableTable(this);
-  late final $ChaptersTableTable chaptersTable = $ChaptersTableTable(this);
-  late final $ReadHistoriesTableTable readHistoriesTable =
-      $ReadHistoriesTableTable(this);
-  late final $SeriesTableTable seriesTable = $SeriesTableTable(this);
-  late final $WorkSeriesTable workSeries = $WorkSeriesTable(this);
-  late final $BookmarksTableTable bookmarksTable = $BookmarksTableTable(this);
+  late final $DbSeriesTable dbSeries = $DbSeriesTable(this);
+  late final $DbWorkSeriesTable dbWorkSeries = $DbWorkSeriesTable(this);
+  late final $DbBookmarksTable dbBookmarks = $DbBookmarksTable(this);
+  late final WorksDao worksDao = WorksDao(this as AppDatabase);
+  late final ChaptersDao chaptersDao = ChaptersDao(this as AppDatabase);
+  late final ReadHistoriesDao readHistoriesDao = ReadHistoriesDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    worksTable,
-    authorsTable,
-    workAuthorsTable,
-    tagsTable,
-    workFandomsTable,
-    workRelationshipsTable,
-    workCharactersTable,
-    workTagsTable,
-    chaptersTable,
-    readHistoriesTable,
-    seriesTable,
-    workSeries,
-    bookmarksTable,
+    dbWorks,
+    dbAuthors,
+    dbWorkAuthors,
+    dbTags,
+    dbWorkFandoms,
+    dbWorkRelationships,
+    dbWorkCharacters,
+    dbWorkTags,
+    dbChapters,
+    dbReadHistories,
+    dbSeries,
+    dbWorkSeries,
+    dbBookmarks,
   ];
 }
 
-typedef $$WorksTableTableCreateCompanionBuilder =
-    WorksTableCompanion Function({
+typedef $$DbWorksTableCreateCompanionBuilder =
+    DbWorksCompanion Function({
       Value<int> id,
       required String title,
       required String summary,
@@ -6040,8 +6011,8 @@ typedef $$WorksTableTableCreateCompanionBuilder =
       Value<String?> giftMessage,
       Value<int> subscriptions,
     });
-typedef $$WorksTableTableUpdateCompanionBuilder =
-    WorksTableCompanion Function({
+typedef $$DbWorksTableUpdateCompanionBuilder =
+    DbWorksCompanion Function({
       Value<int> id,
       Value<String> title,
       Value<String> summary,
@@ -6066,214 +6037,189 @@ typedef $$WorksTableTableUpdateCompanionBuilder =
       Value<int> subscriptions,
     });
 
-final class $$WorksTableTableReferences
-    extends BaseReferences<_$AppDatabase, $WorksTableTable, WorksTableData> {
-  $$WorksTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$DbWorksTableReferences
+    extends BaseReferences<_$AppDatabase, $DbWorksTable, DbWork> {
+  $$DbWorksTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$WorkAuthorsTableTable, List<WorkAuthorsTableData>>
-  _workAuthorsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workAuthorsTable,
-    aliasName: $_aliasNameGenerator(
-      db.worksTable.id,
-      db.workAuthorsTable.workId,
-    ),
+  static MultiTypedResultKey<$DbWorkAuthorsTable, List<DbWorkAuthor>>
+  _dbWorkAuthorsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkAuthors,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorkAuthors.workId),
   );
 
-  $$WorkAuthorsTableTableProcessedTableManager get workAuthorsTableRefs {
-    final manager = $$WorkAuthorsTableTableTableManager(
+  $$DbWorkAuthorsTableProcessedTableManager get dbWorkAuthorsRefs {
+    final manager = $$DbWorkAuthorsTableTableManager(
       $_db,
-      $_db.workAuthorsTable,
+      $_db.dbWorkAuthors,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _workAuthorsTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_dbWorkAuthorsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$WorkFandomsTableTable, List<WorkFandomsTableData>>
-  _workFandomsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workFandomsTable,
-    aliasName: $_aliasNameGenerator(
-      db.worksTable.id,
-      db.workFandomsTable.workId,
-    ),
+  static MultiTypedResultKey<$DbWorkFandomsTable, List<DbWorkFandom>>
+  _dbWorkFandomsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkFandoms,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorkFandoms.workId),
   );
 
-  $$WorkFandomsTableTableProcessedTableManager get workFandomsTableRefs {
-    final manager = $$WorkFandomsTableTableTableManager(
+  $$DbWorkFandomsTableProcessedTableManager get dbWorkFandomsRefs {
+    final manager = $$DbWorkFandomsTableTableManager(
       $_db,
-      $_db.workFandomsTable,
+      $_db.dbWorkFandoms,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _workFandomsTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_dbWorkFandomsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
   static MultiTypedResultKey<
-    $WorkRelationshipsTableTable,
-    List<WorkRelationshipsTableData>
+    $DbWorkRelationshipsTable,
+    List<DbWorkRelationship>
   >
-  _workRelationshipsTableRefsTable(_$AppDatabase db) =>
+  _dbWorkRelationshipsRefsTable(_$AppDatabase db) =>
       MultiTypedResultKey.fromTable(
-        db.workRelationshipsTable,
+        db.dbWorkRelationships,
         aliasName: $_aliasNameGenerator(
-          db.worksTable.id,
-          db.workRelationshipsTable.workId,
+          db.dbWorks.id,
+          db.dbWorkRelationships.workId,
         ),
       );
 
-  $$WorkRelationshipsTableTableProcessedTableManager
-  get workRelationshipsTableRefs {
-    final manager = $$WorkRelationshipsTableTableTableManager(
+  $$DbWorkRelationshipsTableProcessedTableManager get dbWorkRelationshipsRefs {
+    final manager = $$DbWorkRelationshipsTableTableManager(
       $_db,
-      $_db.workRelationshipsTable,
+      $_db.dbWorkRelationships,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _workRelationshipsTableRefsTable($_db),
+      _dbWorkRelationshipsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<
-    $WorkCharactersTableTable,
-    List<WorkCharactersTableData>
-  >
-  _workCharactersTableRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.workCharactersTable,
-        aliasName: $_aliasNameGenerator(
-          db.worksTable.id,
-          db.workCharactersTable.workId,
-        ),
-      );
+  static MultiTypedResultKey<$DbWorkCharactersTable, List<DbWorkCharacter>>
+  _dbWorkCharactersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkCharacters,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorkCharacters.workId),
+  );
 
-  $$WorkCharactersTableTableProcessedTableManager get workCharactersTableRefs {
-    final manager = $$WorkCharactersTableTableTableManager(
+  $$DbWorkCharactersTableProcessedTableManager get dbWorkCharactersRefs {
+    final manager = $$DbWorkCharactersTableTableManager(
       $_db,
-      $_db.workCharactersTable,
+      $_db.dbWorkCharacters,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _workCharactersTableRefsTable($_db),
+      _dbWorkCharactersRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$WorkTagsTableTable, List<WorkTagsTableData>>
-  _workTagsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workTagsTable,
-    aliasName: $_aliasNameGenerator(db.worksTable.id, db.workTagsTable.workId),
+  static MultiTypedResultKey<$DbWorkTagsTable, List<DbWorkTag>>
+  _dbWorkTagsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkTags,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorkTags.workId),
   );
 
-  $$WorkTagsTableTableProcessedTableManager get workTagsTableRefs {
-    final manager = $$WorkTagsTableTableTableManager(
+  $$DbWorkTagsTableProcessedTableManager get dbWorkTagsRefs {
+    final manager = $$DbWorkTagsTableTableManager(
       $_db,
-      $_db.workTagsTable,
+      $_db.dbWorkTags,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_workTagsTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbWorkTagsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$ChaptersTableTable, List<ChaptersTableData>>
-  _chaptersTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.chaptersTable,
-    aliasName: $_aliasNameGenerator(db.worksTable.id, db.chaptersTable.workId),
+  static MultiTypedResultKey<$DbChaptersTable, List<DbChapter>>
+  _dbChaptersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbChapters,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbChapters.workId),
   );
 
-  $$ChaptersTableTableProcessedTableManager get chaptersTableRefs {
-    final manager = $$ChaptersTableTableTableManager(
+  $$DbChaptersTableProcessedTableManager get dbChaptersRefs {
+    final manager = $$DbChaptersTableTableManager(
       $_db,
-      $_db.chaptersTable,
+      $_db.dbChapters,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_chaptersTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbChaptersRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<
-    $ReadHistoriesTableTable,
-    List<ReadHistoriesTableData>
-  >
-  _readHistoriesTableRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.readHistoriesTable,
-        aliasName: $_aliasNameGenerator(
-          db.worksTable.id,
-          db.readHistoriesTable.workId,
-        ),
-      );
+  static MultiTypedResultKey<$DbReadHistoriesTable, List<DbReadHistory>>
+  _dbReadHistoriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbReadHistories,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbReadHistories.workId),
+  );
 
-  $$ReadHistoriesTableTableProcessedTableManager get readHistoriesTableRefs {
-    final manager = $$ReadHistoriesTableTableTableManager(
+  $$DbReadHistoriesTableProcessedTableManager get dbReadHistoriesRefs {
+    final manager = $$DbReadHistoriesTableTableManager(
       $_db,
-      $_db.readHistoriesTable,
+      $_db.dbReadHistories,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _readHistoriesTableRefsTable($_db),
+      _dbReadHistoriesRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$WorkSeriesTable, List<WorkSery>>
-  _workSeriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workSeries,
-    aliasName: $_aliasNameGenerator(db.worksTable.id, db.workSeries.workId),
+  static MultiTypedResultKey<$DbWorkSeriesTable, List<DbWorkSery>>
+  _dbWorkSeriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkSeries,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorkSeries.workId),
   );
 
-  $$WorkSeriesTableProcessedTableManager get workSeriesRefs {
-    final manager = $$WorkSeriesTableTableManager(
+  $$DbWorkSeriesTableProcessedTableManager get dbWorkSeriesRefs {
+    final manager = $$DbWorkSeriesTableTableManager(
       $_db,
-      $_db.workSeries,
+      $_db.dbWorkSeries,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_workSeriesRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbWorkSeriesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$BookmarksTableTable, List<BookmarksTableData>>
-  _bookmarksTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.bookmarksTable,
-    aliasName: $_aliasNameGenerator(db.worksTable.id, db.bookmarksTable.workId),
+  static MultiTypedResultKey<$DbBookmarksTable, List<DbBookmark>>
+  _dbBookmarksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbBookmarks,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbBookmarks.workId),
   );
 
-  $$BookmarksTableTableProcessedTableManager get bookmarksTableRefs {
-    final manager = $$BookmarksTableTableTableManager(
+  $$DbBookmarksTableProcessedTableManager get dbBookmarksRefs {
+    final manager = $$DbBookmarksTableTableManager(
       $_db,
-      $_db.bookmarksTable,
+      $_db.dbBookmarks,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_bookmarksTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbBookmarksRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$WorksTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorksTableTable> {
-  $$WorksTableTableFilterComposer({
+class $$DbWorksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorksTable> {
+  $$DbWorksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6390,22 +6336,22 @@ class $$WorksTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> workAuthorsTableRefs(
-    Expression<bool> Function($$WorkAuthorsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkAuthorsRefs(
+    Expression<bool> Function($$DbWorkAuthorsTableFilterComposer f) f,
   ) {
-    final $$WorkAuthorsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkAuthorsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workAuthorsTable,
+      referencedTable: $db.dbWorkAuthors,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkAuthorsTableTableFilterComposer(
+          }) => $$DbWorkAuthorsTableFilterComposer(
             $db: $db,
-            $table: $db.workAuthorsTable,
+            $table: $db.dbWorkAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6415,22 +6361,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workFandomsTableRefs(
-    Expression<bool> Function($$WorkFandomsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkFandomsRefs(
+    Expression<bool> Function($$DbWorkFandomsTableFilterComposer f) f,
   ) {
-    final $$WorkFandomsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkFandomsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workFandomsTable,
+      referencedTable: $db.dbWorkFandoms,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkFandomsTableTableFilterComposer(
+          }) => $$DbWorkFandomsTableFilterComposer(
             $db: $db,
-            $table: $db.workFandomsTable,
+            $table: $db.dbWorkFandoms,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6440,48 +6386,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workRelationshipsTableRefs(
-    Expression<bool> Function($$WorkRelationshipsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkRelationshipsRefs(
+    Expression<bool> Function($$DbWorkRelationshipsTableFilterComposer f) f,
   ) {
-    final $$WorkRelationshipsTableTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.workRelationshipsTable,
-          getReferencedColumn: (t) => t.workId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$WorkRelationshipsTableTableFilterComposer(
-                $db: $db,
-                $table: $db.workRelationshipsTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<bool> workCharactersTableRefs(
-    Expression<bool> Function($$WorkCharactersTableTableFilterComposer f) f,
-  ) {
-    final $$WorkCharactersTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkRelationshipsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workCharactersTable,
+      referencedTable: $db.dbWorkRelationships,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkCharactersTableTableFilterComposer(
+          }) => $$DbWorkRelationshipsTableFilterComposer(
             $db: $db,
-            $table: $db.workCharactersTable,
+            $table: $db.dbWorkRelationships,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6491,22 +6411,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workTagsTableRefs(
-    Expression<bool> Function($$WorkTagsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkCharactersRefs(
+    Expression<bool> Function($$DbWorkCharactersTableFilterComposer f) f,
   ) {
-    final $$WorkTagsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkCharactersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workTagsTable,
+      referencedTable: $db.dbWorkCharacters,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkTagsTableTableFilterComposer(
+          }) => $$DbWorkCharactersTableFilterComposer(
             $db: $db,
-            $table: $db.workTagsTable,
+            $table: $db.dbWorkCharacters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6516,22 +6436,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> chaptersTableRefs(
-    Expression<bool> Function($$ChaptersTableTableFilterComposer f) f,
+  Expression<bool> dbWorkTagsRefs(
+    Expression<bool> Function($$DbWorkTagsTableFilterComposer f) f,
   ) {
-    final $$ChaptersTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkTagsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chaptersTable,
+      referencedTable: $db.dbWorkTags,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChaptersTableTableFilterComposer(
+          }) => $$DbWorkTagsTableFilterComposer(
             $db: $db,
-            $table: $db.chaptersTable,
+            $table: $db.dbWorkTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6541,22 +6461,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> readHistoriesTableRefs(
-    Expression<bool> Function($$ReadHistoriesTableTableFilterComposer f) f,
+  Expression<bool> dbChaptersRefs(
+    Expression<bool> Function($$DbChaptersTableFilterComposer f) f,
   ) {
-    final $$ReadHistoriesTableTableFilterComposer composer = $composerBuilder(
+    final $$DbChaptersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.readHistoriesTable,
+      referencedTable: $db.dbChapters,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReadHistoriesTableTableFilterComposer(
+          }) => $$DbChaptersTableFilterComposer(
             $db: $db,
-            $table: $db.readHistoriesTable,
+            $table: $db.dbChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6566,22 +6486,22 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workSeriesRefs(
-    Expression<bool> Function($$WorkSeriesTableFilterComposer f) f,
+  Expression<bool> dbReadHistoriesRefs(
+    Expression<bool> Function($$DbReadHistoriesTableFilterComposer f) f,
   ) {
-    final $$WorkSeriesTableFilterComposer composer = $composerBuilder(
+    final $$DbReadHistoriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workSeries,
+      referencedTable: $db.dbReadHistories,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkSeriesTableFilterComposer(
+          }) => $$DbReadHistoriesTableFilterComposer(
             $db: $db,
-            $table: $db.workSeries,
+            $table: $db.dbReadHistories,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6591,22 +6511,47 @@ class $$WorksTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> bookmarksTableRefs(
-    Expression<bool> Function($$BookmarksTableTableFilterComposer f) f,
+  Expression<bool> dbWorkSeriesRefs(
+    Expression<bool> Function($$DbWorkSeriesTableFilterComposer f) f,
   ) {
-    final $$BookmarksTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkSeriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbWorkSeries,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableFilterComposer(
+          }) => $$DbWorkSeriesTableFilterComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbWorkSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbBookmarksRefs(
+    Expression<bool> Function($$DbBookmarksTableFilterComposer f) f,
+  ) {
+    final $$DbBookmarksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbBookmarks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbBookmarksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6617,9 +6562,9 @@ class $$WorksTableTableFilterComposer
   }
 }
 
-class $$WorksTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorksTableTable> {
-  $$WorksTableTableOrderingComposer({
+class $$DbWorksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorksTable> {
+  $$DbWorksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6737,9 +6682,9 @@ class $$WorksTableTableOrderingComposer
   );
 }
 
-class $$WorksTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorksTableTable> {
-  $$WorksTableTableAnnotationComposer({
+class $$DbWorksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorksTable> {
+  $$DbWorksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6828,22 +6773,22 @@ class $$WorksTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  Expression<T> workAuthorsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkAuthorsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkAuthorsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkAuthorsTableAnnotationComposer a) f,
   ) {
-    final $$WorkAuthorsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkAuthorsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workAuthorsTable,
+      referencedTable: $db.dbWorkAuthors,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkAuthorsTableTableAnnotationComposer(
+          }) => $$DbWorkAuthorsTableAnnotationComposer(
             $db: $db,
-            $table: $db.workAuthorsTable,
+            $table: $db.dbWorkAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6853,22 +6798,22 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> workFandomsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkFandomsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkFandomsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkFandomsTableAnnotationComposer a) f,
   ) {
-    final $$WorkFandomsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkFandomsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workFandomsTable,
+      referencedTable: $db.dbWorkFandoms,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkFandomsTableTableAnnotationComposer(
+          }) => $$DbWorkFandomsTableAnnotationComposer(
             $db: $db,
-            $table: $db.workFandomsTable,
+            $table: $db.dbWorkFandoms,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6878,23 +6823,23 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> workRelationshipsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkRelationshipsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkRelationshipsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkRelationshipsTableAnnotationComposer a) f,
   ) {
-    final $$WorkRelationshipsTableTableAnnotationComposer composer =
+    final $$DbWorkRelationshipsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.id,
-          referencedTable: $db.workRelationshipsTable,
+          referencedTable: $db.dbWorkRelationships,
           getReferencedColumn: (t) => t.workId,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$WorkRelationshipsTableTableAnnotationComposer(
+              }) => $$DbWorkRelationshipsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.workRelationshipsTable,
+                $table: $db.dbWorkRelationships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -6904,48 +6849,22 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> workCharactersTableRefs<T extends Object>(
-    Expression<T> Function($$WorkCharactersTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkCharactersRefs<T extends Object>(
+    Expression<T> Function($$DbWorkCharactersTableAnnotationComposer a) f,
   ) {
-    final $$WorkCharactersTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.workCharactersTable,
-          getReferencedColumn: (t) => t.workId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$WorkCharactersTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.workCharactersTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<T> workTagsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkTagsTableTableAnnotationComposer a) f,
-  ) {
-    final $$WorkTagsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkCharactersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workTagsTable,
+      referencedTable: $db.dbWorkCharacters,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkTagsTableTableAnnotationComposer(
+          }) => $$DbWorkCharactersTableAnnotationComposer(
             $db: $db,
-            $table: $db.workTagsTable,
+            $table: $db.dbWorkCharacters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6955,22 +6874,22 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> chaptersTableRefs<T extends Object>(
-    Expression<T> Function($$ChaptersTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkTagsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkTagsTableAnnotationComposer a) f,
   ) {
-    final $$ChaptersTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkTagsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chaptersTable,
+      referencedTable: $db.dbWorkTags,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChaptersTableTableAnnotationComposer(
+          }) => $$DbWorkTagsTableAnnotationComposer(
             $db: $db,
-            $table: $db.chaptersTable,
+            $table: $db.dbWorkTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6980,48 +6899,22 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> readHistoriesTableRefs<T extends Object>(
-    Expression<T> Function($$ReadHistoriesTableTableAnnotationComposer a) f,
+  Expression<T> dbChaptersRefs<T extends Object>(
+    Expression<T> Function($$DbChaptersTableAnnotationComposer a) f,
   ) {
-    final $$ReadHistoriesTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.readHistoriesTable,
-          getReferencedColumn: (t) => t.workId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ReadHistoriesTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.readHistoriesTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<T> workSeriesRefs<T extends Object>(
-    Expression<T> Function($$WorkSeriesTableAnnotationComposer a) f,
-  ) {
-    final $$WorkSeriesTableAnnotationComposer composer = $composerBuilder(
+    final $$DbChaptersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workSeries,
+      referencedTable: $db.dbChapters,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkSeriesTableAnnotationComposer(
+          }) => $$DbChaptersTableAnnotationComposer(
             $db: $db,
-            $table: $db.workSeries,
+            $table: $db.dbChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7031,22 +6924,72 @@ class $$WorksTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> bookmarksTableRefs<T extends Object>(
-    Expression<T> Function($$BookmarksTableTableAnnotationComposer a) f,
+  Expression<T> dbReadHistoriesRefs<T extends Object>(
+    Expression<T> Function($$DbReadHistoriesTableAnnotationComposer a) f,
   ) {
-    final $$BookmarksTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbReadHistoriesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbReadHistories,
       getReferencedColumn: (t) => t.workId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableAnnotationComposer(
+          }) => $$DbReadHistoriesTableAnnotationComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbReadHistories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbWorkSeriesRefs<T extends Object>(
+    Expression<T> Function($$DbWorkSeriesTableAnnotationComposer a) f,
+  ) {
+    final $$DbWorkSeriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbWorkSeries,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorkSeriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorkSeries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbBookmarksRefs<T extends Object>(
+    Expression<T> Function($$DbBookmarksTableAnnotationComposer a) f,
+  ) {
+    final $$DbBookmarksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbBookmarks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbBookmarksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7057,42 +7000,42 @@ class $$WorksTableTableAnnotationComposer
   }
 }
 
-class $$WorksTableTableTableManager
+class $$DbWorksTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $WorksTableTable,
-          WorksTableData,
-          $$WorksTableTableFilterComposer,
-          $$WorksTableTableOrderingComposer,
-          $$WorksTableTableAnnotationComposer,
-          $$WorksTableTableCreateCompanionBuilder,
-          $$WorksTableTableUpdateCompanionBuilder,
-          (WorksTableData, $$WorksTableTableReferences),
-          WorksTableData,
+          $DbWorksTable,
+          DbWork,
+          $$DbWorksTableFilterComposer,
+          $$DbWorksTableOrderingComposer,
+          $$DbWorksTableAnnotationComposer,
+          $$DbWorksTableCreateCompanionBuilder,
+          $$DbWorksTableUpdateCompanionBuilder,
+          (DbWork, $$DbWorksTableReferences),
+          DbWork,
           PrefetchHooks Function({
-            bool workAuthorsTableRefs,
-            bool workFandomsTableRefs,
-            bool workRelationshipsTableRefs,
-            bool workCharactersTableRefs,
-            bool workTagsTableRefs,
-            bool chaptersTableRefs,
-            bool readHistoriesTableRefs,
-            bool workSeriesRefs,
-            bool bookmarksTableRefs,
+            bool dbWorkAuthorsRefs,
+            bool dbWorkFandomsRefs,
+            bool dbWorkRelationshipsRefs,
+            bool dbWorkCharactersRefs,
+            bool dbWorkTagsRefs,
+            bool dbChaptersRefs,
+            bool dbReadHistoriesRefs,
+            bool dbWorkSeriesRefs,
+            bool dbBookmarksRefs,
           })
         > {
-  $$WorksTableTableTableManager(_$AppDatabase db, $WorksTableTable table)
+  $$DbWorksTableTableManager(_$AppDatabase db, $DbWorksTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$WorksTableTableFilterComposer($db: db, $table: table),
+              $$DbWorksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$WorksTableTableOrderingComposer($db: db, $table: table),
+              $$DbWorksTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$WorksTableTableAnnotationComposer($db: db, $table: table),
+              $$DbWorksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -7117,7 +7060,7 @@ class $$WorksTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> giftMessage = const Value.absent(),
                 Value<int> subscriptions = const Value.absent(),
-              }) => WorksTableCompanion(
+              }) => DbWorksCompanion(
                 id: id,
                 title: title,
                 summary: summary,
@@ -7165,7 +7108,7 @@ class $$WorksTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> giftMessage = const Value.absent(),
                 Value<int> subscriptions = const Value.absent(),
-              }) => WorksTableCompanion.insert(
+              }) => DbWorksCompanion.insert(
                 id: id,
                 title: title,
                 summary: summary,
@@ -7193,221 +7136,221 @@ class $$WorksTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$WorksTableTableReferences(db, table, e),
+                  $$DbWorksTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
               ({
-                workAuthorsTableRefs = false,
-                workFandomsTableRefs = false,
-                workRelationshipsTableRefs = false,
-                workCharactersTableRefs = false,
-                workTagsTableRefs = false,
-                chaptersTableRefs = false,
-                readHistoriesTableRefs = false,
-                workSeriesRefs = false,
-                bookmarksTableRefs = false,
+                dbWorkAuthorsRefs = false,
+                dbWorkFandomsRefs = false,
+                dbWorkRelationshipsRefs = false,
+                dbWorkCharactersRefs = false,
+                dbWorkTagsRefs = false,
+                dbChaptersRefs = false,
+                dbReadHistoriesRefs = false,
+                dbWorkSeriesRefs = false,
+                dbBookmarksRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (workAuthorsTableRefs) db.workAuthorsTable,
-                    if (workFandomsTableRefs) db.workFandomsTable,
-                    if (workRelationshipsTableRefs) db.workRelationshipsTable,
-                    if (workCharactersTableRefs) db.workCharactersTable,
-                    if (workTagsTableRefs) db.workTagsTable,
-                    if (chaptersTableRefs) db.chaptersTable,
-                    if (readHistoriesTableRefs) db.readHistoriesTable,
-                    if (workSeriesRefs) db.workSeries,
-                    if (bookmarksTableRefs) db.bookmarksTable,
+                    if (dbWorkAuthorsRefs) db.dbWorkAuthors,
+                    if (dbWorkFandomsRefs) db.dbWorkFandoms,
+                    if (dbWorkRelationshipsRefs) db.dbWorkRelationships,
+                    if (dbWorkCharactersRefs) db.dbWorkCharacters,
+                    if (dbWorkTagsRefs) db.dbWorkTags,
+                    if (dbChaptersRefs) db.dbChapters,
+                    if (dbReadHistoriesRefs) db.dbReadHistories,
+                    if (dbWorkSeriesRefs) db.dbWorkSeries,
+                    if (dbBookmarksRefs) db.dbBookmarks,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (workAuthorsTableRefs)
+                      if (dbWorkAuthorsRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkAuthorsTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkAuthor
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workAuthorsTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkAuthorsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workAuthorsTableRefs,
+                              ).dbWorkAuthorsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (workFandomsTableRefs)
+                      if (dbWorkFandomsRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkFandomsTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkFandom
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workFandomsTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkFandomsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workFandomsTableRefs,
+                              ).dbWorkFandomsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (workRelationshipsTableRefs)
+                      if (dbWorkRelationshipsRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkRelationshipsTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkRelationship
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workRelationshipsTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkRelationshipsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workRelationshipsTableRefs,
+                              ).dbWorkRelationshipsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (workCharactersTableRefs)
+                      if (dbWorkCharactersRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkCharactersTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkCharacter
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workCharactersTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkCharactersRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workCharactersTableRefs,
+                              ).dbWorkCharactersRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (workTagsTableRefs)
+                      if (dbWorkTagsRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkTagsTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkTag
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workTagsTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkTagsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workTagsTableRefs,
+                              ).dbWorkTagsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (chaptersTableRefs)
+                      if (dbChaptersRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          ChaptersTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbChapter
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._chaptersTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbChaptersRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).chaptersTableRefs,
+                              ).dbChaptersRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (readHistoriesTableRefs)
+                      if (dbReadHistoriesRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          ReadHistoriesTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbReadHistory
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._readHistoriesTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbReadHistoriesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).readHistoriesTableRefs,
+                              ).dbReadHistoriesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (workSeriesRefs)
+                      if (dbWorkSeriesRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          WorkSery
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorkSery
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._workSeriesRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorkSeriesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workSeriesRefs,
+                              ).dbWorkSeriesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (bookmarksTableRefs)
+                      if (dbBookmarksRefs)
                         await $_getPrefetchedData<
-                          WorksTableData,
-                          $WorksTableTable,
-                          BookmarksTableData
+                          DbWork,
+                          $DbWorksTable,
+                          DbBookmark
                         >(
                           currentTable: table,
-                          referencedTable: $$WorksTableTableReferences
-                              ._bookmarksTableRefsTable(db),
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbBookmarksRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$WorksTableTableReferences(
+                              $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).bookmarksTableRefs,
+                              ).dbBookmarksRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
@@ -7422,32 +7365,32 @@ class $$WorksTableTableTableManager
       );
 }
 
-typedef $$WorksTableTableProcessedTableManager =
+typedef $$DbWorksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $WorksTableTable,
-      WorksTableData,
-      $$WorksTableTableFilterComposer,
-      $$WorksTableTableOrderingComposer,
-      $$WorksTableTableAnnotationComposer,
-      $$WorksTableTableCreateCompanionBuilder,
-      $$WorksTableTableUpdateCompanionBuilder,
-      (WorksTableData, $$WorksTableTableReferences),
-      WorksTableData,
+      $DbWorksTable,
+      DbWork,
+      $$DbWorksTableFilterComposer,
+      $$DbWorksTableOrderingComposer,
+      $$DbWorksTableAnnotationComposer,
+      $$DbWorksTableCreateCompanionBuilder,
+      $$DbWorksTableUpdateCompanionBuilder,
+      (DbWork, $$DbWorksTableReferences),
+      DbWork,
       PrefetchHooks Function({
-        bool workAuthorsTableRefs,
-        bool workFandomsTableRefs,
-        bool workRelationshipsTableRefs,
-        bool workCharactersTableRefs,
-        bool workTagsTableRefs,
-        bool chaptersTableRefs,
-        bool readHistoriesTableRefs,
-        bool workSeriesRefs,
-        bool bookmarksTableRefs,
+        bool dbWorkAuthorsRefs,
+        bool dbWorkFandomsRefs,
+        bool dbWorkRelationshipsRefs,
+        bool dbWorkCharactersRefs,
+        bool dbWorkTagsRefs,
+        bool dbChaptersRefs,
+        bool dbReadHistoriesRefs,
+        bool dbWorkSeriesRefs,
+        bool dbBookmarksRefs,
       })
     >;
-typedef $$AuthorsTableTableCreateCompanionBuilder =
-    AuthorsTableCompanion Function({
+typedef $$DbAuthorsTableCreateCompanionBuilder =
+    DbAuthorsCompanion Function({
       Value<int> id,
       required String name,
       required String pseud,
@@ -7461,8 +7404,8 @@ typedef $$AuthorsTableTableCreateCompanionBuilder =
       Value<int?> gifts,
       Value<bool> guest,
     });
-typedef $$AuthorsTableTableUpdateCompanionBuilder =
-    AuthorsTableCompanion Function({
+typedef $$DbAuthorsTableUpdateCompanionBuilder =
+    DbAuthorsCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String> pseud,
@@ -7477,59 +7420,50 @@ typedef $$AuthorsTableTableUpdateCompanionBuilder =
       Value<bool> guest,
     });
 
-final class $$AuthorsTableTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $AuthorsTableTable, AuthorsTableData> {
-  $$AuthorsTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$DbAuthorsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbAuthorsTable, DbAuthor> {
+  $$DbAuthorsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$WorkAuthorsTableTable, List<WorkAuthorsTableData>>
-  _workAuthorsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workAuthorsTable,
-    aliasName: $_aliasNameGenerator(
-      db.authorsTable.id,
-      db.workAuthorsTable.authorId,
-    ),
+  static MultiTypedResultKey<$DbWorkAuthorsTable, List<DbWorkAuthor>>
+  _dbWorkAuthorsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkAuthors,
+    aliasName: $_aliasNameGenerator(db.dbAuthors.id, db.dbWorkAuthors.authorId),
   );
 
-  $$WorkAuthorsTableTableProcessedTableManager get workAuthorsTableRefs {
-    final manager = $$WorkAuthorsTableTableTableManager(
+  $$DbWorkAuthorsTableProcessedTableManager get dbWorkAuthorsRefs {
+    final manager = $$DbWorkAuthorsTableTableManager(
       $_db,
-      $_db.workAuthorsTable,
+      $_db.dbWorkAuthors,
     ).filter((f) => f.authorId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _workAuthorsTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_dbWorkAuthorsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$BookmarksTableTable, List<BookmarksTableData>>
-  _bookmarksTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.bookmarksTable,
-    aliasName: $_aliasNameGenerator(
-      db.authorsTable.id,
-      db.bookmarksTable.userId,
-    ),
+  static MultiTypedResultKey<$DbBookmarksTable, List<DbBookmark>>
+  _dbBookmarksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbBookmarks,
+    aliasName: $_aliasNameGenerator(db.dbAuthors.id, db.dbBookmarks.userId),
   );
 
-  $$BookmarksTableTableProcessedTableManager get bookmarksTableRefs {
-    final manager = $$BookmarksTableTableTableManager(
+  $$DbBookmarksTableProcessedTableManager get dbBookmarksRefs {
+    final manager = $$DbBookmarksTableTableManager(
       $_db,
-      $_db.bookmarksTable,
+      $_db.dbBookmarks,
     ).filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_bookmarksTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbBookmarksRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$AuthorsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $AuthorsTableTable> {
-  $$AuthorsTableTableFilterComposer({
+class $$DbAuthorsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbAuthorsTable> {
+  $$DbAuthorsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7596,22 +7530,22 @@ class $$AuthorsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> workAuthorsTableRefs(
-    Expression<bool> Function($$WorkAuthorsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkAuthorsRefs(
+    Expression<bool> Function($$DbWorkAuthorsTableFilterComposer f) f,
   ) {
-    final $$WorkAuthorsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkAuthorsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workAuthorsTable,
+      referencedTable: $db.dbWorkAuthors,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkAuthorsTableTableFilterComposer(
+          }) => $$DbWorkAuthorsTableFilterComposer(
             $db: $db,
-            $table: $db.workAuthorsTable,
+            $table: $db.dbWorkAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7621,22 +7555,22 @@ class $$AuthorsTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> bookmarksTableRefs(
-    Expression<bool> Function($$BookmarksTableTableFilterComposer f) f,
+  Expression<bool> dbBookmarksRefs(
+    Expression<bool> Function($$DbBookmarksTableFilterComposer f) f,
   ) {
-    final $$BookmarksTableTableFilterComposer composer = $composerBuilder(
+    final $$DbBookmarksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbBookmarks,
       getReferencedColumn: (t) => t.userId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableFilterComposer(
+          }) => $$DbBookmarksTableFilterComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7647,9 +7581,9 @@ class $$AuthorsTableTableFilterComposer
   }
 }
 
-class $$AuthorsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $AuthorsTableTable> {
-  $$AuthorsTableTableOrderingComposer({
+class $$DbAuthorsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbAuthorsTable> {
+  $$DbAuthorsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7717,9 +7651,9 @@ class $$AuthorsTableTableOrderingComposer
   );
 }
 
-class $$AuthorsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $AuthorsTableTable> {
-  $$AuthorsTableTableAnnotationComposer({
+class $$DbAuthorsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbAuthorsTable> {
+  $$DbAuthorsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7764,22 +7698,22 @@ class $$AuthorsTableTableAnnotationComposer
   GeneratedColumn<bool> get guest =>
       $composableBuilder(column: $table.guest, builder: (column) => column);
 
-  Expression<T> workAuthorsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkAuthorsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkAuthorsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkAuthorsTableAnnotationComposer a) f,
   ) {
-    final $$WorkAuthorsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkAuthorsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workAuthorsTable,
+      referencedTable: $db.dbWorkAuthors,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkAuthorsTableTableAnnotationComposer(
+          }) => $$DbWorkAuthorsTableAnnotationComposer(
             $db: $db,
-            $table: $db.workAuthorsTable,
+            $table: $db.dbWorkAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7789,22 +7723,22 @@ class $$AuthorsTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> bookmarksTableRefs<T extends Object>(
-    Expression<T> Function($$BookmarksTableTableAnnotationComposer a) f,
+  Expression<T> dbBookmarksRefs<T extends Object>(
+    Expression<T> Function($$DbBookmarksTableAnnotationComposer a) f,
   ) {
-    final $$BookmarksTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbBookmarksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbBookmarks,
       getReferencedColumn: (t) => t.userId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableAnnotationComposer(
+          }) => $$DbBookmarksTableAnnotationComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7815,35 +7749,32 @@ class $$AuthorsTableTableAnnotationComposer
   }
 }
 
-class $$AuthorsTableTableTableManager
+class $$DbAuthorsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $AuthorsTableTable,
-          AuthorsTableData,
-          $$AuthorsTableTableFilterComposer,
-          $$AuthorsTableTableOrderingComposer,
-          $$AuthorsTableTableAnnotationComposer,
-          $$AuthorsTableTableCreateCompanionBuilder,
-          $$AuthorsTableTableUpdateCompanionBuilder,
-          (AuthorsTableData, $$AuthorsTableTableReferences),
-          AuthorsTableData,
-          PrefetchHooks Function({
-            bool workAuthorsTableRefs,
-            bool bookmarksTableRefs,
-          })
+          $DbAuthorsTable,
+          DbAuthor,
+          $$DbAuthorsTableFilterComposer,
+          $$DbAuthorsTableOrderingComposer,
+          $$DbAuthorsTableAnnotationComposer,
+          $$DbAuthorsTableCreateCompanionBuilder,
+          $$DbAuthorsTableUpdateCompanionBuilder,
+          (DbAuthor, $$DbAuthorsTableReferences),
+          DbAuthor,
+          PrefetchHooks Function({bool dbWorkAuthorsRefs, bool dbBookmarksRefs})
         > {
-  $$AuthorsTableTableTableManager(_$AppDatabase db, $AuthorsTableTable table)
+  $$DbAuthorsTableTableManager(_$AppDatabase db, $DbAuthorsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AuthorsTableTableFilterComposer($db: db, $table: table),
+              $$DbAuthorsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AuthorsTableTableOrderingComposer($db: db, $table: table),
+              $$DbAuthorsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AuthorsTableTableAnnotationComposer($db: db, $table: table),
+              $$DbAuthorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -7858,7 +7789,7 @@ class $$AuthorsTableTableTableManager
                 Value<int?> collections = const Value.absent(),
                 Value<int?> gifts = const Value.absent(),
                 Value<bool> guest = const Value.absent(),
-              }) => AuthorsTableCompanion(
+              }) => DbAuthorsCompanion(
                 id: id,
                 name: name,
                 pseud: pseud,
@@ -7886,7 +7817,7 @@ class $$AuthorsTableTableTableManager
                 Value<int?> collections = const Value.absent(),
                 Value<int?> gifts = const Value.absent(),
                 Value<bool> guest = const Value.absent(),
-              }) => AuthorsTableCompanion.insert(
+              }) => DbAuthorsCompanion.insert(
                 id: id,
                 name: name,
                 pseud: pseud,
@@ -7904,57 +7835,57 @@ class $$AuthorsTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$AuthorsTableTableReferences(db, table, e),
+                  $$DbAuthorsTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
-              ({workAuthorsTableRefs = false, bookmarksTableRefs = false}) {
+              ({dbWorkAuthorsRefs = false, dbBookmarksRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (workAuthorsTableRefs) db.workAuthorsTable,
-                    if (bookmarksTableRefs) db.bookmarksTable,
+                    if (dbWorkAuthorsRefs) db.dbWorkAuthors,
+                    if (dbBookmarksRefs) db.dbBookmarks,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (workAuthorsTableRefs)
+                      if (dbWorkAuthorsRefs)
                         await $_getPrefetchedData<
-                          AuthorsTableData,
-                          $AuthorsTableTable,
-                          WorkAuthorsTableData
+                          DbAuthor,
+                          $DbAuthorsTable,
+                          DbWorkAuthor
                         >(
                           currentTable: table,
-                          referencedTable: $$AuthorsTableTableReferences
-                              ._workAuthorsTableRefsTable(db),
+                          referencedTable: $$DbAuthorsTableReferences
+                              ._dbWorkAuthorsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$AuthorsTableTableReferences(
+                              $$DbAuthorsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workAuthorsTableRefs,
+                              ).dbWorkAuthorsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.authorId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (bookmarksTableRefs)
+                      if (dbBookmarksRefs)
                         await $_getPrefetchedData<
-                          AuthorsTableData,
-                          $AuthorsTableTable,
-                          BookmarksTableData
+                          DbAuthor,
+                          $DbAuthorsTable,
+                          DbBookmark
                         >(
                           currentTable: table,
-                          referencedTable: $$AuthorsTableTableReferences
-                              ._bookmarksTableRefsTable(db),
+                          referencedTable: $$DbAuthorsTableReferences
+                              ._dbBookmarksRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$AuthorsTableTableReferences(
+                              $$DbAuthorsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).bookmarksTableRefs,
+                              ).dbBookmarksRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.userId == item.id,
@@ -7969,60 +7900,51 @@ class $$AuthorsTableTableTableManager
       );
 }
 
-typedef $$AuthorsTableTableProcessedTableManager =
+typedef $$DbAuthorsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $AuthorsTableTable,
-      AuthorsTableData,
-      $$AuthorsTableTableFilterComposer,
-      $$AuthorsTableTableOrderingComposer,
-      $$AuthorsTableTableAnnotationComposer,
-      $$AuthorsTableTableCreateCompanionBuilder,
-      $$AuthorsTableTableUpdateCompanionBuilder,
-      (AuthorsTableData, $$AuthorsTableTableReferences),
-      AuthorsTableData,
-      PrefetchHooks Function({
-        bool workAuthorsTableRefs,
-        bool bookmarksTableRefs,
-      })
+      $DbAuthorsTable,
+      DbAuthor,
+      $$DbAuthorsTableFilterComposer,
+      $$DbAuthorsTableOrderingComposer,
+      $$DbAuthorsTableAnnotationComposer,
+      $$DbAuthorsTableCreateCompanionBuilder,
+      $$DbAuthorsTableUpdateCompanionBuilder,
+      (DbAuthor, $$DbAuthorsTableReferences),
+      DbAuthor,
+      PrefetchHooks Function({bool dbWorkAuthorsRefs, bool dbBookmarksRefs})
     >;
-typedef $$WorkAuthorsTableTableCreateCompanionBuilder =
-    WorkAuthorsTableCompanion Function({
+typedef $$DbWorkAuthorsTableCreateCompanionBuilder =
+    DbWorkAuthorsCompanion Function({
       required int workId,
       required int authorId,
       Value<int> rowid,
     });
-typedef $$WorkAuthorsTableTableUpdateCompanionBuilder =
-    WorkAuthorsTableCompanion Function({
+typedef $$DbWorkAuthorsTableUpdateCompanionBuilder =
+    DbWorkAuthorsCompanion Function({
       Value<int> workId,
       Value<int> authorId,
       Value<int> rowid,
     });
 
-final class $$WorkAuthorsTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $WorkAuthorsTableTable,
-          WorkAuthorsTableData
-        > {
-  $$WorkAuthorsTableTableReferences(
+final class $$DbWorkAuthorsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbWorkAuthorsTable, DbWorkAuthor> {
+  $$DbWorkAuthorsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.workAuthorsTable.workId, db.worksTable.id),
-      );
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkAuthors.workId, db.dbWorks.id),
+  );
 
-  $$WorksTableTableProcessedTableManager get workId {
+  $$DbWorksTableProcessedTableManager get workId {
     final $_column = $_itemColumn<int>('work_id')!;
 
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -8031,17 +7953,17 @@ final class $$WorkAuthorsTableTableReferences
     );
   }
 
-  static $AuthorsTableTable _authorIdTable(_$AppDatabase db) =>
-      db.authorsTable.createAlias(
-        $_aliasNameGenerator(db.workAuthorsTable.authorId, db.authorsTable.id),
+  static $DbAuthorsTable _authorIdTable(_$AppDatabase db) =>
+      db.dbAuthors.createAlias(
+        $_aliasNameGenerator(db.dbWorkAuthors.authorId, db.dbAuthors.id),
       );
 
-  $$AuthorsTableTableProcessedTableManager get authorId {
+  $$DbAuthorsTableProcessedTableManager get authorId {
     final $_column = $_itemColumn<int>('author_id')!;
 
-    final manager = $$AuthorsTableTableTableManager(
+    final manager = $$DbAuthorsTableTableManager(
       $_db,
-      $_db.authorsTable,
+      $_db.dbAuthors,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_authorIdTable($_db));
     if (item == null) return manager;
@@ -8051,29 +7973,29 @@ final class $$WorkAuthorsTableTableReferences
   }
 }
 
-class $$WorkAuthorsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkAuthorsTableTable> {
-  $$WorkAuthorsTableTableFilterComposer({
+class $$DbWorkAuthorsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkAuthorsTable> {
+  $$DbWorkAuthorsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8083,20 +8005,20 @@ class $$WorkAuthorsTableTableFilterComposer
     return composer;
   }
 
-  $$AuthorsTableTableFilterComposer get authorId {
-    final $$AuthorsTableTableFilterComposer composer = $composerBuilder(
+  $$DbAuthorsTableFilterComposer get authorId {
+    final $$DbAuthorsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableFilterComposer(
+          }) => $$DbAuthorsTableFilterComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8107,29 +8029,29 @@ class $$WorkAuthorsTableTableFilterComposer
   }
 }
 
-class $$WorkAuthorsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkAuthorsTableTable> {
-  $$WorkAuthorsTableTableOrderingComposer({
+class $$DbWorkAuthorsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkAuthorsTable> {
+  $$DbWorkAuthorsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8139,20 +8061,20 @@ class $$WorkAuthorsTableTableOrderingComposer
     return composer;
   }
 
-  $$AuthorsTableTableOrderingComposer get authorId {
-    final $$AuthorsTableTableOrderingComposer composer = $composerBuilder(
+  $$DbAuthorsTableOrderingComposer get authorId {
+    final $$DbAuthorsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableOrderingComposer(
+          }) => $$DbAuthorsTableOrderingComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8163,29 +8085,29 @@ class $$WorkAuthorsTableTableOrderingComposer
   }
 }
 
-class $$WorkAuthorsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkAuthorsTableTable> {
-  $$WorkAuthorsTableTableAnnotationComposer({
+class $$DbWorkAuthorsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkAuthorsTable> {
+  $$DbWorkAuthorsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8195,20 +8117,20 @@ class $$WorkAuthorsTableTableAnnotationComposer
     return composer;
   }
 
-  $$AuthorsTableTableAnnotationComposer get authorId {
-    final $$AuthorsTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbAuthorsTableAnnotationComposer get authorId {
+    final $$DbAuthorsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableAnnotationComposer(
+          }) => $$DbAuthorsTableAnnotationComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8219,40 +8141,38 @@ class $$WorkAuthorsTableTableAnnotationComposer
   }
 }
 
-class $$WorkAuthorsTableTableTableManager
+class $$DbWorkAuthorsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $WorkAuthorsTableTable,
-          WorkAuthorsTableData,
-          $$WorkAuthorsTableTableFilterComposer,
-          $$WorkAuthorsTableTableOrderingComposer,
-          $$WorkAuthorsTableTableAnnotationComposer,
-          $$WorkAuthorsTableTableCreateCompanionBuilder,
-          $$WorkAuthorsTableTableUpdateCompanionBuilder,
-          (WorkAuthorsTableData, $$WorkAuthorsTableTableReferences),
-          WorkAuthorsTableData,
+          $DbWorkAuthorsTable,
+          DbWorkAuthor,
+          $$DbWorkAuthorsTableFilterComposer,
+          $$DbWorkAuthorsTableOrderingComposer,
+          $$DbWorkAuthorsTableAnnotationComposer,
+          $$DbWorkAuthorsTableCreateCompanionBuilder,
+          $$DbWorkAuthorsTableUpdateCompanionBuilder,
+          (DbWorkAuthor, $$DbWorkAuthorsTableReferences),
+          DbWorkAuthor,
           PrefetchHooks Function({bool workId, bool authorId})
         > {
-  $$WorkAuthorsTableTableTableManager(
-    _$AppDatabase db,
-    $WorkAuthorsTableTable table,
-  ) : super(
+  $$DbWorkAuthorsTableTableManager(_$AppDatabase db, $DbWorkAuthorsTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$WorkAuthorsTableTableFilterComposer($db: db, $table: table),
+              $$DbWorkAuthorsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$WorkAuthorsTableTableOrderingComposer($db: db, $table: table),
+              $$DbWorkAuthorsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$WorkAuthorsTableTableAnnotationComposer($db: db, $table: table),
+              $$DbWorkAuthorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> workId = const Value.absent(),
                 Value<int> authorId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => WorkAuthorsTableCompanion(
+              }) => DbWorkAuthorsCompanion(
                 workId: workId,
                 authorId: authorId,
                 rowid: rowid,
@@ -8262,7 +8182,7 @@ class $$WorkAuthorsTableTableTableManager
                 required int workId,
                 required int authorId,
                 Value<int> rowid = const Value.absent(),
-              }) => WorkAuthorsTableCompanion.insert(
+              }) => DbWorkAuthorsCompanion.insert(
                 workId: workId,
                 authorId: authorId,
                 rowid: rowid,
@@ -8271,7 +8191,7 @@ class $$WorkAuthorsTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$WorkAuthorsTableTableReferences(db, table, e),
+                  $$DbWorkAuthorsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -8300,13 +8220,11 @@ class $$WorkAuthorsTableTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.workId,
-                                referencedTable:
-                                    $$WorkAuthorsTableTableReferences
-                                        ._workIdTable(db),
-                                referencedColumn:
-                                    $$WorkAuthorsTableTableReferences
-                                        ._workIdTable(db)
-                                        .id,
+                                referencedTable: $$DbWorkAuthorsTableReferences
+                                    ._workIdTable(db),
+                                referencedColumn: $$DbWorkAuthorsTableReferences
+                                    ._workIdTable(db)
+                                    .id,
                               )
                               as T;
                     }
@@ -8315,13 +8233,11 @@ class $$WorkAuthorsTableTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.authorId,
-                                referencedTable:
-                                    $$WorkAuthorsTableTableReferences
-                                        ._authorIdTable(db),
-                                referencedColumn:
-                                    $$WorkAuthorsTableTableReferences
-                                        ._authorIdTable(db)
-                                        .id,
+                                referencedTable: $$DbWorkAuthorsTableReferences
+                                    ._authorIdTable(db),
+                                referencedColumn: $$DbWorkAuthorsTableReferences
+                                    ._authorIdTable(db)
+                                    .id,
                               )
                               as T;
                     }
@@ -8337,22 +8253,22 @@ class $$WorkAuthorsTableTableTableManager
       );
 }
 
-typedef $$WorkAuthorsTableTableProcessedTableManager =
+typedef $$DbWorkAuthorsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $WorkAuthorsTableTable,
-      WorkAuthorsTableData,
-      $$WorkAuthorsTableTableFilterComposer,
-      $$WorkAuthorsTableTableOrderingComposer,
-      $$WorkAuthorsTableTableAnnotationComposer,
-      $$WorkAuthorsTableTableCreateCompanionBuilder,
-      $$WorkAuthorsTableTableUpdateCompanionBuilder,
-      (WorkAuthorsTableData, $$WorkAuthorsTableTableReferences),
-      WorkAuthorsTableData,
+      $DbWorkAuthorsTable,
+      DbWorkAuthor,
+      $$DbWorkAuthorsTableFilterComposer,
+      $$DbWorkAuthorsTableOrderingComposer,
+      $$DbWorkAuthorsTableAnnotationComposer,
+      $$DbWorkAuthorsTableCreateCompanionBuilder,
+      $$DbWorkAuthorsTableUpdateCompanionBuilder,
+      (DbWorkAuthor, $$DbWorkAuthorsTableReferences),
+      DbWorkAuthor,
       PrefetchHooks Function({bool workId, bool authorId})
     >;
-typedef $$TagsTableTableCreateCompanionBuilder =
-    TagsTableCompanion Function({
+typedef $$DbTagsTableCreateCompanionBuilder =
+    DbTagsCompanion Function({
       required String name,
       required String localizedName,
       Value<int> count,
@@ -8360,8 +8276,8 @@ typedef $$TagsTableTableCreateCompanionBuilder =
       required String type,
       Value<int> rowid,
     });
-typedef $$TagsTableTableUpdateCompanionBuilder =
-    TagsTableCompanion Function({
+typedef $$DbTagsTableUpdateCompanionBuilder =
+    DbTagsCompanion Function({
       Value<String> name,
       Value<String> localizedName,
       Value<int> count,
@@ -8370,113 +8286,100 @@ typedef $$TagsTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$TagsTableTableReferences
-    extends BaseReferences<_$AppDatabase, $TagsTableTable, TagsTableData> {
-  $$TagsTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$DbTagsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbTagsTable, DbTag> {
+  $$DbTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$WorkFandomsTableTable, List<WorkFandomsTableData>>
-  _workFandomsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workFandomsTable,
-    aliasName: $_aliasNameGenerator(
-      db.tagsTable.name,
-      db.workFandomsTable.tagName,
-    ),
+  static MultiTypedResultKey<$DbWorkFandomsTable, List<DbWorkFandom>>
+  _dbWorkFandomsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkFandoms,
+    aliasName: $_aliasNameGenerator(db.dbTags.name, db.dbWorkFandoms.tagName),
   );
 
-  $$WorkFandomsTableTableProcessedTableManager get workFandomsTableRefs {
-    final manager = $$WorkFandomsTableTableTableManager(
+  $$DbWorkFandomsTableProcessedTableManager get dbWorkFandomsRefs {
+    final manager = $$DbWorkFandomsTableTableManager(
       $_db,
-      $_db.workFandomsTable,
+      $_db.dbWorkFandoms,
     ).filter((f) => f.tagName.name.sqlEquals($_itemColumn<String>('name')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _workFandomsTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_dbWorkFandomsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
   static MultiTypedResultKey<
-    $WorkRelationshipsTableTable,
-    List<WorkRelationshipsTableData>
+    $DbWorkRelationshipsTable,
+    List<DbWorkRelationship>
   >
-  _workRelationshipsTableRefsTable(_$AppDatabase db) =>
+  _dbWorkRelationshipsRefsTable(_$AppDatabase db) =>
       MultiTypedResultKey.fromTable(
-        db.workRelationshipsTable,
+        db.dbWorkRelationships,
         aliasName: $_aliasNameGenerator(
-          db.tagsTable.name,
-          db.workRelationshipsTable.tagName,
+          db.dbTags.name,
+          db.dbWorkRelationships.tagName,
         ),
       );
 
-  $$WorkRelationshipsTableTableProcessedTableManager
-  get workRelationshipsTableRefs {
-    final manager = $$WorkRelationshipsTableTableTableManager(
+  $$DbWorkRelationshipsTableProcessedTableManager get dbWorkRelationshipsRefs {
+    final manager = $$DbWorkRelationshipsTableTableManager(
       $_db,
-      $_db.workRelationshipsTable,
+      $_db.dbWorkRelationships,
     ).filter((f) => f.tagName.name.sqlEquals($_itemColumn<String>('name')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _workRelationshipsTableRefsTable($_db),
+      _dbWorkRelationshipsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<
-    $WorkCharactersTableTable,
-    List<WorkCharactersTableData>
-  >
-  _workCharactersTableRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.workCharactersTable,
-        aliasName: $_aliasNameGenerator(
-          db.tagsTable.name,
-          db.workCharactersTable.tagName,
-        ),
-      );
-
-  $$WorkCharactersTableTableProcessedTableManager get workCharactersTableRefs {
-    final manager = $$WorkCharactersTableTableTableManager(
-      $_db,
-      $_db.workCharactersTable,
-    ).filter((f) => f.tagName.name.sqlEquals($_itemColumn<String>('name')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _workCharactersTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$WorkTagsTableTable, List<WorkTagsTableData>>
-  _workTagsTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workTagsTable,
+  static MultiTypedResultKey<$DbWorkCharactersTable, List<DbWorkCharacter>>
+  _dbWorkCharactersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkCharacters,
     aliasName: $_aliasNameGenerator(
-      db.tagsTable.name,
-      db.workTagsTable.tagName,
+      db.dbTags.name,
+      db.dbWorkCharacters.tagName,
     ),
   );
 
-  $$WorkTagsTableTableProcessedTableManager get workTagsTableRefs {
-    final manager = $$WorkTagsTableTableTableManager(
+  $$DbWorkCharactersTableProcessedTableManager get dbWorkCharactersRefs {
+    final manager = $$DbWorkCharactersTableTableManager(
       $_db,
-      $_db.workTagsTable,
+      $_db.dbWorkCharacters,
     ).filter((f) => f.tagName.name.sqlEquals($_itemColumn<String>('name')!));
 
-    final cache = $_typedResult.readTableOrNull(_workTagsTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _dbWorkCharactersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DbWorkTagsTable, List<DbWorkTag>>
+  _dbWorkTagsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkTags,
+    aliasName: $_aliasNameGenerator(db.dbTags.name, db.dbWorkTags.tagName),
+  );
+
+  $$DbWorkTagsTableProcessedTableManager get dbWorkTagsRefs {
+    final manager = $$DbWorkTagsTableTableManager(
+      $_db,
+      $_db.dbWorkTags,
+    ).filter((f) => f.tagName.name.sqlEquals($_itemColumn<String>('name')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbWorkTagsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$TagsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $TagsTableTable> {
-  $$TagsTableTableFilterComposer({
+class $$DbTagsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbTagsTable> {
+  $$DbTagsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8508,22 +8411,22 @@ class $$TagsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> workFandomsTableRefs(
-    Expression<bool> Function($$WorkFandomsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkFandomsRefs(
+    Expression<bool> Function($$DbWorkFandomsTableFilterComposer f) f,
   ) {
-    final $$WorkFandomsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkFandomsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.name,
-      referencedTable: $db.workFandomsTable,
+      referencedTable: $db.dbWorkFandoms,
       getReferencedColumn: (t) => t.tagName,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkFandomsTableTableFilterComposer(
+          }) => $$DbWorkFandomsTableFilterComposer(
             $db: $db,
-            $table: $db.workFandomsTable,
+            $table: $db.dbWorkFandoms,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8533,48 +8436,22 @@ class $$TagsTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workRelationshipsTableRefs(
-    Expression<bool> Function($$WorkRelationshipsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkRelationshipsRefs(
+    Expression<bool> Function($$DbWorkRelationshipsTableFilterComposer f) f,
   ) {
-    final $$WorkRelationshipsTableTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.name,
-          referencedTable: $db.workRelationshipsTable,
-          getReferencedColumn: (t) => t.tagName,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$WorkRelationshipsTableTableFilterComposer(
-                $db: $db,
-                $table: $db.workRelationshipsTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<bool> workCharactersTableRefs(
-    Expression<bool> Function($$WorkCharactersTableTableFilterComposer f) f,
-  ) {
-    final $$WorkCharactersTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkRelationshipsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.name,
-      referencedTable: $db.workCharactersTable,
+      referencedTable: $db.dbWorkRelationships,
       getReferencedColumn: (t) => t.tagName,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkCharactersTableTableFilterComposer(
+          }) => $$DbWorkRelationshipsTableFilterComposer(
             $db: $db,
-            $table: $db.workCharactersTable,
+            $table: $db.dbWorkRelationships,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8584,22 +8461,47 @@ class $$TagsTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> workTagsTableRefs(
-    Expression<bool> Function($$WorkTagsTableTableFilterComposer f) f,
+  Expression<bool> dbWorkCharactersRefs(
+    Expression<bool> Function($$DbWorkCharactersTableFilterComposer f) f,
   ) {
-    final $$WorkTagsTableTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkCharactersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.name,
-      referencedTable: $db.workTagsTable,
+      referencedTable: $db.dbWorkCharacters,
       getReferencedColumn: (t) => t.tagName,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkTagsTableTableFilterComposer(
+          }) => $$DbWorkCharactersTableFilterComposer(
             $db: $db,
-            $table: $db.workTagsTable,
+            $table: $db.dbWorkCharacters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbWorkTagsRefs(
+    Expression<bool> Function($$DbWorkTagsTableFilterComposer f) f,
+  ) {
+    final $$DbWorkTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.name,
+      referencedTable: $db.dbWorkTags,
+      getReferencedColumn: (t) => t.tagName,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorkTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorkTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8610,9 +8512,9 @@ class $$TagsTableTableFilterComposer
   }
 }
 
-class $$TagsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $TagsTableTable> {
-  $$TagsTableTableOrderingComposer({
+class $$DbTagsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbTagsTable> {
+  $$DbTagsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8645,9 +8547,9 @@ class $$TagsTableTableOrderingComposer
   );
 }
 
-class $$TagsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TagsTableTable> {
-  $$TagsTableTableAnnotationComposer({
+class $$DbTagsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbTagsTable> {
+  $$DbTagsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8671,22 +8573,22 @@ class $$TagsTableTableAnnotationComposer
   GeneratedColumn<String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
-  Expression<T> workFandomsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkFandomsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkFandomsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkFandomsTableAnnotationComposer a) f,
   ) {
-    final $$WorkFandomsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkFandomsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.name,
-      referencedTable: $db.workFandomsTable,
+      referencedTable: $db.dbWorkFandoms,
       getReferencedColumn: (t) => t.tagName,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkFandomsTableTableAnnotationComposer(
+          }) => $$DbWorkFandomsTableAnnotationComposer(
             $db: $db,
-            $table: $db.workFandomsTable,
+            $table: $db.dbWorkFandoms,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8696,23 +8598,23 @@ class $$TagsTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> workRelationshipsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkRelationshipsTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkRelationshipsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkRelationshipsTableAnnotationComposer a) f,
   ) {
-    final $$WorkRelationshipsTableTableAnnotationComposer composer =
+    final $$DbWorkRelationshipsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.name,
-          referencedTable: $db.workRelationshipsTable,
+          referencedTable: $db.dbWorkRelationships,
           getReferencedColumn: (t) => t.tagName,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$WorkRelationshipsTableTableAnnotationComposer(
+              }) => $$DbWorkRelationshipsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.workRelationshipsTable,
+                $table: $db.dbWorkRelationships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -8722,48 +8624,47 @@ class $$TagsTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> workCharactersTableRefs<T extends Object>(
-    Expression<T> Function($$WorkCharactersTableTableAnnotationComposer a) f,
+  Expression<T> dbWorkCharactersRefs<T extends Object>(
+    Expression<T> Function($$DbWorkCharactersTableAnnotationComposer a) f,
   ) {
-    final $$WorkCharactersTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.name,
-          referencedTable: $db.workCharactersTable,
-          getReferencedColumn: (t) => t.tagName,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$WorkCharactersTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.workCharactersTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<T> workTagsTableRefs<T extends Object>(
-    Expression<T> Function($$WorkTagsTableTableAnnotationComposer a) f,
-  ) {
-    final $$WorkTagsTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkCharactersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.name,
-      referencedTable: $db.workTagsTable,
+      referencedTable: $db.dbWorkCharacters,
       getReferencedColumn: (t) => t.tagName,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkTagsTableTableAnnotationComposer(
+          }) => $$DbWorkCharactersTableAnnotationComposer(
             $db: $db,
-            $table: $db.workTagsTable,
+            $table: $db.dbWorkCharacters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbWorkTagsRefs<T extends Object>(
+    Expression<T> Function($$DbWorkTagsTableAnnotationComposer a) f,
+  ) {
+    final $$DbWorkTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.name,
+      referencedTable: $db.dbWorkTags,
+      getReferencedColumn: (t) => t.tagName,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorkTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorkTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8774,37 +8675,37 @@ class $$TagsTableTableAnnotationComposer
   }
 }
 
-class $$TagsTableTableTableManager
+class $$DbTagsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $TagsTableTable,
-          TagsTableData,
-          $$TagsTableTableFilterComposer,
-          $$TagsTableTableOrderingComposer,
-          $$TagsTableTableAnnotationComposer,
-          $$TagsTableTableCreateCompanionBuilder,
-          $$TagsTableTableUpdateCompanionBuilder,
-          (TagsTableData, $$TagsTableTableReferences),
-          TagsTableData,
+          $DbTagsTable,
+          DbTag,
+          $$DbTagsTableFilterComposer,
+          $$DbTagsTableOrderingComposer,
+          $$DbTagsTableAnnotationComposer,
+          $$DbTagsTableCreateCompanionBuilder,
+          $$DbTagsTableUpdateCompanionBuilder,
+          (DbTag, $$DbTagsTableReferences),
+          DbTag,
           PrefetchHooks Function({
-            bool workFandomsTableRefs,
-            bool workRelationshipsTableRefs,
-            bool workCharactersTableRefs,
-            bool workTagsTableRefs,
+            bool dbWorkFandomsRefs,
+            bool dbWorkRelationshipsRefs,
+            bool dbWorkCharactersRefs,
+            bool dbWorkTagsRefs,
           })
         > {
-  $$TagsTableTableTableManager(_$AppDatabase db, $TagsTableTable table)
+  $$DbTagsTableTableManager(_$AppDatabase db, $DbTagsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$TagsTableTableFilterComposer($db: db, $table: table),
+              $$DbTagsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$TagsTableTableOrderingComposer($db: db, $table: table),
+              $$DbTagsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$TagsTableTableAnnotationComposer($db: db, $table: table),
+              $$DbTagsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> name = const Value.absent(),
@@ -8813,7 +8714,7 @@ class $$TagsTableTableTableManager
                 Value<bool> canonical = const Value.absent(),
                 Value<String> type = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => TagsTableCompanion(
+              }) => DbTagsCompanion(
                 name: name,
                 localizedName: localizedName,
                 count: count,
@@ -8829,7 +8730,7 @@ class $$TagsTableTableTableManager
                 Value<bool> canonical = const Value.absent(),
                 required String type,
                 Value<int> rowid = const Value.absent(),
-              }) => TagsTableCompanion.insert(
+              }) => DbTagsCompanion.insert(
                 name: name,
                 localizedName: localizedName,
                 count: count,
@@ -8839,108 +8740,106 @@ class $$TagsTableTableTableManager
               ),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TagsTableTableReferences(db, table, e),
-                ),
+                (e) =>
+                    (e.readTable(table), $$DbTagsTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback:
               ({
-                workFandomsTableRefs = false,
-                workRelationshipsTableRefs = false,
-                workCharactersTableRefs = false,
-                workTagsTableRefs = false,
+                dbWorkFandomsRefs = false,
+                dbWorkRelationshipsRefs = false,
+                dbWorkCharactersRefs = false,
+                dbWorkTagsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (workFandomsTableRefs) db.workFandomsTable,
-                    if (workRelationshipsTableRefs) db.workRelationshipsTable,
-                    if (workCharactersTableRefs) db.workCharactersTable,
-                    if (workTagsTableRefs) db.workTagsTable,
+                    if (dbWorkFandomsRefs) db.dbWorkFandoms,
+                    if (dbWorkRelationshipsRefs) db.dbWorkRelationships,
+                    if (dbWorkCharactersRefs) db.dbWorkCharacters,
+                    if (dbWorkTagsRefs) db.dbWorkTags,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (workFandomsTableRefs)
+                      if (dbWorkFandomsRefs)
                         await $_getPrefetchedData<
-                          TagsTableData,
-                          $TagsTableTable,
-                          WorkFandomsTableData
+                          DbTag,
+                          $DbTagsTable,
+                          DbWorkFandom
                         >(
                           currentTable: table,
-                          referencedTable: $$TagsTableTableReferences
-                              ._workFandomsTableRefsTable(db),
+                          referencedTable: $$DbTagsTableReferences
+                              ._dbWorkFandomsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$TagsTableTableReferences(
+                              $$DbTagsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workFandomsTableRefs,
+                              ).dbWorkFandomsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.tagName == item.name,
                               ),
                           typedResults: items,
                         ),
-                      if (workRelationshipsTableRefs)
+                      if (dbWorkRelationshipsRefs)
                         await $_getPrefetchedData<
-                          TagsTableData,
-                          $TagsTableTable,
-                          WorkRelationshipsTableData
+                          DbTag,
+                          $DbTagsTable,
+                          DbWorkRelationship
                         >(
                           currentTable: table,
-                          referencedTable: $$TagsTableTableReferences
-                              ._workRelationshipsTableRefsTable(db),
+                          referencedTable: $$DbTagsTableReferences
+                              ._dbWorkRelationshipsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$TagsTableTableReferences(
+                              $$DbTagsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workRelationshipsTableRefs,
+                              ).dbWorkRelationshipsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.tagName == item.name,
                               ),
                           typedResults: items,
                         ),
-                      if (workCharactersTableRefs)
+                      if (dbWorkCharactersRefs)
                         await $_getPrefetchedData<
-                          TagsTableData,
-                          $TagsTableTable,
-                          WorkCharactersTableData
+                          DbTag,
+                          $DbTagsTable,
+                          DbWorkCharacter
                         >(
                           currentTable: table,
-                          referencedTable: $$TagsTableTableReferences
-                              ._workCharactersTableRefsTable(db),
+                          referencedTable: $$DbTagsTableReferences
+                              ._dbWorkCharactersRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$TagsTableTableReferences(
+                              $$DbTagsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workCharactersTableRefs,
+                              ).dbWorkCharactersRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.tagName == item.name,
                               ),
                           typedResults: items,
                         ),
-                      if (workTagsTableRefs)
+                      if (dbWorkTagsRefs)
                         await $_getPrefetchedData<
-                          TagsTableData,
-                          $TagsTableTable,
-                          WorkTagsTableData
+                          DbTag,
+                          $DbTagsTable,
+                          DbWorkTag
                         >(
                           currentTable: table,
-                          referencedTable: $$TagsTableTableReferences
-                              ._workTagsTableRefsTable(db),
+                          referencedTable: $$DbTagsTableReferences
+                              ._dbWorkTagsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$TagsTableTableReferences(
+                              $$DbTagsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workTagsTableRefs,
+                              ).dbWorkTagsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.tagName == item.name,
@@ -8955,62 +8854,56 @@ class $$TagsTableTableTableManager
       );
 }
 
-typedef $$TagsTableTableProcessedTableManager =
+typedef $$DbTagsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $TagsTableTable,
-      TagsTableData,
-      $$TagsTableTableFilterComposer,
-      $$TagsTableTableOrderingComposer,
-      $$TagsTableTableAnnotationComposer,
-      $$TagsTableTableCreateCompanionBuilder,
-      $$TagsTableTableUpdateCompanionBuilder,
-      (TagsTableData, $$TagsTableTableReferences),
-      TagsTableData,
+      $DbTagsTable,
+      DbTag,
+      $$DbTagsTableFilterComposer,
+      $$DbTagsTableOrderingComposer,
+      $$DbTagsTableAnnotationComposer,
+      $$DbTagsTableCreateCompanionBuilder,
+      $$DbTagsTableUpdateCompanionBuilder,
+      (DbTag, $$DbTagsTableReferences),
+      DbTag,
       PrefetchHooks Function({
-        bool workFandomsTableRefs,
-        bool workRelationshipsTableRefs,
-        bool workCharactersTableRefs,
-        bool workTagsTableRefs,
+        bool dbWorkFandomsRefs,
+        bool dbWorkRelationshipsRefs,
+        bool dbWorkCharactersRefs,
+        bool dbWorkTagsRefs,
       })
     >;
-typedef $$WorkFandomsTableTableCreateCompanionBuilder =
-    WorkFandomsTableCompanion Function({
+typedef $$DbWorkFandomsTableCreateCompanionBuilder =
+    DbWorkFandomsCompanion Function({
       required int workId,
       required String tagName,
       Value<int> rowid,
     });
-typedef $$WorkFandomsTableTableUpdateCompanionBuilder =
-    WorkFandomsTableCompanion Function({
+typedef $$DbWorkFandomsTableUpdateCompanionBuilder =
+    DbWorkFandomsCompanion Function({
       Value<int> workId,
       Value<String> tagName,
       Value<int> rowid,
     });
 
-final class $$WorkFandomsTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $WorkFandomsTableTable,
-          WorkFandomsTableData
-        > {
-  $$WorkFandomsTableTableReferences(
+final class $$DbWorkFandomsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbWorkFandomsTable, DbWorkFandom> {
+  $$DbWorkFandomsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.workFandomsTable.workId, db.worksTable.id),
-      );
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkFandoms.workId, db.dbWorks.id),
+  );
 
-  $$WorksTableTableProcessedTableManager get workId {
+  $$DbWorksTableProcessedTableManager get workId {
     final $_column = $_itemColumn<int>('work_id')!;
 
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -9019,17 +8912,16 @@ final class $$WorkFandomsTableTableReferences
     );
   }
 
-  static $TagsTableTable _tagNameTable(_$AppDatabase db) =>
-      db.tagsTable.createAlias(
-        $_aliasNameGenerator(db.workFandomsTable.tagName, db.tagsTable.name),
-      );
+  static $DbTagsTable _tagNameTable(_$AppDatabase db) => db.dbTags.createAlias(
+    $_aliasNameGenerator(db.dbWorkFandoms.tagName, db.dbTags.name),
+  );
 
-  $$TagsTableTableProcessedTableManager get tagName {
+  $$DbTagsTableProcessedTableManager get tagName {
     final $_column = $_itemColumn<String>('tag_name')!;
 
-    final manager = $$TagsTableTableTableManager(
+    final manager = $$DbTagsTableTableManager(
       $_db,
-      $_db.tagsTable,
+      $_db.dbTags,
     ).filter((f) => f.name.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
     if (item == null) return manager;
@@ -9039,29 +8931,29 @@ final class $$WorkFandomsTableTableReferences
   }
 }
 
-class $$WorkFandomsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkFandomsTableTable> {
-  $$WorkFandomsTableTableFilterComposer({
+class $$DbWorkFandomsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkFandomsTable> {
+  $$DbWorkFandomsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9071,20 +8963,20 @@ class $$WorkFandomsTableTableFilterComposer
     return composer;
   }
 
-  $$TagsTableTableFilterComposer get tagName {
-    final $$TagsTableTableFilterComposer composer = $composerBuilder(
+  $$DbTagsTableFilterComposer get tagName {
+    final $$DbTagsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
+      referencedTable: $db.dbTags,
       getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableFilterComposer(
+          }) => $$DbTagsTableFilterComposer(
             $db: $db,
-            $table: $db.tagsTable,
+            $table: $db.dbTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9095,29 +8987,29 @@ class $$WorkFandomsTableTableFilterComposer
   }
 }
 
-class $$WorkFandomsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkFandomsTableTable> {
-  $$WorkFandomsTableTableOrderingComposer({
+class $$DbWorkFandomsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkFandomsTable> {
+  $$DbWorkFandomsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9127,20 +9019,20 @@ class $$WorkFandomsTableTableOrderingComposer
     return composer;
   }
 
-  $$TagsTableTableOrderingComposer get tagName {
-    final $$TagsTableTableOrderingComposer composer = $composerBuilder(
+  $$DbTagsTableOrderingComposer get tagName {
+    final $$DbTagsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
+      referencedTable: $db.dbTags,
       getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableOrderingComposer(
+          }) => $$DbTagsTableOrderingComposer(
             $db: $db,
-            $table: $db.tagsTable,
+            $table: $db.dbTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9151,29 +9043,29 @@ class $$WorkFandomsTableTableOrderingComposer
   }
 }
 
-class $$WorkFandomsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkFandomsTableTable> {
-  $$WorkFandomsTableTableAnnotationComposer({
+class $$DbWorkFandomsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkFandomsTable> {
+  $$DbWorkFandomsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9183,20 +9075,20 @@ class $$WorkFandomsTableTableAnnotationComposer
     return composer;
   }
 
-  $$TagsTableTableAnnotationComposer get tagName {
-    final $$TagsTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbTagsTableAnnotationComposer get tagName {
+    final $$DbTagsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
+      referencedTable: $db.dbTags,
       getReferencedColumn: (t) => t.name,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableAnnotationComposer(
+          }) => $$DbTagsTableAnnotationComposer(
             $db: $db,
-            $table: $db.tagsTable,
+            $table: $db.dbTags,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9207,1150 +9099,38 @@ class $$WorkFandomsTableTableAnnotationComposer
   }
 }
 
-class $$WorkFandomsTableTableTableManager
+class $$DbWorkFandomsTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $WorkFandomsTableTable,
-          WorkFandomsTableData,
-          $$WorkFandomsTableTableFilterComposer,
-          $$WorkFandomsTableTableOrderingComposer,
-          $$WorkFandomsTableTableAnnotationComposer,
-          $$WorkFandomsTableTableCreateCompanionBuilder,
-          $$WorkFandomsTableTableUpdateCompanionBuilder,
-          (WorkFandomsTableData, $$WorkFandomsTableTableReferences),
-          WorkFandomsTableData,
+          $DbWorkFandomsTable,
+          DbWorkFandom,
+          $$DbWorkFandomsTableFilterComposer,
+          $$DbWorkFandomsTableOrderingComposer,
+          $$DbWorkFandomsTableAnnotationComposer,
+          $$DbWorkFandomsTableCreateCompanionBuilder,
+          $$DbWorkFandomsTableUpdateCompanionBuilder,
+          (DbWorkFandom, $$DbWorkFandomsTableReferences),
+          DbWorkFandom,
           PrefetchHooks Function({bool workId, bool tagName})
         > {
-  $$WorkFandomsTableTableTableManager(
-    _$AppDatabase db,
-    $WorkFandomsTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WorkFandomsTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$WorkFandomsTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$WorkFandomsTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> workId = const Value.absent(),
-                Value<String> tagName = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WorkFandomsTableCompanion(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required int workId,
-                required String tagName,
-                Value<int> rowid = const Value.absent(),
-              }) => WorkFandomsTableCompanion.insert(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$WorkFandomsTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({workId = false, tagName = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (workId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.workId,
-                                referencedTable:
-                                    $$WorkFandomsTableTableReferences
-                                        ._workIdTable(db),
-                                referencedColumn:
-                                    $$WorkFandomsTableTableReferences
-                                        ._workIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (tagName) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.tagName,
-                                referencedTable:
-                                    $$WorkFandomsTableTableReferences
-                                        ._tagNameTable(db),
-                                referencedColumn:
-                                    $$WorkFandomsTableTableReferences
-                                        ._tagNameTable(db)
-                                        .name,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$WorkFandomsTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WorkFandomsTableTable,
-      WorkFandomsTableData,
-      $$WorkFandomsTableTableFilterComposer,
-      $$WorkFandomsTableTableOrderingComposer,
-      $$WorkFandomsTableTableAnnotationComposer,
-      $$WorkFandomsTableTableCreateCompanionBuilder,
-      $$WorkFandomsTableTableUpdateCompanionBuilder,
-      (WorkFandomsTableData, $$WorkFandomsTableTableReferences),
-      WorkFandomsTableData,
-      PrefetchHooks Function({bool workId, bool tagName})
-    >;
-typedef $$WorkRelationshipsTableTableCreateCompanionBuilder =
-    WorkRelationshipsTableCompanion Function({
-      required int workId,
-      required String tagName,
-      Value<int> rowid,
-    });
-typedef $$WorkRelationshipsTableTableUpdateCompanionBuilder =
-    WorkRelationshipsTableCompanion Function({
-      Value<int> workId,
-      Value<String> tagName,
-      Value<int> rowid,
-    });
-
-final class $$WorkRelationshipsTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $WorkRelationshipsTableTable,
-          WorkRelationshipsTableData
-        > {
-  $$WorkRelationshipsTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(
-          db.workRelationshipsTable.workId,
-          db.worksTable.id,
-        ),
-      );
-
-  $$WorksTableTableProcessedTableManager get workId {
-    final $_column = $_itemColumn<int>('work_id')!;
-
-    final manager = $$WorksTableTableTableManager(
-      $_db,
-      $_db.worksTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $TagsTableTable _tagNameTable(_$AppDatabase db) =>
-      db.tagsTable.createAlias(
-        $_aliasNameGenerator(
-          db.workRelationshipsTable.tagName,
-          db.tagsTable.name,
-        ),
-      );
-
-  $$TagsTableTableProcessedTableManager get tagName {
-    final $_column = $_itemColumn<String>('tag_name')!;
-
-    final manager = $$TagsTableTableTableManager(
-      $_db,
-      $_db.tagsTable,
-    ).filter((f) => f.name.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$WorkRelationshipsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkRelationshipsTableTable> {
-  $$WorkRelationshipsTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableFilterComposer get tagName {
-    final $$TagsTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableFilterComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkRelationshipsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkRelationshipsTableTable> {
-  $$WorkRelationshipsTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableOrderingComposer get tagName {
-    final $$TagsTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkRelationshipsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkRelationshipsTableTable> {
-  $$WorkRelationshipsTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableAnnotationComposer get tagName {
-    final $$TagsTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkRelationshipsTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WorkRelationshipsTableTable,
-          WorkRelationshipsTableData,
-          $$WorkRelationshipsTableTableFilterComposer,
-          $$WorkRelationshipsTableTableOrderingComposer,
-          $$WorkRelationshipsTableTableAnnotationComposer,
-          $$WorkRelationshipsTableTableCreateCompanionBuilder,
-          $$WorkRelationshipsTableTableUpdateCompanionBuilder,
-          (WorkRelationshipsTableData, $$WorkRelationshipsTableTableReferences),
-          WorkRelationshipsTableData,
-          PrefetchHooks Function({bool workId, bool tagName})
-        > {
-  $$WorkRelationshipsTableTableTableManager(
-    _$AppDatabase db,
-    $WorkRelationshipsTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WorkRelationshipsTableTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$WorkRelationshipsTableTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$WorkRelationshipsTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> workId = const Value.absent(),
-                Value<String> tagName = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WorkRelationshipsTableCompanion(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required int workId,
-                required String tagName,
-                Value<int> rowid = const Value.absent(),
-              }) => WorkRelationshipsTableCompanion.insert(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$WorkRelationshipsTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({workId = false, tagName = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (workId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.workId,
-                                referencedTable:
-                                    $$WorkRelationshipsTableTableReferences
-                                        ._workIdTable(db),
-                                referencedColumn:
-                                    $$WorkRelationshipsTableTableReferences
-                                        ._workIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (tagName) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.tagName,
-                                referencedTable:
-                                    $$WorkRelationshipsTableTableReferences
-                                        ._tagNameTable(db),
-                                referencedColumn:
-                                    $$WorkRelationshipsTableTableReferences
-                                        ._tagNameTable(db)
-                                        .name,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$WorkRelationshipsTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WorkRelationshipsTableTable,
-      WorkRelationshipsTableData,
-      $$WorkRelationshipsTableTableFilterComposer,
-      $$WorkRelationshipsTableTableOrderingComposer,
-      $$WorkRelationshipsTableTableAnnotationComposer,
-      $$WorkRelationshipsTableTableCreateCompanionBuilder,
-      $$WorkRelationshipsTableTableUpdateCompanionBuilder,
-      (WorkRelationshipsTableData, $$WorkRelationshipsTableTableReferences),
-      WorkRelationshipsTableData,
-      PrefetchHooks Function({bool workId, bool tagName})
-    >;
-typedef $$WorkCharactersTableTableCreateCompanionBuilder =
-    WorkCharactersTableCompanion Function({
-      required int workId,
-      required String tagName,
-      Value<int> rowid,
-    });
-typedef $$WorkCharactersTableTableUpdateCompanionBuilder =
-    WorkCharactersTableCompanion Function({
-      Value<int> workId,
-      Value<String> tagName,
-      Value<int> rowid,
-    });
-
-final class $$WorkCharactersTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $WorkCharactersTableTable,
-          WorkCharactersTableData
-        > {
-  $$WorkCharactersTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.workCharactersTable.workId, db.worksTable.id),
-      );
-
-  $$WorksTableTableProcessedTableManager get workId {
-    final $_column = $_itemColumn<int>('work_id')!;
-
-    final manager = $$WorksTableTableTableManager(
-      $_db,
-      $_db.worksTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $TagsTableTable _tagNameTable(_$AppDatabase db) =>
-      db.tagsTable.createAlias(
-        $_aliasNameGenerator(db.workCharactersTable.tagName, db.tagsTable.name),
-      );
-
-  $$TagsTableTableProcessedTableManager get tagName {
-    final $_column = $_itemColumn<String>('tag_name')!;
-
-    final manager = $$TagsTableTableTableManager(
-      $_db,
-      $_db.tagsTable,
-    ).filter((f) => f.name.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$WorkCharactersTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkCharactersTableTable> {
-  $$WorkCharactersTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableFilterComposer get tagName {
-    final $$TagsTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableFilterComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkCharactersTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkCharactersTableTable> {
-  $$WorkCharactersTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableOrderingComposer get tagName {
-    final $$TagsTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkCharactersTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkCharactersTableTable> {
-  $$WorkCharactersTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableAnnotationComposer get tagName {
-    final $$TagsTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkCharactersTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WorkCharactersTableTable,
-          WorkCharactersTableData,
-          $$WorkCharactersTableTableFilterComposer,
-          $$WorkCharactersTableTableOrderingComposer,
-          $$WorkCharactersTableTableAnnotationComposer,
-          $$WorkCharactersTableTableCreateCompanionBuilder,
-          $$WorkCharactersTableTableUpdateCompanionBuilder,
-          (WorkCharactersTableData, $$WorkCharactersTableTableReferences),
-          WorkCharactersTableData,
-          PrefetchHooks Function({bool workId, bool tagName})
-        > {
-  $$WorkCharactersTableTableTableManager(
-    _$AppDatabase db,
-    $WorkCharactersTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$WorkCharactersTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$WorkCharactersTableTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$WorkCharactersTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> workId = const Value.absent(),
-                Value<String> tagName = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => WorkCharactersTableCompanion(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required int workId,
-                required String tagName,
-                Value<int> rowid = const Value.absent(),
-              }) => WorkCharactersTableCompanion.insert(
-                workId: workId,
-                tagName: tagName,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$WorkCharactersTableTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({workId = false, tagName = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (workId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.workId,
-                                referencedTable:
-                                    $$WorkCharactersTableTableReferences
-                                        ._workIdTable(db),
-                                referencedColumn:
-                                    $$WorkCharactersTableTableReferences
-                                        ._workIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (tagName) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.tagName,
-                                referencedTable:
-                                    $$WorkCharactersTableTableReferences
-                                        ._tagNameTable(db),
-                                referencedColumn:
-                                    $$WorkCharactersTableTableReferences
-                                        ._tagNameTable(db)
-                                        .name,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$WorkCharactersTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $WorkCharactersTableTable,
-      WorkCharactersTableData,
-      $$WorkCharactersTableTableFilterComposer,
-      $$WorkCharactersTableTableOrderingComposer,
-      $$WorkCharactersTableTableAnnotationComposer,
-      $$WorkCharactersTableTableCreateCompanionBuilder,
-      $$WorkCharactersTableTableUpdateCompanionBuilder,
-      (WorkCharactersTableData, $$WorkCharactersTableTableReferences),
-      WorkCharactersTableData,
-      PrefetchHooks Function({bool workId, bool tagName})
-    >;
-typedef $$WorkTagsTableTableCreateCompanionBuilder =
-    WorkTagsTableCompanion Function({
-      required int workId,
-      required String tagName,
-      Value<int> rowid,
-    });
-typedef $$WorkTagsTableTableUpdateCompanionBuilder =
-    WorkTagsTableCompanion Function({
-      Value<int> workId,
-      Value<String> tagName,
-      Value<int> rowid,
-    });
-
-final class $$WorkTagsTableTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $WorkTagsTableTable, WorkTagsTableData> {
-  $$WorkTagsTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.workTagsTable.workId, db.worksTable.id),
-      );
-
-  $$WorksTableTableProcessedTableManager get workId {
-    final $_column = $_itemColumn<int>('work_id')!;
-
-    final manager = $$WorksTableTableTableManager(
-      $_db,
-      $_db.worksTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $TagsTableTable _tagNameTable(_$AppDatabase db) =>
-      db.tagsTable.createAlias(
-        $_aliasNameGenerator(db.workTagsTable.tagName, db.tagsTable.name),
-      );
-
-  $$TagsTableTableProcessedTableManager get tagName {
-    final $_column = $_itemColumn<String>('tag_name')!;
-
-    final manager = $$TagsTableTableTableManager(
-      $_db,
-      $_db.tagsTable,
-    ).filter((f) => f.name.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$WorkTagsTableTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkTagsTableTable> {
-  $$WorkTagsTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableFilterComposer get tagName {
-    final $$TagsTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableFilterComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkTagsTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkTagsTableTable> {
-  $$WorkTagsTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableOrderingComposer get tagName {
-    final $$TagsTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkTagsTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkTagsTableTable> {
-  $$WorkTagsTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.worksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TagsTableTableAnnotationComposer get tagName {
-    final $$TagsTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagName,
-      referencedTable: $db.tagsTable,
-      getReferencedColumn: (t) => t.name,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TagsTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.tagsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$WorkTagsTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $WorkTagsTableTable,
-          WorkTagsTableData,
-          $$WorkTagsTableTableFilterComposer,
-          $$WorkTagsTableTableOrderingComposer,
-          $$WorkTagsTableTableAnnotationComposer,
-          $$WorkTagsTableTableCreateCompanionBuilder,
-          $$WorkTagsTableTableUpdateCompanionBuilder,
-          (WorkTagsTableData, $$WorkTagsTableTableReferences),
-          WorkTagsTableData,
-          PrefetchHooks Function({bool workId, bool tagName})
-        > {
-  $$WorkTagsTableTableTableManager(_$AppDatabase db, $WorkTagsTableTable table)
+  $$DbWorkFandomsTableTableManager(_$AppDatabase db, $DbWorkFandomsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$WorkTagsTableTableFilterComposer($db: db, $table: table),
+              $$DbWorkFandomsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$WorkTagsTableTableOrderingComposer($db: db, $table: table),
+              $$DbWorkFandomsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$WorkTagsTableTableAnnotationComposer($db: db, $table: table),
+              $$DbWorkFandomsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> workId = const Value.absent(),
                 Value<String> tagName = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => WorkTagsTableCompanion(
+              }) => DbWorkFandomsCompanion(
                 workId: workId,
                 tagName: tagName,
                 rowid: rowid,
@@ -10360,7 +9140,7 @@ class $$WorkTagsTableTableTableManager
                 required int workId,
                 required String tagName,
                 Value<int> rowid = const Value.absent(),
-              }) => WorkTagsTableCompanion.insert(
+              }) => DbWorkFandomsCompanion.insert(
                 workId: workId,
                 tagName: tagName,
                 rowid: rowid,
@@ -10369,7 +9149,7 @@ class $$WorkTagsTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$WorkTagsTableTableReferences(db, table, e),
+                  $$DbWorkFandomsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -10398,9 +9178,9 @@ class $$WorkTagsTableTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.workId,
-                                referencedTable: $$WorkTagsTableTableReferences
+                                referencedTable: $$DbWorkFandomsTableReferences
                                     ._workIdTable(db),
-                                referencedColumn: $$WorkTagsTableTableReferences
+                                referencedColumn: $$DbWorkFandomsTableReferences
                                     ._workIdTable(db)
                                     .id,
                               )
@@ -10411,9 +9191,9 @@ class $$WorkTagsTableTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.tagName,
-                                referencedTable: $$WorkTagsTableTableReferences
+                                referencedTable: $$DbWorkFandomsTableReferences
                                     ._tagNameTable(db),
-                                referencedColumn: $$WorkTagsTableTableReferences
+                                referencedColumn: $$DbWorkFandomsTableReferences
                                     ._tagNameTable(db)
                                     .name,
                               )
@@ -10431,22 +9211,1098 @@ class $$WorkTagsTableTableTableManager
       );
 }
 
-typedef $$WorkTagsTableTableProcessedTableManager =
+typedef $$DbWorkFandomsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $WorkTagsTableTable,
-      WorkTagsTableData,
-      $$WorkTagsTableTableFilterComposer,
-      $$WorkTagsTableTableOrderingComposer,
-      $$WorkTagsTableTableAnnotationComposer,
-      $$WorkTagsTableTableCreateCompanionBuilder,
-      $$WorkTagsTableTableUpdateCompanionBuilder,
-      (WorkTagsTableData, $$WorkTagsTableTableReferences),
-      WorkTagsTableData,
+      $DbWorkFandomsTable,
+      DbWorkFandom,
+      $$DbWorkFandomsTableFilterComposer,
+      $$DbWorkFandomsTableOrderingComposer,
+      $$DbWorkFandomsTableAnnotationComposer,
+      $$DbWorkFandomsTableCreateCompanionBuilder,
+      $$DbWorkFandomsTableUpdateCompanionBuilder,
+      (DbWorkFandom, $$DbWorkFandomsTableReferences),
+      DbWorkFandom,
       PrefetchHooks Function({bool workId, bool tagName})
     >;
-typedef $$ChaptersTableTableCreateCompanionBuilder =
-    ChaptersTableCompanion Function({
+typedef $$DbWorkRelationshipsTableCreateCompanionBuilder =
+    DbWorkRelationshipsCompanion Function({
+      required int workId,
+      required String tagName,
+      Value<int> rowid,
+    });
+typedef $$DbWorkRelationshipsTableUpdateCompanionBuilder =
+    DbWorkRelationshipsCompanion Function({
+      Value<int> workId,
+      Value<String> tagName,
+      Value<int> rowid,
+    });
+
+final class $$DbWorkRelationshipsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbWorkRelationshipsTable,
+          DbWorkRelationship
+        > {
+  $$DbWorkRelationshipsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkRelationships.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DbTagsTable _tagNameTable(_$AppDatabase db) => db.dbTags.createAlias(
+    $_aliasNameGenerator(db.dbWorkRelationships.tagName, db.dbTags.name),
+  );
+
+  $$DbTagsTableProcessedTableManager get tagName {
+    final $_column = $_itemColumn<String>('tag_name')!;
+
+    final manager = $$DbTagsTableTableManager(
+      $_db,
+      $_db.dbTags,
+    ).filter((f) => f.name.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbWorkRelationshipsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkRelationshipsTable> {
+  $$DbWorkRelationshipsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableFilterComposer get tagName {
+    final $$DbTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkRelationshipsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkRelationshipsTable> {
+  $$DbWorkRelationshipsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableOrderingComposer get tagName {
+    final $$DbTagsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkRelationshipsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkRelationshipsTable> {
+  $$DbWorkRelationshipsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableAnnotationComposer get tagName {
+    final $$DbTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkRelationshipsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbWorkRelationshipsTable,
+          DbWorkRelationship,
+          $$DbWorkRelationshipsTableFilterComposer,
+          $$DbWorkRelationshipsTableOrderingComposer,
+          $$DbWorkRelationshipsTableAnnotationComposer,
+          $$DbWorkRelationshipsTableCreateCompanionBuilder,
+          $$DbWorkRelationshipsTableUpdateCompanionBuilder,
+          (DbWorkRelationship, $$DbWorkRelationshipsTableReferences),
+          DbWorkRelationship,
+          PrefetchHooks Function({bool workId, bool tagName})
+        > {
+  $$DbWorkRelationshipsTableTableManager(
+    _$AppDatabase db,
+    $DbWorkRelationshipsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbWorkRelationshipsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbWorkRelationshipsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DbWorkRelationshipsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> workId = const Value.absent(),
+                Value<String> tagName = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkRelationshipsCompanion(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int workId,
+                required String tagName,
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkRelationshipsCompanion.insert(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbWorkRelationshipsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false, tagName = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable:
+                                    $$DbWorkRelationshipsTableReferences
+                                        ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbWorkRelationshipsTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (tagName) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.tagName,
+                                referencedTable:
+                                    $$DbWorkRelationshipsTableReferences
+                                        ._tagNameTable(db),
+                                referencedColumn:
+                                    $$DbWorkRelationshipsTableReferences
+                                        ._tagNameTable(db)
+                                        .name,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbWorkRelationshipsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbWorkRelationshipsTable,
+      DbWorkRelationship,
+      $$DbWorkRelationshipsTableFilterComposer,
+      $$DbWorkRelationshipsTableOrderingComposer,
+      $$DbWorkRelationshipsTableAnnotationComposer,
+      $$DbWorkRelationshipsTableCreateCompanionBuilder,
+      $$DbWorkRelationshipsTableUpdateCompanionBuilder,
+      (DbWorkRelationship, $$DbWorkRelationshipsTableReferences),
+      DbWorkRelationship,
+      PrefetchHooks Function({bool workId, bool tagName})
+    >;
+typedef $$DbWorkCharactersTableCreateCompanionBuilder =
+    DbWorkCharactersCompanion Function({
+      required int workId,
+      required String tagName,
+      Value<int> rowid,
+    });
+typedef $$DbWorkCharactersTableUpdateCompanionBuilder =
+    DbWorkCharactersCompanion Function({
+      Value<int> workId,
+      Value<String> tagName,
+      Value<int> rowid,
+    });
+
+final class $$DbWorkCharactersTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $DbWorkCharactersTable, DbWorkCharacter> {
+  $$DbWorkCharactersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkCharacters.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DbTagsTable _tagNameTable(_$AppDatabase db) => db.dbTags.createAlias(
+    $_aliasNameGenerator(db.dbWorkCharacters.tagName, db.dbTags.name),
+  );
+
+  $$DbTagsTableProcessedTableManager get tagName {
+    final $_column = $_itemColumn<String>('tag_name')!;
+
+    final manager = $$DbTagsTableTableManager(
+      $_db,
+      $_db.dbTags,
+    ).filter((f) => f.name.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbWorkCharactersTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkCharactersTable> {
+  $$DbWorkCharactersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableFilterComposer get tagName {
+    final $$DbTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkCharactersTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkCharactersTable> {
+  $$DbWorkCharactersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableOrderingComposer get tagName {
+    final $$DbTagsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkCharactersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkCharactersTable> {
+  $$DbWorkCharactersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableAnnotationComposer get tagName {
+    final $$DbTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkCharactersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbWorkCharactersTable,
+          DbWorkCharacter,
+          $$DbWorkCharactersTableFilterComposer,
+          $$DbWorkCharactersTableOrderingComposer,
+          $$DbWorkCharactersTableAnnotationComposer,
+          $$DbWorkCharactersTableCreateCompanionBuilder,
+          $$DbWorkCharactersTableUpdateCompanionBuilder,
+          (DbWorkCharacter, $$DbWorkCharactersTableReferences),
+          DbWorkCharacter,
+          PrefetchHooks Function({bool workId, bool tagName})
+        > {
+  $$DbWorkCharactersTableTableManager(
+    _$AppDatabase db,
+    $DbWorkCharactersTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbWorkCharactersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbWorkCharactersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbWorkCharactersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> workId = const Value.absent(),
+                Value<String> tagName = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkCharactersCompanion(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int workId,
+                required String tagName,
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkCharactersCompanion.insert(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbWorkCharactersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false, tagName = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable:
+                                    $$DbWorkCharactersTableReferences
+                                        ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbWorkCharactersTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (tagName) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.tagName,
+                                referencedTable:
+                                    $$DbWorkCharactersTableReferences
+                                        ._tagNameTable(db),
+                                referencedColumn:
+                                    $$DbWorkCharactersTableReferences
+                                        ._tagNameTable(db)
+                                        .name,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbWorkCharactersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbWorkCharactersTable,
+      DbWorkCharacter,
+      $$DbWorkCharactersTableFilterComposer,
+      $$DbWorkCharactersTableOrderingComposer,
+      $$DbWorkCharactersTableAnnotationComposer,
+      $$DbWorkCharactersTableCreateCompanionBuilder,
+      $$DbWorkCharactersTableUpdateCompanionBuilder,
+      (DbWorkCharacter, $$DbWorkCharactersTableReferences),
+      DbWorkCharacter,
+      PrefetchHooks Function({bool workId, bool tagName})
+    >;
+typedef $$DbWorkTagsTableCreateCompanionBuilder =
+    DbWorkTagsCompanion Function({
+      required int workId,
+      required String tagName,
+      Value<int> rowid,
+    });
+typedef $$DbWorkTagsTableUpdateCompanionBuilder =
+    DbWorkTagsCompanion Function({
+      Value<int> workId,
+      Value<String> tagName,
+      Value<int> rowid,
+    });
+
+final class $$DbWorkTagsTableReferences
+    extends BaseReferences<_$AppDatabase, $DbWorkTagsTable, DbWorkTag> {
+  $$DbWorkTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkTags.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DbTagsTable _tagNameTable(_$AppDatabase db) => db.dbTags.createAlias(
+    $_aliasNameGenerator(db.dbWorkTags.tagName, db.dbTags.name),
+  );
+
+  $$DbTagsTableProcessedTableManager get tagName {
+    final $_column = $_itemColumn<String>('tag_name')!;
+
+    final manager = $$DbTagsTableTableManager(
+      $_db,
+      $_db.dbTags,
+    ).filter((f) => f.name.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tagNameTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbWorkTagsTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkTagsTable> {
+  $$DbWorkTagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableFilterComposer get tagName {
+    final $$DbTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkTagsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkTagsTable> {
+  $$DbWorkTagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableOrderingComposer get tagName {
+    final $$DbTagsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkTagsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkTagsTable> {
+  $$DbWorkTagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbTagsTableAnnotationComposer get tagName {
+    final $$DbTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagName,
+      referencedTable: $db.dbTags,
+      getReferencedColumn: (t) => t.name,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorkTagsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbWorkTagsTable,
+          DbWorkTag,
+          $$DbWorkTagsTableFilterComposer,
+          $$DbWorkTagsTableOrderingComposer,
+          $$DbWorkTagsTableAnnotationComposer,
+          $$DbWorkTagsTableCreateCompanionBuilder,
+          $$DbWorkTagsTableUpdateCompanionBuilder,
+          (DbWorkTag, $$DbWorkTagsTableReferences),
+          DbWorkTag,
+          PrefetchHooks Function({bool workId, bool tagName})
+        > {
+  $$DbWorkTagsTableTableManager(_$AppDatabase db, $DbWorkTagsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbWorkTagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbWorkTagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbWorkTagsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> workId = const Value.absent(),
+                Value<String> tagName = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkTagsCompanion(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int workId,
+                required String tagName,
+                Value<int> rowid = const Value.absent(),
+              }) => DbWorkTagsCompanion.insert(
+                workId: workId,
+                tagName: tagName,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbWorkTagsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false, tagName = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable: $$DbWorkTagsTableReferences
+                                    ._workIdTable(db),
+                                referencedColumn: $$DbWorkTagsTableReferences
+                                    ._workIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+                    if (tagName) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.tagName,
+                                referencedTable: $$DbWorkTagsTableReferences
+                                    ._tagNameTable(db),
+                                referencedColumn: $$DbWorkTagsTableReferences
+                                    ._tagNameTable(db)
+                                    .name,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbWorkTagsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbWorkTagsTable,
+      DbWorkTag,
+      $$DbWorkTagsTableFilterComposer,
+      $$DbWorkTagsTableOrderingComposer,
+      $$DbWorkTagsTableAnnotationComposer,
+      $$DbWorkTagsTableCreateCompanionBuilder,
+      $$DbWorkTagsTableUpdateCompanionBuilder,
+      (DbWorkTag, $$DbWorkTagsTableReferences),
+      DbWorkTag,
+      PrefetchHooks Function({bool workId, bool tagName})
+    >;
+typedef $$DbChaptersTableCreateCompanionBuilder =
+    DbChaptersCompanion Function({
       Value<int> id,
       required int workId,
       required int chapter,
@@ -10460,8 +10316,8 @@ typedef $$ChaptersTableTableCreateCompanionBuilder =
       Value<int> comments,
       Value<bool> oneshot,
     });
-typedef $$ChaptersTableTableUpdateCompanionBuilder =
-    ChaptersTableCompanion Function({
+typedef $$DbChaptersTableUpdateCompanionBuilder =
+    DbChaptersCompanion Function({
       Value<int> id,
       Value<int> workId,
       Value<int> chapter,
@@ -10476,26 +10332,20 @@ typedef $$ChaptersTableTableUpdateCompanionBuilder =
       Value<bool> oneshot,
     });
 
-final class $$ChaptersTableTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $ChaptersTableTable, ChaptersTableData> {
-  $$ChaptersTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
+final class $$DbChaptersTableReferences
+    extends BaseReferences<_$AppDatabase, $DbChaptersTable, DbChapter> {
+  $$DbChaptersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbChapters.workId, db.dbWorks.id),
   );
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.chaptersTable.workId, db.worksTable.id),
-      );
-
-  $$WorksTableTableProcessedTableManager get workId {
+  $$DbWorksTableProcessedTableManager get workId {
     final $_column = $_itemColumn<int>('work_id')!;
 
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -10504,27 +10354,23 @@ final class $$ChaptersTableTableReferences
     );
   }
 
-  static MultiTypedResultKey<
-    $ReadHistoriesTableTable,
-    List<ReadHistoriesTableData>
-  >
-  _readHistoriesTableRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.readHistoriesTable,
-        aliasName: $_aliasNameGenerator(
-          db.chaptersTable.id,
-          db.readHistoriesTable.chapterId,
-        ),
-      );
+  static MultiTypedResultKey<$DbReadHistoriesTable, List<DbReadHistory>>
+  _dbReadHistoriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbReadHistories,
+    aliasName: $_aliasNameGenerator(
+      db.dbChapters.id,
+      db.dbReadHistories.chapterId,
+    ),
+  );
 
-  $$ReadHistoriesTableTableProcessedTableManager get readHistoriesTableRefs {
-    final manager = $$ReadHistoriesTableTableTableManager(
+  $$DbReadHistoriesTableProcessedTableManager get dbReadHistoriesRefs {
+    final manager = $$DbReadHistoriesTableTableManager(
       $_db,
-      $_db.readHistoriesTable,
+      $_db.dbReadHistories,
     ).filter((f) => f.chapterId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _readHistoriesTableRefsTable($_db),
+      _dbReadHistoriesRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -10532,9 +10378,9 @@ final class $$ChaptersTableTableReferences
   }
 }
 
-class $$ChaptersTableTableFilterComposer
-    extends Composer<_$AppDatabase, $ChaptersTableTable> {
-  $$ChaptersTableTableFilterComposer({
+class $$DbChaptersTableFilterComposer
+    extends Composer<_$AppDatabase, $DbChaptersTable> {
+  $$DbChaptersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -10596,20 +10442,20 @@ class $$ChaptersTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10619,22 +10465,22 @@ class $$ChaptersTableTableFilterComposer
     return composer;
   }
 
-  Expression<bool> readHistoriesTableRefs(
-    Expression<bool> Function($$ReadHistoriesTableTableFilterComposer f) f,
+  Expression<bool> dbReadHistoriesRefs(
+    Expression<bool> Function($$DbReadHistoriesTableFilterComposer f) f,
   ) {
-    final $$ReadHistoriesTableTableFilterComposer composer = $composerBuilder(
+    final $$DbReadHistoriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.readHistoriesTable,
+      referencedTable: $db.dbReadHistories,
       getReferencedColumn: (t) => t.chapterId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReadHistoriesTableTableFilterComposer(
+          }) => $$DbReadHistoriesTableFilterComposer(
             $db: $db,
-            $table: $db.readHistoriesTable,
+            $table: $db.dbReadHistories,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10645,9 +10491,9 @@ class $$ChaptersTableTableFilterComposer
   }
 }
 
-class $$ChaptersTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $ChaptersTableTable> {
-  $$ChaptersTableTableOrderingComposer({
+class $$DbChaptersTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbChaptersTable> {
+  $$DbChaptersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -10709,20 +10555,20 @@ class $$ChaptersTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10733,9 +10579,9 @@ class $$ChaptersTableTableOrderingComposer
   }
 }
 
-class $$ChaptersTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ChaptersTableTable> {
-  $$ChaptersTableTableAnnotationComposer({
+class $$DbChaptersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbChaptersTable> {
+  $$DbChaptersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -10777,20 +10623,20 @@ class $$ChaptersTableTableAnnotationComposer
   GeneratedColumn<bool> get oneshot =>
       $composableBuilder(column: $table.oneshot, builder: (column) => column);
 
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10800,59 +10646,58 @@ class $$ChaptersTableTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> readHistoriesTableRefs<T extends Object>(
-    Expression<T> Function($$ReadHistoriesTableTableAnnotationComposer a) f,
+  Expression<T> dbReadHistoriesRefs<T extends Object>(
+    Expression<T> Function($$DbReadHistoriesTableAnnotationComposer a) f,
   ) {
-    final $$ReadHistoriesTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.readHistoriesTable,
-          getReferencedColumn: (t) => t.chapterId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$DbReadHistoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbReadHistories,
+      getReferencedColumn: (t) => t.chapterId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbReadHistoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbReadHistories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ReadHistoriesTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.readHistoriesTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 }
 
-class $$ChaptersTableTableTableManager
+class $$DbChaptersTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ChaptersTableTable,
-          ChaptersTableData,
-          $$ChaptersTableTableFilterComposer,
-          $$ChaptersTableTableOrderingComposer,
-          $$ChaptersTableTableAnnotationComposer,
-          $$ChaptersTableTableCreateCompanionBuilder,
-          $$ChaptersTableTableUpdateCompanionBuilder,
-          (ChaptersTableData, $$ChaptersTableTableReferences),
-          ChaptersTableData,
-          PrefetchHooks Function({bool workId, bool readHistoriesTableRefs})
+          $DbChaptersTable,
+          DbChapter,
+          $$DbChaptersTableFilterComposer,
+          $$DbChaptersTableOrderingComposer,
+          $$DbChaptersTableAnnotationComposer,
+          $$DbChaptersTableCreateCompanionBuilder,
+          $$DbChaptersTableUpdateCompanionBuilder,
+          (DbChapter, $$DbChaptersTableReferences),
+          DbChapter,
+          PrefetchHooks Function({bool workId, bool dbReadHistoriesRefs})
         > {
-  $$ChaptersTableTableTableManager(_$AppDatabase db, $ChaptersTableTable table)
+  $$DbChaptersTableTableManager(_$AppDatabase db, $DbChaptersTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChaptersTableTableFilterComposer($db: db, $table: table),
+              $$DbChaptersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChaptersTableTableOrderingComposer($db: db, $table: table),
+              $$DbChaptersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChaptersTableTableAnnotationComposer($db: db, $table: table),
+              $$DbChaptersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -10867,7 +10712,7 @@ class $$ChaptersTableTableTableManager
                 Value<int> words = const Value.absent(),
                 Value<int> comments = const Value.absent(),
                 Value<bool> oneshot = const Value.absent(),
-              }) => ChaptersTableCompanion(
+              }) => DbChaptersCompanion(
                 id: id,
                 workId: workId,
                 chapter: chapter,
@@ -10895,7 +10740,7 @@ class $$ChaptersTableTableTableManager
                 Value<int> words = const Value.absent(),
                 Value<int> comments = const Value.absent(),
                 Value<bool> oneshot = const Value.absent(),
-              }) => ChaptersTableCompanion.insert(
+              }) => DbChaptersCompanion.insert(
                 id: id,
                 workId: workId,
                 chapter: chapter,
@@ -10913,16 +10758,16 @@ class $$ChaptersTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChaptersTableTableReferences(db, table, e),
+                  $$DbChaptersTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
-              ({workId = false, readHistoriesTableRefs = false}) {
+              ({workId = false, dbReadHistoriesRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (readHistoriesTableRefs) db.readHistoriesTable,
+                    if (dbReadHistoriesRefs) db.dbReadHistories,
                   ],
                   addJoins:
                       <
@@ -10945,11 +10790,10 @@ class $$ChaptersTableTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.workId,
-                                    referencedTable:
-                                        $$ChaptersTableTableReferences
-                                            ._workIdTable(db),
+                                    referencedTable: $$DbChaptersTableReferences
+                                        ._workIdTable(db),
                                     referencedColumn:
-                                        $$ChaptersTableTableReferences
+                                        $$DbChaptersTableReferences
                                             ._workIdTable(db)
                                             .id,
                                   )
@@ -10960,21 +10804,21 @@ class $$ChaptersTableTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (readHistoriesTableRefs)
+                      if (dbReadHistoriesRefs)
                         await $_getPrefetchedData<
-                          ChaptersTableData,
-                          $ChaptersTableTable,
-                          ReadHistoriesTableData
+                          DbChapter,
+                          $DbChaptersTable,
+                          DbReadHistory
                         >(
                           currentTable: table,
-                          referencedTable: $$ChaptersTableTableReferences
-                              ._readHistoriesTableRefsTable(db),
+                          referencedTable: $$DbChaptersTableReferences
+                              ._dbReadHistoriesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$ChaptersTableTableReferences(
+                              $$DbChaptersTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).readHistoriesTableRefs,
+                              ).dbReadHistoriesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.chapterId == item.id,
@@ -10989,22 +10833,22 @@ class $$ChaptersTableTableTableManager
       );
 }
 
-typedef $$ChaptersTableTableProcessedTableManager =
+typedef $$DbChaptersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ChaptersTableTable,
-      ChaptersTableData,
-      $$ChaptersTableTableFilterComposer,
-      $$ChaptersTableTableOrderingComposer,
-      $$ChaptersTableTableAnnotationComposer,
-      $$ChaptersTableTableCreateCompanionBuilder,
-      $$ChaptersTableTableUpdateCompanionBuilder,
-      (ChaptersTableData, $$ChaptersTableTableReferences),
-      ChaptersTableData,
-      PrefetchHooks Function({bool workId, bool readHistoriesTableRefs})
+      $DbChaptersTable,
+      DbChapter,
+      $$DbChaptersTableFilterComposer,
+      $$DbChaptersTableOrderingComposer,
+      $$DbChaptersTableAnnotationComposer,
+      $$DbChaptersTableCreateCompanionBuilder,
+      $$DbChaptersTableUpdateCompanionBuilder,
+      (DbChapter, $$DbChaptersTableReferences),
+      DbChapter,
+      PrefetchHooks Function({bool workId, bool dbReadHistoriesRefs})
     >;
-typedef $$ReadHistoriesTableTableCreateCompanionBuilder =
-    ReadHistoriesTableCompanion Function({
+typedef $$DbReadHistoriesTableCreateCompanionBuilder =
+    DbReadHistoriesCompanion Function({
       Value<int> workId,
       Value<int?> chapterId,
       required DateTime timestamp,
@@ -11013,8 +10857,8 @@ typedef $$ReadHistoriesTableTableCreateCompanionBuilder =
       required double completion,
       Value<int> hits,
     });
-typedef $$ReadHistoriesTableTableUpdateCompanionBuilder =
-    ReadHistoriesTableCompanion Function({
+typedef $$DbReadHistoriesTableUpdateCompanionBuilder =
+    DbReadHistoriesCompanion Function({
       Value<int> workId,
       Value<int?> chapterId,
       Value<DateTime> timestamp,
@@ -11024,30 +10868,25 @@ typedef $$ReadHistoriesTableTableUpdateCompanionBuilder =
       Value<int> hits,
     });
 
-final class $$ReadHistoriesTableTableReferences
+final class $$DbReadHistoriesTableReferences
     extends
-        BaseReferences<
-          _$AppDatabase,
-          $ReadHistoriesTableTable,
-          ReadHistoriesTableData
-        > {
-  $$ReadHistoriesTableTableReferences(
+        BaseReferences<_$AppDatabase, $DbReadHistoriesTable, DbReadHistory> {
+  $$DbReadHistoriesTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.readHistoriesTable.workId, db.worksTable.id),
-      );
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbReadHistories.workId, db.dbWorks.id),
+  );
 
-  $$WorksTableTableProcessedTableManager get workId {
+  $$DbWorksTableProcessedTableManager get workId {
     final $_column = $_itemColumn<int>('work_id')!;
 
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -11056,20 +10895,17 @@ final class $$ReadHistoriesTableTableReferences
     );
   }
 
-  static $ChaptersTableTable _chapterIdTable(_$AppDatabase db) =>
-      db.chaptersTable.createAlias(
-        $_aliasNameGenerator(
-          db.readHistoriesTable.chapterId,
-          db.chaptersTable.id,
-        ),
+  static $DbChaptersTable _chapterIdTable(_$AppDatabase db) =>
+      db.dbChapters.createAlias(
+        $_aliasNameGenerator(db.dbReadHistories.chapterId, db.dbChapters.id),
       );
 
-  $$ChaptersTableTableProcessedTableManager? get chapterId {
+  $$DbChaptersTableProcessedTableManager? get chapterId {
     final $_column = $_itemColumn<int>('chapter_id');
     if ($_column == null) return null;
-    final manager = $$ChaptersTableTableTableManager(
+    final manager = $$DbChaptersTableTableManager(
       $_db,
-      $_db.chaptersTable,
+      $_db.dbChapters,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_chapterIdTable($_db));
     if (item == null) return manager;
@@ -11079,9 +10915,9 @@ final class $$ReadHistoriesTableTableReferences
   }
 }
 
-class $$ReadHistoriesTableTableFilterComposer
-    extends Composer<_$AppDatabase, $ReadHistoriesTableTable> {
-  $$ReadHistoriesTableTableFilterComposer({
+class $$DbReadHistoriesTableFilterComposer
+    extends Composer<_$AppDatabase, $DbReadHistoriesTable> {
+  $$DbReadHistoriesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11113,20 +10949,20 @@ class $$ReadHistoriesTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11136,20 +10972,20 @@ class $$ReadHistoriesTableTableFilterComposer
     return composer;
   }
 
-  $$ChaptersTableTableFilterComposer get chapterId {
-    final $$ChaptersTableTableFilterComposer composer = $composerBuilder(
+  $$DbChaptersTableFilterComposer get chapterId {
+    final $$DbChaptersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chapterId,
-      referencedTable: $db.chaptersTable,
+      referencedTable: $db.dbChapters,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChaptersTableTableFilterComposer(
+          }) => $$DbChaptersTableFilterComposer(
             $db: $db,
-            $table: $db.chaptersTable,
+            $table: $db.dbChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11160,9 +10996,9 @@ class $$ReadHistoriesTableTableFilterComposer
   }
 }
 
-class $$ReadHistoriesTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $ReadHistoriesTableTable> {
-  $$ReadHistoriesTableTableOrderingComposer({
+class $$DbReadHistoriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbReadHistoriesTable> {
+  $$DbReadHistoriesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11194,20 +11030,20 @@ class $$ReadHistoriesTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11217,20 +11053,20 @@ class $$ReadHistoriesTableTableOrderingComposer
     return composer;
   }
 
-  $$ChaptersTableTableOrderingComposer get chapterId {
-    final $$ChaptersTableTableOrderingComposer composer = $composerBuilder(
+  $$DbChaptersTableOrderingComposer get chapterId {
+    final $$DbChaptersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chapterId,
-      referencedTable: $db.chaptersTable,
+      referencedTable: $db.dbChapters,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChaptersTableTableOrderingComposer(
+          }) => $$DbChaptersTableOrderingComposer(
             $db: $db,
-            $table: $db.chaptersTable,
+            $table: $db.dbChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11241,9 +11077,9 @@ class $$ReadHistoriesTableTableOrderingComposer
   }
 }
 
-class $$ReadHistoriesTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ReadHistoriesTableTable> {
-  $$ReadHistoriesTableTableAnnotationComposer({
+class $$DbReadHistoriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbReadHistoriesTable> {
+  $$DbReadHistoriesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11267,20 +11103,20 @@ class $$ReadHistoriesTableTableAnnotationComposer
   GeneratedColumn<int> get hits =>
       $composableBuilder(column: $table.hits, builder: (column) => column);
 
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11290,20 +11126,20 @@ class $$ReadHistoriesTableTableAnnotationComposer
     return composer;
   }
 
-  $$ChaptersTableTableAnnotationComposer get chapterId {
-    final $$ChaptersTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbChaptersTableAnnotationComposer get chapterId {
+    final $$DbChaptersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chapterId,
-      referencedTable: $db.chaptersTable,
+      referencedTable: $db.dbChapters,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChaptersTableTableAnnotationComposer(
+          }) => $$DbChaptersTableAnnotationComposer(
             $db: $db,
-            $table: $db.chaptersTable,
+            $table: $db.dbChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11314,37 +11150,34 @@ class $$ReadHistoriesTableTableAnnotationComposer
   }
 }
 
-class $$ReadHistoriesTableTableTableManager
+class $$DbReadHistoriesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ReadHistoriesTableTable,
-          ReadHistoriesTableData,
-          $$ReadHistoriesTableTableFilterComposer,
-          $$ReadHistoriesTableTableOrderingComposer,
-          $$ReadHistoriesTableTableAnnotationComposer,
-          $$ReadHistoriesTableTableCreateCompanionBuilder,
-          $$ReadHistoriesTableTableUpdateCompanionBuilder,
-          (ReadHistoriesTableData, $$ReadHistoriesTableTableReferences),
-          ReadHistoriesTableData,
+          $DbReadHistoriesTable,
+          DbReadHistory,
+          $$DbReadHistoriesTableFilterComposer,
+          $$DbReadHistoriesTableOrderingComposer,
+          $$DbReadHistoriesTableAnnotationComposer,
+          $$DbReadHistoriesTableCreateCompanionBuilder,
+          $$DbReadHistoriesTableUpdateCompanionBuilder,
+          (DbReadHistory, $$DbReadHistoriesTableReferences),
+          DbReadHistory,
           PrefetchHooks Function({bool workId, bool chapterId})
         > {
-  $$ReadHistoriesTableTableTableManager(
+  $$DbReadHistoriesTableTableManager(
     _$AppDatabase db,
-    $ReadHistoriesTableTable table,
+    $DbReadHistoriesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ReadHistoriesTableTableFilterComposer($db: db, $table: table),
+              $$DbReadHistoriesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ReadHistoriesTableTableOrderingComposer($db: db, $table: table),
+              $$DbReadHistoriesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ReadHistoriesTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$DbReadHistoriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> workId = const Value.absent(),
@@ -11354,7 +11187,7 @@ class $$ReadHistoriesTableTableTableManager
                 Value<String> status = const Value.absent(),
                 Value<double> completion = const Value.absent(),
                 Value<int> hits = const Value.absent(),
-              }) => ReadHistoriesTableCompanion(
+              }) => DbReadHistoriesCompanion(
                 workId: workId,
                 chapterId: chapterId,
                 timestamp: timestamp,
@@ -11372,7 +11205,7 @@ class $$ReadHistoriesTableTableTableManager
                 required String status,
                 required double completion,
                 Value<int> hits = const Value.absent(),
-              }) => ReadHistoriesTableCompanion.insert(
+              }) => DbReadHistoriesCompanion.insert(
                 workId: workId,
                 chapterId: chapterId,
                 timestamp: timestamp,
@@ -11385,7 +11218,7 @@ class $$ReadHistoriesTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ReadHistoriesTableTableReferences(db, table, e),
+                  $$DbReadHistoriesTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -11415,10 +11248,10 @@ class $$ReadHistoriesTableTableTableManager
                                 currentTable: table,
                                 currentColumn: table.workId,
                                 referencedTable:
-                                    $$ReadHistoriesTableTableReferences
+                                    $$DbReadHistoriesTableReferences
                                         ._workIdTable(db),
                                 referencedColumn:
-                                    $$ReadHistoriesTableTableReferences
+                                    $$DbReadHistoriesTableReferences
                                         ._workIdTable(db)
                                         .id,
                               )
@@ -11430,10 +11263,10 @@ class $$ReadHistoriesTableTableTableManager
                                 currentTable: table,
                                 currentColumn: table.chapterId,
                                 referencedTable:
-                                    $$ReadHistoriesTableTableReferences
+                                    $$DbReadHistoriesTableReferences
                                         ._chapterIdTable(db),
                                 referencedColumn:
-                                    $$ReadHistoriesTableTableReferences
+                                    $$DbReadHistoriesTableReferences
                                         ._chapterIdTable(db)
                                         .id,
                               )
@@ -11451,22 +11284,22 @@ class $$ReadHistoriesTableTableTableManager
       );
 }
 
-typedef $$ReadHistoriesTableTableProcessedTableManager =
+typedef $$DbReadHistoriesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ReadHistoriesTableTable,
-      ReadHistoriesTableData,
-      $$ReadHistoriesTableTableFilterComposer,
-      $$ReadHistoriesTableTableOrderingComposer,
-      $$ReadHistoriesTableTableAnnotationComposer,
-      $$ReadHistoriesTableTableCreateCompanionBuilder,
-      $$ReadHistoriesTableTableUpdateCompanionBuilder,
-      (ReadHistoriesTableData, $$ReadHistoriesTableTableReferences),
-      ReadHistoriesTableData,
+      $DbReadHistoriesTable,
+      DbReadHistory,
+      $$DbReadHistoriesTableFilterComposer,
+      $$DbReadHistoriesTableOrderingComposer,
+      $$DbReadHistoriesTableAnnotationComposer,
+      $$DbReadHistoriesTableCreateCompanionBuilder,
+      $$DbReadHistoriesTableUpdateCompanionBuilder,
+      (DbReadHistory, $$DbReadHistoriesTableReferences),
+      DbReadHistory,
       PrefetchHooks Function({bool workId, bool chapterId})
     >;
-typedef $$SeriesTableTableCreateCompanionBuilder =
-    SeriesTableCompanion Function({
+typedef $$DbSeriesTableCreateCompanionBuilder =
+    DbSeriesCompanion Function({
       Value<int> id,
       required String title,
       Value<String> summary,
@@ -11478,8 +11311,8 @@ typedef $$SeriesTableTableCreateCompanionBuilder =
       Value<DateTime?> publishDate,
       Value<String?> notes,
     });
-typedef $$SeriesTableTableUpdateCompanionBuilder =
-    SeriesTableCompanion Function({
+typedef $$DbSeriesTableUpdateCompanionBuilder =
+    DbSeriesCompanion Function({
       Value<int> id,
       Value<String> title,
       Value<String> summary,
@@ -11492,53 +11325,50 @@ typedef $$SeriesTableTableUpdateCompanionBuilder =
       Value<String?> notes,
     });
 
-final class $$SeriesTableTableReferences
-    extends BaseReferences<_$AppDatabase, $SeriesTableTable, SeriesTableData> {
-  $$SeriesTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$DbSeriesTableReferences
+    extends BaseReferences<_$AppDatabase, $DbSeriesTable, DbSery> {
+  $$DbSeriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$WorkSeriesTable, List<WorkSery>>
-  _workSeriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.workSeries,
-    aliasName: $_aliasNameGenerator(db.seriesTable.id, db.workSeries.seriesId),
+  static MultiTypedResultKey<$DbWorkSeriesTable, List<DbWorkSery>>
+  _dbWorkSeriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorkSeries,
+    aliasName: $_aliasNameGenerator(db.dbSeries.id, db.dbWorkSeries.seriesId),
   );
 
-  $$WorkSeriesTableProcessedTableManager get workSeriesRefs {
-    final manager = $$WorkSeriesTableTableManager(
+  $$DbWorkSeriesTableProcessedTableManager get dbWorkSeriesRefs {
+    final manager = $$DbWorkSeriesTableTableManager(
       $_db,
-      $_db.workSeries,
+      $_db.dbWorkSeries,
     ).filter((f) => f.seriesId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_workSeriesRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbWorkSeriesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$BookmarksTableTable, List<BookmarksTableData>>
-  _bookmarksTableRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.bookmarksTable,
-    aliasName: $_aliasNameGenerator(
-      db.seriesTable.id,
-      db.bookmarksTable.seriesId,
-    ),
+  static MultiTypedResultKey<$DbBookmarksTable, List<DbBookmark>>
+  _dbBookmarksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbBookmarks,
+    aliasName: $_aliasNameGenerator(db.dbSeries.id, db.dbBookmarks.seriesId),
   );
 
-  $$BookmarksTableTableProcessedTableManager get bookmarksTableRefs {
-    final manager = $$BookmarksTableTableTableManager(
+  $$DbBookmarksTableProcessedTableManager get dbBookmarksRefs {
+    final manager = $$DbBookmarksTableTableManager(
       $_db,
-      $_db.bookmarksTable,
+      $_db.dbBookmarks,
     ).filter((f) => f.seriesId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_bookmarksTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_dbBookmarksRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$SeriesTableTableFilterComposer
-    extends Composer<_$AppDatabase, $SeriesTableTable> {
-  $$SeriesTableTableFilterComposer({
+class $$DbSeriesTableFilterComposer
+    extends Composer<_$AppDatabase, $DbSeriesTable> {
+  $$DbSeriesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11595,22 +11425,22 @@ class $$SeriesTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> workSeriesRefs(
-    Expression<bool> Function($$WorkSeriesTableFilterComposer f) f,
+  Expression<bool> dbWorkSeriesRefs(
+    Expression<bool> Function($$DbWorkSeriesTableFilterComposer f) f,
   ) {
-    final $$WorkSeriesTableFilterComposer composer = $composerBuilder(
+    final $$DbWorkSeriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workSeries,
+      referencedTable: $db.dbWorkSeries,
       getReferencedColumn: (t) => t.seriesId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkSeriesTableFilterComposer(
+          }) => $$DbWorkSeriesTableFilterComposer(
             $db: $db,
-            $table: $db.workSeries,
+            $table: $db.dbWorkSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11620,22 +11450,22 @@ class $$SeriesTableTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> bookmarksTableRefs(
-    Expression<bool> Function($$BookmarksTableTableFilterComposer f) f,
+  Expression<bool> dbBookmarksRefs(
+    Expression<bool> Function($$DbBookmarksTableFilterComposer f) f,
   ) {
-    final $$BookmarksTableTableFilterComposer composer = $composerBuilder(
+    final $$DbBookmarksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbBookmarks,
       getReferencedColumn: (t) => t.seriesId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableFilterComposer(
+          }) => $$DbBookmarksTableFilterComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11646,9 +11476,9 @@ class $$SeriesTableTableFilterComposer
   }
 }
 
-class $$SeriesTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $SeriesTableTable> {
-  $$SeriesTableTableOrderingComposer({
+class $$DbSeriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbSeriesTable> {
+  $$DbSeriesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11706,9 +11536,9 @@ class $$SeriesTableTableOrderingComposer
   );
 }
 
-class $$SeriesTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $SeriesTableTable> {
-  $$SeriesTableTableAnnotationComposer({
+class $$DbSeriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbSeriesTable> {
+  $$DbSeriesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -11749,22 +11579,22 @@ class $$SeriesTableTableAnnotationComposer
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 
-  Expression<T> workSeriesRefs<T extends Object>(
-    Expression<T> Function($$WorkSeriesTableAnnotationComposer a) f,
+  Expression<T> dbWorkSeriesRefs<T extends Object>(
+    Expression<T> Function($$DbWorkSeriesTableAnnotationComposer a) f,
   ) {
-    final $$WorkSeriesTableAnnotationComposer composer = $composerBuilder(
+    final $$DbWorkSeriesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.workSeries,
+      referencedTable: $db.dbWorkSeries,
       getReferencedColumn: (t) => t.seriesId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorkSeriesTableAnnotationComposer(
+          }) => $$DbWorkSeriesTableAnnotationComposer(
             $db: $db,
-            $table: $db.workSeries,
+            $table: $db.dbWorkSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11774,22 +11604,22 @@ class $$SeriesTableTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> bookmarksTableRefs<T extends Object>(
-    Expression<T> Function($$BookmarksTableTableAnnotationComposer a) f,
+  Expression<T> dbBookmarksRefs<T extends Object>(
+    Expression<T> Function($$DbBookmarksTableAnnotationComposer a) f,
   ) {
-    final $$BookmarksTableTableAnnotationComposer composer = $composerBuilder(
+    final $$DbBookmarksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.bookmarksTable,
+      referencedTable: $db.dbBookmarks,
       getReferencedColumn: (t) => t.seriesId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$BookmarksTableTableAnnotationComposer(
+          }) => $$DbBookmarksTableAnnotationComposer(
             $db: $db,
-            $table: $db.bookmarksTable,
+            $table: $db.dbBookmarks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11800,32 +11630,32 @@ class $$SeriesTableTableAnnotationComposer
   }
 }
 
-class $$SeriesTableTableTableManager
+class $$DbSeriesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $SeriesTableTable,
-          SeriesTableData,
-          $$SeriesTableTableFilterComposer,
-          $$SeriesTableTableOrderingComposer,
-          $$SeriesTableTableAnnotationComposer,
-          $$SeriesTableTableCreateCompanionBuilder,
-          $$SeriesTableTableUpdateCompanionBuilder,
-          (SeriesTableData, $$SeriesTableTableReferences),
-          SeriesTableData,
-          PrefetchHooks Function({bool workSeriesRefs, bool bookmarksTableRefs})
+          $DbSeriesTable,
+          DbSery,
+          $$DbSeriesTableFilterComposer,
+          $$DbSeriesTableOrderingComposer,
+          $$DbSeriesTableAnnotationComposer,
+          $$DbSeriesTableCreateCompanionBuilder,
+          $$DbSeriesTableUpdateCompanionBuilder,
+          (DbSery, $$DbSeriesTableReferences),
+          DbSery,
+          PrefetchHooks Function({bool dbWorkSeriesRefs, bool dbBookmarksRefs})
         > {
-  $$SeriesTableTableTableManager(_$AppDatabase db, $SeriesTableTable table)
+  $$DbSeriesTableTableManager(_$AppDatabase db, $DbSeriesTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$SeriesTableTableFilterComposer($db: db, $table: table),
+              $$DbSeriesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$SeriesTableTableOrderingComposer($db: db, $table: table),
+              $$DbSeriesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$SeriesTableTableAnnotationComposer($db: db, $table: table),
+              $$DbSeriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -11838,7 +11668,7 @@ class $$SeriesTableTableTableManager
                 Value<bool?> finished = const Value.absent(),
                 Value<DateTime?> publishDate = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-              }) => SeriesTableCompanion(
+              }) => DbSeriesCompanion(
                 id: id,
                 title: title,
                 summary: summary,
@@ -11862,7 +11692,7 @@ class $$SeriesTableTableTableManager
                 Value<bool?> finished = const Value.absent(),
                 Value<DateTime?> publishDate = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-              }) => SeriesTableCompanion.insert(
+              }) => DbSeriesCompanion.insert(
                 id: id,
                 title: title,
                 summary: summary,
@@ -11878,57 +11708,57 @@ class $$SeriesTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$SeriesTableTableReferences(db, table, e),
+                  $$DbSeriesTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
-              ({workSeriesRefs = false, bookmarksTableRefs = false}) {
+              ({dbWorkSeriesRefs = false, dbBookmarksRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (workSeriesRefs) db.workSeries,
-                    if (bookmarksTableRefs) db.bookmarksTable,
+                    if (dbWorkSeriesRefs) db.dbWorkSeries,
+                    if (dbBookmarksRefs) db.dbBookmarks,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (workSeriesRefs)
+                      if (dbWorkSeriesRefs)
                         await $_getPrefetchedData<
-                          SeriesTableData,
-                          $SeriesTableTable,
-                          WorkSery
+                          DbSery,
+                          $DbSeriesTable,
+                          DbWorkSery
                         >(
                           currentTable: table,
-                          referencedTable: $$SeriesTableTableReferences
-                              ._workSeriesRefsTable(db),
+                          referencedTable: $$DbSeriesTableReferences
+                              ._dbWorkSeriesRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$SeriesTableTableReferences(
+                              $$DbSeriesTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).workSeriesRefs,
+                              ).dbWorkSeriesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.seriesId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (bookmarksTableRefs)
+                      if (dbBookmarksRefs)
                         await $_getPrefetchedData<
-                          SeriesTableData,
-                          $SeriesTableTable,
-                          BookmarksTableData
+                          DbSery,
+                          $DbSeriesTable,
+                          DbBookmark
                         >(
                           currentTable: table,
-                          referencedTable: $$SeriesTableTableReferences
-                              ._bookmarksTableRefsTable(db),
+                          referencedTable: $$DbSeriesTableReferences
+                              ._dbBookmarksRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$SeriesTableTableReferences(
+                              $$DbSeriesTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).bookmarksTableRefs,
+                              ).dbBookmarksRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.seriesId == item.id,
@@ -11943,50 +11773,49 @@ class $$SeriesTableTableTableManager
       );
 }
 
-typedef $$SeriesTableTableProcessedTableManager =
+typedef $$DbSeriesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $SeriesTableTable,
-      SeriesTableData,
-      $$SeriesTableTableFilterComposer,
-      $$SeriesTableTableOrderingComposer,
-      $$SeriesTableTableAnnotationComposer,
-      $$SeriesTableTableCreateCompanionBuilder,
-      $$SeriesTableTableUpdateCompanionBuilder,
-      (SeriesTableData, $$SeriesTableTableReferences),
-      SeriesTableData,
-      PrefetchHooks Function({bool workSeriesRefs, bool bookmarksTableRefs})
+      $DbSeriesTable,
+      DbSery,
+      $$DbSeriesTableFilterComposer,
+      $$DbSeriesTableOrderingComposer,
+      $$DbSeriesTableAnnotationComposer,
+      $$DbSeriesTableCreateCompanionBuilder,
+      $$DbSeriesTableUpdateCompanionBuilder,
+      (DbSery, $$DbSeriesTableReferences),
+      DbSery,
+      PrefetchHooks Function({bool dbWorkSeriesRefs, bool dbBookmarksRefs})
     >;
-typedef $$WorkSeriesTableCreateCompanionBuilder =
-    WorkSeriesCompanion Function({
+typedef $$DbWorkSeriesTableCreateCompanionBuilder =
+    DbWorkSeriesCompanion Function({
       required int workId,
       required int seriesId,
       required int part,
       Value<int> rowid,
     });
-typedef $$WorkSeriesTableUpdateCompanionBuilder =
-    WorkSeriesCompanion Function({
+typedef $$DbWorkSeriesTableUpdateCompanionBuilder =
+    DbWorkSeriesCompanion Function({
       Value<int> workId,
       Value<int> seriesId,
       Value<int> part,
       Value<int> rowid,
     });
 
-final class $$WorkSeriesTableReferences
-    extends BaseReferences<_$AppDatabase, $WorkSeriesTable, WorkSery> {
-  $$WorkSeriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$DbWorkSeriesTableReferences
+    extends BaseReferences<_$AppDatabase, $DbWorkSeriesTable, DbWorkSery> {
+  $$DbWorkSeriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.workSeries.workId, db.worksTable.id),
-      );
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorkSeries.workId, db.dbWorks.id),
+  );
 
-  $$WorksTableTableProcessedTableManager get workId {
+  $$DbWorksTableProcessedTableManager get workId {
     final $_column = $_itemColumn<int>('work_id')!;
 
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -11995,17 +11824,17 @@ final class $$WorkSeriesTableReferences
     );
   }
 
-  static $SeriesTableTable _seriesIdTable(_$AppDatabase db) =>
-      db.seriesTable.createAlias(
-        $_aliasNameGenerator(db.workSeries.seriesId, db.seriesTable.id),
+  static $DbSeriesTable _seriesIdTable(_$AppDatabase db) =>
+      db.dbSeries.createAlias(
+        $_aliasNameGenerator(db.dbWorkSeries.seriesId, db.dbSeries.id),
       );
 
-  $$SeriesTableTableProcessedTableManager get seriesId {
+  $$DbSeriesTableProcessedTableManager get seriesId {
     final $_column = $_itemColumn<int>('series_id')!;
 
-    final manager = $$SeriesTableTableTableManager(
+    final manager = $$DbSeriesTableTableManager(
       $_db,
-      $_db.seriesTable,
+      $_db.dbSeries,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_seriesIdTable($_db));
     if (item == null) return manager;
@@ -12015,9 +11844,9 @@ final class $$WorkSeriesTableReferences
   }
 }
 
-class $$WorkSeriesTableFilterComposer
-    extends Composer<_$AppDatabase, $WorkSeriesTable> {
-  $$WorkSeriesTableFilterComposer({
+class $$DbWorkSeriesTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorkSeriesTable> {
+  $$DbWorkSeriesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12029,20 +11858,20 @@ class $$WorkSeriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12052,20 +11881,20 @@ class $$WorkSeriesTableFilterComposer
     return composer;
   }
 
-  $$SeriesTableTableFilterComposer get seriesId {
-    final $$SeriesTableTableFilterComposer composer = $composerBuilder(
+  $$DbSeriesTableFilterComposer get seriesId {
+    final $$DbSeriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableFilterComposer(
+          }) => $$DbSeriesTableFilterComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12076,9 +11905,9 @@ class $$WorkSeriesTableFilterComposer
   }
 }
 
-class $$WorkSeriesTableOrderingComposer
-    extends Composer<_$AppDatabase, $WorkSeriesTable> {
-  $$WorkSeriesTableOrderingComposer({
+class $$DbWorkSeriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorkSeriesTable> {
+  $$DbWorkSeriesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12090,20 +11919,20 @@ class $$WorkSeriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12113,20 +11942,20 @@ class $$WorkSeriesTableOrderingComposer
     return composer;
   }
 
-  $$SeriesTableTableOrderingComposer get seriesId {
-    final $$SeriesTableTableOrderingComposer composer = $composerBuilder(
+  $$DbSeriesTableOrderingComposer get seriesId {
+    final $$DbSeriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableOrderingComposer(
+          }) => $$DbSeriesTableOrderingComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12137,9 +11966,9 @@ class $$WorkSeriesTableOrderingComposer
   }
 }
 
-class $$WorkSeriesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $WorkSeriesTable> {
-  $$WorkSeriesTableAnnotationComposer({
+class $$DbWorkSeriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorkSeriesTable> {
+  $$DbWorkSeriesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12149,20 +11978,20 @@ class $$WorkSeriesTableAnnotationComposer
   GeneratedColumn<int> get part =>
       $composableBuilder(column: $table.part, builder: (column) => column);
 
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12172,20 +12001,20 @@ class $$WorkSeriesTableAnnotationComposer
     return composer;
   }
 
-  $$SeriesTableTableAnnotationComposer get seriesId {
-    final $$SeriesTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbSeriesTableAnnotationComposer get seriesId {
+    final $$DbSeriesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableAnnotationComposer(
+          }) => $$DbSeriesTableAnnotationComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12196,39 +12025,39 @@ class $$WorkSeriesTableAnnotationComposer
   }
 }
 
-class $$WorkSeriesTableTableManager
+class $$DbWorkSeriesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $WorkSeriesTable,
-          WorkSery,
-          $$WorkSeriesTableFilterComposer,
-          $$WorkSeriesTableOrderingComposer,
-          $$WorkSeriesTableAnnotationComposer,
-          $$WorkSeriesTableCreateCompanionBuilder,
-          $$WorkSeriesTableUpdateCompanionBuilder,
-          (WorkSery, $$WorkSeriesTableReferences),
-          WorkSery,
+          $DbWorkSeriesTable,
+          DbWorkSery,
+          $$DbWorkSeriesTableFilterComposer,
+          $$DbWorkSeriesTableOrderingComposer,
+          $$DbWorkSeriesTableAnnotationComposer,
+          $$DbWorkSeriesTableCreateCompanionBuilder,
+          $$DbWorkSeriesTableUpdateCompanionBuilder,
+          (DbWorkSery, $$DbWorkSeriesTableReferences),
+          DbWorkSery,
           PrefetchHooks Function({bool workId, bool seriesId})
         > {
-  $$WorkSeriesTableTableManager(_$AppDatabase db, $WorkSeriesTable table)
+  $$DbWorkSeriesTableTableManager(_$AppDatabase db, $DbWorkSeriesTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$WorkSeriesTableFilterComposer($db: db, $table: table),
+              $$DbWorkSeriesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$WorkSeriesTableOrderingComposer($db: db, $table: table),
+              $$DbWorkSeriesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$WorkSeriesTableAnnotationComposer($db: db, $table: table),
+              $$DbWorkSeriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> workId = const Value.absent(),
                 Value<int> seriesId = const Value.absent(),
                 Value<int> part = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => WorkSeriesCompanion(
+              }) => DbWorkSeriesCompanion(
                 workId: workId,
                 seriesId: seriesId,
                 part: part,
@@ -12240,7 +12069,7 @@ class $$WorkSeriesTableTableManager
                 required int seriesId,
                 required int part,
                 Value<int> rowid = const Value.absent(),
-              }) => WorkSeriesCompanion.insert(
+              }) => DbWorkSeriesCompanion.insert(
                 workId: workId,
                 seriesId: seriesId,
                 part: part,
@@ -12250,7 +12079,7 @@ class $$WorkSeriesTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$WorkSeriesTableReferences(db, table, e),
+                  $$DbWorkSeriesTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -12279,9 +12108,9 @@ class $$WorkSeriesTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.workId,
-                                referencedTable: $$WorkSeriesTableReferences
+                                referencedTable: $$DbWorkSeriesTableReferences
                                     ._workIdTable(db),
-                                referencedColumn: $$WorkSeriesTableReferences
+                                referencedColumn: $$DbWorkSeriesTableReferences
                                     ._workIdTable(db)
                                     .id,
                               )
@@ -12292,9 +12121,9 @@ class $$WorkSeriesTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.seriesId,
-                                referencedTable: $$WorkSeriesTableReferences
+                                referencedTable: $$DbWorkSeriesTableReferences
                                     ._seriesIdTable(db),
-                                referencedColumn: $$WorkSeriesTableReferences
+                                referencedColumn: $$DbWorkSeriesTableReferences
                                     ._seriesIdTable(db)
                                     .id,
                               )
@@ -12312,22 +12141,22 @@ class $$WorkSeriesTableTableManager
       );
 }
 
-typedef $$WorkSeriesTableProcessedTableManager =
+typedef $$DbWorkSeriesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $WorkSeriesTable,
-      WorkSery,
-      $$WorkSeriesTableFilterComposer,
-      $$WorkSeriesTableOrderingComposer,
-      $$WorkSeriesTableAnnotationComposer,
-      $$WorkSeriesTableCreateCompanionBuilder,
-      $$WorkSeriesTableUpdateCompanionBuilder,
-      (WorkSery, $$WorkSeriesTableReferences),
-      WorkSery,
+      $DbWorkSeriesTable,
+      DbWorkSery,
+      $$DbWorkSeriesTableFilterComposer,
+      $$DbWorkSeriesTableOrderingComposer,
+      $$DbWorkSeriesTableAnnotationComposer,
+      $$DbWorkSeriesTableCreateCompanionBuilder,
+      $$DbWorkSeriesTableUpdateCompanionBuilder,
+      (DbWorkSery, $$DbWorkSeriesTableReferences),
+      DbWorkSery,
       PrefetchHooks Function({bool workId, bool seriesId})
     >;
-typedef $$BookmarksTableTableCreateCompanionBuilder =
-    BookmarksTableCompanion Function({
+typedef $$DbBookmarksTableCreateCompanionBuilder =
+    DbBookmarksCompanion Function({
       Value<int> id,
       Value<int?> workId,
       Value<int?> seriesId,
@@ -12338,8 +12167,8 @@ typedef $$BookmarksTableTableCreateCompanionBuilder =
       Value<String?> privateNotes,
       Value<String?> recNotes,
     });
-typedef $$BookmarksTableTableUpdateCompanionBuilder =
-    BookmarksTableCompanion Function({
+typedef $$DbBookmarksTableUpdateCompanionBuilder =
+    DbBookmarksCompanion Function({
       Value<int> id,
       Value<int?> workId,
       Value<int?> seriesId,
@@ -12351,30 +12180,20 @@ typedef $$BookmarksTableTableUpdateCompanionBuilder =
       Value<String?> recNotes,
     });
 
-final class $$BookmarksTableTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $BookmarksTableTable,
-          BookmarksTableData
-        > {
-  $$BookmarksTableTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
+final class $$DbBookmarksTableReferences
+    extends BaseReferences<_$AppDatabase, $DbBookmarksTable, DbBookmark> {
+  $$DbBookmarksTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbBookmarks.workId, db.dbWorks.id),
   );
 
-  static $WorksTableTable _workIdTable(_$AppDatabase db) =>
-      db.worksTable.createAlias(
-        $_aliasNameGenerator(db.bookmarksTable.workId, db.worksTable.id),
-      );
-
-  $$WorksTableTableProcessedTableManager? get workId {
+  $$DbWorksTableProcessedTableManager? get workId {
     final $_column = $_itemColumn<int>('work_id');
     if ($_column == null) return null;
-    final manager = $$WorksTableTableTableManager(
+    final manager = $$DbWorksTableTableManager(
       $_db,
-      $_db.worksTable,
+      $_db.dbWorks,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_workIdTable($_db));
     if (item == null) return manager;
@@ -12383,17 +12202,17 @@ final class $$BookmarksTableTableReferences
     );
   }
 
-  static $SeriesTableTable _seriesIdTable(_$AppDatabase db) =>
-      db.seriesTable.createAlias(
-        $_aliasNameGenerator(db.bookmarksTable.seriesId, db.seriesTable.id),
+  static $DbSeriesTable _seriesIdTable(_$AppDatabase db) =>
+      db.dbSeries.createAlias(
+        $_aliasNameGenerator(db.dbBookmarks.seriesId, db.dbSeries.id),
       );
 
-  $$SeriesTableTableProcessedTableManager? get seriesId {
+  $$DbSeriesTableProcessedTableManager? get seriesId {
     final $_column = $_itemColumn<int>('series_id');
     if ($_column == null) return null;
-    final manager = $$SeriesTableTableTableManager(
+    final manager = $$DbSeriesTableTableManager(
       $_db,
-      $_db.seriesTable,
+      $_db.dbSeries,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_seriesIdTable($_db));
     if (item == null) return manager;
@@ -12402,17 +12221,17 @@ final class $$BookmarksTableTableReferences
     );
   }
 
-  static $AuthorsTableTable _userIdTable(_$AppDatabase db) =>
-      db.authorsTable.createAlias(
-        $_aliasNameGenerator(db.bookmarksTable.userId, db.authorsTable.id),
+  static $DbAuthorsTable _userIdTable(_$AppDatabase db) =>
+      db.dbAuthors.createAlias(
+        $_aliasNameGenerator(db.dbBookmarks.userId, db.dbAuthors.id),
       );
 
-  $$AuthorsTableTableProcessedTableManager get userId {
+  $$DbAuthorsTableProcessedTableManager get userId {
     final $_column = $_itemColumn<int>('user_id')!;
 
-    final manager = $$AuthorsTableTableTableManager(
+    final manager = $$DbAuthorsTableTableManager(
       $_db,
-      $_db.authorsTable,
+      $_db.dbAuthors,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIdTable($_db));
     if (item == null) return manager;
@@ -12422,9 +12241,9 @@ final class $$BookmarksTableTableReferences
   }
 }
 
-class $$BookmarksTableTableFilterComposer
-    extends Composer<_$AppDatabase, $BookmarksTableTable> {
-  $$BookmarksTableTableFilterComposer({
+class $$DbBookmarksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbBookmarksTable> {
+  $$DbBookmarksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12461,20 +12280,20 @@ class $$BookmarksTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$WorksTableTableFilterComposer get workId {
-    final $$WorksTableTableFilterComposer composer = $composerBuilder(
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableFilterComposer(
+          }) => $$DbWorksTableFilterComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12484,20 +12303,20 @@ class $$BookmarksTableTableFilterComposer
     return composer;
   }
 
-  $$SeriesTableTableFilterComposer get seriesId {
-    final $$SeriesTableTableFilterComposer composer = $composerBuilder(
+  $$DbSeriesTableFilterComposer get seriesId {
+    final $$DbSeriesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableFilterComposer(
+          }) => $$DbSeriesTableFilterComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12507,20 +12326,20 @@ class $$BookmarksTableTableFilterComposer
     return composer;
   }
 
-  $$AuthorsTableTableFilterComposer get userId {
-    final $$AuthorsTableTableFilterComposer composer = $composerBuilder(
+  $$DbAuthorsTableFilterComposer get userId {
+    final $$DbAuthorsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableFilterComposer(
+          }) => $$DbAuthorsTableFilterComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12531,9 +12350,9 @@ class $$BookmarksTableTableFilterComposer
   }
 }
 
-class $$BookmarksTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $BookmarksTableTable> {
-  $$BookmarksTableTableOrderingComposer({
+class $$DbBookmarksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbBookmarksTable> {
+  $$DbBookmarksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12570,20 +12389,20 @@ class $$BookmarksTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$WorksTableTableOrderingComposer get workId {
-    final $$WorksTableTableOrderingComposer composer = $composerBuilder(
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableOrderingComposer(
+          }) => $$DbWorksTableOrderingComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12593,20 +12412,20 @@ class $$BookmarksTableTableOrderingComposer
     return composer;
   }
 
-  $$SeriesTableTableOrderingComposer get seriesId {
-    final $$SeriesTableTableOrderingComposer composer = $composerBuilder(
+  $$DbSeriesTableOrderingComposer get seriesId {
+    final $$DbSeriesTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableOrderingComposer(
+          }) => $$DbSeriesTableOrderingComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12616,20 +12435,20 @@ class $$BookmarksTableTableOrderingComposer
     return composer;
   }
 
-  $$AuthorsTableTableOrderingComposer get userId {
-    final $$AuthorsTableTableOrderingComposer composer = $composerBuilder(
+  $$DbAuthorsTableOrderingComposer get userId {
+    final $$DbAuthorsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableOrderingComposer(
+          }) => $$DbAuthorsTableOrderingComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12640,9 +12459,9 @@ class $$BookmarksTableTableOrderingComposer
   }
 }
 
-class $$BookmarksTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $BookmarksTableTable> {
-  $$BookmarksTableTableAnnotationComposer({
+class $$DbBookmarksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbBookmarksTable> {
+  $$DbBookmarksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -12669,20 +12488,20 @@ class $$BookmarksTableTableAnnotationComposer
   GeneratedColumn<String> get recNotes =>
       $composableBuilder(column: $table.recNotes, builder: (column) => column);
 
-  $$WorksTableTableAnnotationComposer get workId {
-    final $$WorksTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.workId,
-      referencedTable: $db.worksTable,
+      referencedTable: $db.dbWorks,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$WorksTableTableAnnotationComposer(
+          }) => $$DbWorksTableAnnotationComposer(
             $db: $db,
-            $table: $db.worksTable,
+            $table: $db.dbWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12692,20 +12511,20 @@ class $$BookmarksTableTableAnnotationComposer
     return composer;
   }
 
-  $$SeriesTableTableAnnotationComposer get seriesId {
-    final $$SeriesTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbSeriesTableAnnotationComposer get seriesId {
+    final $$DbSeriesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.seriesId,
-      referencedTable: $db.seriesTable,
+      referencedTable: $db.dbSeries,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SeriesTableTableAnnotationComposer(
+          }) => $$DbSeriesTableAnnotationComposer(
             $db: $db,
-            $table: $db.seriesTable,
+            $table: $db.dbSeries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12715,20 +12534,20 @@ class $$BookmarksTableTableAnnotationComposer
     return composer;
   }
 
-  $$AuthorsTableTableAnnotationComposer get userId {
-    final $$AuthorsTableTableAnnotationComposer composer = $composerBuilder(
+  $$DbAuthorsTableAnnotationComposer get userId {
+    final $$DbAuthorsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userId,
-      referencedTable: $db.authorsTable,
+      referencedTable: $db.dbAuthors,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableTableAnnotationComposer(
+          }) => $$DbAuthorsTableAnnotationComposer(
             $db: $db,
-            $table: $db.authorsTable,
+            $table: $db.dbAuthors,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -12739,34 +12558,32 @@ class $$BookmarksTableTableAnnotationComposer
   }
 }
 
-class $$BookmarksTableTableTableManager
+class $$DbBookmarksTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $BookmarksTableTable,
-          BookmarksTableData,
-          $$BookmarksTableTableFilterComposer,
-          $$BookmarksTableTableOrderingComposer,
-          $$BookmarksTableTableAnnotationComposer,
-          $$BookmarksTableTableCreateCompanionBuilder,
-          $$BookmarksTableTableUpdateCompanionBuilder,
-          (BookmarksTableData, $$BookmarksTableTableReferences),
-          BookmarksTableData,
+          $DbBookmarksTable,
+          DbBookmark,
+          $$DbBookmarksTableFilterComposer,
+          $$DbBookmarksTableOrderingComposer,
+          $$DbBookmarksTableAnnotationComposer,
+          $$DbBookmarksTableCreateCompanionBuilder,
+          $$DbBookmarksTableUpdateCompanionBuilder,
+          (DbBookmark, $$DbBookmarksTableReferences),
+          DbBookmark,
           PrefetchHooks Function({bool workId, bool seriesId, bool userId})
         > {
-  $$BookmarksTableTableTableManager(
-    _$AppDatabase db,
-    $BookmarksTableTable table,
-  ) : super(
+  $$DbBookmarksTableTableManager(_$AppDatabase db, $DbBookmarksTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$BookmarksTableTableFilterComposer($db: db, $table: table),
+              $$DbBookmarksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$BookmarksTableTableOrderingComposer($db: db, $table: table),
+              $$DbBookmarksTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$BookmarksTableTableAnnotationComposer($db: db, $table: table),
+              $$DbBookmarksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -12778,7 +12595,7 @@ class $$BookmarksTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> privateNotes = const Value.absent(),
                 Value<String?> recNotes = const Value.absent(),
-              }) => BookmarksTableCompanion(
+              }) => DbBookmarksCompanion(
                 id: id,
                 workId: workId,
                 seriesId: seriesId,
@@ -12800,7 +12617,7 @@ class $$BookmarksTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<String?> privateNotes = const Value.absent(),
                 Value<String?> recNotes = const Value.absent(),
-              }) => BookmarksTableCompanion.insert(
+              }) => DbBookmarksCompanion.insert(
                 id: id,
                 workId: workId,
                 seriesId: seriesId,
@@ -12815,7 +12632,7 @@ class $$BookmarksTableTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$BookmarksTableTableReferences(db, table, e),
+                  $$DbBookmarksTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -12846,10 +12663,10 @@ class $$BookmarksTableTableTableManager
                                     currentTable: table,
                                     currentColumn: table.workId,
                                     referencedTable:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._workIdTable(db),
                                     referencedColumn:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._workIdTable(db)
                                             .id,
                                   )
@@ -12861,10 +12678,10 @@ class $$BookmarksTableTableTableManager
                                     currentTable: table,
                                     currentColumn: table.seriesId,
                                     referencedTable:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._seriesIdTable(db),
                                     referencedColumn:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._seriesIdTable(db)
                                             .id,
                                   )
@@ -12876,10 +12693,10 @@ class $$BookmarksTableTableTableManager
                                     currentTable: table,
                                     currentColumn: table.userId,
                                     referencedTable:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._userIdTable(db),
                                     referencedColumn:
-                                        $$BookmarksTableTableReferences
+                                        $$DbBookmarksTableReferences
                                             ._userIdTable(db)
                                             .id,
                                   )
@@ -12897,51 +12714,48 @@ class $$BookmarksTableTableTableManager
       );
 }
 
-typedef $$BookmarksTableTableProcessedTableManager =
+typedef $$DbBookmarksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $BookmarksTableTable,
-      BookmarksTableData,
-      $$BookmarksTableTableFilterComposer,
-      $$BookmarksTableTableOrderingComposer,
-      $$BookmarksTableTableAnnotationComposer,
-      $$BookmarksTableTableCreateCompanionBuilder,
-      $$BookmarksTableTableUpdateCompanionBuilder,
-      (BookmarksTableData, $$BookmarksTableTableReferences),
-      BookmarksTableData,
+      $DbBookmarksTable,
+      DbBookmark,
+      $$DbBookmarksTableFilterComposer,
+      $$DbBookmarksTableOrderingComposer,
+      $$DbBookmarksTableAnnotationComposer,
+      $$DbBookmarksTableCreateCompanionBuilder,
+      $$DbBookmarksTableUpdateCompanionBuilder,
+      (DbBookmark, $$DbBookmarksTableReferences),
+      DbBookmark,
       PrefetchHooks Function({bool workId, bool seriesId, bool userId})
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$WorksTableTableTableManager get worksTable =>
-      $$WorksTableTableTableManager(_db, _db.worksTable);
-  $$AuthorsTableTableTableManager get authorsTable =>
-      $$AuthorsTableTableTableManager(_db, _db.authorsTable);
-  $$WorkAuthorsTableTableTableManager get workAuthorsTable =>
-      $$WorkAuthorsTableTableTableManager(_db, _db.workAuthorsTable);
-  $$TagsTableTableTableManager get tagsTable =>
-      $$TagsTableTableTableManager(_db, _db.tagsTable);
-  $$WorkFandomsTableTableTableManager get workFandomsTable =>
-      $$WorkFandomsTableTableTableManager(_db, _db.workFandomsTable);
-  $$WorkRelationshipsTableTableTableManager get workRelationshipsTable =>
-      $$WorkRelationshipsTableTableTableManager(
-        _db,
-        _db.workRelationshipsTable,
-      );
-  $$WorkCharactersTableTableTableManager get workCharactersTable =>
-      $$WorkCharactersTableTableTableManager(_db, _db.workCharactersTable);
-  $$WorkTagsTableTableTableManager get workTagsTable =>
-      $$WorkTagsTableTableTableManager(_db, _db.workTagsTable);
-  $$ChaptersTableTableTableManager get chaptersTable =>
-      $$ChaptersTableTableTableManager(_db, _db.chaptersTable);
-  $$ReadHistoriesTableTableTableManager get readHistoriesTable =>
-      $$ReadHistoriesTableTableTableManager(_db, _db.readHistoriesTable);
-  $$SeriesTableTableTableManager get seriesTable =>
-      $$SeriesTableTableTableManager(_db, _db.seriesTable);
-  $$WorkSeriesTableTableManager get workSeries =>
-      $$WorkSeriesTableTableManager(_db, _db.workSeries);
-  $$BookmarksTableTableTableManager get bookmarksTable =>
-      $$BookmarksTableTableTableManager(_db, _db.bookmarksTable);
+  $$DbWorksTableTableManager get dbWorks =>
+      $$DbWorksTableTableManager(_db, _db.dbWorks);
+  $$DbAuthorsTableTableManager get dbAuthors =>
+      $$DbAuthorsTableTableManager(_db, _db.dbAuthors);
+  $$DbWorkAuthorsTableTableManager get dbWorkAuthors =>
+      $$DbWorkAuthorsTableTableManager(_db, _db.dbWorkAuthors);
+  $$DbTagsTableTableManager get dbTags =>
+      $$DbTagsTableTableManager(_db, _db.dbTags);
+  $$DbWorkFandomsTableTableManager get dbWorkFandoms =>
+      $$DbWorkFandomsTableTableManager(_db, _db.dbWorkFandoms);
+  $$DbWorkRelationshipsTableTableManager get dbWorkRelationships =>
+      $$DbWorkRelationshipsTableTableManager(_db, _db.dbWorkRelationships);
+  $$DbWorkCharactersTableTableManager get dbWorkCharacters =>
+      $$DbWorkCharactersTableTableManager(_db, _db.dbWorkCharacters);
+  $$DbWorkTagsTableTableManager get dbWorkTags =>
+      $$DbWorkTagsTableTableManager(_db, _db.dbWorkTags);
+  $$DbChaptersTableTableManager get dbChapters =>
+      $$DbChaptersTableTableManager(_db, _db.dbChapters);
+  $$DbReadHistoriesTableTableManager get dbReadHistories =>
+      $$DbReadHistoriesTableTableManager(_db, _db.dbReadHistories);
+  $$DbSeriesTableTableManager get dbSeries =>
+      $$DbSeriesTableTableManager(_db, _db.dbSeries);
+  $$DbWorkSeriesTableTableManager get dbWorkSeries =>
+      $$DbWorkSeriesTableTableManager(_db, _db.dbWorkSeries);
+  $$DbBookmarksTableTableManager get dbBookmarks =>
+      $$DbBookmarksTableTableManager(_db, _db.dbBookmarks);
 }

@@ -3,14 +3,14 @@ import 'package:archiverse/database/tables/series.dart';
 import 'package:archiverse/database/tables/works.dart';
 import 'package:drift/drift.dart';
 
-class BookmarksTable extends Table {
+class DbBookmarks extends Table {
   @override
   String get tableName => 'bookmarks';
 
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get workId => integer().references(WorksTable, #id).nullable()();
-  IntColumn get seriesId => integer().references(SeriesTable, #id).nullable()();
-  IntColumn get userId => integer().references(AuthorsTable, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id).nullable()();
+  IntColumn get seriesId => integer().references(DbSeries, #id).nullable()();
+  IntColumn get userId => integer().references(DbAuthors, #id)();
   DateTimeColumn get date => dateTime()();
   TextColumn get type => text()(); // BookmarkType enum as string
   TextColumn get notes => text().nullable()();

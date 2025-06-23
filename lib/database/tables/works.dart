@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-class WorksTable extends Table {
+class DbWorks extends Table {
   @override
   String get tableName => 'works'; // Keep the actual table name as 'works'
 
