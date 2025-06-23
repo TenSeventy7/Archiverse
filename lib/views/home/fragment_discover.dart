@@ -87,7 +87,6 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
   ) {
     return NestedScrollView(
       controller: controller,
-      physics: const BouncingScrollPhysics(),
       headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
         return <Widget>[
           DiscoverHeader(
@@ -175,13 +174,19 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
   }
 
   Widget _buildNoItemsIndicator() {
-    return Padding(
-      padding: context.horizontalPadding,
-      child: ItemPlaceholder.medium(
-        icon: TablerIcons.brand_ao3,
-        message: 'Welcome to Archiverse!',
-        subtitle:
-            'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: Padding(
+          padding: context.horizontalPadding,
+          child: ItemPlaceholder.medium(
+            icon: TablerIcons.brand_ao3,
+            message: 'Welcome to Archiverse!',
+            subtitle:
+                'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',
+          ),
+        ),
       ),
     );
   }
