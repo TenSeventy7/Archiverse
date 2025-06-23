@@ -62,7 +62,7 @@ class AuthorTile extends StatelessWidget {
               maxRadius: 16.0,
               backgroundColor: context.colorScheme.primaryContainer,
               child: EnhancedFutureBuilder(
-                future: AppApi().getUser(author),
+                future: AppApi().getUser(author, priority: RequestPriority.low),
                 rememberFutureResult: false,
                 whenDone: (author) =>
                     UserImage(context: context, user: author, size: 8),
