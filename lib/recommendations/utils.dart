@@ -42,6 +42,27 @@ class RecommendationUtils {
         .toList();
   }
 
+  /// Get user's favorite works based on read history
+  /// This method returns a list of works sorted by hit count
+  static List<Work> getUserFavoriteWorks(List<ReadHistory>? userHistory) {
+    if (userHistory == null || userHistory.isEmpty) return [];
+
+    final workCount = <int, Map<String, dynamic>>{};
+
+    for (final history in userHistory) {
+      final workId = history.work.id;
+      workCount[workId] = {'work': history.work, 'count': history.hits};
+    }
+
+    final sortedWorks = workCount.values.toList()
+      ..sort((a, b) => b['count'].compareTo(a['count']));
+
+    return sortedWorks
+        .take(10)
+        .map<Work>((entry) => entry['work'] as Work)
+        .toList();
+  }
+
   /// Get user's favorite tags based on read history
   static List<Tag> getUserFavoriteTags(
     List<ReadHistory>? userHistory, {
