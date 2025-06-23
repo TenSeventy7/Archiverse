@@ -23,20 +23,23 @@ abstract class CommonDetailActivityState<T>
 
   CommonDetailActivityState(this.item);
 
-  Future<T> fetchItem();
+  Future<T> fetchItem({bool refresh = false});
 
-  void _fetchItem() async {
+  Future<void> _fetchItem({bool refresh = false}) async {
+    setState(() {
+      state = LoadingState.LOADING;
+    });
+
     try {
-      T fetch = await fetchItem();
+      final T result = await fetchItem(refresh: refresh);
       if (mounted) {
         setState(() {
-          item = fetch;
+          item = result;
           state = LoadingState.LOADED;
         });
         onItemLoaded();
       }
     } catch (e) {
-      print(e);
       if (mounted) {
         setState(() {
           state = LoadingState.ERROR;
@@ -44,6 +47,24 @@ abstract class CommonDetailActivityState<T>
       }
     }
   }
+
+  // Subclasses can override this for additional refresh logic
+  Future<void> onRefreshContent() async {}
+
+  // Add refresh method that subclasses can override
+  Future<void> onRefresh() async {
+    // Force refresh the main item
+    await _fetchItem(refresh: true);
+
+    // Call subclass-specific refresh logic
+    await onRefreshContent();
+  }
+
+  bool get hasRefresh => true;
+  bool get _canRefresh =>
+      hasRefresh &&
+      state != LoadingState.LOADING &&
+      state != LoadingState.ERROR;
 
   void _refreshItem() {
     setState(() {
@@ -175,19 +196,23 @@ abstract class CommonDetailActivityState<T>
       controller: controller,
       physics: const BouncingScrollPhysics(),
       headerSliverBuilder: (context, scrolled) => [_buildAppBar(context)],
-      body: Skeletonizer(
-        enabled: state != LoadingState.LOADED,
-        child: CustomScrollView(
-          slivers: [
-            ...buildDetailSlivers(context),
-            if (state == LoadingState.LOADED) ...[
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 48.0,
-                ), // Add some spacing at the bottom for floating bar
-              ),
+      body: RefreshIndicator(
+        notificationPredicate: _canRefresh ? (_) => true : (_) => false,
+        onRefresh: onRefresh,
+        child: Skeletonizer(
+          enabled: state != LoadingState.LOADED,
+          child: CustomScrollView(
+            slivers: [
+              ...buildDetailSlivers(context),
+              if (state == LoadingState.LOADED) ...[
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 48.0,
+                  ), // Add some spacing at the bottom for floating bar
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
