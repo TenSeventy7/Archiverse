@@ -103,7 +103,7 @@ class _LibraryHistoryTabState extends State<LibraryHistoryTab> {
 
     return Column(
       children: [
-        TextHeader.small(title: AppUtils.formatDate(context, date)),
+        TextHeader.small(title: AppUtils.formatDateTight(context, date)),
 
         Padding(
           padding: context.horizontalPadding,
