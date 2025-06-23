@@ -52,7 +52,7 @@ class AuthorsDao extends BaseDao<DbAuthors, DbAuthor, Pseud> {
 
   // Get author by name and pseud
   Future<Pseud?> getAuthorByNameAndPseud(String name, String pseud) async {
-    final author = await getSingle(
+    final author = await getSingleOrNull(
       (a) => a.name.equals(name) & a.pseud.equals(pseud),
     );
     return author != null ? fromRow(author) : null;
@@ -116,19 +116,14 @@ class AuthorsDao extends BaseDao<DbAuthors, DbAuthor, Pseud> {
 
   // Insert or update author and return the ID
   Future<int> insertOrUpdateAuthorAndGetId(Pseud pseud) async {
-    // Try to find existing author
-    final existing = await getAuthorByNameAndPseud(pseud.name, pseud.pseud);
+    final authorRecord = await getSingleOrNull(
+      (a) => a.name.equals(pseud.name) & a.pseud.equals(pseud.pseud),
+    );
 
-    if (existing != null) {
-      // Get the ID of the existing author
-      final authorRecord = await getSingle(
-        (a) => a.name.equals(pseud.name) & a.pseud.equals(pseud.pseud),
-      );
-
-      // Update the existing author
-      await insertOrUpdate(pseud);
-
-      return authorRecord!.id;
+    if (authorRecord != null) {
+      // Update existing author
+      await updateWhere(pseud, (a) => a.id.equals(authorRecord.id));
+      return authorRecord.id;
     } else {
       // Insert new author
       return await insertAuthorAndGetId(pseud);

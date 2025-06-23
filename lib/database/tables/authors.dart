@@ -17,6 +17,11 @@ class DbAuthors extends Table {
   IntColumn get collections => integer().nullable()();
   IntColumn get gifts => integer().nullable()();
   BoolColumn get guest => boolean().withDefault(const Constant(false))();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {name, pseud},
+  ];
 }
 
 class DbWorkAuthors extends Table {

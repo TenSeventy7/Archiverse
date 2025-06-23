@@ -42,6 +42,10 @@ abstract class BaseDao<T extends Table, D extends DataClass, M>
     return await (select(table)..where(where)).getSingleOrNull();
   }
 
+  Future<D?> getSingleOrNull(Expression<bool> Function(T tbl) where) async {
+    return await (select(table)..where(where)).getSingleOrNull();
+  }
+
   Future<List<D>> getMultiple(Expression<bool> Function(T tbl) where) async {
     return await (select(table)..where(where)).get();
   }
