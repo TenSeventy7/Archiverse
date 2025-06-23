@@ -145,7 +145,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
       return AppApi().getPseud(item);
     }
 
-    return AppApi().getUser(item);
+    return AppApi().getUser(item, priority: RequestPriority.high);
   }
 
   @override
