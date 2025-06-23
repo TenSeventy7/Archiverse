@@ -2,10 +2,10 @@ import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/discover_header.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
-import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_recommendations.dart';
+import 'package:archiverse/recommendations/base_recommendation.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
@@ -22,12 +22,12 @@ class DiscoverFragment extends StatefulWidget {
 
 class _DiscoverFragmentState extends State<DiscoverFragment> {
   static const _pageSize = 5;
-  late final PagingController<int, RecommendationResult> _pagingController;
+  late final PagingController<int, BaseRecommendation> _pagingController;
 
   @override
   void initState() {
     super.initState();
-    _pagingController = PagingController<int, RecommendationResult>(
+    _pagingController = PagingController<int, BaseRecommendation>(
       getNextPageKey: (state) => (state.keys?.last ?? 0) + 1,
       fetchPage: (pageKey) => _fetchPage(pageKey),
     );
@@ -38,13 +38,10 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
     });
   }
 
-  Future<List<RecommendationResult>> _fetchPage(int pageKey) async {
+  Future<List<BaseRecommendation>> _fetchPage(int pageKey) async {
     final provider = context.read<RecommendationsProvider>();
 
-    final result = await provider.getRecommendationsWithContext(
-      pageKey: pageKey,
-      pageSize: _pageSize,
-    );
+    final result = await provider.getRecommendationsWithContext(pageKey);
 
     return [result];
   }
@@ -79,7 +76,6 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
         size: 22.0,
         color: context.theme.colorScheme.onPrimaryContainer,
       ),
-
       body: (context, controller) => _buildScrollView(controller, context),
       child: SizedBox(),
     );
@@ -105,28 +101,27 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
           await context.read<RecommendationsProvider>().refresh();
           _pagingController.refresh();
         },
-        child: PagingListener<int, RecommendationResult>(
+        child: PagingListener<int, BaseRecommendation>(
           controller: _pagingController,
           builder: (context, state, fetchNextPage) =>
-              PagedListView<int, RecommendationResult>(
+              PagedListView<int, BaseRecommendation>(
                 physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 state: state,
                 fetchNextPage: fetchNextPage,
-                builderDelegate:
-                    PagedChildBuilderDelegate<RecommendationResult>(
-                      itemBuilder: _buildItem,
-                      firstPageErrorIndicatorBuilder: (context) =>
-                          _buildErrorIndicator(fetchNextPage),
-                      newPageErrorIndicatorBuilder: (context) =>
-                          _buildErrorIndicator(fetchNextPage),
-                      firstPageProgressIndicatorBuilder: (context) =>
-                          _buildLoadingIndicator(),
-                      newPageProgressIndicatorBuilder: (context) =>
-                          _buildLoadingIndicator(),
-                      noItemsFoundIndicatorBuilder: (context) =>
-                          _buildNoItemsIndicator(),
-                    ),
+                builderDelegate: PagedChildBuilderDelegate<BaseRecommendation>(
+                  itemBuilder: _buildItem,
+                  firstPageErrorIndicatorBuilder: (context) =>
+                      _buildErrorIndicator(fetchNextPage),
+                  newPageErrorIndicatorBuilder: (context) =>
+                      _buildErrorIndicator(fetchNextPage),
+                  firstPageProgressIndicatorBuilder: (context) =>
+                      _buildLoadingIndicator(),
+                  newPageProgressIndicatorBuilder: (context) =>
+                      _buildLoadingIndicator(),
+                  noItemsFoundIndicatorBuilder: (context) =>
+                      _buildNoItemsIndicator(),
+                ),
               ),
         ),
       ),
@@ -135,28 +130,26 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
 
   Widget _buildItem(
     BuildContext context,
-    RecommendationResult result,
+    BaseRecommendation engine,
     int index,
   ) {
-    // Handle continue reading card for pageKey 0
-    if (result.isContinueReading) {
-      return Padding(
-        padding: context.horizontalPadding,
-        child: ContinueReadingCard(),
-      );
-    }
-
-    // Handle regular recommendation sections
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.commonPadding),
-      child: WorkSuggestions(
-        works: result.works,
-        loading: false,
-        header: TextHeader.medium(
-          title: result.getDisplayTitle(),
-          icon: result.icon,
-          hasPadding: true,
-        ),
+      padding: EdgeInsetsGeometry.only(
+        left: context.commonPadding,
+        right: context.commonPadding,
+        bottom: context.commonPadding,
+      ),
+      child: Column(
+        children: [
+          if (engine.hasHeader) ...[
+            TextHeader.medium(
+              title: engine.getWidgetTitle(context),
+              icon: engine.widgetIcon,
+              hasPadding: true,
+            ),
+          ],
+          engine.build(context: context, items: engine.items),
+        ],
       ),
     );
   }
