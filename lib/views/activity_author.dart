@@ -64,6 +64,13 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
     _fetchSeries();
   }
 
+  @override
+  Future<void> onRefreshContent() async {
+    _fetchWorks();
+    _fetchBookmarks();
+    _fetchSeries();
+  }
+
   Future<void> _fetchWorks() async {
     setState(() {
       _worksState = LoadingState.LOADING;
@@ -140,12 +147,20 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
   }
 
   @override
-  Future<Pseud> fetchItem() {
+  Future<Pseud> fetchItem({bool refresh = false}) async {
     if (item.isPseud) {
-      return AppApi().getPseud(item);
+      return AppApi().getPseud(
+        item,
+        refresh: refresh,
+        priority: RequestPriority.high,
+      );
     }
 
-    return AppApi().getUser(item, priority: RequestPriority.high);
+    return AppApi().getUser(
+      item,
+      refresh: refresh,
+      priority: RequestPriority.high,
+    );
   }
 
   @override
