@@ -1,3 +1,4 @@
+import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/placeholders.dart';
@@ -49,6 +50,7 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
     final textTheme = context.textTheme;
 
     return Card.filled(
+      color: colorScheme.tertiaryContainer.withValues(alpha: 0.5),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
@@ -61,7 +63,7 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 18.0),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -77,30 +79,12 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
                         Text(
                           "Continue reading",
                           style: textTheme.labelMedium?.copyWith(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 6.0),
-                        Text(
-                          readHistory.work.title,
-                          style: textTheme.titleLarge?.copyWith(
+                            color: colorScheme.tertiary,
                             fontWeight: FontWeight.w600,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 4.0),
-                        Text(
-                          readHistory.work.authors
-                              .map((author) => author.name)
-                              .join(", "),
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        const SizedBox(height: 8.0),
+                        WorkItem.mini(work: readHistory.work),
                       ],
                     ),
                   ),
@@ -111,14 +95,14 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: colorScheme.primary.withAlpha(50),
+                        color: colorScheme.tertiaryFixedDim.withAlpha(60),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         readHistory.work.title[0].toUpperCase(),
                         style: textTheme.titleLarge?.copyWith(
-                          color: colorScheme.primary,
+                          color: colorScheme.tertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -145,7 +129,7 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
                   Text(
                     "${(readHistory.completion * 100).toInt()}%",
                     style: textTheme.labelMedium?.copyWith(
-                      color: colorScheme.primary,
+                      color: colorScheme.tertiary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -158,7 +142,9 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
                 child: LinearProgressIndicator(
                   value: readHistory.completion,
                   borderRadius: BorderRadius.circular(24),
-                  backgroundColor: colorScheme.surfaceContainerLow,
+                  color: colorScheme.tertiary,
+                  stopIndicatorColor: colorScheme.tertiaryFixed,
+                  backgroundColor: colorScheme.tertiaryFixedDim.withAlpha(60),
                   minHeight: 10,
                 ),
               ),
