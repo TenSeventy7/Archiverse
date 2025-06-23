@@ -27,6 +27,7 @@ class RecommendationsProvider extends ChangeNotifier {
 
   // Dynamic list of available recommendation types
   final List<BaseRecommendation<dynamic>> _recommendations = [];
+  int _lastRecommendationId = 0;
 
   RecommendationsProvider();
 
@@ -99,6 +100,8 @@ class RecommendationsProvider extends ChangeNotifier {
     if (_recommendations.isEmpty) {
       _addInitialRecommendations();
     }
+
+    _lastRecommendationId = _recommendations.length;
   }
 
   /// Get paginated recommendations with context
@@ -142,7 +145,14 @@ class RecommendationsProvider extends ChangeNotifier {
         BaseRecommendation<dynamic> engine = RandomDiscoveryRecommendation();
 
         if (attempts < 3) {
-          engine = availableRecs[random.nextInt(availableRecs.length)];
+          int index = random.nextInt(availableRecs.length);
+
+          // Ensure we don't select the same recommendation type as last time
+          while (index == _lastRecommendationId) {
+            index = random.nextInt(availableRecs.length);
+          }
+
+          engine = availableRecs[index];
         }
 
         final recommendations = await engine.getRecommendations(
