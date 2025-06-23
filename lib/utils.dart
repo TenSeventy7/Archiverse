@@ -23,10 +23,9 @@ class AppUtils {
     List<String> authorNames = [];
 
     for (var author in authors) {
-      String authorName =
-          showPseud && author.name != author.pseud
-              ? "${author.pseud} (${author.name})"
-              : author.name;
+      String authorName = showPseud && author.name != author.pseud
+          ? "${author.pseud} (${author.name})"
+          : author.name;
 
       if (!authorNames.contains(authorName)) {
         authorNames.add(authorName);
@@ -81,6 +80,27 @@ class AppUtils {
       }
     } catch (e) {
       return "Unknown";
+    }
+  }
+
+  static String formatDateTight(BuildContext context, DateTime date) {
+    // If the date is up to yesterday, return relative time
+    DateTime today = DateTime.now().toUtc();
+    today = DateTime.utc(today.year, today.month, today.day);
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+
+    if (date.isAfter(yesterday)) {
+      // Show relative time for today or yesterday
+      return AppUtils.formatDate(context, date);
+    } else {
+      // Otherwise, show full date in proper locale
+      if (date.year == today.year) {
+        // Same year: show "MMMM dd" or "dd MMMM" based on locale
+        return DateFormat.MMMMd().format(date);
+      } else {
+        // Different year: include year based on locale
+        return DateFormat.yMMMMd().format(date);
+      }
     }
   }
 
