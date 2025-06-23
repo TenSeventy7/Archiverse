@@ -317,7 +317,7 @@ class ReadHistoriesDao
   // This is useful for analytics and personalized recommendations.
   Future<void> addHit(int workId, {int hits = 1}) async {
     await customUpdate(
-      'UPDATE read_histories SET hits = hits + ? WHERE id = ?',
+      'UPDATE read_histories SET hits = hits + ? WHERE work_id = ?',
       variables: [Variable<int>(hits), Variable<int>(workId)],
     );
   }
