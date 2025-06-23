@@ -93,6 +93,9 @@ class SeriesWork {
   SeriesWork copyWith({int? part, Series? series}) {
     return SeriesWork(part: part ?? this.part, series: series ?? this.series);
   }
+
+  SeriesWork.fromSeries({required this.part, required Series series})
+    : series = series.copyWith();
 }
 
 class Work {

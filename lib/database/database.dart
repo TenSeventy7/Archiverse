@@ -41,7 +41,14 @@ part 'database.g.dart';
     DbWorkSeries,
     DbBookmarks,
   ],
-  daos: [WorksDao, ChaptersDao, ReadHistoriesDao],
+  daos: [
+    WorksDao,
+    AuthorsDao,
+    TagsDao,
+    ChaptersDao,
+    ReadHistoriesDao,
+    SeriesDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

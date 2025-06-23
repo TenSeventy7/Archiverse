@@ -1,7 +1,10 @@
 import 'package:archiverse/database/database.dart';
 
+export 'package:archiverse/database/repository/repository_authors.dart';
 export 'package:archiverse/database/repository/repository_chapters.dart';
 export 'package:archiverse/database/repository/repository_read_histories.dart';
+export 'package:archiverse/database/repository/repository_series.dart';
+export 'package:archiverse/database/repository/repository_tags.dart';
 export 'package:archiverse/database/repository/repository_works.dart';
 
 class DataRepository {

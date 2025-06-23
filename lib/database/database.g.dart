@@ -4148,7 +4148,7 @@ class $DbReadHistoriesTable extends DbReadHistories
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: const Constant(0),
+    defaultValue: const Constant(1),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -5961,10 +5961,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DbWorkSeriesTable dbWorkSeries = $DbWorkSeriesTable(this);
   late final $DbBookmarksTable dbBookmarks = $DbBookmarksTable(this);
   late final WorksDao worksDao = WorksDao(this as AppDatabase);
+  late final AuthorsDao authorsDao = AuthorsDao(this as AppDatabase);
+  late final TagsDao tagsDao = TagsDao(this as AppDatabase);
   late final ChaptersDao chaptersDao = ChaptersDao(this as AppDatabase);
   late final ReadHistoriesDao readHistoriesDao = ReadHistoriesDao(
     this as AppDatabase,
   );
+  late final SeriesDao seriesDao = SeriesDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

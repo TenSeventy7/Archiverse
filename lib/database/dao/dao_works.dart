@@ -1,24 +1,13 @@
 import 'dart:convert';
 import 'package:archiverse/database/database.dart';
-import 'package:archiverse/models/pseud.dart';
+import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:drift/drift.dart';
 
 import 'dao_base.dart';
 
-@DriftAccessor(
-  tables: [
-    DbWorks,
-    DbAuthors,
-    DbWorkAuthors,
-    DbTags,
-    DbWorkFandoms,
-    DbWorkRelationships,
-    DbWorkCharacters,
-    DbWorkTags,
-  ],
-)
+@DriftAccessor(tables: [DbWorks])
 class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
   WorksDao(super.db);
 
@@ -102,12 +91,38 @@ class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
       // Insert/update the basic work
       await insertOrUpdate(work);
 
-      // Handle related data
-      await _insertWorkAuthors(work);
-      await _insertWorkTags(work.id, work.fandoms, 'fandoms');
-      await _insertWorkTags(work.id, work.relationships, 'relationships');
-      await _insertWorkTags(work.id, work.characters, 'characters');
-      await _insertWorkTags(work.id, work.tags, 'tags');
+      // Use separate DAOs for related data
+      await db.authorsDao.insertOrUpdateWorkAuthors(work.id, work.authors);
+      await db.tagsDao.insertOrUpdateWorkTags(
+        work.id,
+        work.fandoms,
+        TagType.FANDOM,
+      );
+      await db.tagsDao.insertOrUpdateWorkTags(
+        work.id,
+        work.relationships,
+        TagType.RELATIONSHIP,
+      );
+      await db.tagsDao.insertOrUpdateWorkTags(
+        work.id,
+        work.characters,
+        TagType.CHARACTER,
+      );
+      await db.tagsDao.insertOrUpdateWorkTags(
+        work.id,
+        work.tags,
+        TagType.FREEFORM,
+      );
+
+      // Handle series relationships
+      if (work.series.isNotEmpty) {
+        // Get all Series inside SeriesWork
+        var series = work.series.whereType<Series>().toList();
+        if (series.isNotEmpty) {
+          // Save series and link to work
+          await _saveWorkSeries(work.id, series);
+        }
+      }
     });
   }
 
@@ -115,23 +130,25 @@ class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
     final workData = await getSingle((w) => w.id.equals(workId));
     if (workData == null) return null;
 
-    // Get authors
-    final workAuthors = await _getWorkAuthors(workId);
-
-    // Get tags for each category
-    final fandoms = await _getWorkTags(workId, 'fandoms');
-    final relationships = await _getWorkTags(workId, 'relationships');
-    final characters = await _getWorkTags(workId, 'characters');
-    final workTagsList = await _getWorkTags(workId, 'tags');
+    // Use separate DAOs to get related data
+    final authors = await db.authorsDao.getWorkAuthors(workId);
+    final fandoms = await db.tagsDao.getWorkTags(workId, TagType.FANDOM);
+    final relationships = await db.tagsDao.getWorkTags(
+      workId,
+      TagType.RELATIONSHIP,
+    );
+    final characters = await db.tagsDao.getWorkTags(workId, TagType.CHARACTER);
+    final workTagsList = await db.tagsDao.getWorkTags(workId, TagType.FREEFORM);
+    final series = await db.seriesDao.getWorkSeries(workId);
 
     return Work(
       id: workData.id,
       title: workData.title,
       summary: workData.summary,
       requiresAuth: workData.requiresAuth,
-      series: [], // TODO: Implement series loading
+      series: series,
       updateDate: workData.updateDate,
-      authors: workAuthors,
+      authors: authors,
       words: workData.words,
       chapters: workData.chapters,
       comments: workData.comments,
@@ -158,6 +175,26 @@ class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
       giftMessage: workData.giftMessage,
       subscriptions: workData.subscriptions,
     );
+  }
+
+  // Helper method to save work series relationships
+  Future<void> _saveWorkSeries(int workId, List<Series> seriesList) async {
+    // Remove existing series relationships for this work
+    await (delete(
+      db.dbWorkSeries,
+    )..where((ws) => ws.workId.equals(workId))).go();
+
+    // Add new series relationships
+    for (final series in seriesList) {
+      // Save/update the series itself
+      final seriesId = await db.seriesDao.insertOrUpdateSeriesAndGetId(series);
+
+      // Get the next part number for this series
+      final partNumber = await db.seriesDao.getNextPartNumber(seriesId);
+
+      // Link work to series
+      await db.seriesDao.linkWorkToSeries(workId, seriesId, partNumber);
+    }
   }
 
   Future<List<Work>> searchWorks(String query) async {
@@ -197,190 +234,85 @@ class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
             : const Value.absent(),
       ),
     );
+
+    // If the work was updated, recalculate series stats
+    if (updateDate != null) {
+      await _updateSeriesStatsForWork(workId);
+    }
   }
 
-  // Private helper methods
-  Future<List<Pseud>> _getWorkAuthors(int workId) async {
-    dynamic dbAuthors = db.dbAuthors;
-    DbWorkAuthors dbWorkAuthors = db.dbWorkAuthors;
-    final query = select(dbAuthors).join([
-      innerJoin(dbWorkAuthors, dbWorkAuthors.authorId.equalsExp(dbAuthors.id)),
-    ])..where(dbWorkAuthors.workId.equals(workId));
+  // Helper method to update series statistics when a work changes
+  Future<void> _updateSeriesStatsForWork(int workId) async {
+    final seriesList = await db.seriesDao.getWorkSeries(workId);
+    for (final series in seriesList) {
+      await db.seriesDao.recalculateSeriesStats(series.series.id);
+    }
+  }
+
+  // Get works in a series (ordered by part number)
+  Future<List<Work>> getWorksInSeries(int seriesId) async {
+    final query =
+        select(table).join([
+            innerJoin(
+              db.dbWorkSeries,
+              db.dbWorkSeries.workId.equalsExp(table.asDslTable.id),
+            ),
+          ])
+          ..where(db.dbWorkSeries.seriesId.equals(seriesId))
+          ..orderBy([OrderingTerm.asc(db.dbWorkSeries.part)]);
 
     final results = await query.get();
-    return results.map((row) {
-      final author = row.readTable(dbAuthors);
-      return Pseud(
-        name: author.name,
-        pseud: author.pseud,
-        imageUrl: author.imageUrl,
-        bio: author.bio,
-        joinDate: author.joinDate,
-        works: author.works,
-        series: author.series,
-        bookmarks: author.bookmarks,
-        collections: author.collections,
-        gifts: author.gifts,
-        guest: author.guest,
-      );
-    }).toList();
+    return results.map((row) => fromRow(row.readTable(table))).toList();
   }
 
-  Future<List<Tag>> _getWorkTags(int workId, String type) async {
-    late JoinedSelectStatement query;
-
-    dynamic dbTags = db.dbTags;
-    DbWorkFandoms dbWorkFandoms = db.dbWorkFandoms;
-    DbWorkRelationships dbWorkRelationships = db.dbWorkRelationships;
-    DbWorkCharacters dbWorkCharacters = db.dbWorkCharacters;
-    DbWorkTags dbWorkTags = db.dbWorkTags;
-
-    switch (type) {
-      case 'fandoms':
-        query = select(dbTags).join([
-          innerJoin(
-            dbWorkFandoms,
-            dbWorkFandoms.tagName.equalsExp(dbTags.name),
-          ),
-        ])..where(dbWorkFandoms.workId.equals(workId));
-        break;
-      case 'relationships':
-        query = select(dbTags).join([
-          innerJoin(
-            dbWorkRelationships,
-            dbWorkRelationships.tagName.equalsExp(dbTags.name),
-          ),
-        ])..where(dbWorkRelationships.workId.equals(workId));
-        break;
-      case 'characters':
-        query = select(dbTags).join([
-          innerJoin(
-            dbWorkCharacters,
-            dbWorkCharacters.tagName.equalsExp(dbTags.name),
-          ),
-        ])..where(dbWorkCharacters.workId.equals(workId));
-        break;
-      case 'tags':
-        query = select(dbTags).join([
-          innerJoin(dbWorkTags, dbWorkTags.tagName.equalsExp(dbTags.name)),
-        ])..where(dbWorkTags.workId.equals(workId));
-        break;
-      default:
-        throw ArgumentError('Invalid tag type: $type');
-    }
+  // Get works by author that are part of series
+  Future<List<Work>> getAuthorWorksInSeries(int authorId) async {
+    final query =
+        select(table).join([
+            innerJoin(
+              db.dbWorkAuthors,
+              db.dbWorkAuthors.workId.equalsExp(table.asDslTable.id),
+            ),
+            innerJoin(
+              db.dbWorkSeries,
+              db.dbWorkSeries.workId.equalsExp(table.asDslTable.id),
+            ),
+          ])
+          ..where(db.dbWorkAuthors.authorId.equals(authorId))
+          ..orderBy([
+            OrderingTerm.asc(db.dbWorkSeries.seriesId),
+            OrderingTerm.asc(db.dbWorkSeries.part),
+          ]);
 
     final results = await query.get();
-    return results.map((row) {
-      final tag = row.readTable(dbTags);
-      return Tag(
-        name: tag.name,
-        localizedName: tag.localizedName,
-        count: tag.count,
-        canonical: tag.canonical,
-        type: TagType.values.firstWhere((t) => t.name == tag.type),
-      );
-    }).toList();
+    return results.map((row) => fromRow(row.readTable(table))).toList();
   }
 
-  Future<void> _insertWorkAuthors(Work work) async {
-    for (final author in work.authors) {
-      // Insert or update the author
-      await into(db.dbAuthors).insertOnConflictUpdate(
-        DbAuthorsCompanion(
-          name: Value(author.name),
-          pseud: Value(author.pseud),
-          imageUrl: Value(author.imageUrl),
-          bio: Value(author.bio),
-          joinDate: Value(author.joinDate),
-          works: Value(author.works),
-          series: Value(author.series),
-          bookmarks: Value(author.bookmarks),
-          collections: Value(author.collections),
-          gifts: Value(author.gifts),
-          guest: Value(author.guest),
-        ),
-      );
+  // Check if work is part of any series
+  Future<bool> isWorkInSeries(int workId) async {
+    final count =
+        await (selectOnly(db.dbWorkSeries)
+              ..addColumns([db.dbWorkSeries.workId.count()])
+              ..where(db.dbWorkSeries.workId.equals(workId)))
+            .getSingle();
 
-      // Get the author record
-      final authorRecord =
-          await (select(db.dbAuthors)
-                ..where(
-                  (a) =>
-                      a.name.equals(author.name) & a.pseud.equals(author.pseud),
-                )
-                ..limit(1))
-              .getSingleOrNull();
-
-      if (authorRecord != null) {
-        // Link work to author
-        await into(db.dbWorkAuthors).insertOnConflictUpdate(
-          DbWorkAuthorsCompanion(
-            workId: Value(work.id),
-            authorId: Value(authorRecord.id),
-          ),
-        );
-      }
-    }
+    return (count.read(db.dbWorkSeries.workId.count()) ?? 0) > 0;
   }
 
-  Future<void> _insertWorkTags(
-    int workId,
-    List<Tag> tagList,
-    String type,
-  ) async {
-    dynamic dbTags = db.dbTags;
-    dynamic dbWorkFandoms = db.dbWorkFandoms;
-    dynamic dbWorkRelationships = db.dbWorkRelationships;
-    dynamic dbWorkCharacters = db.dbWorkCharacters;
-    dynamic dbWorkTags = db.dbWorkTags;
+  // Get standalone works (not part of any series)
+  Future<List<Work>> getStandaloneWorks({int limit = 50}) async {
+    final query =
+        select(table).join([
+            leftOuterJoin(
+              db.dbWorkSeries,
+              db.dbWorkSeries.workId.equalsExp(table.asDslTable.id),
+            ),
+          ])
+          ..where(db.dbWorkSeries.workId.isNull())
+          ..orderBy([OrderingTerm.desc(table.asDslTable.updateDate)])
+          ..limit(limit);
 
-    for (final tag in tagList) {
-      // Insert the tag
-      await into(dbTags).insertOnConflictUpdate(
-        DbTagsCompanion(
-          name: Value(tag.name),
-          localizedName: Value(tag.localizedName),
-          count: Value(tag.count),
-          canonical: Value(tag.canonical),
-          type: Value(tag.type.name),
-        ),
-      );
-
-      // Link to work based on type
-      switch (type) {
-        case 'fandoms':
-          await into(dbWorkFandoms).insertOnConflictUpdate(
-            DbWorkFandomsCompanion(
-              workId: Value(workId),
-              tagName: Value(tag.name),
-            ),
-          );
-          break;
-        case 'relationships':
-          await into(dbWorkRelationships).insertOnConflictUpdate(
-            DbWorkRelationshipsCompanion(
-              workId: Value(workId),
-              tagName: Value(tag.name),
-            ),
-          );
-          break;
-        case 'characters':
-          await into(dbWorkCharacters).insertOnConflictUpdate(
-            DbWorkCharactersCompanion(
-              workId: Value(workId),
-              tagName: Value(tag.name),
-            ),
-          );
-          break;
-        case 'tags':
-          await into(dbWorkTags).insertOnConflictUpdate(
-            DbWorkTagsCompanion(
-              workId: Value(workId),
-              tagName: Value(tag.name),
-            ),
-          );
-          break;
-      }
-    }
+    final results = await query.get();
+    return results.map((row) => fromRow(row.readTable(table))).toList();
   }
 }
