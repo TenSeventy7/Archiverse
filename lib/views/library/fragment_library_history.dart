@@ -49,6 +49,11 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
       _controller.value = _controller.value.copyWith(hasNextPage: false);
     }
 
+    if (newItems.values.first.isEmpty) {
+      // If no items were returned, we can return an empty list
+      return [];
+    }
+
     return [newItems];
   }
 
@@ -141,7 +146,7 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
     return Padding(
       padding: EdgeInsetsGeometry.all(24.0),
       child: ItemPlaceholder.small(
-        icon: TablerIcons.history_off,
+        icon: TablerIcons.history,
         message: "No reading history yet",
         subtitle: "Start reading some works to see your history here",
       ),
