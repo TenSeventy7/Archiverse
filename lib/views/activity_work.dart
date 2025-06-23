@@ -81,7 +81,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     _fetchBookmarks();
   }
 
-  void _fetchSeries() async {
+  Future<void> _fetchSeries() async {
     try {
       List<SeriesWork> fetched = [];
       for (var part in item.series) {
@@ -103,7 +103,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     }
   }
 
-  void _fetchBookmarks() async {
+  Future<void> _fetchBookmarks() async {
     try {
       List<Bookmark> bookmarks = await AppApi().getBookmarksFromWork(
         item,
@@ -144,8 +144,18 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   @override
-  Future<Work> fetchItem() {
-    return AppApi().getWork(item, priority: RequestPriority.high);
+  Future<Work> fetchItem({bool refresh = false}) {
+    return AppApi().getWork(
+      item,
+      priority: RequestPriority.high,
+      refresh: refresh,
+    );
+  }
+
+  @override
+  Future<void> onRefreshContent() async {
+    _fetchSeries();
+    _fetchBookmarks();
   }
 
   @override
