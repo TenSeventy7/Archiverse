@@ -12,6 +12,7 @@ class ReadHistory {
   final int position;
   final ReadStatus status;
   final double completion; // Percentage; from 0.0 to 1.0
+  final int hits; // Number of times the work has been read
 
   const ReadHistory({
     required this.work,
@@ -20,5 +21,6 @@ class ReadHistory {
     required this.position,
     required this.status,
     required this.completion,
+    this.hits = 1,
   });
 }
