@@ -6,8 +6,8 @@ import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/recommendations/base_recommendation.dart';
-import 'package:archiverse/recommendations/utils.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
+import 'package:archiverse/recommendations/recommendation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 

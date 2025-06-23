@@ -5,23 +5,23 @@ import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/recommendations/base_recommendation.dart';
-import 'package:archiverse/recommendations/utils.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
+import 'package:archiverse/recommendations/recommendation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class SameFandomRecommendation extends BaseRecommendation<Work> {
-  const SameFandomRecommendation({super.title, super.items = const []});
+class SameRelationshipRecommendation extends BaseRecommendation<Work> {
+  const SameRelationshipRecommendation({super.title, super.items = const []});
 
   @override
   bool get requiresHistory => true;
 
   @override
-  IconData get widgetIcon => TablerIcons.books;
+  IconData get widgetIcon => TablerIcons.heart;
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "More works in the ${title ?? 'your favorite'} universe";
+    return "Fall in love with more ${title ?? 'of your favorite characters'}";
   }
 
   @override
@@ -32,12 +32,12 @@ class SameFandomRecommendation extends BaseRecommendation<Work> {
   }) async {
     final fandoms = RecommendationUtils.getUserFavoriteTags(
       readHistory,
-      types: [TagType.FANDOM],
-      limit: 10,
+      types: [TagType.RELATIONSHIP],
+      limit: 20,
     );
 
     if (fandoms.isEmpty) {
-      throw Exception('No favorite fandoms found');
+      throw Exception('No favorite characters found');
     }
 
     final random = Random(seed);
@@ -63,6 +63,9 @@ class SameFandomRecommendation extends BaseRecommendation<Work> {
     String? title,
     bool? isContinueReading,
   }) {
-    return SameFandomRecommendation(title: title, items: items ?? this.items);
+    return SameRelationshipRecommendation(
+      title: title,
+      items: items ?? this.items,
+    );
   }
 }

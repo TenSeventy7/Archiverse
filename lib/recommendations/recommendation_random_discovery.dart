@@ -1,5 +1,5 @@
-import 'package:archiverse/recommendations/base_recommendation.dart';
-import 'package:archiverse/recommendations/utils.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
+import 'package:archiverse/recommendations/recommendation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/models/work.dart';

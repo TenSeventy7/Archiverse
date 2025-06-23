@@ -5,7 +5,7 @@ import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_recommendations.dart';
-import 'package:archiverse/recommendations/base_recommendation.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
 import 'package:archiverse/views/activity_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';

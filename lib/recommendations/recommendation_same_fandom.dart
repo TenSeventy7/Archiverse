@@ -5,24 +5,23 @@ import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/recommendations/base_recommendation.dart';
-import 'package:archiverse/recommendations/utils.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
+import 'package:archiverse/recommendations/recommendation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class SameCharacterRecommendation extends BaseRecommendation<Work> {
-  const SameCharacterRecommendation({super.title, super.items = const []});
+class SameFandomRecommendation extends BaseRecommendation<Work> {
+  const SameFandomRecommendation({super.title, super.items = const []});
 
   @override
   bool get requiresHistory => true;
 
   @override
-  IconData get widgetIcon => TablerIcons.user;
+  IconData get widgetIcon => TablerIcons.books;
 
   @override
   String getWidgetTitle(BuildContext context) {
-    // return "More works in the ${title ?? 'your favorite'} universe";
-    return "Looking for more ${title ?? 'of your favorite character'}?";
+    return "More works in the ${title ?? 'your favorite'} universe";
   }
 
   @override
@@ -33,12 +32,12 @@ class SameCharacterRecommendation extends BaseRecommendation<Work> {
   }) async {
     final fandoms = RecommendationUtils.getUserFavoriteTags(
       readHistory,
-      types: [TagType.CHARACTER],
-      limit: 20,
+      types: [TagType.FANDOM],
+      limit: 10,
     );
 
     if (fandoms.isEmpty) {
-      throw Exception('No favorite characters found');
+      throw Exception('No favorite fandoms found');
     }
 
     final random = Random(seed);
@@ -64,9 +63,6 @@ class SameCharacterRecommendation extends BaseRecommendation<Work> {
     String? title,
     bool? isContinueReading,
   }) {
-    return SameCharacterRecommendation(
-      title: title,
-      items: items ?? this.items,
-    );
+    return SameFandomRecommendation(title: title, items: items ?? this.items);
   }
 }

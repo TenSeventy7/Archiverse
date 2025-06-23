@@ -5,23 +5,24 @@ import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/recommendations/base_recommendation.dart';
-import 'package:archiverse/recommendations/utils.dart';
+import 'package:archiverse/recommendations/recommendation_base.dart';
+import 'package:archiverse/recommendations/recommendation_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class SameRelationshipRecommendation extends BaseRecommendation<Work> {
-  const SameRelationshipRecommendation({super.title, super.items = const []});
+class SameCharacterRecommendation extends BaseRecommendation<Work> {
+  const SameCharacterRecommendation({super.title, super.items = const []});
 
   @override
   bool get requiresHistory => true;
 
   @override
-  IconData get widgetIcon => TablerIcons.heart;
+  IconData get widgetIcon => TablerIcons.user;
 
   @override
   String getWidgetTitle(BuildContext context) {
-    return "Fall in love with more ${title ?? 'of your favorite characters'}";
+    // return "More works in the ${title ?? 'your favorite'} universe";
+    return "Looking for more ${title ?? 'of your favorite character'}?";
   }
 
   @override
@@ -32,7 +33,7 @@ class SameRelationshipRecommendation extends BaseRecommendation<Work> {
   }) async {
     final fandoms = RecommendationUtils.getUserFavoriteTags(
       readHistory,
-      types: [TagType.RELATIONSHIP],
+      types: [TagType.CHARACTER],
       limit: 20,
     );
 
@@ -63,7 +64,7 @@ class SameRelationshipRecommendation extends BaseRecommendation<Work> {
     String? title,
     bool? isContinueReading,
   }) {
-    return SameRelationshipRecommendation(
+    return SameCharacterRecommendation(
       title: title,
       items: items ?? this.items,
     );
