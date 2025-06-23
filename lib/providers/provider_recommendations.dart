@@ -21,6 +21,7 @@ class RecommendationsProvider extends ChangeNotifier {
   final Map<int, BaseRecommendation> _cache = {};
 
   bool _isLoading = false;
+  bool _isInitialized = false;
   String? _error;
   List<ReadHistory>? _workHistory;
 
@@ -32,17 +33,13 @@ class RecommendationsProvider extends ChangeNotifier {
 
   void _addInitialRecommendations() {
     _addRecommendation(const RandomDiscoveryRecommendation());
-
-    // These recommenders only make sense if we have user history
-    if (_workHistory != null && _workHistory!.isNotEmpty) {
-      _addRecommendation(const SameAuthorRecommendation());
-      _addRecommendation(const SimilarTagsRecommendation());
-      _addRecommendation(const SameFandomRecommendation());
-      _addRecommendation(const SameCharacterRecommendation());
-      _addRecommendation(const SameRelationshipRecommendation());
-      _addRecommendation(const RelatedWorksRecommendation());
-      _addRecommendation(const PopularInFandomRecommendation());
-    }
+    _addRecommendation(const SameAuthorRecommendation());
+    _addRecommendation(const SimilarTagsRecommendation());
+    _addRecommendation(const SameFandomRecommendation());
+    _addRecommendation(const SameCharacterRecommendation());
+    _addRecommendation(const SameRelationshipRecommendation());
+    _addRecommendation(const RelatedWorksRecommendation());
+    _addRecommendation(const PopularInFandomRecommendation());
   }
 
   /// Add a new recommendation type dynamically
@@ -103,6 +100,8 @@ class RecommendationsProvider extends ChangeNotifier {
     }
 
     _lastRecommendationId = _recommendations.length;
+    _isInitialized = true;
+    notifyListeners();
   }
 
   /// Get paginated recommendations with context
@@ -195,7 +194,7 @@ class RecommendationsProvider extends ChangeNotifier {
   }
 
   bool get hasHistory {
-    return _workHistory != null && _workHistory!.isNotEmpty;
+    return _workHistory != null && _workHistory!.isNotEmpty && _isInitialized;
   }
 
   /// Clear cache and refresh recommendations
@@ -203,6 +202,7 @@ class RecommendationsProvider extends ChangeNotifier {
     _cache.clear();
     _workHistory = null;
     _error = null;
+    _isInitialized = false;
     notifyListeners();
 
     await initialize();

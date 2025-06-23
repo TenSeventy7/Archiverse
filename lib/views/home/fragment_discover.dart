@@ -100,7 +100,7 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
           await context.read<RecommendationsProvider>().refresh();
           _pagingController.refresh();
         },
-        child: context.read<RecommendationsProvider>().hasHistory
+        child: context.watch<RecommendationsProvider>().hasHistory
             ? _buildRecommendations()
             : _buildNoItemsIndicator(),
       ),
