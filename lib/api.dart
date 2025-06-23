@@ -28,7 +28,10 @@ class AppApi extends Ao3Api {
 
   factory AppApi() => _instance;
 
-  Future<Work> getWork(Work work) async {
+  Future<Work> getWork(
+    Work work, {
+    RequestPriority priority = RequestPriority.normal,
+  }) async {
     try {
       // Check database first if it's cached
       Work? cachedWork = await WorkRepository.getWork(work.id);
@@ -36,9 +39,9 @@ class AppApi extends Ao3Api {
         return cachedWork;
       }
 
-      return _ao3Api.getWork(work);
+      return _ao3Api.getWork(work, priority: priority);
     } catch (e) {
-      return _ao3Api.getWork(work);
+      return _ao3Api.getWork(work, priority: priority);
     }
   }
 
