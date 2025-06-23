@@ -20,6 +20,12 @@ class ItemPlaceholder extends StatelessWidget {
     this.subtitle,
     this.icon,
   }) : _type = _ItemPlaceholderType.small;
+  const ItemPlaceholder.medium({
+    super.key,
+    this.message,
+    this.subtitle,
+    this.icon,
+  }) : _type = _ItemPlaceholderType.medium;
 
   final String? message;
   final String? subtitle;
@@ -32,6 +38,7 @@ class ItemPlaceholder extends StatelessWidget {
       case _ItemPlaceholderType.small:
         return _buildSmallError(context);
       case _ItemPlaceholderType.medium:
+        return _buildMediumError(context);
       case _ItemPlaceholderType.large:
         return _buildLargeError(context);
     }
@@ -60,10 +67,47 @@ class ItemPlaceholder extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: context.textTheme.titleMedium,
                 ),
+                Text(
+                  subtitle ??
+                      "This page seems to be empty for now. Check back in later!",
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding _buildMediumError(BuildContext context) {
+    return Padding(
+      padding: EdgeInsetsGeometry.all(24.0),
+      child: Column(
+        children: [
+          if (icon != null)
+            Icon(
+              icon,
+              color: context.colorScheme.surfaceContainerHighest,
+              size: 96.0,
+            )
+          else
+            // Default icon if none is provided
+            Image.asset(context.getDrawable("component_empty_img.png")),
+          const SizedBox(height: 24.0),
+          Text(
+            message ?? "There's nothing to see here!",
+            textAlign: TextAlign.center,
+            style: context.textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8.0),
+          // ignore: prefer_const_constructors
+          Text(
+            subtitle ??
+                "This page seems to be empty for now. Check back in later!",
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
