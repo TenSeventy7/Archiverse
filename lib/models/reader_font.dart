@@ -52,6 +52,25 @@ enum ReaderFont {
     }
   }
 
+  String? get toOFLName {
+    switch (this) {
+      case ReaderFont.system:
+        return 'Roboto-OFL.txt';
+      case ReaderFont.openSans:
+        return 'OpenSans-OFL.txt';
+      case ReaderFont.merriweather:
+        return 'Merriweather-OFL.txt';
+      case ReaderFont.lora:
+        return 'Lora-OFL.txt';
+      case ReaderFont.sourceSerif:
+        return 'SourceSerif4-OFL.txt';
+      case ReaderFont.playfair:
+        return 'Playfair-OFL.txt';
+      case ReaderFont.montserrat:
+        return 'Montserrat-OFL.txt';
+    }
+  }
+
   String get name {
     switch (this) {
       case ReaderFont.system:
