@@ -6,6 +6,7 @@
 
 import 'package:archiverse/api.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/reader_font.dart';
 import 'package:archiverse/models/theming.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/providers/provider_read_history.dart';
@@ -16,7 +17,9 @@ import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
 import 'package:archiverse/strings/app_localizations.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +44,7 @@ void main() async {
   // We ship the TTFs with the app to avoid runtime fetching
   // Hi, 200MB app xD
   GoogleFonts.config.allowRuntimeFetching = false;
+  addFontLicenses(); // Add font licenses to the license registry
 
   runApp(
     MultiProvider(
@@ -58,6 +62,20 @@ void main() async {
       child: const Archiverse(),
     ),
   );
+}
+
+Future<void> addFontLicenses() async {
+  for (final font in ReaderFont.values) {
+    String? oflName = font.toOFLName;
+    if (oflName == null) {
+      continue; // Skip if the font does not have an OFL license
+    }
+
+    LicenseRegistry.addLicense(() async* {
+      final license = await rootBundle.loadString('assets/fonts/$oflName');
+      yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    });
+  }
 }
 
 class Archiverse extends StatelessWidget {
