@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:archiverse/database/dao.dart';
+import 'package:archiverse/database/tables/library.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -40,6 +41,10 @@ part 'database.g.dart';
     DbSeries,
     DbWorkSeries,
     DbBookmarks,
+    DbChapterWorks,
+    DbWorksLibrary,
+    DbDownloadedWorks,
+    DbDownloadedChapters,
   ],
   daos: [
     WorksDao,
@@ -62,7 +67,7 @@ LazyDatabase _openConnection() {
     final dbFolder = await getApplicationDocumentsDirectory();
 
     // Delete old database file if it exists
-    // final oldFile = File(p.join(dbFolder.path, 'archiverse_database_2.db'));
+    // final oldFile = File(p.join(dbFolder.path, 'archiverse.db'));
     // if (await oldFile.exists()) {
     //   await oldFile.delete();
     // }

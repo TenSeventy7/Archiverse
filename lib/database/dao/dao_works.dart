@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:archiverse/database/database.dart';
+import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';

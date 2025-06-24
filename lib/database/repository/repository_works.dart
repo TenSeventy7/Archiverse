@@ -1,4 +1,5 @@
 import 'package:archiverse/database/repository.dart';
+import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/work.dart';
 
 extension WorkRepository on DataRepository {

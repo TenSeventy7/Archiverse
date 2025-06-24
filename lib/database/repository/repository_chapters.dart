@@ -31,4 +31,11 @@ extension ChapterRepository on DataRepository {
       excludeId: workId,
     );
   }
+
+  static Future<void> linkChapterToWork(int chapterId, int workId) async {
+    await DataRepository.database.chaptersDao.linkChapterToWork(
+      chapterId,
+      workId,
+    );
+  }
 }

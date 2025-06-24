@@ -3,12 +3,15 @@ import 'package:archiverse/models/chapter.dart';
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
-@DriftAccessor(tables: [DbChapters])
+@DriftAccessor(tables: [DbChapters, DbChapterWorks])
 class ChaptersDao extends BaseDao<DbChapters, DbChapter, Chapter> {
   ChaptersDao(super.db);
 
   @override
   TableInfo<DbChapters, DbChapter> get table => db.dbChapters;
+
+  TableInfo<DbChapterWorks, DbChapterWork> get chapterWorksTable =>
+      db.dbChapterWorks;
 
   @override
   Insertable<DbChapter> toCompanion(Chapter chapter) {
@@ -48,6 +51,10 @@ class ChaptersDao extends BaseDao<DbChapters, DbChapter, Chapter> {
 
   Future<List<Chapter>> getChaptersByWork(int workId) async {
     final chapters = await getMultiple((c) => c.workId.equals(workId));
+
+    // Sort by chapter number
+    chapters.sort((a, b) => a.chapter.compareTo(b.chapter));
+
     return chapters.map((c) => fromRow(c)).toList();
   }
 
@@ -85,5 +92,27 @@ class ChaptersDao extends BaseDao<DbChapters, DbChapter, Chapter> {
 
     final result = await query.get();
     return result.isNotEmpty;
+  }
+
+  Future<void> linkChapterToWork(int chapterId, int workId) async {
+    final existingLink =
+        await (select(db.dbChapterWorks)..where(
+              (cw) => cw.chapterId.equals(chapterId) & cw.workId.equals(workId),
+            ))
+            .getSingleOrNull();
+
+    if (existingLink != null) {
+      return; // Link already exists
+    }
+
+    await db.batch((batch) {
+      batch.insert(
+        db.dbChapterWorks,
+        DbChapterWorksCompanion(
+          chapterId: Value(chapterId),
+          workId: Value(workId),
+        ),
+      );
+    });
   }
 }

@@ -1451,6 +1451,10 @@ class $DbAuthorsTable extends DbAuthors
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {name, pseud},
+  ];
+  @override
   DbAuthor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DbAuthor(
@@ -5939,6 +5943,1045 @@ class DbBookmarksCompanion extends UpdateCompanion<DbBookmark> {
   }
 }
 
+class $DbChapterWorksTable extends DbChapterWorks
+    with TableInfo<$DbChapterWorksTable, DbChapterWork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbChapterWorksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _chapterIdMeta = const VerificationMeta(
+    'chapterId',
+  );
+  @override
+  late final GeneratedColumn<int> chapterId = GeneratedColumn<int>(
+    'chapter_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES chapters (id)',
+    ),
+  );
+  static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
+  @override
+  late final GeneratedColumn<int> workId = GeneratedColumn<int>(
+    'work_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES works (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [chapterId, workId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'chapter_works';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbChapterWork> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('chapter_id')) {
+      context.handle(
+        _chapterIdMeta,
+        chapterId.isAcceptableOrUnknown(data['chapter_id']!, _chapterIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_chapterIdMeta);
+    }
+    if (data.containsKey('work_id')) {
+      context.handle(
+        _workIdMeta,
+        workId.isAcceptableOrUnknown(data['work_id']!, _workIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {chapterId, workId};
+  @override
+  DbChapterWork map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbChapterWork(
+      chapterId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}chapter_id'],
+      )!,
+      workId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}work_id'],
+      )!,
+    );
+  }
+
+  @override
+  $DbChapterWorksTable createAlias(String alias) {
+    return $DbChapterWorksTable(attachedDatabase, alias);
+  }
+}
+
+class DbChapterWork extends DataClass implements Insertable<DbChapterWork> {
+  final int chapterId;
+  final int workId;
+  const DbChapterWork({required this.chapterId, required this.workId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['chapter_id'] = Variable<int>(chapterId);
+    map['work_id'] = Variable<int>(workId);
+    return map;
+  }
+
+  DbChapterWorksCompanion toCompanion(bool nullToAbsent) {
+    return DbChapterWorksCompanion(
+      chapterId: Value(chapterId),
+      workId: Value(workId),
+    );
+  }
+
+  factory DbChapterWork.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbChapterWork(
+      chapterId: serializer.fromJson<int>(json['chapterId']),
+      workId: serializer.fromJson<int>(json['workId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'chapterId': serializer.toJson<int>(chapterId),
+      'workId': serializer.toJson<int>(workId),
+    };
+  }
+
+  DbChapterWork copyWith({int? chapterId, int? workId}) => DbChapterWork(
+    chapterId: chapterId ?? this.chapterId,
+    workId: workId ?? this.workId,
+  );
+  DbChapterWork copyWithCompanion(DbChapterWorksCompanion data) {
+    return DbChapterWork(
+      chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
+      workId: data.workId.present ? data.workId.value : this.workId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbChapterWork(')
+          ..write('chapterId: $chapterId, ')
+          ..write('workId: $workId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(chapterId, workId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbChapterWork &&
+          other.chapterId == this.chapterId &&
+          other.workId == this.workId);
+}
+
+class DbChapterWorksCompanion extends UpdateCompanion<DbChapterWork> {
+  final Value<int> chapterId;
+  final Value<int> workId;
+  final Value<int> rowid;
+  const DbChapterWorksCompanion({
+    this.chapterId = const Value.absent(),
+    this.workId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DbChapterWorksCompanion.insert({
+    required int chapterId,
+    required int workId,
+    this.rowid = const Value.absent(),
+  }) : chapterId = Value(chapterId),
+       workId = Value(workId);
+  static Insertable<DbChapterWork> custom({
+    Expression<int>? chapterId,
+    Expression<int>? workId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (chapterId != null) 'chapter_id': chapterId,
+      if (workId != null) 'work_id': workId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DbChapterWorksCompanion copyWith({
+    Value<int>? chapterId,
+    Value<int>? workId,
+    Value<int>? rowid,
+  }) {
+    return DbChapterWorksCompanion(
+      chapterId: chapterId ?? this.chapterId,
+      workId: workId ?? this.workId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (chapterId.present) {
+      map['chapter_id'] = Variable<int>(chapterId.value);
+    }
+    if (workId.present) {
+      map['work_id'] = Variable<int>(workId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbChapterWorksCompanion(')
+          ..write('chapterId: $chapterId, ')
+          ..write('workId: $workId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbWorksLibraryTable extends DbWorksLibrary
+    with TableInfo<$DbWorksLibraryTable, DbWorksLibraryData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbWorksLibraryTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
+  @override
+  late final GeneratedColumn<int> workId = GeneratedColumn<int>(
+    'work_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES works (id)',
+    ),
+  );
+  static const VerificationMeta _timestampMeta = const VerificationMeta(
+    'timestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+    'timestamp',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, workId, timestamp];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'library';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbWorksLibraryData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('work_id')) {
+      context.handle(
+        _workIdMeta,
+        workId.isAcceptableOrUnknown(data['work_id']!, _workIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workIdMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(
+        _timestampMeta,
+        timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbWorksLibraryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbWorksLibraryData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      workId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}work_id'],
+      )!,
+      timestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}timestamp'],
+      )!,
+    );
+  }
+
+  @override
+  $DbWorksLibraryTable createAlias(String alias) {
+    return $DbWorksLibraryTable(attachedDatabase, alias);
+  }
+}
+
+class DbWorksLibraryData extends DataClass
+    implements Insertable<DbWorksLibraryData> {
+  final int id;
+  final int workId;
+  final DateTime timestamp;
+  const DbWorksLibraryData({
+    required this.id,
+    required this.workId,
+    required this.timestamp,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['work_id'] = Variable<int>(workId);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    return map;
+  }
+
+  DbWorksLibraryCompanion toCompanion(bool nullToAbsent) {
+    return DbWorksLibraryCompanion(
+      id: Value(id),
+      workId: Value(workId),
+      timestamp: Value(timestamp),
+    );
+  }
+
+  factory DbWorksLibraryData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbWorksLibraryData(
+      id: serializer.fromJson<int>(json['id']),
+      workId: serializer.fromJson<int>(json['workId']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'workId': serializer.toJson<int>(workId),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+    };
+  }
+
+  DbWorksLibraryData copyWith({int? id, int? workId, DateTime? timestamp}) =>
+      DbWorksLibraryData(
+        id: id ?? this.id,
+        workId: workId ?? this.workId,
+        timestamp: timestamp ?? this.timestamp,
+      );
+  DbWorksLibraryData copyWithCompanion(DbWorksLibraryCompanion data) {
+    return DbWorksLibraryData(
+      id: data.id.present ? data.id.value : this.id,
+      workId: data.workId.present ? data.workId.value : this.workId,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbWorksLibraryData(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, workId, timestamp);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbWorksLibraryData &&
+          other.id == this.id &&
+          other.workId == this.workId &&
+          other.timestamp == this.timestamp);
+}
+
+class DbWorksLibraryCompanion extends UpdateCompanion<DbWorksLibraryData> {
+  final Value<int> id;
+  final Value<int> workId;
+  final Value<DateTime> timestamp;
+  const DbWorksLibraryCompanion({
+    this.id = const Value.absent(),
+    this.workId = const Value.absent(),
+    this.timestamp = const Value.absent(),
+  });
+  DbWorksLibraryCompanion.insert({
+    this.id = const Value.absent(),
+    required int workId,
+    required DateTime timestamp,
+  }) : workId = Value(workId),
+       timestamp = Value(timestamp);
+  static Insertable<DbWorksLibraryData> custom({
+    Expression<int>? id,
+    Expression<int>? workId,
+    Expression<DateTime>? timestamp,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (workId != null) 'work_id': workId,
+      if (timestamp != null) 'timestamp': timestamp,
+    });
+  }
+
+  DbWorksLibraryCompanion copyWith({
+    Value<int>? id,
+    Value<int>? workId,
+    Value<DateTime>? timestamp,
+  }) {
+    return DbWorksLibraryCompanion(
+      id: id ?? this.id,
+      workId: workId ?? this.workId,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (workId.present) {
+      map['work_id'] = Variable<int>(workId.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbWorksLibraryCompanion(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbDownloadedWorksTable extends DbDownloadedWorks
+    with TableInfo<$DbDownloadedWorksTable, DbDownloadedWork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbDownloadedWorksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
+  @override
+  late final GeneratedColumn<int> workId = GeneratedColumn<int>(
+    'work_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES works (id)',
+    ),
+  );
+  static const VerificationMeta _timestampMeta = const VerificationMeta(
+    'timestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+    'timestamp',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _chaptersMeta = const VerificationMeta(
+    'chapters',
+  );
+  @override
+  late final GeneratedColumn<int> chapters = GeneratedColumn<int>(
+    'chapters',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isCompleteMeta = const VerificationMeta(
+    'isComplete',
+  );
+  @override
+  late final GeneratedColumn<bool> isComplete = GeneratedColumn<bool>(
+    'is_complete',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_complete" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    workId,
+    timestamp,
+    chapters,
+    isComplete,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'downloaded_works';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbDownloadedWork> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('work_id')) {
+      context.handle(
+        _workIdMeta,
+        workId.isAcceptableOrUnknown(data['work_id']!, _workIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workIdMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(
+        _timestampMeta,
+        timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('chapters')) {
+      context.handle(
+        _chaptersMeta,
+        chapters.isAcceptableOrUnknown(data['chapters']!, _chaptersMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_chaptersMeta);
+    }
+    if (data.containsKey('is_complete')) {
+      context.handle(
+        _isCompleteMeta,
+        isComplete.isAcceptableOrUnknown(data['is_complete']!, _isCompleteMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbDownloadedWork map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbDownloadedWork(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      workId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}work_id'],
+      )!,
+      timestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}timestamp'],
+      )!,
+      chapters: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}chapters'],
+      )!,
+      isComplete: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_complete'],
+      )!,
+    );
+  }
+
+  @override
+  $DbDownloadedWorksTable createAlias(String alias) {
+    return $DbDownloadedWorksTable(attachedDatabase, alias);
+  }
+}
+
+class DbDownloadedWork extends DataClass
+    implements Insertable<DbDownloadedWork> {
+  final int id;
+  final int workId;
+  final DateTime timestamp;
+  final int chapters;
+  final bool isComplete;
+  const DbDownloadedWork({
+    required this.id,
+    required this.workId,
+    required this.timestamp,
+    required this.chapters,
+    required this.isComplete,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['work_id'] = Variable<int>(workId);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    map['chapters'] = Variable<int>(chapters);
+    map['is_complete'] = Variable<bool>(isComplete);
+    return map;
+  }
+
+  DbDownloadedWorksCompanion toCompanion(bool nullToAbsent) {
+    return DbDownloadedWorksCompanion(
+      id: Value(id),
+      workId: Value(workId),
+      timestamp: Value(timestamp),
+      chapters: Value(chapters),
+      isComplete: Value(isComplete),
+    );
+  }
+
+  factory DbDownloadedWork.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbDownloadedWork(
+      id: serializer.fromJson<int>(json['id']),
+      workId: serializer.fromJson<int>(json['workId']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+      chapters: serializer.fromJson<int>(json['chapters']),
+      isComplete: serializer.fromJson<bool>(json['isComplete']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'workId': serializer.toJson<int>(workId),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+      'chapters': serializer.toJson<int>(chapters),
+      'isComplete': serializer.toJson<bool>(isComplete),
+    };
+  }
+
+  DbDownloadedWork copyWith({
+    int? id,
+    int? workId,
+    DateTime? timestamp,
+    int? chapters,
+    bool? isComplete,
+  }) => DbDownloadedWork(
+    id: id ?? this.id,
+    workId: workId ?? this.workId,
+    timestamp: timestamp ?? this.timestamp,
+    chapters: chapters ?? this.chapters,
+    isComplete: isComplete ?? this.isComplete,
+  );
+  DbDownloadedWork copyWithCompanion(DbDownloadedWorksCompanion data) {
+    return DbDownloadedWork(
+      id: data.id.present ? data.id.value : this.id,
+      workId: data.workId.present ? data.workId.value : this.workId,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+      chapters: data.chapters.present ? data.chapters.value : this.chapters,
+      isComplete: data.isComplete.present
+          ? data.isComplete.value
+          : this.isComplete,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbDownloadedWork(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('chapters: $chapters, ')
+          ..write('isComplete: $isComplete')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, workId, timestamp, chapters, isComplete);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbDownloadedWork &&
+          other.id == this.id &&
+          other.workId == this.workId &&
+          other.timestamp == this.timestamp &&
+          other.chapters == this.chapters &&
+          other.isComplete == this.isComplete);
+}
+
+class DbDownloadedWorksCompanion extends UpdateCompanion<DbDownloadedWork> {
+  final Value<int> id;
+  final Value<int> workId;
+  final Value<DateTime> timestamp;
+  final Value<int> chapters;
+  final Value<bool> isComplete;
+  const DbDownloadedWorksCompanion({
+    this.id = const Value.absent(),
+    this.workId = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.chapters = const Value.absent(),
+    this.isComplete = const Value.absent(),
+  });
+  DbDownloadedWorksCompanion.insert({
+    this.id = const Value.absent(),
+    required int workId,
+    required DateTime timestamp,
+    required int chapters,
+    this.isComplete = const Value.absent(),
+  }) : workId = Value(workId),
+       timestamp = Value(timestamp),
+       chapters = Value(chapters);
+  static Insertable<DbDownloadedWork> custom({
+    Expression<int>? id,
+    Expression<int>? workId,
+    Expression<DateTime>? timestamp,
+    Expression<int>? chapters,
+    Expression<bool>? isComplete,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (workId != null) 'work_id': workId,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (chapters != null) 'chapters': chapters,
+      if (isComplete != null) 'is_complete': isComplete,
+    });
+  }
+
+  DbDownloadedWorksCompanion copyWith({
+    Value<int>? id,
+    Value<int>? workId,
+    Value<DateTime>? timestamp,
+    Value<int>? chapters,
+    Value<bool>? isComplete,
+  }) {
+    return DbDownloadedWorksCompanion(
+      id: id ?? this.id,
+      workId: workId ?? this.workId,
+      timestamp: timestamp ?? this.timestamp,
+      chapters: chapters ?? this.chapters,
+      isComplete: isComplete ?? this.isComplete,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (workId.present) {
+      map['work_id'] = Variable<int>(workId.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    if (chapters.present) {
+      map['chapters'] = Variable<int>(chapters.value);
+    }
+    if (isComplete.present) {
+      map['is_complete'] = Variable<bool>(isComplete.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbDownloadedWorksCompanion(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('chapters: $chapters, ')
+          ..write('isComplete: $isComplete')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbDownloadedChaptersTable extends DbDownloadedChapters
+    with TableInfo<$DbDownloadedChaptersTable, DbDownloadedChapter> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbDownloadedChaptersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _chapterIdMeta = const VerificationMeta(
+    'chapterId',
+  );
+  @override
+  late final GeneratedColumn<int> chapterId = GeneratedColumn<int>(
+    'chapter_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES chapters (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, chapterId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'downloaded_chapters';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbDownloadedChapter> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('chapter_id')) {
+      context.handle(
+        _chapterIdMeta,
+        chapterId.isAcceptableOrUnknown(data['chapter_id']!, _chapterIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_chapterIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DbDownloadedChapter map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbDownloadedChapter(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      chapterId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}chapter_id'],
+      )!,
+    );
+  }
+
+  @override
+  $DbDownloadedChaptersTable createAlias(String alias) {
+    return $DbDownloadedChaptersTable(attachedDatabase, alias);
+  }
+}
+
+class DbDownloadedChapter extends DataClass
+    implements Insertable<DbDownloadedChapter> {
+  final int id;
+  final int chapterId;
+  const DbDownloadedChapter({required this.id, required this.chapterId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['chapter_id'] = Variable<int>(chapterId);
+    return map;
+  }
+
+  DbDownloadedChaptersCompanion toCompanion(bool nullToAbsent) {
+    return DbDownloadedChaptersCompanion(
+      id: Value(id),
+      chapterId: Value(chapterId),
+    );
+  }
+
+  factory DbDownloadedChapter.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbDownloadedChapter(
+      id: serializer.fromJson<int>(json['id']),
+      chapterId: serializer.fromJson<int>(json['chapterId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'chapterId': serializer.toJson<int>(chapterId),
+    };
+  }
+
+  DbDownloadedChapter copyWith({int? id, int? chapterId}) =>
+      DbDownloadedChapter(
+        id: id ?? this.id,
+        chapterId: chapterId ?? this.chapterId,
+      );
+  DbDownloadedChapter copyWithCompanion(DbDownloadedChaptersCompanion data) {
+    return DbDownloadedChapter(
+      id: data.id.present ? data.id.value : this.id,
+      chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbDownloadedChapter(')
+          ..write('id: $id, ')
+          ..write('chapterId: $chapterId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, chapterId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbDownloadedChapter &&
+          other.id == this.id &&
+          other.chapterId == this.chapterId);
+}
+
+class DbDownloadedChaptersCompanion
+    extends UpdateCompanion<DbDownloadedChapter> {
+  final Value<int> id;
+  final Value<int> chapterId;
+  const DbDownloadedChaptersCompanion({
+    this.id = const Value.absent(),
+    this.chapterId = const Value.absent(),
+  });
+  DbDownloadedChaptersCompanion.insert({
+    this.id = const Value.absent(),
+    required int chapterId,
+  }) : chapterId = Value(chapterId);
+  static Insertable<DbDownloadedChapter> custom({
+    Expression<int>? id,
+    Expression<int>? chapterId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (chapterId != null) 'chapter_id': chapterId,
+    });
+  }
+
+  DbDownloadedChaptersCompanion copyWith({
+    Value<int>? id,
+    Value<int>? chapterId,
+  }) {
+    return DbDownloadedChaptersCompanion(
+      id: id ?? this.id,
+      chapterId: chapterId ?? this.chapterId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (chapterId.present) {
+      map['chapter_id'] = Variable<int>(chapterId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbDownloadedChaptersCompanion(')
+          ..write('id: $id, ')
+          ..write('chapterId: $chapterId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5960,6 +7003,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DbSeriesTable dbSeries = $DbSeriesTable(this);
   late final $DbWorkSeriesTable dbWorkSeries = $DbWorkSeriesTable(this);
   late final $DbBookmarksTable dbBookmarks = $DbBookmarksTable(this);
+  late final $DbChapterWorksTable dbChapterWorks = $DbChapterWorksTable(this);
+  late final $DbWorksLibraryTable dbWorksLibrary = $DbWorksLibraryTable(this);
+  late final $DbDownloadedWorksTable dbDownloadedWorks =
+      $DbDownloadedWorksTable(this);
+  late final $DbDownloadedChaptersTable dbDownloadedChapters =
+      $DbDownloadedChaptersTable(this);
   late final WorksDao worksDao = WorksDao(this as AppDatabase);
   late final AuthorsDao authorsDao = AuthorsDao(this as AppDatabase);
   late final TagsDao tagsDao = TagsDao(this as AppDatabase);
@@ -5986,6 +7035,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     dbSeries,
     dbWorkSeries,
     dbBookmarks,
+    dbChapterWorks,
+    dbWorksLibrary,
+    dbDownloadedWorks,
+    dbDownloadedChapters,
   ];
 }
 
@@ -6214,6 +7267,66 @@ final class $$DbWorksTableReferences
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_dbBookmarksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DbChapterWorksTable, List<DbChapterWork>>
+  _dbChapterWorksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbChapterWorks,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbChapterWorks.workId),
+  );
+
+  $$DbChapterWorksTableProcessedTableManager get dbChapterWorksRefs {
+    final manager = $$DbChapterWorksTableTableManager(
+      $_db,
+      $_db.dbChapterWorks,
+    ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbChapterWorksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DbWorksLibraryTable, List<DbWorksLibraryData>>
+  _dbWorksLibraryRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbWorksLibrary,
+    aliasName: $_aliasNameGenerator(db.dbWorks.id, db.dbWorksLibrary.workId),
+  );
+
+  $$DbWorksLibraryTableProcessedTableManager get dbWorksLibraryRefs {
+    final manager = $$DbWorksLibraryTableTableManager(
+      $_db,
+      $_db.dbWorksLibrary,
+    ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbWorksLibraryRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$DbDownloadedWorksTable, List<DbDownloadedWork>>
+  _dbDownloadedWorksRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.dbDownloadedWorks,
+        aliasName: $_aliasNameGenerator(
+          db.dbWorks.id,
+          db.dbDownloadedWorks.workId,
+        ),
+      );
+
+  $$DbDownloadedWorksTableProcessedTableManager get dbDownloadedWorksRefs {
+    final manager = $$DbDownloadedWorksTableTableManager(
+      $_db,
+      $_db.dbDownloadedWorks,
+    ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _dbDownloadedWorksRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -6555,6 +7668,81 @@ class $$DbWorksTableFilterComposer
           }) => $$DbBookmarksTableFilterComposer(
             $db: $db,
             $table: $db.dbBookmarks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbChapterWorksRefs(
+    Expression<bool> Function($$DbChapterWorksTableFilterComposer f) f,
+  ) {
+    final $$DbChapterWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbChapterWorks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChapterWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbChapterWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbWorksLibraryRefs(
+    Expression<bool> Function($$DbWorksLibraryTableFilterComposer f) f,
+  ) {
+    final $$DbWorksLibraryTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbWorksLibrary,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksLibraryTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorksLibrary,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbDownloadedWorksRefs(
+    Expression<bool> Function($$DbDownloadedWorksTableFilterComposer f) f,
+  ) {
+    final $$DbDownloadedWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbDownloadedWorks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbDownloadedWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbDownloadedWorks,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7001,6 +8189,82 @@ class $$DbWorksTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> dbChapterWorksRefs<T extends Object>(
+    Expression<T> Function($$DbChapterWorksTableAnnotationComposer a) f,
+  ) {
+    final $$DbChapterWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbChapterWorks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChapterWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbChapterWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbWorksLibraryRefs<T extends Object>(
+    Expression<T> Function($$DbWorksLibraryTableAnnotationComposer a) f,
+  ) {
+    final $$DbWorksLibraryTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbWorksLibrary,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksLibraryTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorksLibrary,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbDownloadedWorksRefs<T extends Object>(
+    Expression<T> Function($$DbDownloadedWorksTableAnnotationComposer a) f,
+  ) {
+    final $$DbDownloadedWorksTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbDownloadedWorks,
+          getReferencedColumn: (t) => t.workId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbDownloadedWorksTableAnnotationComposer(
+                $db: $db,
+                $table: $db.dbDownloadedWorks,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$DbWorksTableTableManager
@@ -7026,6 +8290,9 @@ class $$DbWorksTableTableManager
             bool dbReadHistoriesRefs,
             bool dbWorkSeriesRefs,
             bool dbBookmarksRefs,
+            bool dbChapterWorksRefs,
+            bool dbWorksLibraryRefs,
+            bool dbDownloadedWorksRefs,
           })
         > {
   $$DbWorksTableTableManager(_$AppDatabase db, $DbWorksTable table)
@@ -7154,6 +8421,9 @@ class $$DbWorksTableTableManager
                 dbReadHistoriesRefs = false,
                 dbWorkSeriesRefs = false,
                 dbBookmarksRefs = false,
+                dbChapterWorksRefs = false,
+                dbWorksLibraryRefs = false,
+                dbDownloadedWorksRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -7167,6 +8437,9 @@ class $$DbWorksTableTableManager
                     if (dbReadHistoriesRefs) db.dbReadHistories,
                     if (dbWorkSeriesRefs) db.dbWorkSeries,
                     if (dbBookmarksRefs) db.dbBookmarks,
+                    if (dbChapterWorksRefs) db.dbChapterWorks,
+                    if (dbWorksLibraryRefs) db.dbWorksLibrary,
+                    if (dbDownloadedWorksRefs) db.dbDownloadedWorks,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -7360,6 +8633,69 @@ class $$DbWorksTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (dbChapterWorksRefs)
+                        await $_getPrefetchedData<
+                          DbWork,
+                          $DbWorksTable,
+                          DbChapterWork
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbChapterWorksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbWorksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbChapterWorksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.workId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (dbWorksLibraryRefs)
+                        await $_getPrefetchedData<
+                          DbWork,
+                          $DbWorksTable,
+                          DbWorksLibraryData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbWorksLibraryRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbWorksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbWorksLibraryRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.workId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (dbDownloadedWorksRefs)
+                        await $_getPrefetchedData<
+                          DbWork,
+                          $DbWorksTable,
+                          DbDownloadedWork
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbDownloadedWorksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbWorksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbDownloadedWorksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.workId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -7390,6 +8726,9 @@ typedef $$DbWorksTableProcessedTableManager =
         bool dbReadHistoriesRefs,
         bool dbWorkSeriesRefs,
         bool dbBookmarksRefs,
+        bool dbChapterWorksRefs,
+        bool dbWorksLibraryRefs,
+        bool dbDownloadedWorksRefs,
       })
     >;
 typedef $$DbAuthorsTableCreateCompanionBuilder =
@@ -10379,6 +11718,55 @@ final class $$DbChaptersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$DbChapterWorksTable, List<DbChapterWork>>
+  _dbChapterWorksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.dbChapterWorks,
+    aliasName: $_aliasNameGenerator(
+      db.dbChapters.id,
+      db.dbChapterWorks.chapterId,
+    ),
+  );
+
+  $$DbChapterWorksTableProcessedTableManager get dbChapterWorksRefs {
+    final manager = $$DbChapterWorksTableTableManager(
+      $_db,
+      $_db.dbChapterWorks,
+    ).filter((f) => f.chapterId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_dbChapterWorksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $DbDownloadedChaptersTable,
+    List<DbDownloadedChapter>
+  >
+  _dbDownloadedChaptersRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.dbDownloadedChapters,
+        aliasName: $_aliasNameGenerator(
+          db.dbChapters.id,
+          db.dbDownloadedChapters.chapterId,
+        ),
+      );
+
+  $$DbDownloadedChaptersTableProcessedTableManager
+  get dbDownloadedChaptersRefs {
+    final manager = $$DbDownloadedChaptersTableTableManager(
+      $_db,
+      $_db.dbDownloadedChapters,
+    ).filter((f) => f.chapterId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _dbDownloadedChaptersRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$DbChaptersTableFilterComposer
@@ -10484,6 +11872,56 @@ class $$DbChaptersTableFilterComposer
           }) => $$DbReadHistoriesTableFilterComposer(
             $db: $db,
             $table: $db.dbReadHistories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbChapterWorksRefs(
+    Expression<bool> Function($$DbChapterWorksTableFilterComposer f) f,
+  ) {
+    final $$DbChapterWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbChapterWorks,
+      getReferencedColumn: (t) => t.chapterId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChapterWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbChapterWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> dbDownloadedChaptersRefs(
+    Expression<bool> Function($$DbDownloadedChaptersTableFilterComposer f) f,
+  ) {
+    final $$DbDownloadedChaptersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbDownloadedChapters,
+      getReferencedColumn: (t) => t.chapterId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbDownloadedChaptersTableFilterComposer(
+            $db: $db,
+            $table: $db.dbDownloadedChapters,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10673,6 +12111,57 @@ class $$DbChaptersTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> dbChapterWorksRefs<T extends Object>(
+    Expression<T> Function($$DbChapterWorksTableAnnotationComposer a) f,
+  ) {
+    final $$DbChapterWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbChapterWorks,
+      getReferencedColumn: (t) => t.chapterId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChapterWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbChapterWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> dbDownloadedChaptersRefs<T extends Object>(
+    Expression<T> Function($$DbDownloadedChaptersTableAnnotationComposer a) f,
+  ) {
+    final $$DbDownloadedChaptersTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbDownloadedChapters,
+          getReferencedColumn: (t) => t.chapterId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbDownloadedChaptersTableAnnotationComposer(
+                $db: $db,
+                $table: $db.dbDownloadedChapters,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$DbChaptersTableTableManager
@@ -10688,7 +12177,12 @@ class $$DbChaptersTableTableManager
           $$DbChaptersTableUpdateCompanionBuilder,
           (DbChapter, $$DbChaptersTableReferences),
           DbChapter,
-          PrefetchHooks Function({bool workId, bool dbReadHistoriesRefs})
+          PrefetchHooks Function({
+            bool workId,
+            bool dbReadHistoriesRefs,
+            bool dbChapterWorksRefs,
+            bool dbDownloadedChaptersRefs,
+          })
         > {
   $$DbChaptersTableTableManager(_$AppDatabase db, $DbChaptersTable table)
     : super(
@@ -10766,11 +12260,18 @@ class $$DbChaptersTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({workId = false, dbReadHistoriesRefs = false}) {
+              ({
+                workId = false,
+                dbReadHistoriesRefs = false,
+                dbChapterWorksRefs = false,
+                dbDownloadedChaptersRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (dbReadHistoriesRefs) db.dbReadHistories,
+                    if (dbChapterWorksRefs) db.dbChapterWorks,
+                    if (dbDownloadedChaptersRefs) db.dbDownloadedChapters,
                   ],
                   addJoins:
                       <
@@ -10828,6 +12329,48 @@ class $$DbChaptersTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (dbChapterWorksRefs)
+                        await $_getPrefetchedData<
+                          DbChapter,
+                          $DbChaptersTable,
+                          DbChapterWork
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbChaptersTableReferences
+                              ._dbChapterWorksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbChaptersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbChapterWorksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.chapterId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (dbDownloadedChaptersRefs)
+                        await $_getPrefetchedData<
+                          DbChapter,
+                          $DbChaptersTable,
+                          DbDownloadedChapter
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbChaptersTableReferences
+                              ._dbDownloadedChaptersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbChaptersTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbDownloadedChaptersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.chapterId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -10848,7 +12391,12 @@ typedef $$DbChaptersTableProcessedTableManager =
       $$DbChaptersTableUpdateCompanionBuilder,
       (DbChapter, $$DbChaptersTableReferences),
       DbChapter,
-      PrefetchHooks Function({bool workId, bool dbReadHistoriesRefs})
+      PrefetchHooks Function({
+        bool workId,
+        bool dbReadHistoriesRefs,
+        bool dbChapterWorksRefs,
+        bool dbDownloadedChaptersRefs,
+      })
     >;
 typedef $$DbReadHistoriesTableCreateCompanionBuilder =
     DbReadHistoriesCompanion Function({
@@ -12731,6 +14279,1254 @@ typedef $$DbBookmarksTableProcessedTableManager =
       DbBookmark,
       PrefetchHooks Function({bool workId, bool seriesId, bool userId})
     >;
+typedef $$DbChapterWorksTableCreateCompanionBuilder =
+    DbChapterWorksCompanion Function({
+      required int chapterId,
+      required int workId,
+      Value<int> rowid,
+    });
+typedef $$DbChapterWorksTableUpdateCompanionBuilder =
+    DbChapterWorksCompanion Function({
+      Value<int> chapterId,
+      Value<int> workId,
+      Value<int> rowid,
+    });
+
+final class $$DbChapterWorksTableReferences
+    extends BaseReferences<_$AppDatabase, $DbChapterWorksTable, DbChapterWork> {
+  $$DbChapterWorksTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbChaptersTable _chapterIdTable(_$AppDatabase db) =>
+      db.dbChapters.createAlias(
+        $_aliasNameGenerator(db.dbChapterWorks.chapterId, db.dbChapters.id),
+      );
+
+  $$DbChaptersTableProcessedTableManager get chapterId {
+    final $_column = $_itemColumn<int>('chapter_id')!;
+
+    final manager = $$DbChaptersTableTableManager(
+      $_db,
+      $_db.dbChapters,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_chapterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbChapterWorks.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbChapterWorksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbChapterWorksTable> {
+  $$DbChapterWorksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbChaptersTableFilterComposer get chapterId {
+    final $$DbChaptersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableFilterComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbChapterWorksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbChapterWorksTable> {
+  $$DbChapterWorksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbChaptersTableOrderingComposer get chapterId {
+    final $$DbChaptersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbChapterWorksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbChapterWorksTable> {
+  $$DbChapterWorksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$DbChaptersTableAnnotationComposer get chapterId {
+    final $$DbChaptersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbChapterWorksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbChapterWorksTable,
+          DbChapterWork,
+          $$DbChapterWorksTableFilterComposer,
+          $$DbChapterWorksTableOrderingComposer,
+          $$DbChapterWorksTableAnnotationComposer,
+          $$DbChapterWorksTableCreateCompanionBuilder,
+          $$DbChapterWorksTableUpdateCompanionBuilder,
+          (DbChapterWork, $$DbChapterWorksTableReferences),
+          DbChapterWork,
+          PrefetchHooks Function({bool chapterId, bool workId})
+        > {
+  $$DbChapterWorksTableTableManager(
+    _$AppDatabase db,
+    $DbChapterWorksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbChapterWorksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbChapterWorksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbChapterWorksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> chapterId = const Value.absent(),
+                Value<int> workId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DbChapterWorksCompanion(
+                chapterId: chapterId,
+                workId: workId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int chapterId,
+                required int workId,
+                Value<int> rowid = const Value.absent(),
+              }) => DbChapterWorksCompanion.insert(
+                chapterId: chapterId,
+                workId: workId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbChapterWorksTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({chapterId = false, workId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (chapterId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.chapterId,
+                                referencedTable: $$DbChapterWorksTableReferences
+                                    ._chapterIdTable(db),
+                                referencedColumn:
+                                    $$DbChapterWorksTableReferences
+                                        ._chapterIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable: $$DbChapterWorksTableReferences
+                                    ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbChapterWorksTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbChapterWorksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbChapterWorksTable,
+      DbChapterWork,
+      $$DbChapterWorksTableFilterComposer,
+      $$DbChapterWorksTableOrderingComposer,
+      $$DbChapterWorksTableAnnotationComposer,
+      $$DbChapterWorksTableCreateCompanionBuilder,
+      $$DbChapterWorksTableUpdateCompanionBuilder,
+      (DbChapterWork, $$DbChapterWorksTableReferences),
+      DbChapterWork,
+      PrefetchHooks Function({bool chapterId, bool workId})
+    >;
+typedef $$DbWorksLibraryTableCreateCompanionBuilder =
+    DbWorksLibraryCompanion Function({
+      Value<int> id,
+      required int workId,
+      required DateTime timestamp,
+    });
+typedef $$DbWorksLibraryTableUpdateCompanionBuilder =
+    DbWorksLibraryCompanion Function({
+      Value<int> id,
+      Value<int> workId,
+      Value<DateTime> timestamp,
+    });
+
+final class $$DbWorksLibraryTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbWorksLibraryTable,
+          DbWorksLibraryData
+        > {
+  $$DbWorksLibraryTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbWorksLibrary.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbWorksLibraryTableFilterComposer
+    extends Composer<_$AppDatabase, $DbWorksLibraryTable> {
+  $$DbWorksLibraryTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorksLibraryTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbWorksLibraryTable> {
+  $$DbWorksLibraryTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorksLibraryTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbWorksLibraryTable> {
+  $$DbWorksLibraryTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbWorksLibraryTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbWorksLibraryTable,
+          DbWorksLibraryData,
+          $$DbWorksLibraryTableFilterComposer,
+          $$DbWorksLibraryTableOrderingComposer,
+          $$DbWorksLibraryTableAnnotationComposer,
+          $$DbWorksLibraryTableCreateCompanionBuilder,
+          $$DbWorksLibraryTableUpdateCompanionBuilder,
+          (DbWorksLibraryData, $$DbWorksLibraryTableReferences),
+          DbWorksLibraryData,
+          PrefetchHooks Function({bool workId})
+        > {
+  $$DbWorksLibraryTableTableManager(
+    _$AppDatabase db,
+    $DbWorksLibraryTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbWorksLibraryTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbWorksLibraryTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbWorksLibraryTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> workId = const Value.absent(),
+                Value<DateTime> timestamp = const Value.absent(),
+              }) => DbWorksLibraryCompanion(
+                id: id,
+                workId: workId,
+                timestamp: timestamp,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int workId,
+                required DateTime timestamp,
+              }) => DbWorksLibraryCompanion.insert(
+                id: id,
+                workId: workId,
+                timestamp: timestamp,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbWorksLibraryTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable: $$DbWorksLibraryTableReferences
+                                    ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbWorksLibraryTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbWorksLibraryTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbWorksLibraryTable,
+      DbWorksLibraryData,
+      $$DbWorksLibraryTableFilterComposer,
+      $$DbWorksLibraryTableOrderingComposer,
+      $$DbWorksLibraryTableAnnotationComposer,
+      $$DbWorksLibraryTableCreateCompanionBuilder,
+      $$DbWorksLibraryTableUpdateCompanionBuilder,
+      (DbWorksLibraryData, $$DbWorksLibraryTableReferences),
+      DbWorksLibraryData,
+      PrefetchHooks Function({bool workId})
+    >;
+typedef $$DbDownloadedWorksTableCreateCompanionBuilder =
+    DbDownloadedWorksCompanion Function({
+      Value<int> id,
+      required int workId,
+      required DateTime timestamp,
+      required int chapters,
+      Value<bool> isComplete,
+    });
+typedef $$DbDownloadedWorksTableUpdateCompanionBuilder =
+    DbDownloadedWorksCompanion Function({
+      Value<int> id,
+      Value<int> workId,
+      Value<DateTime> timestamp,
+      Value<int> chapters,
+      Value<bool> isComplete,
+    });
+
+final class $$DbDownloadedWorksTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbDownloadedWorksTable,
+          DbDownloadedWork
+        > {
+  $$DbDownloadedWorksTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbDownloadedWorks.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbDownloadedWorksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbDownloadedWorksTable> {
+  $$DbDownloadedWorksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get chapters => $composableBuilder(
+    column: $table.chapters,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedWorksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbDownloadedWorksTable> {
+  $$DbDownloadedWorksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get chapters => $composableBuilder(
+    column: $table.chapters,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedWorksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbDownloadedWorksTable> {
+  $$DbDownloadedWorksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+
+  GeneratedColumn<int> get chapters =>
+      $composableBuilder(column: $table.chapters, builder: (column) => column);
+
+  GeneratedColumn<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => column,
+  );
+
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedWorksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbDownloadedWorksTable,
+          DbDownloadedWork,
+          $$DbDownloadedWorksTableFilterComposer,
+          $$DbDownloadedWorksTableOrderingComposer,
+          $$DbDownloadedWorksTableAnnotationComposer,
+          $$DbDownloadedWorksTableCreateCompanionBuilder,
+          $$DbDownloadedWorksTableUpdateCompanionBuilder,
+          (DbDownloadedWork, $$DbDownloadedWorksTableReferences),
+          DbDownloadedWork,
+          PrefetchHooks Function({bool workId})
+        > {
+  $$DbDownloadedWorksTableTableManager(
+    _$AppDatabase db,
+    $DbDownloadedWorksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbDownloadedWorksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbDownloadedWorksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DbDownloadedWorksTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> workId = const Value.absent(),
+                Value<DateTime> timestamp = const Value.absent(),
+                Value<int> chapters = const Value.absent(),
+                Value<bool> isComplete = const Value.absent(),
+              }) => DbDownloadedWorksCompanion(
+                id: id,
+                workId: workId,
+                timestamp: timestamp,
+                chapters: chapters,
+                isComplete: isComplete,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int workId,
+                required DateTime timestamp,
+                required int chapters,
+                Value<bool> isComplete = const Value.absent(),
+              }) => DbDownloadedWorksCompanion.insert(
+                id: id,
+                workId: workId,
+                timestamp: timestamp,
+                chapters: chapters,
+                isComplete: isComplete,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbDownloadedWorksTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable:
+                                    $$DbDownloadedWorksTableReferences
+                                        ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbDownloadedWorksTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbDownloadedWorksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbDownloadedWorksTable,
+      DbDownloadedWork,
+      $$DbDownloadedWorksTableFilterComposer,
+      $$DbDownloadedWorksTableOrderingComposer,
+      $$DbDownloadedWorksTableAnnotationComposer,
+      $$DbDownloadedWorksTableCreateCompanionBuilder,
+      $$DbDownloadedWorksTableUpdateCompanionBuilder,
+      (DbDownloadedWork, $$DbDownloadedWorksTableReferences),
+      DbDownloadedWork,
+      PrefetchHooks Function({bool workId})
+    >;
+typedef $$DbDownloadedChaptersTableCreateCompanionBuilder =
+    DbDownloadedChaptersCompanion Function({
+      Value<int> id,
+      required int chapterId,
+    });
+typedef $$DbDownloadedChaptersTableUpdateCompanionBuilder =
+    DbDownloadedChaptersCompanion Function({
+      Value<int> id,
+      Value<int> chapterId,
+    });
+
+final class $$DbDownloadedChaptersTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbDownloadedChaptersTable,
+          DbDownloadedChapter
+        > {
+  $$DbDownloadedChaptersTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbChaptersTable _chapterIdTable(_$AppDatabase db) =>
+      db.dbChapters.createAlias(
+        $_aliasNameGenerator(
+          db.dbDownloadedChapters.chapterId,
+          db.dbChapters.id,
+        ),
+      );
+
+  $$DbChaptersTableProcessedTableManager get chapterId {
+    final $_column = $_itemColumn<int>('chapter_id')!;
+
+    final manager = $$DbChaptersTableTableManager(
+      $_db,
+      $_db.dbChapters,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_chapterIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbDownloadedChaptersTableFilterComposer
+    extends Composer<_$AppDatabase, $DbDownloadedChaptersTable> {
+  $$DbDownloadedChaptersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DbChaptersTableFilterComposer get chapterId {
+    final $$DbChaptersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableFilterComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedChaptersTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbDownloadedChaptersTable> {
+  $$DbDownloadedChaptersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DbChaptersTableOrderingComposer get chapterId {
+    final $$DbChaptersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedChaptersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbDownloadedChaptersTable> {
+  $$DbDownloadedChaptersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  $$DbChaptersTableAnnotationComposer get chapterId {
+    final $$DbChaptersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.chapterId,
+      referencedTable: $db.dbChapters,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbChaptersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbChapters,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbDownloadedChaptersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbDownloadedChaptersTable,
+          DbDownloadedChapter,
+          $$DbDownloadedChaptersTableFilterComposer,
+          $$DbDownloadedChaptersTableOrderingComposer,
+          $$DbDownloadedChaptersTableAnnotationComposer,
+          $$DbDownloadedChaptersTableCreateCompanionBuilder,
+          $$DbDownloadedChaptersTableUpdateCompanionBuilder,
+          (DbDownloadedChapter, $$DbDownloadedChaptersTableReferences),
+          DbDownloadedChapter,
+          PrefetchHooks Function({bool chapterId})
+        > {
+  $$DbDownloadedChaptersTableTableManager(
+    _$AppDatabase db,
+    $DbDownloadedChaptersTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbDownloadedChaptersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbDownloadedChaptersTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DbDownloadedChaptersTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> chapterId = const Value.absent(),
+              }) => DbDownloadedChaptersCompanion(id: id, chapterId: chapterId),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int chapterId,
+              }) => DbDownloadedChaptersCompanion.insert(
+                id: id,
+                chapterId: chapterId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbDownloadedChaptersTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({chapterId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (chapterId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.chapterId,
+                                referencedTable:
+                                    $$DbDownloadedChaptersTableReferences
+                                        ._chapterIdTable(db),
+                                referencedColumn:
+                                    $$DbDownloadedChaptersTableReferences
+                                        ._chapterIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbDownloadedChaptersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbDownloadedChaptersTable,
+      DbDownloadedChapter,
+      $$DbDownloadedChaptersTableFilterComposer,
+      $$DbDownloadedChaptersTableOrderingComposer,
+      $$DbDownloadedChaptersTableAnnotationComposer,
+      $$DbDownloadedChaptersTableCreateCompanionBuilder,
+      $$DbDownloadedChaptersTableUpdateCompanionBuilder,
+      (DbDownloadedChapter, $$DbDownloadedChaptersTableReferences),
+      DbDownloadedChapter,
+      PrefetchHooks Function({bool chapterId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12761,4 +15557,12 @@ class $AppDatabaseManager {
       $$DbWorkSeriesTableTableManager(_db, _db.dbWorkSeries);
   $$DbBookmarksTableTableManager get dbBookmarks =>
       $$DbBookmarksTableTableManager(_db, _db.dbBookmarks);
+  $$DbChapterWorksTableTableManager get dbChapterWorks =>
+      $$DbChapterWorksTableTableManager(_db, _db.dbChapterWorks);
+  $$DbWorksLibraryTableTableManager get dbWorksLibrary =>
+      $$DbWorksLibraryTableTableManager(_db, _db.dbWorksLibrary);
+  $$DbDownloadedWorksTableTableManager get dbDownloadedWorks =>
+      $$DbDownloadedWorksTableTableManager(_db, _db.dbDownloadedWorks);
+  $$DbDownloadedChaptersTableTableManager get dbDownloadedChapters =>
+      $$DbDownloadedChaptersTableTableManager(_db, _db.dbDownloadedChapters);
 }

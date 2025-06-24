@@ -21,3 +21,14 @@ class DbChapters extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+class DbChapterWorks extends Table {
+  @override
+  String get tableName => 'chapter_works';
+
+  IntColumn get chapterId => integer().references(DbChapters, #id)();
+  IntColumn get workId => integer().references(DbWorks, #id)();
+
+  @override
+  Set<Column> get primaryKey => {chapterId, workId};
+}
