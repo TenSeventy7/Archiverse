@@ -47,11 +47,11 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
 
     if (!hasMore) {
       _controller.value = _controller.value.copyWith(hasNextPage: false);
-    }
 
-    if (newItems.values.first.isEmpty) {
-      // If no items were returned, we can return an empty list
-      return [];
+      if (newItems.values.first.isEmpty) {
+        // If no items were returned, we can return an empty list
+        return [];
+      }
     }
 
     return [newItems];
