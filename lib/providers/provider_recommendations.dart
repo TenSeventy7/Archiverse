@@ -71,11 +71,13 @@ class RecommendationsProvider extends ChangeNotifier {
 
   // Getters
   bool get isLoading => _isLoading;
+  bool get isInitialized => _isInitialized;
   String? get error => _error;
 
   /// Initialize the recommendation system by loading user history
   Future<void> initialize() async {
     if (_workHistory != null) return; // Already initialized
+    if (_isInitialized) return; // Already initialized
 
     try {
       _isLoading = true;
@@ -107,6 +109,11 @@ class RecommendationsProvider extends ChangeNotifier {
   /// Get paginated recommendations with context
   Future<BaseRecommendation> getRecommendationsWithContext(int pageKey) async {
     await initialize();
+
+    while (!_isInitialized) {
+      // Wait for initialization to complete
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
 
     // Check cache first
     if (_cache.containsKey(pageKey)) {
