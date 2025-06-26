@@ -98,6 +98,15 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
                 _buildActionTile(
                   context,
+                  icon: TablerIcons.plus,
+                  title: "Add to Library",
+                  onTap: () {},
+                ),
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
                   icon: TablerIcons.download,
                   title: context.strings.work_download,
                   onTap: () {},
