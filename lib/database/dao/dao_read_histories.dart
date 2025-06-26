@@ -35,32 +35,35 @@ class ReadHistoriesDao
 
   // Get read history with complete work and chapter data
   Future<ReadHistory?> getReadHistoryComplete(int workId) async {
-    final historyData = await getSingle((h) => h.workId.equals(workId));
-    if (historyData == null) return null;
-
-    // Get complete work data using WorksDao
-    final work = await db.worksDao.getWorkComplete(workId);
-    if (work == null) return null;
-
-    Chapter? chapter;
-    if (historyData.chapterId != null) {
-      final chapterData = await db.chaptersDao.getSingle(
-        (c) => c.id.equals(historyData.chapterId!),
-      );
-      if (chapterData != null) {
-        chapter = db.chaptersDao.fromRow(chapterData);
+    return getWorkReadHistory(workId, limit: 1).then((histories) {
+      if (histories.isNotEmpty) {
+        return histories.first;
       }
-    }
+      return null;
+    });
+  }
 
-    return ReadHistory(
-      work: work,
-      chapter: chapter,
-      timestamp: historyData.timestamp,
-      position: historyData.position,
-      status: ReadStatus.values.firstWhere((s) => s.name == historyData.status),
-      completion: historyData.completion,
-      hits: historyData.hits ?? 1, // Default to 1 if hits is null
-    );
+  Future<List<ReadHistory>> getWorkReadHistory(
+    int workId, {
+    int limit = 10,
+  }) async {
+    final query =
+        select(table).join([
+            innerJoin(
+              db.dbWorks,
+              db.dbWorks.id.equalsExp(table.asDslTable.workId),
+            ),
+            leftOuterJoin(
+              db.dbChapters,
+              db.dbChapters.id.equalsExp(table.asDslTable.chapterId),
+            ),
+          ])
+          ..where(table.asDslTable.workId.equals(workId))
+          ..orderBy([OrderingTerm.desc(table.asDslTable.timestamp)])
+          ..limit(limit);
+
+    final results = await query.get();
+    return await _buildHistoryListFromJoinResults(results);
   }
 
   // Get all read history with complete data
@@ -80,18 +83,57 @@ class ReadHistoriesDao
 
   // Get read history ordered by timestamp (most recent first)
   Future<List<ReadHistory>> getRecentReadHistory({int limit = 50}) async {
-    final historyRecords =
-        await (select(table)
-              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
-              ..limit(limit))
-            .get();
+    final query =
+        select(table).join([
+            innerJoin(
+              db.dbWorks,
+              db.dbWorks.id.equalsExp(table.asDslTable.workId),
+            ),
+            leftOuterJoin(
+              db.dbChapters,
+              db.dbChapters.id.equalsExp(table.asDslTable.chapterId),
+            ),
+          ])
+          ..orderBy([OrderingTerm.desc(table.asDslTable.timestamp)])
+          ..limit(limit);
 
+    final results = await query.get();
+    return await _buildHistoryListFromJoinResults(results);
+  }
+
+  /// Helper method to build ReadHistory list from JOIN results
+  Future<List<ReadHistory>> _buildHistoryListFromJoinResults(
+    List<TypedResult> results,
+  ) async {
     final histories = <ReadHistory>[];
-    for (final record in historyRecords) {
-      final history = await getReadHistoryComplete(record.workId);
-      if (history != null) {
-        histories.add(history);
+
+    for (final row in results) {
+      final historyData = row.readTable(table);
+      final workData = row.readTable(db.dbWorks);
+      final chapterData = row.readTableOrNull(db.dbChapters);
+
+      // Get complete work data with tags, fandoms, and authors
+      final work = await db.worksDao.getWorkComplete(workData.id);
+      if (work == null) continue;
+
+      Chapter? chapter;
+      if (chapterData != null) {
+        chapter = db.chaptersDao.fromRow(chapterData);
       }
+
+      histories.add(
+        ReadHistory(
+          work: work,
+          chapter: chapter,
+          timestamp: historyData.timestamp,
+          position: historyData.position,
+          status: ReadStatus.values.firstWhere(
+            (s) => s.name == historyData.status,
+          ),
+          completion: historyData.completion,
+          hits: historyData.hits,
+        ),
+      );
     }
 
     return histories;
@@ -287,18 +329,51 @@ class ReadHistoriesDao
         .add(const Duration(days: 1))
         .subtract(const Duration(microseconds: 1));
 
-    final historyRecords =
-        await (select(table)
-              ..where((h) => h.timestamp.isBetweenValues(startDate, endDate))
-              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)]))
-            .get();
+    final query =
+        select(db.dbReadHistories).join([
+            innerJoin(
+              db.dbWorks,
+              db.dbWorks.id.equalsExp(db.dbReadHistories.workId),
+            ),
+            leftOuterJoin(
+              db.dbChapters,
+              db.dbChapters.id.equalsExp(db.dbReadHistories.chapterId),
+            ),
+          ])
+          ..where(
+            db.dbReadHistories.timestamp.isBetweenValues(startDate, endDate),
+          )
+          ..orderBy([OrderingTerm.desc(db.dbReadHistories.timestamp)]);
+
+    final results = await query.get();
 
     final histories = <ReadHistory>[];
-    for (final record in historyRecords) {
-      final history = await getReadHistoryComplete(record.workId);
-      if (history != null) {
-        histories.add(history);
+    for (final row in results) {
+      final historyData = row.readTable(db.dbReadHistories);
+      final workData = row.readTable(db.dbWorks);
+      final chapterData = row.readTableOrNull(db.dbChapters);
+
+      final work = await db.worksDao.getWorkComplete(workData.id);
+      if (work == null) continue;
+
+      Chapter? chapter;
+      if (chapterData != null) {
+        chapter = db.chaptersDao.fromRow(chapterData);
       }
+
+      histories.add(
+        ReadHistory(
+          work: work,
+          chapter: chapter,
+          timestamp: historyData.timestamp,
+          position: historyData.position,
+          status: ReadStatus.values.firstWhere(
+            (s) => s.name == historyData.status,
+          ),
+          completion: historyData.completion,
+          hits: historyData.hits,
+        ),
+      );
     }
 
     return histories;

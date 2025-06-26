@@ -4076,6 +4076,19 @@ class $DbReadHistoriesTable extends DbReadHistories
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $DbReadHistoriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
   @override
   late final GeneratedColumn<int> workId = GeneratedColumn<int>(
@@ -4083,7 +4096,7 @@ class $DbReadHistoriesTable extends DbReadHistories
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES works (id)',
     ),
@@ -4156,6 +4169,7 @@ class $DbReadHistoriesTable extends DbReadHistories
   );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
     workId,
     chapterId,
     timestamp,
@@ -4176,11 +4190,16 @@ class $DbReadHistoriesTable extends DbReadHistories
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('work_id')) {
       context.handle(
         _workIdMeta,
         workId.isAcceptableOrUnknown(data['work_id']!, _workIdMeta),
       );
+    } else if (isInserting) {
+      context.missing(_workIdMeta);
     }
     if (data.containsKey('chapter_id')) {
       context.handle(
@@ -4230,11 +4249,15 @@ class $DbReadHistoriesTable extends DbReadHistories
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {workId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   DbReadHistory map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DbReadHistory(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
       workId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
@@ -4273,6 +4296,7 @@ class $DbReadHistoriesTable extends DbReadHistories
 }
 
 class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
+  final int id;
   final int workId;
   final int? chapterId;
   final DateTime timestamp;
@@ -4281,6 +4305,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   final double completion;
   final int hits;
   const DbReadHistory({
+    required this.id,
     required this.workId,
     this.chapterId,
     required this.timestamp,
@@ -4292,6 +4317,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
     map['work_id'] = Variable<int>(workId);
     if (!nullToAbsent || chapterId != null) {
       map['chapter_id'] = Variable<int>(chapterId);
@@ -4306,6 +4332,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
 
   DbReadHistoriesCompanion toCompanion(bool nullToAbsent) {
     return DbReadHistoriesCompanion(
+      id: Value(id),
       workId: Value(workId),
       chapterId: chapterId == null && nullToAbsent
           ? const Value.absent()
@@ -4324,6 +4351,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DbReadHistory(
+      id: serializer.fromJson<int>(json['id']),
       workId: serializer.fromJson<int>(json['workId']),
       chapterId: serializer.fromJson<int?>(json['chapterId']),
       timestamp: serializer.fromJson<DateTime>(json['timestamp']),
@@ -4337,6 +4365,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'workId': serializer.toJson<int>(workId),
       'chapterId': serializer.toJson<int?>(chapterId),
       'timestamp': serializer.toJson<DateTime>(timestamp),
@@ -4348,6 +4377,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   }
 
   DbReadHistory copyWith({
+    int? id,
     int? workId,
     Value<int?> chapterId = const Value.absent(),
     DateTime? timestamp,
@@ -4356,6 +4386,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     double? completion,
     int? hits,
   }) => DbReadHistory(
+    id: id ?? this.id,
     workId: workId ?? this.workId,
     chapterId: chapterId.present ? chapterId.value : this.chapterId,
     timestamp: timestamp ?? this.timestamp,
@@ -4366,6 +4397,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   );
   DbReadHistory copyWithCompanion(DbReadHistoriesCompanion data) {
     return DbReadHistory(
+      id: data.id.present ? data.id.value : this.id,
       workId: data.workId.present ? data.workId.value : this.workId,
       chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
       timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
@@ -4381,6 +4413,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   @override
   String toString() {
     return (StringBuffer('DbReadHistory(')
+          ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('chapterId: $chapterId, ')
           ..write('timestamp: $timestamp, ')
@@ -4394,6 +4427,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
 
   @override
   int get hashCode => Object.hash(
+    id,
     workId,
     chapterId,
     timestamp,
@@ -4406,6 +4440,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DbReadHistory &&
+          other.id == this.id &&
           other.workId == this.workId &&
           other.chapterId == this.chapterId &&
           other.timestamp == this.timestamp &&
@@ -4416,6 +4451,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
 }
 
 class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
+  final Value<int> id;
   final Value<int> workId;
   final Value<int?> chapterId;
   final Value<DateTime> timestamp;
@@ -4424,6 +4460,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   final Value<double> completion;
   final Value<int> hits;
   const DbReadHistoriesCompanion({
+    this.id = const Value.absent(),
     this.workId = const Value.absent(),
     this.chapterId = const Value.absent(),
     this.timestamp = const Value.absent(),
@@ -4433,18 +4470,21 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     this.hits = const Value.absent(),
   });
   DbReadHistoriesCompanion.insert({
-    this.workId = const Value.absent(),
+    this.id = const Value.absent(),
+    required int workId,
     this.chapterId = const Value.absent(),
     required DateTime timestamp,
     required int position,
     required String status,
     required double completion,
     this.hits = const Value.absent(),
-  }) : timestamp = Value(timestamp),
+  }) : workId = Value(workId),
+       timestamp = Value(timestamp),
        position = Value(position),
        status = Value(status),
        completion = Value(completion);
   static Insertable<DbReadHistory> custom({
+    Expression<int>? id,
     Expression<int>? workId,
     Expression<int>? chapterId,
     Expression<DateTime>? timestamp,
@@ -4454,6 +4494,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     Expression<int>? hits,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (workId != null) 'work_id': workId,
       if (chapterId != null) 'chapter_id': chapterId,
       if (timestamp != null) 'timestamp': timestamp,
@@ -4465,6 +4506,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   }
 
   DbReadHistoriesCompanion copyWith({
+    Value<int>? id,
     Value<int>? workId,
     Value<int?>? chapterId,
     Value<DateTime>? timestamp,
@@ -4474,6 +4516,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     Value<int>? hits,
   }) {
     return DbReadHistoriesCompanion(
+      id: id ?? this.id,
       workId: workId ?? this.workId,
       chapterId: chapterId ?? this.chapterId,
       timestamp: timestamp ?? this.timestamp,
@@ -4487,6 +4530,9 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (workId.present) {
       map['work_id'] = Variable<int>(workId.value);
     }
@@ -4514,6 +4560,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   @override
   String toString() {
     return (StringBuffer('DbReadHistoriesCompanion(')
+          ..write('id: $id, ')
           ..write('workId: $workId, ')
           ..write('chapterId: $chapterId, ')
           ..write('timestamp: $timestamp, ')
@@ -6245,6 +6292,10 @@ class $DbWorksLibraryTable extends DbWorksLibrary
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {workId},
+  ];
+  @override
   DbWorksLibraryData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DbWorksLibraryData(
@@ -6544,6 +6595,10 @@ class $DbDownloadedWorksTable extends DbDownloadedWorks
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {workId},
+  ];
+  @override
   DbDownloadedWork map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DbDownloadedWork(
@@ -6807,8 +6862,34 @@ class $DbDownloadedChaptersTable extends DbDownloadedChapters
       'REFERENCES chapters (id)',
     ),
   );
+  static const VerificationMeta _timestampMeta = const VerificationMeta(
+    'timestamp',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, chapterId];
+  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+    'timestamp',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isCompleteMeta = const VerificationMeta(
+    'isComplete',
+  );
+  @override
+  late final GeneratedColumn<bool> isComplete = GeneratedColumn<bool>(
+    'is_complete',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_complete" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, chapterId, timestamp, isComplete];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -6832,11 +6913,29 @@ class $DbDownloadedChaptersTable extends DbDownloadedChapters
     } else if (isInserting) {
       context.missing(_chapterIdMeta);
     }
+    if (data.containsKey('timestamp')) {
+      context.handle(
+        _timestampMeta,
+        timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    if (data.containsKey('is_complete')) {
+      context.handle(
+        _isCompleteMeta,
+        isComplete.isAcceptableOrUnknown(data['is_complete']!, _isCompleteMeta),
+      );
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {chapterId},
+  ];
   @override
   DbDownloadedChapter map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -6848,6 +6947,14 @@ class $DbDownloadedChaptersTable extends DbDownloadedChapters
       chapterId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}chapter_id'],
+      )!,
+      timestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}timestamp'],
+      )!,
+      isComplete: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_complete'],
       )!,
     );
   }
@@ -6862,12 +6969,21 @@ class DbDownloadedChapter extends DataClass
     implements Insertable<DbDownloadedChapter> {
   final int id;
   final int chapterId;
-  const DbDownloadedChapter({required this.id, required this.chapterId});
+  final DateTime timestamp;
+  final bool isComplete;
+  const DbDownloadedChapter({
+    required this.id,
+    required this.chapterId,
+    required this.timestamp,
+    required this.isComplete,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['chapter_id'] = Variable<int>(chapterId);
+    map['timestamp'] = Variable<DateTime>(timestamp);
+    map['is_complete'] = Variable<bool>(isComplete);
     return map;
   }
 
@@ -6875,6 +6991,8 @@ class DbDownloadedChapter extends DataClass
     return DbDownloadedChaptersCompanion(
       id: Value(id),
       chapterId: Value(chapterId),
+      timestamp: Value(timestamp),
+      isComplete: Value(isComplete),
     );
   }
 
@@ -6886,6 +7004,8 @@ class DbDownloadedChapter extends DataClass
     return DbDownloadedChapter(
       id: serializer.fromJson<int>(json['id']),
       chapterId: serializer.fromJson<int>(json['chapterId']),
+      timestamp: serializer.fromJson<DateTime>(json['timestamp']),
+      isComplete: serializer.fromJson<bool>(json['isComplete']),
     );
   }
   @override
@@ -6894,18 +7014,30 @@ class DbDownloadedChapter extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'chapterId': serializer.toJson<int>(chapterId),
+      'timestamp': serializer.toJson<DateTime>(timestamp),
+      'isComplete': serializer.toJson<bool>(isComplete),
     };
   }
 
-  DbDownloadedChapter copyWith({int? id, int? chapterId}) =>
-      DbDownloadedChapter(
-        id: id ?? this.id,
-        chapterId: chapterId ?? this.chapterId,
-      );
+  DbDownloadedChapter copyWith({
+    int? id,
+    int? chapterId,
+    DateTime? timestamp,
+    bool? isComplete,
+  }) => DbDownloadedChapter(
+    id: id ?? this.id,
+    chapterId: chapterId ?? this.chapterId,
+    timestamp: timestamp ?? this.timestamp,
+    isComplete: isComplete ?? this.isComplete,
+  );
   DbDownloadedChapter copyWithCompanion(DbDownloadedChaptersCompanion data) {
     return DbDownloadedChapter(
       id: data.id.present ? data.id.value : this.id,
       chapterId: data.chapterId.present ? data.chapterId.value : this.chapterId,
+      timestamp: data.timestamp.present ? data.timestamp.value : this.timestamp,
+      isComplete: data.isComplete.present
+          ? data.isComplete.value
+          : this.isComplete,
     );
   }
 
@@ -6913,50 +7045,69 @@ class DbDownloadedChapter extends DataClass
   String toString() {
     return (StringBuffer('DbDownloadedChapter(')
           ..write('id: $id, ')
-          ..write('chapterId: $chapterId')
+          ..write('chapterId: $chapterId, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('isComplete: $isComplete')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, chapterId);
+  int get hashCode => Object.hash(id, chapterId, timestamp, isComplete);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is DbDownloadedChapter &&
           other.id == this.id &&
-          other.chapterId == this.chapterId);
+          other.chapterId == this.chapterId &&
+          other.timestamp == this.timestamp &&
+          other.isComplete == this.isComplete);
 }
 
 class DbDownloadedChaptersCompanion
     extends UpdateCompanion<DbDownloadedChapter> {
   final Value<int> id;
   final Value<int> chapterId;
+  final Value<DateTime> timestamp;
+  final Value<bool> isComplete;
   const DbDownloadedChaptersCompanion({
     this.id = const Value.absent(),
     this.chapterId = const Value.absent(),
+    this.timestamp = const Value.absent(),
+    this.isComplete = const Value.absent(),
   });
   DbDownloadedChaptersCompanion.insert({
     this.id = const Value.absent(),
     required int chapterId,
-  }) : chapterId = Value(chapterId);
+    required DateTime timestamp,
+    this.isComplete = const Value.absent(),
+  }) : chapterId = Value(chapterId),
+       timestamp = Value(timestamp);
   static Insertable<DbDownloadedChapter> custom({
     Expression<int>? id,
     Expression<int>? chapterId,
+    Expression<DateTime>? timestamp,
+    Expression<bool>? isComplete,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (chapterId != null) 'chapter_id': chapterId,
+      if (timestamp != null) 'timestamp': timestamp,
+      if (isComplete != null) 'is_complete': isComplete,
     });
   }
 
   DbDownloadedChaptersCompanion copyWith({
     Value<int>? id,
     Value<int>? chapterId,
+    Value<DateTime>? timestamp,
+    Value<bool>? isComplete,
   }) {
     return DbDownloadedChaptersCompanion(
       id: id ?? this.id,
       chapterId: chapterId ?? this.chapterId,
+      timestamp: timestamp ?? this.timestamp,
+      isComplete: isComplete ?? this.isComplete,
     );
   }
 
@@ -6969,6 +7120,12 @@ class DbDownloadedChaptersCompanion
     if (chapterId.present) {
       map['chapter_id'] = Variable<int>(chapterId.value);
     }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    if (isComplete.present) {
+      map['is_complete'] = Variable<bool>(isComplete.value);
+    }
     return map;
   }
 
@@ -6976,7 +7133,9 @@ class DbDownloadedChaptersCompanion
   String toString() {
     return (StringBuffer('DbDownloadedChaptersCompanion(')
           ..write('id: $id, ')
-          ..write('chapterId: $chapterId')
+          ..write('chapterId: $chapterId, ')
+          ..write('timestamp: $timestamp, ')
+          ..write('isComplete: $isComplete')
           ..write(')'))
         .toString();
   }
@@ -12400,7 +12559,8 @@ typedef $$DbChaptersTableProcessedTableManager =
     >;
 typedef $$DbReadHistoriesTableCreateCompanionBuilder =
     DbReadHistoriesCompanion Function({
-      Value<int> workId,
+      Value<int> id,
+      required int workId,
       Value<int?> chapterId,
       required DateTime timestamp,
       required int position,
@@ -12410,6 +12570,7 @@ typedef $$DbReadHistoriesTableCreateCompanionBuilder =
     });
 typedef $$DbReadHistoriesTableUpdateCompanionBuilder =
     DbReadHistoriesCompanion Function({
+      Value<int> id,
       Value<int> workId,
       Value<int?> chapterId,
       Value<DateTime> timestamp,
@@ -12475,6 +12636,11 @@ class $$DbReadHistoriesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get timestamp => $composableBuilder(
     column: $table.timestamp,
     builder: (column) => ColumnFilters(column),
@@ -12556,6 +12722,11 @@ class $$DbReadHistoriesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get timestamp => $composableBuilder(
     column: $table.timestamp,
     builder: (column) => ColumnOrderings(column),
@@ -12637,6 +12808,9 @@ class $$DbReadHistoriesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<DateTime> get timestamp =>
       $composableBuilder(column: $table.timestamp, builder: (column) => column);
 
@@ -12731,6 +12905,7 @@ class $$DbReadHistoriesTableTableManager
               $$DbReadHistoriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int> id = const Value.absent(),
                 Value<int> workId = const Value.absent(),
                 Value<int?> chapterId = const Value.absent(),
                 Value<DateTime> timestamp = const Value.absent(),
@@ -12739,6 +12914,7 @@ class $$DbReadHistoriesTableTableManager
                 Value<double> completion = const Value.absent(),
                 Value<int> hits = const Value.absent(),
               }) => DbReadHistoriesCompanion(
+                id: id,
                 workId: workId,
                 chapterId: chapterId,
                 timestamp: timestamp,
@@ -12749,7 +12925,8 @@ class $$DbReadHistoriesTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<int> workId = const Value.absent(),
+                Value<int> id = const Value.absent(),
+                required int workId,
                 Value<int?> chapterId = const Value.absent(),
                 required DateTime timestamp,
                 required int position,
@@ -12757,6 +12934,7 @@ class $$DbReadHistoriesTableTableManager
                 required double completion,
                 Value<int> hits = const Value.absent(),
               }) => DbReadHistoriesCompanion.insert(
+                id: id,
                 workId: workId,
                 chapterId: chapterId,
                 timestamp: timestamp,
@@ -15256,11 +15434,15 @@ typedef $$DbDownloadedChaptersTableCreateCompanionBuilder =
     DbDownloadedChaptersCompanion Function({
       Value<int> id,
       required int chapterId,
+      required DateTime timestamp,
+      Value<bool> isComplete,
     });
 typedef $$DbDownloadedChaptersTableUpdateCompanionBuilder =
     DbDownloadedChaptersCompanion Function({
       Value<int> id,
       Value<int> chapterId,
+      Value<DateTime> timestamp,
+      Value<bool> isComplete,
     });
 
 final class $$DbDownloadedChaptersTableReferences
@@ -15313,6 +15495,16 @@ class $$DbDownloadedChaptersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$DbChaptersTableFilterComposer get chapterId {
     final $$DbChaptersTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -15351,6 +15543,16 @@ class $$DbDownloadedChaptersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get timestamp => $composableBuilder(
+    column: $table.timestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$DbChaptersTableOrderingComposer get chapterId {
     final $$DbChaptersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -15386,6 +15588,14 @@ class $$DbDownloadedChaptersTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get timestamp =>
+      $composableBuilder(column: $table.timestamp, builder: (column) => column);
+
+  GeneratedColumn<bool> get isComplete => $composableBuilder(
+    column: $table.isComplete,
+    builder: (column) => column,
+  );
 
   $$DbChaptersTableAnnotationComposer get chapterId {
     final $$DbChaptersTableAnnotationComposer composer = $composerBuilder(
@@ -15449,14 +15659,25 @@ class $$DbDownloadedChaptersTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> chapterId = const Value.absent(),
-              }) => DbDownloadedChaptersCompanion(id: id, chapterId: chapterId),
+                Value<DateTime> timestamp = const Value.absent(),
+                Value<bool> isComplete = const Value.absent(),
+              }) => DbDownloadedChaptersCompanion(
+                id: id,
+                chapterId: chapterId,
+                timestamp: timestamp,
+                isComplete: isComplete,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int chapterId,
+                required DateTime timestamp,
+                Value<bool> isComplete = const Value.absent(),
               }) => DbDownloadedChaptersCompanion.insert(
                 id: id,
                 chapterId: chapterId,
+                timestamp: timestamp,
+                isComplete: isComplete,
               ),
           withReferenceMapper: (p0) => p0
               .map(
