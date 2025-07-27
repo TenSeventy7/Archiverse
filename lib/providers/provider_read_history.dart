@@ -31,7 +31,7 @@ class ReadHistoryProvider extends ChangeNotifier {
         scrollPosition: scrollPosition,
         totalScrollPosition: totalScrollPosition,
       );
-      await _api.addHit(work.id);
+      // Note: Hit counting is now handled internally by saveReadHistory
 
       // Clear cache to force refresh
       _mostRecentHistory = null;
