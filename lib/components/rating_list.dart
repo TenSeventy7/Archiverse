@@ -17,29 +17,33 @@ class RatingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 12,
-      children: [
-        // Age Rating
-        _buildRatingItem(
-          context,
-          RatingUtils.getAgeRatingInfo(context, work.rating),
-        ),
-
-        // Relationship Types
-        for (var relation in work.relationship)
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        spacing: 4,
+        children: [
+          // Age Rating
           _buildRatingItem(
             context,
-            RatingUtils.getRelationshipInfo(context, relation),
+            RatingUtils.getAgeRatingInfo(context, work.rating),
           ),
 
-        // Content Warnings
-        for (var warning in work.warnings)
-          _buildRatingItem(
-            context,
-            RatingUtils.getWarningInfo(context, warning),
-          ),
-      ],
+          // Relationship Types
+          for (var relation in work.relationship)
+            _buildRatingItem(
+              context,
+              RatingUtils.getRelationshipInfo(context, relation),
+            ),
+
+          // Content Warnings
+          for (var warning in work.warnings)
+            _buildRatingItem(
+              context,
+              RatingUtils.getWarningInfo(context, warning),
+            ),
+        ],
+      ),
     );
   }
 
@@ -47,13 +51,14 @@ class RatingList extends StatelessWidget {
     return Skeleton.leaf(
       child: Card(
         elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         clipBehavior: Clip.antiAlias,
         color: info.backgroundColor.withAlpha(26),
         margin: EdgeInsets.zero,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
-            vertical: 4,
+            vertical: 8,
           ),
           onTap: () {
             RatingInfoDialog.showSheet(context, info: info);
