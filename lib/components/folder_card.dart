@@ -1,19 +1,13 @@
+import 'package:archiverse/dialogs/library_folder_options.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/views/lists/activity_folder_works.dart';
 import 'package:flutter/material.dart';
 
 class FolderCard extends StatelessWidget {
-  final String title;
-  final int count;
-  final IconData icon;
-  final Color accentColor;
+  final LibraryCategory category;
 
-  const FolderCard({
-    super.key,
-    required this.title,
-    required this.count,
-    required this.icon,
-    required this.accentColor,
-  });
+  const FolderCard({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +19,13 @@ class FolderCard extends StatelessWidget {
       elevation: 0,
       child: InkWell(
         onTap: () {
-          // Navigate to collection
+          context.navigator.pushNamed(
+            FolderWorksActivity.routeName,
+            arguments: category,
+          );
         },
+        onLongPress: () =>
+            FolderOptionsDialog.showSheet(context, category: category),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -37,16 +36,20 @@ class FolderCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: accentColor.withAlpha(50),
+                      color: category.accentColor.withAlpha(50),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: Icon(icon, color: accentColor, size: 24),
+                    child: Icon(
+                      category.iconData,
+                      color: category.accentColor,
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
               const Spacer(),
               Text(
-                title,
+                category.name,
                 style: context.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -55,7 +58,7 @@ class FolderCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                "$count works",
+                "${category.count} works",
                 style: context.textTheme.labelMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

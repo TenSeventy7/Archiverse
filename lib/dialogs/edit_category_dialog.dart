@@ -1,14 +1,13 @@
-import 'package:archiverse/api.dart';
 import 'package:archiverse/components/animated_checkmark.dart';
 import 'package:archiverse/components/expressive/app_bar.dart';
 import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/icon_selector.dart';
 import 'package:archiverse/components/text_header.dart';
-import 'package:archiverse/extensions/api_library.dart';
-import 'package:archiverse/extensions/string.dart';
 import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/providers/provider_library.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
 
 class _EditCategoryDialog extends StatefulWidget {
   final LibraryCategory? category; // null for add, non-null for edit
@@ -254,17 +253,19 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
     try {
       if (isEditing) {
         final updatedCategory = LibraryCategory(
-          id: widget.category!.id,
+          id: widget.category?.id ?? -1,
           name: name,
           icon: _getStringFromIcon(_selectedIcon ?? TablerIcons.folder),
           color: _selectedColor,
         );
-        await AppApi().updateLibraryCategory(updatedCategory);
+        await context.read<LibraryProvider>().updateCategory(updatedCategory);
       } else {
-        await AppApi().createLibraryCategory(
-          name,
-          color: _selectedColor,
-          icon: _getStringFromIcon(_selectedIcon ?? TablerIcons.folder),
+        await context.read<LibraryProvider>().addCategory(
+          LibraryCategory(
+            name: name,
+            icon: _getStringFromIcon(_selectedIcon ?? TablerIcons.folder),
+            color: _selectedColor,
+          ),
         );
       }
 
@@ -300,7 +301,7 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
 class EditCategoryDialog {
   static Future<bool?> show(BuildContext context, {LibraryCategory? category}) {
     return showDialog<bool>(
-      context: context,
+      context: Navigator.of(context, rootNavigator: true).context,
       builder: (context) => _EditCategoryDialog(category: category),
     );
   }
