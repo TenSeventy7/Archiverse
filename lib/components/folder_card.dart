@@ -1,19 +1,19 @@
 import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
 
-class CollectionCard extends StatelessWidget {
+class FolderCard extends StatelessWidget {
   final String title;
   final int count;
   final IconData icon;
   final Color accentColor;
 
-  const CollectionCard({
-    Key? key,
+  const FolderCard({
+    super.key,
     required this.title,
     required this.count,
     required this.icon,
     required this.accentColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,8 @@ class CollectionCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      color: colorScheme.surfaceContainer,
+      elevation: 0,
       child: InkWell(
         onTap: () {
           // Navigate to collection
@@ -51,10 +53,10 @@ class CollectionCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 "$count works",
-                style: context.textTheme.bodySmall?.copyWith(
+                style: context.textTheme.labelMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
