@@ -11,6 +11,7 @@ class PaddedRow extends StatelessWidget {
   final CrossAxisAlignment? crossAxisAlignment;
   final MainAxisSize? mainAxisSize;
   final EdgeInsetsGeometry? padding;
+  final double? spacing;
 
   const PaddedRow({
     super.key,
@@ -19,6 +20,7 @@ class PaddedRow extends StatelessWidget {
     this.mainAxisAlignment,
     this.crossAxisAlignment,
     this.mainAxisSize,
+    this.spacing,
   });
 
   @override
@@ -29,6 +31,7 @@ class PaddedRow extends StatelessWidget {
         mainAxisSize: mainAxisSize ?? MainAxisSize.max,
         mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
         crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.start,
+        spacing: spacing ?? 0.0,
         children: children,
       ),
     );
