@@ -1,4 +1,5 @@
 import 'package:archiverse/components/items/work_item.dart';
+import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/placeholders.dart';
@@ -9,7 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ContinueReadingCard extends StatefulWidget {
-  const ContinueReadingCard({super.key});
+  const ContinueReadingCard({super.key, this.showHeader = false});
+
+  final bool showHeader;
 
   @override
   State<ContinueReadingCard> createState() => _ContinueReadingCardState();
@@ -33,11 +36,18 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
           enabled: provider.isLoading,
           child: Padding(
             padding: EdgeInsets.only(bottom: 8.0),
-            child: _buildCard(
-              context,
-              provider.isLoading
-                  ? Fillers.history
-                  : provider.mostRecentHistory!,
+            child: Column(
+              children: [
+                if (widget.showHeader) ...[
+                  TextHeader.medium(title: "Continue Reading"),
+                ],
+                _buildCard(
+                  context,
+                  provider.isLoading
+                      ? Fillers.history
+                      : provider.mostRecentHistory!,
+                ),
+              ],
             ),
           ),
         );
