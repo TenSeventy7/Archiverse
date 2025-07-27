@@ -25,6 +25,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
   Future<List<T>> fetchItems(int page);
   Widget buildItemWidget(BuildContext context, T item, int index);
   void onItemTap(T item) => {}; // Optional callback for item tap
+  void onItemLongPress(T item) => {}; // Optional callback for item long press
   Widget buildTitle(BuildContext context);
 
   // Optional overridable methods
@@ -119,6 +120,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
       title: buildItemWidget(context, item, index),
       contentPadding: padding,
       onTap: () => onItemTap(item),
+      onLongPress: () => onItemLongPress(item),
     );
   }
 
