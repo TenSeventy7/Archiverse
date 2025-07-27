@@ -88,6 +88,7 @@ class ThemeProvider extends ChangeNotifier {
           TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
         },
       ),
+      snackBarTheme: SnackBarThemeData(behavior: SnackBarBehavior.floating),
       actionIconTheme: ActionIconThemeData(
         backButtonIconBuilder: (BuildContext context) => Icon(
           Directionality.of(context) == TextDirection.rtl
