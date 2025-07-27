@@ -173,7 +173,7 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
     );
   }
 
-  _buildSeeMoreTile(BuildContext context, Media media) {
+  Widget _buildSeeMoreTile(BuildContext context, Media media) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       visualDensity: VisualDensity.compact,

@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/components/storage_usage_indicator.dart';
@@ -38,12 +41,14 @@ class _CacheManagementActivityState extends State<CacheManagementActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
           return <Widget>[
-            SliverAppBar.large(
+            ExpressiveSliverAppBar.medium(
+              controller: controller,
               title: Text(context.strings.settings_cache_title),
               actions: [
                 IconButton(
@@ -315,34 +320,31 @@ class _CacheManagementActivityState extends State<CacheManagementActivity> {
   void _showClearAllDialog() {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.strings.settings_cache_clear_all),
-            content: Text(context.strings.settings_cache_clear_all_message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.strings.dialog_cancel),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _imageCache = 0;
-                    _pageCache = 0;
-                    _metadataCache = 0;
-                    _searchCache = 0;
-                  });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(context.strings.settings_cache_cleared),
-                    ),
-                  );
-                },
-                child: Text(context.strings.dialog_clear),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(context.strings.settings_cache_clear_all),
+        content: Text(context.strings.settings_cache_clear_all_message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.strings.dialog_cancel),
           ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _imageCache = 0;
+                _pageCache = 0;
+                _metadataCache = 0;
+                _searchCache = 0;
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.strings.settings_cache_cleared)),
+              );
+            },
+            child: Text(context.strings.dialog_clear),
+          ),
+        ],
+      ),
     );
   }
 

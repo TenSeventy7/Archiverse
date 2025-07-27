@@ -66,7 +66,7 @@ class TagWorksActivityState extends CommonListActivityState<Work> {
         // Tag name
         Text(
           tag.name,
-          style: context.textTheme.headlineMedium?.copyWith(
+          style: context.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: colorScheme.onSurface,
           ),

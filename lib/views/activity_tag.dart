@@ -102,7 +102,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
   @override
   double getExpandedHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height * 0.25;
+    return MediaQuery.of(context).size.height * 0.3;
   }
 
   @override
@@ -198,8 +198,6 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
   }
 
   Widget _buildHeroSection(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Padding(
       padding: EdgeInsets.only(
         top: context.commonPaddingDouble,
@@ -210,62 +208,66 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tag type and canonical status
-          Row(
-            children: [
-              // Tag type chip
-              Skeleton.leaf(
-                child: Chip(
-                  avatar: Icon(
-                    _getTagTypeIcon(item.type),
-                    size: 16,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
-                  label: Text(
-                    item.type.toString(),
-                    style: context.textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  backgroundColor: colorScheme.primaryContainer,
-                  side: BorderSide.none,
-                ),
-              ),
-
-              SizedBox(width: 8),
-
-              // Relationship type indicator
-              if (item.type == TagType.RELATIONSHIP)
-                Skeleton.leaf(
-                  child: Chip(
-                    avatar: Icon(
-                      item.isRomanticRelationship
-                          ? TablerIcons.heart_filled
-                          : TablerIcons.users,
-                      size: 16,
-                      color: item.isRomanticRelationship
-                          ? colorScheme.onErrorContainer
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                    label: Text(
-                      item.isRomanticRelationship ? "Romantic" : "Platonic",
-                      style: context.textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    backgroundColor: item.isRomanticRelationship
-                        ? colorScheme.secondaryContainer.withOpacity(0.7)
-                        : colorScheme.tertiaryContainer.withOpacity(0.7),
-                    side: BorderSide.none,
-                  ),
-                ),
-            ],
-          ),
           if (item.canonical) ...[
-            SizedBox(height: 24),
+            SizedBox(height: 8),
             _buildCanonicalCard(context),
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildTagType(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        // Tag type chip
+        Skeleton.leaf(
+          child: Chip(
+            avatar: Icon(
+              _getTagTypeIcon(item.type),
+              size: 16,
+              color: colorScheme.onPrimaryContainer,
+            ),
+            label: Text(
+              item.type.toString(),
+              style: context.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            backgroundColor: colorScheme.primaryContainer,
+            side: BorderSide.none,
+          ),
+        ),
+
+        SizedBox(width: 8),
+
+        // Relationship type indicator
+        if (item.type == TagType.RELATIONSHIP)
+          Skeleton.leaf(
+            child: Chip(
+              avatar: Icon(
+                item.isRomanticRelationship
+                    ? TablerIcons.heart_filled
+                    : TablerIcons.users,
+                size: 16,
+                color: item.isRomanticRelationship
+                    ? colorScheme.onErrorContainer
+                    : colorScheme.onSurfaceVariant,
+              ),
+              label: Text(
+                item.isRomanticRelationship ? "Romantic" : "Platonic",
+                style: context.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: item.isRomanticRelationship
+                  ? colorScheme.secondaryContainer.withOpacity(0.7)
+                  : colorScheme.tertiaryContainer.withOpacity(0.7),
+              side: BorderSide.none,
+            ),
+          ),
+      ],
     );
   }
 
@@ -274,6 +276,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
 
     return Card.filled(
       elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: colorScheme.tertiaryContainer.withAlpha(77),
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -607,6 +610,7 @@ class TagDetailState extends CommonDetailActivityState<Tag> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+          _buildTagType(context),
         ],
       ),
     );

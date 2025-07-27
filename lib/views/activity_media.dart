@@ -1,5 +1,7 @@
 import 'package:alphabet_list_view/alphabet_list_view.dart';
 import 'package:archiverse/api.dart';
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -143,8 +145,9 @@ class _MediaActivityState extends State<MediaActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return ExpressiveScaffold(
+      appBar: (controller) => ExpressiveAppBar(
+        controller: controller,
         title: _isSearching
             ? TextField(
                 controller: _searchController,
@@ -163,7 +166,6 @@ class _MediaActivityState extends State<MediaActivity> {
                 ),
               )
             : Text(media.toLocalName(context)),
-        centerTitle: !_isSearching,
         leading: _isSearching
             ? IconButton(
                 icon: Icon(TablerIcons.arrow_left),
@@ -188,7 +190,7 @@ class _MediaActivityState extends State<MediaActivity> {
                 ),
               ],
       ),
-      body: EnhancedFutureBuilder(
+      body: (controller) => EnhancedFutureBuilder(
         future: _groups,
         rememberFutureResult: false,
         whenDone: _buildList,
@@ -296,7 +298,7 @@ class _MediaActivityState extends State<MediaActivity> {
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: context.colorScheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Text(

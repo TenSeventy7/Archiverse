@@ -1,3 +1,6 @@
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -31,12 +34,14 @@ class _BlockedContentActivityState extends State<BlockedContentActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
           return <Widget>[
-            SliverAppBar.large(
+            ExpressiveSliverAppBar.medium(
+              controller: controller,
               title: Text(context.strings.settings_blocked_content_title),
               actions: [
                 IconButton(
@@ -50,9 +55,11 @@ class _BlockedContentActivityState extends State<BlockedContentActivity> {
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.fromLTRB(
+            context.commonPadding,
+            0,
+            context.commonPadding,
+            16,
           ),
           children: [
             OptionGroup(
@@ -81,10 +88,9 @@ class _BlockedContentActivityState extends State<BlockedContentActivity> {
                 OptionTile.switcher(
                   title:
                       context.strings.settings_blocked_content_show_indicator,
-                  subtitle:
-                      context
-                          .strings
-                          .settings_blocked_content_show_indicator_subtitle,
+                  subtitle: context
+                      .strings
+                      .settings_blocked_content_show_indicator_subtitle,
                   icon: TablerIcons.eye_exclamation,
                   value: _showBlockedIndicator,
                   onChanged: (value) {
@@ -100,64 +106,59 @@ class _BlockedContentActivityState extends State<BlockedContentActivity> {
             if (_blockedWorks.isNotEmpty)
               OptionGroup(
                 title: context.strings.settings_blocked_content_blocked_works,
-                children:
-                    _blockedWorks
-                        .map(
-                          (work) => OptionTile(
-                            title: work['title']!,
-                            subtitle: context.strings
-                                .settings_blocked_content_work_id(work['id']!),
-                            icon: TablerIcons.book_off,
-                            trailing: IconButton(
-                              icon: const Icon(TablerIcons.trash),
-                              onPressed: () {
-                                setState(() {
-                                  _blockedWorks.remove(work);
-                                });
-                              },
-                              tooltip:
-                                  context
-                                      .strings
-                                      .settings_blocked_content_unblock_work,
-                            ),
-                          ),
-                        )
-                        .toList(),
+                children: _blockedWorks
+                    .map(
+                      (work) => OptionTile(
+                        title: work['title']!,
+                        subtitle: context.strings
+                            .settings_blocked_content_work_id(work['id']!),
+                        icon: TablerIcons.book_off,
+                        trailing: IconButton(
+                          icon: const Icon(TablerIcons.trash),
+                          onPressed: () {
+                            setState(() {
+                              _blockedWorks.remove(work);
+                            });
+                          },
+                          tooltip: context
+                              .strings
+                              .settings_blocked_content_unblock_work,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
 
             if (_blockedWorks.isNotEmpty) const SizedBox(height: 16.0),
 
             if (_blockedCollections.isNotEmpty)
               OptionGroup(
-                title:
-                    context
-                        .strings
-                        .settings_blocked_content_blocked_collections,
-                children:
-                    _blockedCollections
-                        .map(
-                          (collection) => OptionTile(
-                            title: collection['title']!,
-                            subtitle: context.strings
-                                .settings_blocked_content_collection_id(
-                                  collection['id']!,
-                                ),
-                            icon: TablerIcons.folders_off,
-                            trailing: IconButton(
-                              icon: const Icon(TablerIcons.trash),
-                              onPressed: () {
-                                setState(() {
-                                  _blockedCollections.remove(collection);
-                                });
-                              },
-                              tooltip:
-                                  context
-                                      .strings
-                                      .settings_blocked_content_unblock_collection,
+                title: context
+                    .strings
+                    .settings_blocked_content_blocked_collections,
+                children: _blockedCollections
+                    .map(
+                      (collection) => OptionTile(
+                        title: collection['title']!,
+                        subtitle: context.strings
+                            .settings_blocked_content_collection_id(
+                              collection['id']!,
                             ),
-                          ),
-                        )
-                        .toList(),
+                        icon: TablerIcons.folders_off,
+                        trailing: IconButton(
+                          icon: const Icon(TablerIcons.trash),
+                          onPressed: () {
+                            setState(() {
+                              _blockedCollections.remove(collection);
+                            });
+                          },
+                          tooltip: context
+                              .strings
+                              .settings_blocked_content_unblock_collection,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
 
             if (_blockedWorks.isEmpty && _blockedCollections.isEmpty)
@@ -256,22 +257,22 @@ class _BlockedContentActivityState extends State<BlockedContentActivity> {
                     decoration: InputDecoration(
                       labelText:
                           contentType ==
-                                  context.strings.settings_blocked_content_work
-                              ? context
-                                  .strings
-                                  .settings_blocked_content_work_id_label
-                              : context
-                                  .strings
-                                  .settings_blocked_content_collection_id_label,
+                              context.strings.settings_blocked_content_work
+                          ? context
+                                .strings
+                                .settings_blocked_content_work_id_label
+                          : context
+                                .strings
+                                .settings_blocked_content_collection_id_label,
                       hintText:
                           contentType ==
-                                  context.strings.settings_blocked_content_work
-                              ? context
-                                  .strings
-                                  .settings_blocked_content_enter_work_id
-                              : context
-                                  .strings
-                                  .settings_blocked_content_enter_collection_id,
+                              context.strings.settings_blocked_content_work
+                          ? context
+                                .strings
+                                .settings_blocked_content_enter_work_id
+                          : context
+                                .strings
+                                .settings_blocked_content_enter_collection_id,
                       prefixIcon: Icon(
                         contentType ==
                                 context.strings.settings_blocked_content_work

@@ -1,3 +1,6 @@
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -29,21 +32,25 @@ class _TagFiltersSettingsActivityState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
           return <Widget>[
-            SliverAppBar.large(
+            ExpressiveSliverAppBar.medium(
+              controller: controller,
               title: Text(context.strings.settings_tag_filters_title),
             ),
           ];
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.fromLTRB(
+            context.commonPadding,
+            0,
+            context.commonPadding,
+            16,
           ),
           children: [
             OptionGroup(
@@ -77,14 +84,13 @@ class _TagFiltersSettingsActivityState
                 ),
                 OptionTile.switcher(
                   title: context.strings.settings_tag_filters_hide_works,
-                  subtitle:
-                      _filterMode == 'Blacklist'
-                          ? context
-                              .strings
-                              .settings_tag_filters_hide_works_blacklist
-                          : context
-                              .strings
-                              .settings_tag_filters_hide_works_whitelist,
+                  subtitle: _filterMode == 'Blacklist'
+                      ? context
+                            .strings
+                            .settings_tag_filters_hide_works_blacklist
+                      : context
+                            .strings
+                            .settings_tag_filters_hide_works_whitelist,
                   icon: TablerIcons.eye_off,
                   value: _hideFilteredWorks,
                   onChanged: (value) {
@@ -109,50 +115,47 @@ class _TagFiltersSettingsActivityState
             const SizedBox(height: 16.0),
 
             OptionGroup(
-              title:
-                  _filterMode == 'Blacklist'
-                      ? context.strings.settings_tag_filters_blacklist
-                      : context.strings.settings_tag_filters_whitelist,
-              children:
-                  _filteredTags.isEmpty
-                      ? [
-                        OptionTile.custom(
-                          title: "",
-                          widget: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                context.strings.settings_tag_filters_no_tags(
-                                  _filterMode.toLowerCase(),
-                                ),
-                                style: TextStyle(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                ),
+              title: _filterMode == 'Blacklist'
+                  ? context.strings.settings_tag_filters_blacklist
+                  : context.strings.settings_tag_filters_whitelist,
+              children: _filteredTags.isEmpty
+                  ? [
+                      OptionTile.custom(
+                        title: "",
+                        widget: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              context.strings.settings_tag_filters_no_tags(
+                                _filterMode.toLowerCase(),
+                              ),
+                              style: TextStyle(
+                                color: context.colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ),
                         ),
-                      ]
-                      : _filteredTags
-                          .map(
-                            (tag) => OptionTile(
-                              title: tag,
-                              icon: TablerIcons.tag,
-                              trailing: IconButton(
-                                icon: const Icon(TablerIcons.trash),
-                                onPressed: () {
-                                  setState(() {
-                                    _filteredTags.remove(tag);
-                                  });
-                                },
-                                tooltip:
-                                    context
-                                        .strings
-                                        .settings_tag_filters_remove_tag,
-                              ),
+                      ),
+                    ]
+                  : _filteredTags
+                        .map(
+                          (tag) => OptionTile(
+                            title: tag,
+                            icon: TablerIcons.tag,
+                            trailing: IconButton(
+                              icon: const Icon(TablerIcons.trash),
+                              onPressed: () {
+                                setState(() {
+                                  _filteredTags.remove(tag);
+                                });
+                              },
+                              tooltip: context
+                                  .strings
+                                  .settings_tag_filters_remove_tag,
                             ),
-                          )
-                          .toList(),
+                          ),
+                        )
+                        .toList(),
             ),
           ],
         ),

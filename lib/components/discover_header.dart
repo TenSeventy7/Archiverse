@@ -1,3 +1,5 @@
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/padded_column.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_user.dart';
@@ -6,24 +8,37 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class DiscoverHeader extends StatelessWidget {
+class DiscoverHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onSearchTap;
   final VoidCallback? onNotificationTap;
+  final ScrollController? controller;
 
-  const DiscoverHeader({super.key, this.onSearchTap, this.onNotificationTap});
+  const DiscoverHeader({
+    super.key,
+    this.onSearchTap,
+    this.onNotificationTap,
+    this.controller,
+  });
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 48.0);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SliverAppBar(
+    return ExpressiveAppBar(
+      controller: controller,
       centerTitle: false,
-      pinned: true,
-      floating: true,
-      toolbarHeight: kToolbarHeight + 24.0,
-      shape: RoundedRectangleBorder(),
+      toolbarHeight: kToolbarHeight + 48.0,
+      titleSpacing: 16.0,
+      // shape: RoundedRectangleBorder(),
       title: PaddedColumn(
-        padding: EdgeInsets.symmetric(horizontal: context.commonPadding),
+        padding: EdgeInsets.only(
+          left: context.commonPadding,
+          right: context.commonPadding,
+          bottom: 24.0,
+        ),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -52,13 +67,16 @@ class DiscoverHeader extends StatelessWidget {
         ],
       ),
       actions: [
-        IconButton(
-          onPressed: onNotificationTap,
-          icon: const Icon(TablerIcons.bell),
-          tooltip: 'Notifications',
+        Padding(
+          padding: EdgeInsets.only(bottom: 24.0),
+          child: IconButton(
+            onPressed: onNotificationTap,
+            icon: const Icon(TablerIcons.bell),
+            tooltip: 'Notifications',
+          ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 16.0, left: 4.0),
+          padding: EdgeInsets.only(right: 16.0, left: 4.0, bottom: 24.0),
           child: IconButton.filled(
             onPressed: onSearchTap,
             // Tabler Icons are a bit larger than Material Icons

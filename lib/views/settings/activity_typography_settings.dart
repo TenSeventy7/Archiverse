@@ -1,3 +1,6 @@
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/settings/bottom_panel.dart';
 import 'package:archiverse/components/settings/font_selection.dart';
 import 'package:archiverse/components/settings/text_size_control.dart';
@@ -10,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/views/activity_common.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 enum FontType {
@@ -131,20 +133,17 @@ class _TypographySettingsActivityState extends State<TextFontsSettingsActivity>
     }
   }
 
-  String? _getFontFamily(ReaderFont font) {
-    return font == ReaderFont.system ? null : font.toFontFamily;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return ExpressiveScaffold(
+      appBar: (controller) => _buildAppBar(context, controller),
+      body: (controller) => Column(
         children: [
           Expanded(
             child: CustomScrollView(
+              controller: controller,
               physics: const BouncingScrollPhysics(),
               slivers: [
-                _buildAppBar(context),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Padding(
@@ -163,10 +162,13 @@ class _TypographySettingsActivityState extends State<TextFontsSettingsActivity>
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return SliverAppBar.large(
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ScrollController controller,
+  ) {
+    return ExpressiveAppBar(
+      controller: controller,
       title: Text("Text and Fonts"),
-      pinned: true,
       actions: [
         IconButton(
           icon: const Icon(TablerIcons.rotate_2),

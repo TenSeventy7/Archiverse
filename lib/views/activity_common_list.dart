@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
+import 'package:archiverse/components/inverse_rounded_rectangle_border.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -31,18 +33,24 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
   Widget? buildExpandedAppBarWidget(BuildContext context) => null;
   double? getExpandedHeight(BuildContext context) => null;
   Widget? buildSeparator(BuildContext context, int index) =>
-      const Divider(height: 1);
+      const SizedBox(height: 4.0);
   bool get isSelectable => true;
+
+  final ScrollController _scrollController = ScrollController();
+  double _appBarOpacity = 0.0;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_updateAppBarOpacity);
     initializePagination();
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_updateAppBarOpacity);
     disposePagination();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -50,21 +58,59 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
     refreshPagination();
   }
 
+  void _updateAppBarOpacity() {
+    // Adjust these values as needed for your design
+    final double fadeStart = 0.0;
+    final double fadeEnd = (getExpandedHeight(context) ?? 200) - kToolbarHeight;
+    final double offset = _scrollController.hasClients
+        ? _scrollController.offset
+        : 0.0;
+    double opacity = ((offset - fadeStart) / (fadeEnd - fadeStart)).clamp(
+      0.0,
+      1.0,
+    );
+    if (opacity != _appBarOpacity) {
+      setState(() {
+        _appBarOpacity = opacity;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.lerp(
+        context.theme.colorScheme.surfaceContainer,
+        context.theme.colorScheme.surfaceContainerHigh,
+        _appBarOpacity,
+      ),
       body: NestedScrollView(
+        controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (context, scrolled) => [_buildAppBar(context)],
-        body: _buildList(context),
+        body: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: context.theme.colorScheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+          ),
+          child: Container(
+            clipBehavior: Clip.hardEdge,
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: _buildList(context),
+          ),
+        ),
       ),
     );
   }
 
   EdgeInsets get padding =>
-      EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0);
+      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0);
 
-  Widget _buildItemWidget(BuildContext context, T item, int index) {
+  Widget _buildItemWidgetTitle(BuildContext context, T item, int index) {
     if (!isSelectable) {
       return buildItemWidget(context, item, index);
     }
@@ -76,6 +122,15 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
     );
   }
 
+  Widget _buildItemWidget(BuildContext context, T item, int index) {
+    return Material(
+      clipBehavior: Clip.hardEdge,
+      color: context.colorScheme.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(8.0),
+      child: _buildItemWidgetTitle(context, item, index),
+    );
+  }
+
   Widget _buildAppBar(BuildContext context) {
     final expandedHeight = getExpandedHeight(context);
     final expandedWidget = buildExpandedAppBarWidget(context);
@@ -83,8 +138,19 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
     if (expandedHeight != null || expandedWidget != null) {
       return SliverAppBar.large(
         title: buildTitle(context),
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(),
+        titleTextStyle: context.theme.textTheme.titleMedium?.apply(
+          fontSizeDelta: 5.0,
+        ),
+        titleSpacing: 8.0,
+        elevation: 0,
+        scrolledUnderElevation: 0.0,
+        backgroundColor: Color.lerp(
+          context.theme.colorScheme.surfaceContainer,
+          context.theme.colorScheme.surfaceContainerHigh,
+          _appBarOpacity,
+        ),
+        shape: const InverseRoundedRectangleBorder(radius: 24.0),
+        collapsedHeight: ExpressiveSliverAppBar.kToolbarHeight + 24.0,
         expandedHeight: expandedHeight,
         actions: buildAppBarActions(context),
         leading: IconButton(
@@ -98,29 +164,36 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
         ),
         flexibleSpace: expandedWidget != null
             ? FlexibleSpaceBar(
-                background: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.commonPaddingDouble,
+                background: Container(
+                  color: Color.lerp(
+                    context.theme.colorScheme.surfaceContainer,
+                    context.theme.colorScheme.surfaceContainerHigh,
+                    _appBarOpacity,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.commonPaddingDouble,
+                        ),
+                        child: expandedWidget,
                       ),
-                      child: expandedWidget,
-                    ),
-                    SizedBox(height: 8),
-                    Divider(height: 1),
-                  ],
+                      SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               )
             : null,
         bottom: buildAppBarBottom(context),
       );
     } else {
-      return SliverAppBar.medium(
+      return ExpressiveSliverAppBar.medium(
         title: buildTitle(context),
         centerTitle: true,
         actions: buildAppBarActions(context),
+        unelevatedColor: context.theme.colorScheme.surfaceContainer,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Icon(

@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -50,62 +53,69 @@ class _AboutActivityState extends State<AboutActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar.large(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
+        physics: const BouncingScrollPhysics(),
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
+          return <Widget>[
+            ExpressiveSliverAppBar.large(
+              controller: controller,
               title: Text(title),
               expandedHeight: context.screenHeight * 0.4,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: context.screenPadding.top),
-                    const CircleAvatar(
-                      radius: 50,
-                      // backgroundImage: AssetImage('assets/images/logo.png'),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      appName,
-                      style: context.textTheme.headlineMedium?.copyWith(
-                        color: context.theme.colorScheme.onSurface,
+              flexibleSpace: (controller, opacity) => FlexibleSpaceBar(
+                background: Material(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: context.screenPadding.top),
+                      const CircleAvatar(
+                        radius: 50,
+                        // backgroundImage: AssetImage('assets/images/logo.png'),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      appVersion,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        color: context.theme.colorScheme.onSurface.withValues(
-                          alpha: 0.7,
+                      const SizedBox(height: 10),
+                      Text(
+                        appName,
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          color: context.theme.colorScheme.onSurface,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 5),
+                      Text(
+                        appVersion,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.theme.colorScheme.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ];
         },
-        body: SingleChildScrollView(
+        body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: context.horizontalPadding,
-            child: Column(
-              children: [
-                _buildAppInfo(),
-                SizedBox(height: context.commonPaddingHalf),
-                _buildDeveloperInfo(),
-                SizedBox(height: context.commonPaddingHalf),
-                _buildLicenseInfo(),
-                SizedBox(height: context.commonPaddingHalf),
-                _buildCommunityLinks(),
-                SizedBox(height: context.commonPadding),
-              ],
+          slivers: [
+            SliverPadding(
+              padding: context.horizontalPadding,
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  _buildAppInfo(),
+                  SizedBox(height: context.commonPaddingHalf),
+                  _buildDeveloperInfo(),
+                  SizedBox(height: context.commonPaddingHalf),
+                  _buildLicenseInfo(),
+                  SizedBox(height: context.commonPaddingHalf),
+                  _buildCommunityLinks(),
+                  SizedBox(height: context.commonPadding),
+                ]),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -185,15 +195,14 @@ class _AboutActivityState extends State<AboutActivity> {
         OptionTile(
           title: 'Privacy Policy',
           icon: TablerIcons.shield_lock,
-          onTap:
-              () =>
-                  _launchUrl('https://tenseventyseven.xyz/archiverse/privacy'),
+          onTap: () =>
+              _launchUrl('https://tenseventyseven.xyz/archiverse/privacy'),
         ),
         OptionTile(
           title: 'Terms of Service',
           icon: TablerIcons.file_text,
-          onTap:
-              () => _launchUrl('https://tenseventyseven.xyz/archiverse/terms'),
+          onTap: () =>
+              _launchUrl('https://tenseventyseven.xyz/archiverse/terms'),
         ),
         OptionTile(
           title: 'Source Code',
@@ -212,10 +221,8 @@ class _AboutActivityState extends State<AboutActivity> {
         OptionTile(
           title: 'Report an Issue',
           icon: TablerIcons.bug,
-          onTap:
-              () => _launchUrl(
-                'https://github.com/TenSeventy7/Archiverse/issues',
-              ),
+          onTap: () =>
+              _launchUrl('https://github.com/TenSeventy7/Archiverse/issues'),
         ),
         OptionTile(
           title: 'Website',

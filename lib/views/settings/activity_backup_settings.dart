@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -56,21 +59,25 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
           return <Widget>[
-            SliverAppBar.large(
+            ExpressiveSliverAppBar.medium(
+              controller: controller,
               title: Text(context.strings.settings_backup_title),
             ),
           ];
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.fromLTRB(
+            context.commonPadding,
+            0,
+            context.commonPadding,
+            16,
           ),
           children: [
             // Quick actions
@@ -166,10 +173,9 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
                 ),
                 OptionTile.switcher(
                   title: context.strings.settings_backup_include_downloads,
-                  subtitle:
-                      context
-                          .strings
-                          .settings_backup_include_downloads_subtitle,
+                  subtitle: context
+                      .strings
+                      .settings_backup_include_downloads_subtitle,
                   icon: TablerIcons.download,
                   value: _includeDownloads,
                   onChanged: (value) {
@@ -186,67 +192,65 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
             // Previous backups
             OptionGroup(
               title: context.strings.settings_backup_previous,
-              children:
-                  _backups.isEmpty
-                      ? [
-                        OptionTile.custom(
-                          title: "",
-                          widget: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24.0),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    TablerIcons.database_off,
-                                    size: 48,
-                                    color: context.colorScheme.onSurfaceVariant
-                                        .withOpacity(0.5),
+              children: _backups.isEmpty
+                  ? [
+                      OptionTile.custom(
+                        title: "",
+                        widget: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  TablerIcons.database_off,
+                                  size: 48,
+                                  color: context.colorScheme.onSurfaceVariant
+                                      .withOpacity(0.5),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  context.strings.settings_backup_no_backups,
+                                  style: TextStyle(
+                                    color: context.colorScheme.onSurfaceVariant,
                                   ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    context.strings.settings_backup_no_backups,
-                                    style: TextStyle(
-                                      color:
-                                          context.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ]
-                      : _backups.map((backup) {
-                        final date = backup['date'] as DateTime;
-                        final formattedDate =
-                            "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                        final formattedTime =
-                            "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+                      ),
+                    ]
+                  : _backups.map((backup) {
+                      final date = backup['date'] as DateTime;
+                      final formattedDate =
+                          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                      final formattedTime =
+                          "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
 
-                        return OptionTile(
-                          title: context.strings.settings_backup_format(
-                            formattedDate,
-                          ),
-                          subtitle:
-                              '$formattedTime • ${_formatBytes(backup['size'], 1)} • ${backup['items']} items',
-                          icon: TablerIcons.database,
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(TablerIcons.refresh),
-                                onPressed: () => _confirmRestore(backup),
-                                tooltip: context.strings.dialog_restore,
-                              ),
-                              IconButton(
-                                icon: const Icon(TablerIcons.trash),
-                                onPressed: () => _confirmDeleteBackup(backup),
-                                tooltip: context.strings.dialog_delete,
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                      return OptionTile(
+                        title: context.strings.settings_backup_format(
+                          formattedDate,
+                        ),
+                        subtitle:
+                            '$formattedTime • ${_formatBytes(backup['size'], 1)} • ${backup['items']} items',
+                        icon: TablerIcons.database,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(TablerIcons.refresh),
+                              onPressed: () => _confirmRestore(backup),
+                              tooltip: context.strings.dialog_restore,
+                            ),
+                            IconButton(
+                              icon: const Icon(TablerIcons.trash),
+                              onPressed: () => _confirmDeleteBackup(backup),
+                              tooltip: context.strings.dialog_delete,
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
             ),
           ],
         ),
@@ -264,18 +268,17 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
   void _createBackup() {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.strings.settings_backup_create_now),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 24),
-                Text(context.strings.settings_backup_creating),
-              ],
-            ),
-          ),
+      builder: (context) => AlertDialog(
+        title: Text(context.strings.settings_backup_create_now),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircularProgressIndicator(),
+            const SizedBox(height: 24),
+            Text(context.strings.settings_backup_creating),
+          ],
+        ),
+      ),
     );
 
     // Simulate backup creation
@@ -308,38 +311,37 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
 
     showModalBottomSheet(
       context: context,
-      builder:
-          (context) => ListView(
-            shrinkWrap: true,
-            children: [
-              ListTile(
-                title: Text(context.strings.settings_backup_restore),
-                leading: const Icon(TablerIcons.refresh),
-              ),
-              const Divider(),
-              ..._backups.map((backup) {
-                final date = backup['date'] as DateTime;
-                final formattedDate =
-                    "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                final formattedTime =
-                    "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
-
-                return ListTile(
-                  title: Text(
-                    context.strings.settings_backup_format(formattedDate),
-                  ),
-                  subtitle: Text(
-                    '$formattedTime • ${_formatBytes(backup['size'], 1)} • ${context.strings.settings_backup_items_count(backup['items'].toString())}',
-                  ),
-                  leading: const Icon(TablerIcons.database),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _confirmRestore(backup);
-                  },
-                );
-              }).toList(),
-            ],
+      builder: (context) => ListView(
+        shrinkWrap: true,
+        children: [
+          ListTile(
+            title: Text(context.strings.settings_backup_restore),
+            leading: const Icon(TablerIcons.refresh),
           ),
+          const Divider(),
+          ..._backups.map((backup) {
+            final date = backup['date'] as DateTime;
+            final formattedDate =
+                "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+            final formattedTime =
+                "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+
+            return ListTile(
+              title: Text(
+                context.strings.settings_backup_format(formattedDate),
+              ),
+              subtitle: Text(
+                '$formattedTime • ${_formatBytes(backup['size'], 1)} • ${context.strings.settings_backup_items_count(backup['items'].toString())}',
+              ),
+              leading: const Icon(TablerIcons.database),
+              onTap: () {
+                Navigator.pop(context);
+                _confirmRestore(backup);
+              },
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 
@@ -350,56 +352,52 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.strings.settings_backup_restore),
-            content: Text(
-              context.strings.settings_backup_restore_confirm(formattedDate),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.strings.dialog_cancel),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder:
-                        (context) => AlertDialog(
-                          title: Text(
-                            context.strings.settings_backup_restoring_title,
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const CircularProgressIndicator(),
-                              const SizedBox(height: 24),
-                              Text(context.strings.settings_backup_restoring),
-                            ],
-                          ),
-                        ),
-                  );
-
-                  // Simulate restore process
-                  Future.delayed(const Duration(seconds: 3), () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          context.strings.settings_backup_restored_success,
-                        ),
-                      ),
-                    );
-                  });
-                },
-                child: Text(context.strings.dialog_restore),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(context.strings.settings_backup_restore),
+        content: Text(
+          context.strings.settings_backup_restore_confirm(formattedDate),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.strings.dialog_cancel),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AlertDialog(
+                  title: Text(context.strings.settings_backup_restoring_title),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 24),
+                      Text(context.strings.settings_backup_restoring),
+                    ],
+                  ),
+                ),
+              );
+
+              // Simulate restore process
+              Future.delayed(const Duration(seconds: 3), () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      context.strings.settings_backup_restored_success,
+                    ),
+                  ),
+                );
+              });
+            },
+            child: Text(context.strings.dialog_restore),
+          ),
+        ],
+      ),
     );
   }
 
@@ -410,33 +408,32 @@ class _BackupRestoreActivityState extends State<BackupRestoreActivity> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(context.strings.settings_backup_delete_title),
-            content: Text(
-              context.strings.settings_backup_delete_confirm(formattedDate),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(context.strings.dialog_cancel),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _backups.remove(backup);
-                  });
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(context.strings.settings_backup_deleted),
-                    ),
-                  );
-                },
-                child: Text(context.strings.dialog_delete),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: Text(context.strings.settings_backup_delete_title),
+        content: Text(
+          context.strings.settings_backup_delete_confirm(formattedDate),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.strings.dialog_cancel),
           ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _backups.remove(backup);
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(context.strings.settings_backup_deleted),
+                ),
+              );
+            },
+            child: Text(context.strings.dialog_delete),
+          ),
+        ],
+      ),
     );
   }
 

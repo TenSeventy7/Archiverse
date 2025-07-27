@@ -143,7 +143,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
 
   @override
   double getExpandedHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height * 0.28;
+    return MediaQuery.of(context).size.height * 0.225;
   }
 
   @override

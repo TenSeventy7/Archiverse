@@ -12,7 +12,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 class LibraryHistoryFragment extends StatefulWidget {
-  const LibraryHistoryFragment({super.key});
+  const LibraryHistoryFragment({super.key, this.controller});
+  final ScrollController? controller;
 
   @override
   State<LibraryHistoryFragment> createState() => _LibraryHistoryFragmentState();
@@ -70,6 +71,7 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
             controller: _controller,
             builder: (context, state, fetchNextPage) =>
                 PagedListView<int, Map<int, List<ReadHistory>>>(
+                  scrollController: widget.controller,
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.zero,
                   state: state,

@@ -9,6 +9,7 @@ import 'package:archiverse/views/activity_common.dart';
 import 'package:archiverse/views/home/fragment_discover.dart';
 import 'package:archiverse/views/home/fragment_library.dart';
 import 'package:archiverse/views/home/fragment_user.dart';
+import 'package:archiverse/views/home/fragment_downloads.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -28,7 +29,12 @@ class _HomeActivityState extends State<HomeActivity> {
   void initState() {
     super.initState();
 
-    _fragments = [DiscoverFragment(), LibraryFragment(), UserFragment()];
+    _fragments = [
+      DiscoverFragment(),
+      LibraryFragment(),
+      LibraryDownloadsFragment(),
+      UserFragment(),
+    ];
   }
 
   @override
@@ -52,6 +58,10 @@ class _HomeActivityState extends State<HomeActivity> {
       destinations: const <NavigationDestination>[
         NavigationDestination(icon: Icon(TablerIcons.home), label: 'Discover'),
         NavigationDestination(icon: Icon(TablerIcons.book), label: 'Library'),
+        NavigationDestination(
+          icon: Icon(TablerIcons.download),
+          label: 'Downloads',
+        ),
         NavigationDestination(icon: Icon(TablerIcons.user), label: 'Me'),
       ],
     );

@@ -1,3 +1,7 @@
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -51,33 +55,33 @@ class _AuthorFiltersSettingsActivityState
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar.large(
-                title: Text(context.strings.settings_author_filters_title),
-                bottom: TabBar(
-                  controller: _tabController,
-                  tabs: [
-                    Tab(text: context.strings.settings_blocked_content_title),
-                    Tab(text: context.strings.dialog_follow),
-                  ],
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(TablerIcons.plus),
-                    onPressed: () => _showAddAuthorDialog(context),
-                    tooltip: context.strings.settings_author_filters_add_author,
-                  ),
-                ],
-              ),
-            ];
-          },
-          body: TabBarView(
+      child: ExpressiveScaffold(
+        rounded: false,
+        appBar: (controller) => ExpressiveAppBar(
+          controller: controller,
+          rounded: false,
+          title: Text(context.strings.settings_author_filters_title),
+          actions: [
+            IconButton(
+              icon: const Icon(TablerIcons.plus),
+              onPressed: () => _showAddAuthorDialog(context),
+              tooltip: context.strings.settings_author_filters_add_author,
+            ),
+          ],
+          bottom: TabBar(
             controller: _tabController,
-            children: [_buildBlockedTab(), _buildFollowedTab()],
+            tabs: [
+              Tab(text: context.strings.settings_blocked_content_title),
+              Tab(text: context.strings.dialog_follow),
+            ],
           ),
+        ),
+        body: (controller) => TabBarView(
+          controller: _tabController,
+          children: [
+            _buildBlockedTab(controller),
+            _buildFollowedTab(controller),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => _showAddAuthorDialog(context),
@@ -87,8 +91,9 @@ class _AuthorFiltersSettingsActivityState
     );
   }
 
-  Widget _buildBlockedTab() {
+  Widget _buildBlockedTab(ScrollController controller) {
     return ListView(
+      controller: controller,
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
         horizontal: context.commonPadding,
@@ -120,10 +125,9 @@ class _AuthorFiltersSettingsActivityState
             ),
             OptionTile.switcher(
               title: context.strings.settings_author_filters_show_indicator,
-              subtitle:
-                  context
-                      .strings
-                      .settings_author_filters_show_indicator_subtitle,
+              subtitle: context
+                  .strings
+                  .settings_author_filters_show_indicator_subtitle,
               icon: TablerIcons.eye_exclamation,
               value: _showBlockedIndicator,
               onChanged: (value) {
@@ -139,26 +143,24 @@ class _AuthorFiltersSettingsActivityState
         if (_blockedAuthors.isNotEmpty)
           OptionGroup(
             title: context.strings.settings_author_filters_blocked_authors,
-            children:
-                _blockedAuthors
-                    .map(
-                      (author) => OptionTile(
-                        title: author['username'],
-                        subtitle: author['reason'],
-                        icon: TablerIcons.user_off,
-                        trailing: IconButton(
-                          icon: const Icon(TablerIcons.trash),
-                          onPressed: () {
-                            setState(() {
-                              _blockedAuthors.remove(author);
-                            });
-                          },
-                          tooltip:
-                              context.strings.settings_author_filters_unblock,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: _blockedAuthors
+                .map(
+                  (author) => OptionTile(
+                    title: author['username'],
+                    subtitle: author['reason'],
+                    icon: TablerIcons.user_off,
+                    trailing: IconButton(
+                      icon: const Icon(TablerIcons.trash),
+                      onPressed: () {
+                        setState(() {
+                          _blockedAuthors.remove(author);
+                        });
+                      },
+                      tooltip: context.strings.settings_author_filters_unblock,
+                    ),
+                  ),
+                )
+                .toList(),
           )
         else
           OptionGroup(
@@ -195,8 +197,9 @@ class _AuthorFiltersSettingsActivityState
     );
   }
 
-  Widget _buildFollowedTab() {
+  Widget _buildFollowedTab(ScrollController controller) {
     return ListView(
+      controller: controller,
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
         horizontal: context.commonPadding,
@@ -239,35 +242,31 @@ class _AuthorFiltersSettingsActivityState
         if (_followedAuthors.isNotEmpty)
           OptionGroup(
             title: context.strings.settings_author_filters_followed_authors,
-            children:
-                _followedAuthors
-                    .map(
-                      (author) => OptionTile.switcher(
-                        title: author['username'],
-                        subtitle:
-                            context
-                                .strings
-                                .settings_author_filters_notify_updates,
-                        icon: TablerIcons.user_check,
-                        value: author['notifyUpdates'],
-                        onChanged: (value) {
-                          setState(() {
-                            author['notifyUpdates'] = value;
-                          });
-                        },
-                        trailing: IconButton(
-                          icon: const Icon(TablerIcons.trash),
-                          onPressed: () {
-                            setState(() {
-                              _followedAuthors.remove(author);
-                            });
-                          },
-                          tooltip:
-                              context.strings.settings_author_filters_unfollow,
-                        ),
-                      ),
-                    )
-                    .toList(),
+            children: _followedAuthors
+                .map(
+                  (author) => OptionTile.switcher(
+                    title: author['username'],
+                    subtitle:
+                        context.strings.settings_author_filters_notify_updates,
+                    icon: TablerIcons.user_check,
+                    value: author['notifyUpdates'],
+                    onChanged: (value) {
+                      setState(() {
+                        author['notifyUpdates'] = value;
+                      });
+                    },
+                    trailing: IconButton(
+                      icon: const Icon(TablerIcons.trash),
+                      onPressed: () {
+                        setState(() {
+                          _followedAuthors.remove(author);
+                        });
+                      },
+                      tooltip: context.strings.settings_author_filters_unfollow,
+                    ),
+                  ),
+                )
+                .toList(),
           )
         else
           OptionGroup(
@@ -334,10 +333,9 @@ class _AuthorFiltersSettingsActivityState
                     TextField(
                       controller: reasonController,
                       decoration: InputDecoration(
-                        labelText:
-                            context
-                                .strings
-                                .settings_author_filters_block_reason,
+                        labelText: context
+                            .strings
+                            .settings_author_filters_block_reason,
                         prefixIcon: Icon(TablerIcons.note),
                       ),
                     )
@@ -368,10 +366,9 @@ class _AuthorFiltersSettingsActivityState
                       if (isBlocking) {
                         _blockedAuthors.add({
                           'username': usernameController.text,
-                          'reason':
-                              reasonController.text.isNotEmpty
-                                  ? reasonController.text
-                                  : null,
+                          'reason': reasonController.text.isNotEmpty
+                              ? reasonController.text
+                              : null,
                         });
                       } else {
                         _followedAuthors.add({

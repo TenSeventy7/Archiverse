@@ -88,6 +88,8 @@ class SearchProvider extends ChangeNotifier {
 
   // Getters
   bool get showClearButton => controller.text.isNotEmpty;
+  bool get isInitialSearch =>
+      _currentRouteLevel == _initialLevel && controller.text.isEmpty;
   bool get isShowingSuggestions => _isShowingSuggestions;
   bool get isShowingResults => _currentRouteLevel > _initialLevel;
   bool get isShowingDetailedResults =>

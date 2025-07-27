@@ -1,3 +1,7 @@
+import 'package:archiverse/components/animated_checkmark.dart';
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/settings/bottom_panel.dart';
 import 'package:archiverse/components/settings/slider_control.dart';
 import 'package:archiverse/components/settings/reader_preview.dart';
@@ -137,14 +141,15 @@ class _ReadingEnvironmentSettingsActivityState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return ExpressiveScaffold(
+      appBar: (controller) => _buildAppBar(context, controller),
+      body: (controller) => Column(
         children: [
           Expanded(
             child: CustomScrollView(
+              controller: controller,
               physics: const BouncingScrollPhysics(),
               slivers: [
-                _buildAppBar(context),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Padding(
@@ -163,8 +168,12 @@ class _ReadingEnvironmentSettingsActivityState
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return SliverAppBar.large(
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    ScrollController controller,
+  ) {
+    return ExpressiveAppBar(
+      controller: controller,
       title: Text("Reader Settings"),
       actions: [
         IconButton(
@@ -173,7 +182,6 @@ class _ReadingEnvironmentSettingsActivityState
           tooltip: context.strings.settings_common_reset,
         ),
       ],
-      pinned: true,
     );
   }
 
@@ -242,19 +250,18 @@ class _ReadingEnvironmentSettingsActivityState
                   label: CircleAvatar(
                     backgroundColor: color.toBackgroundColor(context),
                     radius: 18.0,
-                    child: (_readerBackgroundColor == color)
-                        ? Icon(
-                            TablerIcons.check,
-                            color: color.toForegroundColor(context),
-                            size: 24.0,
-                          )
-                        : Icon(
-                            color == ReaderColor.system
-                                ? TablerIcons.sun_moon
-                                : TablerIcons.letter_a,
-                            color: color.toForegroundColor(context),
-                            size: 24.0,
-                          ),
+                    child: AnimatedCheckmark(
+                      color: color.toForegroundColor(context),
+                      size: 24.0,
+                      selected: _readerBackgroundColor == color,
+                      unselectedWidget: Icon(
+                        color == ReaderColor.system
+                            ? TablerIcons.sun_moon
+                            : TablerIcons.letter_a,
+                        color: color.toForegroundColor(context),
+                        size: 24.0,
+                      ),
+                    ),
                   ),
                 ),
               );

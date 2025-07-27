@@ -1,3 +1,7 @@
+import 'package:archiverse/components/animated_checkmark.dart';
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -79,11 +83,14 @@ class _SettingsActivityState extends State<SettingsActivity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar.large(title: Text(context.strings.settings_title)),
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) => [
+          ExpressiveSliverAppBar.medium(
+            controller: controller,
+            title: Text(context.strings.settings_title),
+          ),
         ],
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -389,21 +396,20 @@ class _SettingsActivityState extends State<SettingsActivity> {
                         ? dynamicColorScheme?.primary
                         : colorScheme.primary,
                     radius: 18.0,
-                    child: (_colorScheme == scheme)
-                        ? Icon(
-                            TablerIcons.check,
-                            color: isDynamic
-                                ? dynamicColorScheme?.primaryContainer
-                                : colorScheme.primaryContainer,
-                            size: 24.0,
-                          )
-                        : (isDynamic && _colorScheme != scheme)
-                        ? Icon(
-                            TablerIcons.palette,
-                            color: dynamicColorScheme?.primaryContainer,
-                            size: 24.0,
-                          )
-                        : null,
+                    child: AnimatedCheckmark(
+                      color: isDynamic && dynamicColorScheme != null
+                          ? dynamicColorScheme.primaryContainer
+                          : colorScheme.primaryContainer,
+                      size: 24.0,
+                      selected: _colorScheme == scheme,
+                      unselectedWidget: isDynamic
+                          ? Icon(
+                              TablerIcons.palette,
+                              color: dynamicColorScheme?.primaryContainer,
+                              size: 24.0,
+                            )
+                          : null,
+                    ),
                   ),
                 );
               }).toList(),

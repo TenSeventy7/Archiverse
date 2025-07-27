@@ -1,7 +1,10 @@
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
 
+import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_search.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:archiverse/views/search/bottom_sheet_filter.dart';
@@ -61,16 +64,20 @@ class _SearchActivityState extends State<SearchActivity> {
 
   /// Builds the main scaffold with app bar and body
   Widget _buildScaffold(SearchProvider provider) {
-    return Scaffold(
+    return ExpressiveScaffold(
       resizeToAvoidBottomInset: true,
-      appBar: _buildAppBar(provider),
-      body: _buildBody(provider),
+      appBar: (controller) => _buildAppBar(controller, provider),
+      body: (controller) => _buildBody(provider),
     );
   }
 
   /// Builds the app bar with search field and actions
-  AppBar _buildAppBar(SearchProvider provider) {
-    return AppBar(
+  PreferredSizeWidget _buildAppBar(
+    ScrollController controller,
+    SearchProvider provider,
+  ) {
+    return ExpressiveAppBar(
+      controller: controller,
       title: TextField(
         controller: provider.controller,
         focusNode: provider.focusNode,
@@ -81,6 +88,9 @@ class _SearchActivityState extends State<SearchActivity> {
         ),
         onSubmitted: provider.performSearch,
       ),
+      unelevatedColor: provider.isInitialSearch
+          ? null
+          : context.colorScheme.surfaceContainer,
       actions: [
         if (provider.showClearButton)
           IconButton(

@@ -1,3 +1,6 @@
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -24,21 +27,25 @@ class _ContentWarningsSettingsActivityState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
+    return ExpressiveScaffold(
+      body: (controller) => ExpressiveNestedScrollView(
+        controller: controller,
         physics: const BouncingScrollPhysics(),
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled, controller) {
           return <Widget>[
-            SliverAppBar.large(
+            ExpressiveSliverAppBar.medium(
+              controller: controller,
               title: Text(context.strings.settings_warnings_title),
             ),
           ];
         },
         body: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(
-            horizontal: context.commonPadding,
-            vertical: 16,
+          padding: EdgeInsets.fromLTRB(
+            context.commonPadding,
+            0,
+            context.commonPadding,
+            16,
           ),
           children: [
             OptionGroup(

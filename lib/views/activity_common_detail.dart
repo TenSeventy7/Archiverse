@@ -1,3 +1,5 @@
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
+import 'package:archiverse/components/inverse_rounded_rectangle_border.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/loading_states.dart';
@@ -20,6 +22,8 @@ abstract class CommonDetailActivityState<T>
     extends State<CommonDetailActivity<T>> {
   T item;
   LoadingState state = LoadingState.LOADING;
+  final ScrollController _scrollController = ScrollController();
+  double _appBarOpacity = 0.0;
 
   CommonDetailActivityState(this.item);
 
@@ -80,15 +84,41 @@ abstract class CommonDetailActivityState<T>
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_updateAppBarOpacity);
     item = widget.item; // Use the item passed from the widget as initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchItem();
     });
   }
 
+  void _updateAppBarOpacity() {
+    // Adjust these values as needed for your design
+    final double fadeStart = 0.0;
+    final double fadeEnd = (getExpandedHeight(context) ?? 200) - kToolbarHeight;
+    final double offset = _scrollController.hasClients
+        ? _scrollController.offset
+        : 0.0;
+    double opacity = ((offset - fadeStart) / (fadeEnd - fadeStart)).clamp(
+      0.0,
+      1.0,
+    );
+    if (opacity != _appBarOpacity) {
+      setState(() {
+        _appBarOpacity = opacity;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: state == LoadingState.ERROR
+          ? null
+          : Color.lerp(
+              context.theme.colorScheme.surfaceContainer,
+              context.theme.colorScheme.surfaceContainerHigh,
+              _appBarOpacity,
+            ),
       // Error state uses a simple app bar
       appBar: state == LoadingState.ERROR
           ? AppBar(
@@ -133,8 +163,7 @@ abstract class CommonDetailActivityState<T>
           size: 22.0,
           color: context.theme.colorScheme.onPrimaryContainer,
         ),
-
-        body: (context, controller) => _buildBody(context, controller),
+        body: (context, controller) => _buildBody(context, _scrollController),
         child: _buildBottomBar(context),
       ),
     );
@@ -179,7 +208,7 @@ abstract class CommonDetailActivityState<T>
                   )
                 : SizedBox(),
           ),
-          if (primary != null) primary,
+          if (primary != null && state != LoadingState.ERROR) primary,
         ],
       ),
     );
@@ -196,22 +225,29 @@ abstract class CommonDetailActivityState<T>
       controller: controller,
       physics: const BouncingScrollPhysics(),
       headerSliverBuilder: (context, scrolled) => [_buildAppBar(context)],
-      body: RefreshIndicator(
-        notificationPredicate: _canRefresh ? (_) => true : (_) => false,
-        onRefresh: onRefresh,
-        child: Skeletonizer(
-          enabled: state != LoadingState.LOADED,
-          child: CustomScrollView(
-            slivers: [
-              ...buildDetailSlivers(context),
-              if (state == LoadingState.LOADED) ...[
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 48.0,
-                  ), // Add some spacing at the bottom for floating bar
-                ),
+      body: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: context.theme.colorScheme.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+        ),
+        child: RefreshIndicator(
+          notificationPredicate: _canRefresh ? (_) => true : (_) => false,
+          onRefresh: onRefresh,
+          child: Skeletonizer(
+            enabled: state != LoadingState.LOADED,
+            child: CustomScrollView(
+              slivers: [
+                ...buildDetailSlivers(context),
+                if (state == LoadingState.LOADED) ...[
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 48.0,
+                    ), // Add some spacing at the bottom for floating bar
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -221,8 +257,19 @@ abstract class CommonDetailActivityState<T>
   Widget _buildAppBar(BuildContext context) {
     return SliverAppBar.large(
       title: buildTitle(context),
-      centerTitle: true,
-      shape: RoundedRectangleBorder(),
+      titleTextStyle: context.theme.textTheme.titleMedium?.apply(
+        fontSizeDelta: 5.0,
+      ),
+      titleSpacing: 8.0,
+      elevation: 0,
+      scrolledUnderElevation: 0.0,
+      backgroundColor: Color.lerp(
+        context.theme.colorScheme.surfaceContainer,
+        context.theme.colorScheme.surfaceContainerHigh,
+        _appBarOpacity,
+      ),
+      shape: const InverseRoundedRectangleBorder(radius: 24.0),
+      collapsedHeight: ExpressiveSliverAppBar.kToolbarHeight + 24.0,
       expandedHeight: getExpandedHeight(context),
       actions: buildAppBarActions(context),
       leading: IconButton(
@@ -235,8 +282,17 @@ abstract class CommonDetailActivityState<T>
         ),
       ),
       flexibleSpace: FlexibleSpaceBar(
-        background: Padding(
-          padding: EdgeInsets.symmetric(horizontal: context.commonPaddingHalf),
+        background: Container(
+          color: Color.lerp(
+            context.theme.colorScheme.surfaceContainer,
+            context.theme.colorScheme.surfaceContainerHigh,
+            _appBarOpacity,
+          ),
+          padding: EdgeInsets.only(
+            left: context.commonPaddingHalf,
+            right: context.commonPaddingHalf,
+            bottom: 8.0,
+          ),
           child: buildExpandedAppBarWidget(context),
         ),
       ),

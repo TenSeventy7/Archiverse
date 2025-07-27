@@ -68,7 +68,7 @@ class TagBookmarksActivityState extends CommonListActivityState<TagBookmark> {
         // Tag name
         Text(
           tag.name,
-          style: context.textTheme.headlineMedium?.copyWith(
+          style: context.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: colorScheme.onSurface,
           ),

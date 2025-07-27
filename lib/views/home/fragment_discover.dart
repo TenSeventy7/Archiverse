@@ -1,5 +1,7 @@
 import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/discover_header.dart';
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
@@ -54,66 +56,80 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomBar(
-      curve: Curves.easeInOutCubicEmphasized,
-      duration: Durations.medium1,
-      offset: 16.0,
-      iconWidth: 42.0,
-      iconHeight: 42.0,
-      iconDecoration: BoxDecoration(
-        color: context.theme.colorScheme.primaryContainer,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: context.theme.colorScheme.shadow.withAlpha(64),
-            blurRadius: 6.0,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return ExpressiveScaffold(
+      appBar: (controller) => DiscoverHeader(
+        controller: controller,
+        onSearchTap: () =>
+            context.navigator.pushNamed(SearchActivity.routeName),
       ),
-      icon: (width, height) => Icon(
-        TablerIcons.arrow_up,
-        size: 22.0,
-        color: context.theme.colorScheme.onPrimaryContainer,
+      body: (controller) => BottomBar(
+        scrollController: controller,
+        curve: Curves.easeInOutCubicEmphasized,
+        duration: Durations.medium1,
+        offset: 16.0,
+        iconWidth: 42.0,
+        iconHeight: 42.0,
+        iconDecoration: BoxDecoration(
+          color: context.theme.colorScheme.primaryContainer,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: context.theme.colorScheme.shadow.withAlpha(64),
+              blurRadius: 6.0,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        icon: (width, height) => Icon(
+          TablerIcons.arrow_up,
+          size: 22.0,
+          color: context.theme.colorScheme.onPrimaryContainer,
+        ),
+        body: (context, controller) => RefreshIndicator(
+          onRefresh: () async {
+            await context.read<RecommendationsProvider>().refresh();
+            _pagingController.refresh();
+          },
+          child: !context.watch<RecommendationsProvider>().isInitialized
+              ? Center(child: CircularProgressIndicator())
+              : context.watch<RecommendationsProvider>().hasHistory
+              ? _buildRecommendations(controller)
+              : _buildNoItemsIndicator(controller),
+        ),
+        child: SizedBox(),
       ),
-      body: (context, controller) => _buildScrollView(controller, context),
-      child: SizedBox(),
     );
   }
 
-  NestedScrollView _buildScrollView(
-    ScrollController controller,
-    BuildContext context,
-  ) {
-    return NestedScrollView(
+  Widget _buildScrollView(ScrollController controller, BuildContext context) {
+    return ExpressiveNestedScrollView(
       controller: controller,
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          DiscoverHeader(
-            onSearchTap: () =>
-                context.navigator.pushNamed(SearchActivity.routeName),
-          ),
-        ];
-      },
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await context.read<RecommendationsProvider>().refresh();
-          _pagingController.refresh();
-        },
-        child: !context.watch<RecommendationsProvider>().isInitialized
-            ? Center(child: CircularProgressIndicator())
-            : context.watch<RecommendationsProvider>().hasHistory
-            ? _buildRecommendations()
-            : _buildNoItemsIndicator(),
-      ),
+      appBarHeight: kToolbarHeight + 48.0,
+      headerSliverBuilder:
+          (
+            BuildContext context,
+            bool innerBoxIsScrolled,
+            ScrollController controller,
+          ) {
+            return <Widget>[
+              DiscoverHeader(
+                controller: controller,
+                onSearchTap: () =>
+                    context.navigator.pushNamed(SearchActivity.routeName),
+              ),
+            ];
+          },
     );
   }
 
-  PagingListener<int, BaseRecommendation<dynamic>> _buildRecommendations() {
+  PagingListener<int, BaseRecommendation<dynamic>> _buildRecommendations(
+    ScrollController controller,
+  ) {
     return PagingListener<int, BaseRecommendation>(
       controller: _pagingController,
       builder: (context, state, fetchNextPage) =>
           PagedListView<int, BaseRecommendation>(
+            scrollController: controller,
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.zero,
             state: state,
@@ -129,7 +145,7 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
               newPageProgressIndicatorBuilder: (context) =>
                   _buildLoadingIndicator(),
               noItemsFoundIndicatorBuilder: (context) =>
-                  _buildNoItemsIndicator(),
+                  _buildNoItemsIndicator(controller),
             ),
           ),
     );
@@ -175,15 +191,16 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
     );
   }
 
-  Widget _buildNoItemsIndicator() {
+  Widget _buildNoItemsIndicator(ScrollController controller) {
     return SingleChildScrollView(
+      controller: controller,
       physics: const BouncingScrollPhysics(),
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.6,
         child: Padding(
           padding: context.horizontalPadding,
           child: ItemPlaceholder.medium(
-            icon: TablerIcons.brand_ao3,
+            icon: TablerIcons.telescope,
             message: 'Welcome to Archiverse!',
             subtitle:
                 'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',

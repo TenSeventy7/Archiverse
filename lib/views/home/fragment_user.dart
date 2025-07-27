@@ -1,3 +1,6 @@
+import 'package:archiverse/components/expressive/nested_scroll_view.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/expressive/sliver_app_bar.dart';
 import 'package:archiverse/components/option_group.dart';
 import 'package:archiverse/components/option_tile.dart';
 import 'package:archiverse/components/user_image.dart';
@@ -16,7 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class UserFragment extends StatefulWidget {
-  const UserFragment({Key? key}) : super(key: key);
+  const UserFragment({super.key});
 
   @override
   State<UserFragment> createState() => _UserFragmentState();
@@ -25,48 +28,72 @@ class UserFragment extends StatefulWidget {
 class _UserFragmentState extends State<UserFragment> {
   @override
   Widget build(BuildContext context) {
+    return ExpressiveScaffold.nested(
+      body: (controller) => _buildScrollView(controller),
+    );
+  }
+
+  Consumer<UserProvider> _buildScrollView(ScrollController controller) {
     return Consumer<UserProvider>(
       builder: (context, userProvider, child) {
         final user = userProvider.user;
         final isSignedIn = userProvider.isSignedIn;
 
-        return NestedScrollView(
+        return ExpressiveNestedScrollView(
+          controller: controller,
           physics: const BouncingScrollPhysics(),
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[_buildAppBar(userProvider, user)];
-          },
-          body: RefreshIndicator(
-            notificationPredicate: isSignedIn ? (_) => true : (_) => false,
-            onRefresh: () => _onRefresh(userProvider),
-            displacement: 20.0,
-            elevation: 0.0,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverPadding(
-                  padding: context.horizontalPadding,
-                  sliver: SliverList.list(
-                    children: [
-                      if (user != null) ...[
-                        _buildContentList(),
-                        SizedBox(height: context.commonPaddingHalf / 2),
-                        _buildWorksList(),
-                        SizedBox(height: context.commonPaddingHalf / 2),
-                      ],
-                      _buildSettingsList(),
-                      if (user != null) ...[
-                        SizedBox(height: context.commonPaddingHalf / 2),
-                        _buildAccountList(),
-                      ],
-                      SizedBox(height: context.commonPaddingHalf),
-                    ],
-                  ),
-                ),
-              ],
+          headerSliverBuilder: (context, _, controller) => [
+            _buildAppBar(userProvider, user, controller),
+          ],
+          body: Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: context.theme.colorScheme.surface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
             ),
+            child: _buildBody(isSignedIn, userProvider, context, user),
           ),
         );
       },
+    );
+  }
+
+  RefreshIndicator _buildBody(
+    bool isSignedIn,
+    UserProvider userProvider,
+    BuildContext context,
+    Pseud? user,
+  ) {
+    return RefreshIndicator(
+      notificationPredicate: isSignedIn ? (_) => true : (_) => false,
+      onRefresh: () => _onRefresh(userProvider),
+      displacement: 20.0,
+      elevation: 0.0,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverPadding(
+            padding: context.horizontalPadding,
+            sliver: SliverList.list(
+              children: [
+                const SizedBox(height: 8.0),
+                if (user != null) ...[
+                  _buildContentList(),
+                  SizedBox(height: context.commonPaddingHalf / 2),
+                  _buildWorksList(),
+                  SizedBox(height: context.commonPaddingHalf / 2),
+                ],
+                _buildSettingsList(),
+                if (user != null) ...[
+                  SizedBox(height: context.commonPaddingHalf / 2),
+                  _buildAccountList(),
+                ],
+                SizedBox(height: context.commonPaddingHalf),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -74,21 +101,32 @@ class _UserFragmentState extends State<UserFragment> {
     await userProvider.refresh();
   }
 
-  Widget _buildAppBar(UserProvider provider, Pseud? user) {
-    return SliverAppBar.large(
+  Widget _buildAppBar(
+    UserProvider provider,
+    Pseud? user,
+    ScrollController controller,
+  ) {
+    return ExpressiveSliverAppBar.large(
+      controller: controller,
       title: Text(user?.name ?? 'User'),
-      centerTitle: true,
-      expandedHeight: context.screenHeight * 0.3,
-      shape: const RoundedRectangleBorder(),
-      flexibleSpace: FlexibleSpaceBar(
+      expandedHeight: context.screenHeight * 0.25,
+      titleSpacing: 16.0,
+      flexibleSpace: (controller, opacity) => FlexibleSpaceBar(
         background: Skeletonizer(
           enabled: provider.isFetching,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: context.commonPaddingHalf,
-              vertical: context.commonPaddingDouble,
+          child: Material(
+            color: Color.lerp(
+              context.theme.colorScheme.surfaceContainer,
+              context.theme.colorScheme.surfaceContainerHigh,
+              opacity,
             ),
-            child: _buildExpandedHeader(provider, user),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: context.commonPaddingHalf,
+                vertical: 8.0,
+              ),
+              child: _buildExpandedHeader(provider, user),
+            ),
           ),
         ),
       ),

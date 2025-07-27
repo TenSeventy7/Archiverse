@@ -140,7 +140,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   @override
   double getExpandedHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height * 0.25;
+    return MediaQuery.of(context).size.height * 0.3;
   }
 
   @override
@@ -226,71 +226,73 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   Widget _buildHeroSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Author avatars with profile links
+        const SizedBox(height: 16.0),
+        _buildAuthorSection(context),
+        const SizedBox(height: 32.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: _buildHeroStats(context),
+        ),
+        const SizedBox(height: 16.0),
+      ],
+    );
+  }
+
+  Widget _buildLastUpdatedInfo(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Last updated info
-          Row(
-            children: [
-              Icon(
-                TablerIcons.clock,
-                size: 18,
-                color: colorScheme.onSurfaceVariant.withOpacity(0.7),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                AppUtils.formatWorkLastUpdated(context, item),
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.7),
-                ),
-              ),
+    // Last updated info
+    return Row(
+      children: [
+        Icon(
+          TablerIcons.clock,
+          size: 18,
+          color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          AppUtils.formatWorkLastUpdated(context, item),
+          style: context.textTheme.labelMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+          ),
+        ),
 
-              const Spacer(),
+        const Spacer(),
 
-              // Completion status
-              if (item.finished == true)
-                Skeleton.leaf(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          TablerIcons.check,
-                          size: 14,
-                          color: colorScheme.onSecondaryContainer,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "Completed",
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onSecondaryContainer,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+        // Completion status
+        if (item.finished == true)
+          Skeleton.leaf(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    TablerIcons.check,
+                    size: 14,
+                    color: colorScheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    "Completed",
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSecondaryContainer,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
-
-          const SizedBox(height: 24.0),
-          _buildHeroStats(context),
-          const SizedBox(height: 16.0),
-        ],
-      ),
+      ],
     );
   }
 
@@ -366,9 +368,6 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Author avatars with profile links
-          _buildAuthorSection(context),
-
           // Series information if applicable
           if (item.series.isNotEmpty)
             Padding(
@@ -404,6 +403,8 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
 
   Widget _buildAuthorSection(BuildContext context) {
     return Card.filled(
+      color: context.colorScheme.tertiaryContainer.withValues(alpha: 0.75),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -428,35 +429,35 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           child: Row(
             children: [
               // Author avatars with overlap
               Skeleton.leaf(
                 child: SizedBox(
-                  height: 48,
+                  height: 56,
                   width: item.authors.length > 1
-                      ? 48 + (item.authors.length - 1) * 24
-                      : 48,
+                      ? 56 + (item.authors.length - 1) * 28
+                      : 56,
                   child: Stack(
                     children: [
                       for (int i = 0; i < item.authors.length; i++)
                         Positioned(
-                          left: i * 24.0,
+                          left: i * 28.0,
                           child: CircleAvatar(
-                            radius: 24,
+                            radius: 28,
                             child: EnhancedFutureBuilder(
                               future: AppApi().getPseud(item.authors[i]),
                               rememberFutureResult: true,
                               whenDone: (author) => UserImage(
                                 context: context,
                                 user: author,
-                                size: 24,
+                                size: 28,
                               ),
                               whenNotDone: UserImage(
                                 context: context,
                                 user: item.authors[i],
-                                size: 24,
+                                size: 28,
                               ),
                             ),
                           ),
@@ -466,7 +467,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                 ),
               ),
 
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
 
               // Author names
               Expanded(
@@ -476,16 +477,23 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                     Text(
                       item.authors.length == 1 ? "Author" : "Authors",
                       style: context.textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onTertiaryContainer.withOpacity(0.8),
                       ),
                     ),
                     Text(
                       item.authors.length == 1
                           ? _getAuthorName(item.authors.first)
                           : "${item.authors.length} authors",
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: context.textTheme.titleMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onTertiaryContainer,
+                          )
+                          .apply(fontSizeDelta: 2.0),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -823,6 +831,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.0,
         children: [
           Text(
             item.title,
@@ -830,6 +839,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          _buildLastUpdatedInfo(context),
         ],
       ),
     );
