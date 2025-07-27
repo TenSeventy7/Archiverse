@@ -1,6 +1,7 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/database/repository.dart';
 import 'package:archiverse/extensions/api_library.dart';
+import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,12 @@ class LibraryProvider extends ChangeNotifier {
   // Most read works state - derived from read history with highest hits
   List<Work> _mostReadWorks = [];
   List<Work> get mostReadWorks => _mostReadWorks;
+
+  // List of library categories
+  List<LibraryCategory> _categories = [];
+  List<LibraryCategory> get categories => _categories;
+  bool _isLoadingCategories = true;
+  bool get isLoadingCategories => _isLoadingCategories;
 
   // Loading states
   bool _isLoadingRecentlyAdded = false;
@@ -36,6 +43,86 @@ class LibraryProvider extends ChangeNotifier {
       _isLoadingRecentlyAdded = false;
       notifyListeners();
     }
+  }
+
+  /// Fetch library categories
+  Future<void> fetchCategories() async {
+    _isLoadingCategories = true;
+    notifyListeners();
+
+    try {
+      _categories = await _api.getLibraryCategories(1);
+    } catch (e) {
+      print('Error fetching library categories: $e');
+      _categories = [];
+    } finally {
+      _isLoadingCategories = false;
+      notifyListeners();
+    }
+  }
+
+  /// Delete a library category
+  Future<void> deleteCategory(LibraryCategory category) async {
+    try {
+      print('Deleting category: ${category.name}');
+      await _api.deleteLibraryCategory(category);
+      await refreshCategories();
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting category: $e');
+      // Optionally handle error, e.g. show snackbar
+    }
+  }
+
+  /// Remove a work from a specific category
+  Future<void> removeWorkFromCategory(
+    Work work,
+    LibraryCategory category,
+  ) async {
+    try {
+      if (!await _api.isWorkInCategory(work, category)) {
+        return;
+      }
+
+      await _api.removeWorkFromCategory(work, category);
+      notifyListeners();
+
+      await refreshCategories(); // Refresh categories after removal
+    } catch (e) {}
+  }
+
+  /// Add a new library category
+  Future<void> addCategory(LibraryCategory category) async {
+    try {
+      await _api.createLibraryCategory(
+        category.name,
+        icon: category.icon,
+        color: category.color,
+      );
+      notifyListeners();
+      await refreshCategories(); // Refresh categories after adding
+    } catch (e) {
+      print('Error adding category: $e');
+      // Optionally handle error, e.g. show snackbar
+    }
+  }
+
+  /// Update an existing library category
+  Future<void> updateCategory(LibraryCategory category) async {
+    try {
+      await _api.updateLibraryCategory(category);
+      notifyListeners();
+      await refreshCategories(); // Refresh categories after updating
+    } catch (e) {
+      print('Error updating category: $e');
+      // Optionally handle error, e.g. show snackbar
+    }
+  }
+
+  /// Refresh categories from API
+  Future<void> refreshCategories() async {
+    _categories = [];
+    await fetchCategories();
   }
 
   /// Fetch most read works based on read history hits and completion
@@ -96,13 +183,18 @@ class LibraryProvider extends ChangeNotifier {
 
   /// Refresh all library data
   Future<void> refreshAll() async {
-    await Future.wait([fetchRecentlyAdded(), fetchMostRead()]);
+    await Future.wait([
+      fetchRecentlyAdded(),
+      fetchMostRead(),
+      fetchCategories(),
+    ]);
   }
 
   /// Clear all data
   void clear() {
     _recentlyAddedWorks = [];
     _mostReadWorks = [];
+    _categories = [];
     notifyListeners();
   }
 }
