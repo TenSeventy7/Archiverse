@@ -84,6 +84,8 @@ class OptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       title: title.isNotEmpty ? Text(title) : null,
       leading: icon != null ? Icon(icon) : null,
       trailing: _buildTrailingWidget(
@@ -126,6 +128,8 @@ class _SwitchOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       leading: icon != null ? Icon(icon) : null,
@@ -162,6 +166,8 @@ class _ListOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       enabled: enabled,
       title: Text(title),
       subtitle: Text(_getSelectedEntryName()),
@@ -238,6 +244,8 @@ class _RadioOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       leading: icon != null ? Icon(icon) : null,
@@ -275,6 +283,8 @@ class _SliderOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       title: Text(title),
       leading: icon != null ? Icon(icon) : null,
       isThreeLine: true,
@@ -317,6 +327,8 @@ class _CustomOptionTile extends OptionTile {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: context.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
