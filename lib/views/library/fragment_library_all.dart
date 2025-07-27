@@ -6,6 +6,7 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/providers/provider_library.dart';
+import 'package:archiverse/views/lists/activity_library_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +52,7 @@ class _LibraryAllFragmentState extends State<LibraryAllFragment> {
                   title: "Recently Added",
                   actionText: Text("View all"),
                   onTap: () {
-                    // Navigate to recent works
+                    context.navigator.pushNamed(LibraryWorksActivity.routeName);
                   },
                 ),
 

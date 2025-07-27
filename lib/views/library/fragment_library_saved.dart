@@ -1,15 +1,21 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/folder_card.dart';
-import 'package:archiverse/components/icon_selector.dart';
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/dialogs/edit_category_dialog.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/work.dart';
 import 'package:archiverse/placeholders.dart';
+import 'package:archiverse/providers/provider_library.dart';
+import 'package:archiverse/views/lists/activity_library_folders.dart';
+import 'package:archiverse/views/lists/activity_library_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LibrarySavedFragment extends StatefulWidget {
   const LibrarySavedFragment({super.key, this.controller});
@@ -20,31 +26,21 @@ class LibrarySavedFragment extends StatefulWidget {
 }
 
 class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
-  List<LibraryCategory> _categories = [];
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LibraryProvider>().refreshAll();
+    });
   }
 
-  Future<void> _loadCategories() async {
-    setState(() => _isLoading = true);
-    try {
-      final categories = await AppApi().getLibraryCategories();
-      setState(() {
-        _categories = categories;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error loading categories: $e')));
-      }
-    }
+  // Also refresh categories when the fragment is reloaded
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LibraryProvider>().refreshCategories();
+    });
   }
 
   @override
@@ -57,12 +53,50 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
           padding: context.horizontalPadding,
           sliver: SliverList.list(
             children: [
-              TextHeader.medium(title: "Folders"),
-              _buildCollectionsList(),
+              TextHeader.medium(
+                title: "Folders",
+                actionText: Text("View all"),
+                onTap: () {
+                  context.navigator
+                      .pushNamed(LibraryFoldersActivity.routeName)
+                      .then((_) {
+                        if (!context.mounted) return;
+                        context.read<LibraryProvider>().refreshCategories();
+                      });
+                },
+              ),
+              Consumer<LibraryProvider>(
+                builder: (context, libraryProvider, child) {
+                  return _buildCollectionsList(libraryProvider);
+                },
+              ),
 
               // Recent Works
-              TextHeader.medium(title: "Recent Works"),
-              _buildWorksList(5),
+              TextHeader.medium(
+                title: "Recent Works",
+                actionText: Text("View all"),
+                onTap: () {
+                  context.navigator
+                      .pushNamed(LibraryWorksActivity.routeName)
+                      .then((_) {
+                        if (context.mounted) {
+                          context.read<LibraryProvider>().refreshAll();
+                        }
+                      });
+                },
+              ),
+              // Recent works
+              Consumer<LibraryProvider>(
+                builder: (context, provider, child) {
+                  if (provider.isLoadingRecentlyAdded) {
+                    return _buildLoadingList(4);
+                  }
+
+                  return _buildWorksList(
+                    provider.recentlyAddedWorks.take(4).toList(),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -70,19 +104,47 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
     );
   }
 
-  Widget _buildWorksList(int count) {
-    return Column(
-      children: List.generate(count, (index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: WorkCard(work: Fillers.work),
-        );
-      }),
+  Widget _buildLoadingList(int count) {
+    return Skeletonizer(
+      enabled: true,
+      child: Column(
+        children: List.generate(count, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: WorkCard(
+              work: Fillers.work,
+            ), // Use placeholder while loading
+          );
+        }),
+      ),
     );
   }
 
-  Widget _buildCollectionsList() {
-    if (_isLoading) {
+  Widget _buildWorksList(List<Work> works) {
+    if (works.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        child: Center(
+          child: ItemPlaceholder.small(
+            icon: TablerIcons.book,
+            subtitle: "Add works to your library to see them here",
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: works.map((work) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: WorkCard(work: work),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCollectionsList(LibraryProvider provider) {
+    if (provider.isLoadingCategories) {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(32.0),
@@ -93,7 +155,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
 
     // Add "Add Category" card at the end
     final displayItems = [
-      ..._categories,
+      ...provider.categories.take(5),
       null, // This will be the "Add Category" card
     ];
 
@@ -109,20 +171,8 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
         if (category == null) {
           return _buildAddCategoryCard();
         }
-        return _buildCategoryCard(category);
+        return FolderCard(category: category);
       }).toList(),
-    );
-  }
-
-  Widget _buildCategoryCard(LibraryCategory category) {
-    return GestureDetector(
-      onLongPress: () => _showCategoryOptions(category),
-      child: FolderCard(
-        title: category.name,
-        count: category.count,
-        icon: category.iconData,
-        accentColor: category.accentColor,
-      ),
     );
   }
 
@@ -153,95 +203,13 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
     );
   }
 
-  void _showCategoryOptions(LibraryCategory category) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(TablerIcons.edit),
-            title: const Text('Edit Category'),
-            onTap: () {
-              Navigator.pop(context);
-              _showEditCategoryDialog(category);
-            },
-          ),
-          ListTile(
-            leading: const Icon(TablerIcons.trash),
-            title: const Text('Delete Category'),
-            onTap: () {
-              Navigator.pop(context);
-              _showDeleteCategoryDialog(category);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showAddCategoryDialog() async {
     final result = await EditCategoryDialog.show(context);
     if (result == true) {
-      await _loadCategories();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Category added successfully')),
         );
-      }
-    }
-  }
-
-  void _showEditCategoryDialog(LibraryCategory category) async {
-    final result = await EditCategoryDialog.show(context, category: category);
-    if (result == true) {
-      await _loadCategories();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Category updated successfully')),
-        );
-      }
-    }
-  }
-
-  void _showDeleteCategoryDialog(LibraryCategory category) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text('Are you sure you want to delete "${category.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              await _deleteCategory(category);
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _deleteCategory(LibraryCategory category) async {
-    try {
-      await AppApi().deleteLibraryCategory(category);
-      await _loadCategories();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Category deleted successfully')),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error deleting category: $e')));
       }
     }
   }
