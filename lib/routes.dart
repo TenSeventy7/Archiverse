@@ -5,6 +5,7 @@
  */
 
 import 'package:archiverse/models/chapter.dart';
+import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
@@ -24,6 +25,7 @@ import 'package:archiverse/views/activity_work.dart';
 import 'package:archiverse/views/lists/activity_author_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
+import 'package:archiverse/views/lists/activity_folder_works.dart';
 import 'package:archiverse/views/lists/activity_series_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
@@ -200,6 +202,14 @@ class AppRoutes {
         if (args is Chapter) {
           throw ArgumentError(
             "ReaderActivity cannot be initialized with just a Chapter directly.",
+          );
+        }
+        return null;
+      case FolderWorksActivity.routeName:
+        final args = settings.arguments;
+        if (args is LibraryCategory) {
+          return MaterialPageRoute(
+            builder: (context) => FolderWorksActivity(folder: args),
           );
         }
         return null;
