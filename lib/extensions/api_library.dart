@@ -4,6 +4,24 @@ import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/work.dart';
 
 extension ApiLibrary on AppApi {
+  Future<bool> isWorkInLibrary(Work work) async {
+    try {
+      return await LibraryRepository.isWorkInLibrary(work.id);
+    } catch (e) {
+      print('Error checking if work is in library: $e');
+      return false;
+    }
+  }
+
+  Future<bool> isWorkInCategory(Work work, LibraryCategory category) async {
+    try {
+      return await LibraryRepository.isWorkInCategory(work, category);
+    } catch (e) {
+      print('Error checking if work is in category ${category.name}: $e');
+      return false;
+    }
+  }
+
   Future<void> addWorkToLibrary(Work work) async {
     try {
       // Add work to database if not already present
@@ -32,6 +50,9 @@ extension ApiLibrary on AppApi {
         return;
       }
 
+      // Remove work from all categories first
+      await LibraryRepository.removeWorkFromAllCategories(work.id);
+
       // Remove work from library
       await LibraryRepository.removeWorkFromLibrary(work.id);
 
@@ -39,6 +60,15 @@ extension ApiLibrary on AppApi {
       await WorkRepository.cleanUpWork(work.id);
     } catch (e) {
       print('Error removing work from library: $e');
+    }
+  }
+
+  Future<List<Work>> getWorksInLibrary({required int page}) async {
+    try {
+      return await LibraryRepository.getWorksInLibrary(page);
+    } catch (e) {
+      print('Error fetching works in library: $e');
+      return [];
     }
   }
 
@@ -57,11 +87,20 @@ extension ApiLibrary on AppApi {
     }
   }
 
-  Future<List<LibraryCategory>> getLibraryCategories() async {
+  Future<List<LibraryCategory>> getAllLibraryCategories() async {
     try {
       return await LibraryRepository.getAllLibraryCategories();
     } catch (e) {
       print('Error fetching library categories: $e');
+      return [];
+    }
+  }
+
+  Future<List<LibraryCategory>> getLibraryCategories(int page) async {
+    try {
+      return await LibraryRepository.getLibraryCategories(page);
+    } catch (e) {
+      print('Error fetching library categories for page $page: $e');
       return [];
     }
   }

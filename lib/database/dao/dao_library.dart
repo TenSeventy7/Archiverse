@@ -89,4 +89,26 @@ class LibraryDao
   Future<int> getTotalCount() async {
     return await getCount();
   }
+
+  Future<List<Work>> getWorksInLibrary({required int page}) async {
+    final query = select(table)
+      ..orderBy([(w) => OrderingTerm.desc(w.timestamp)])
+      ..limit(20, offset: (page - 1) * 20);
+
+    final results = await query.get();
+    final workIds = results.map((row) => row.workId).toList();
+
+    // Fetch the actual Work objects using the work IDs
+    List<Work> works = [];
+    if (workIds.isNotEmpty) {
+      for (final workId in workIds) {
+        final work = await db.worksDao.getWorkComplete(workId);
+        if (work != null) {
+          works.add(work);
+        }
+      }
+    }
+
+    return works;
+  }
 }

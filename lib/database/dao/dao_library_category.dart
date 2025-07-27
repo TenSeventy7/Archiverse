@@ -94,6 +94,19 @@ class LibraryCategoriesDao
     }).toList();
   }
 
+  Future<List<LibraryCategory>> getCategories(int page) async {
+    final query = select(db.dbLibraryCategories)
+      ..limit(20, offset: (page - 1) * 20);
+    final results = await query.get();
+    final future = results.map((row) => getWorkCount(row.id));
+    final counts = await Future.wait(future);
+    return results.asMap().entries.map((entry) {
+      final row = entry.value;
+      final count = counts[entry.key];
+      return fromRowComplete(row, count);
+    }).toList();
+  }
+
   Future<List<DbLibraryCategoryWork>> getMultipleCategories(
     Expression<bool> Function(DbLibraryCategoryWorks tbl) where,
   ) async {
@@ -111,6 +124,18 @@ class LibraryCategoriesDao
     ).insert(companion, mode: InsertMode.insertOrIgnore);
   }
 
+  Future<bool> isWorkInCategory(int workId, int categoryId) async {
+    final table = db.dbLibraryCategoryWorks;
+    final count =
+        await (select(table)..where(
+              (tbl) =>
+                  tbl.workId.equals(workId) & tbl.categoryId.equals(categoryId),
+            ))
+            .get()
+            .then((rows) => rows.length);
+    return count > 0;
+  }
+
   Future<List<Work>> getWorksByCategory(int categoryId) async {
     final results = await getMultipleCategories(
       (tbl) => tbl.categoryId.equals(categoryId),
@@ -120,6 +145,14 @@ class LibraryCategoriesDao
     );
     final works = await Future.wait(workFutures);
     return works.whereType<Work>().toList();
+  }
+
+  Future<bool> removeWorkFromAllCategories(int workId) async {
+    final table = db.dbLibraryCategoryWorks;
+    final deletedCount = await (delete(
+      table,
+    )..where((tbl) => tbl.workId.equals(workId))).go();
+    return deletedCount > 0;
   }
 
   Future<bool> removeWorkFromCategory(int workId, int categoryId) async {

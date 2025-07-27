@@ -18,6 +18,11 @@ extension LibraryRepository on DataRepository {
     return await DataRepository.database.libraryDao.removeWork(workId);
   }
 
+  static Future<bool> removeWorkFromAllCategories(int workId) async {
+    return await DataRepository.database.libraryCategoriesDao
+        .removeWorkFromAllCategories(workId);
+  }
+
   static Future<bool> isWorkInLibrary(int workId) async {
     return await DataRepository.database.libraryDao.containsWork(workId);
   }
@@ -59,6 +64,12 @@ extension LibraryRepository on DataRepository {
         .getAllCategories();
   }
 
+  static Future<List<LibraryCategory>> getLibraryCategories(int page) async {
+    return await DataRepository.database.libraryCategoriesDao.getCategories(
+      page,
+    );
+  }
+
   static Future<bool> updateLibraryCategory(LibraryCategory category) async {
     return await DataRepository.database.libraryCategoriesDao.updateCategory(
       category,
@@ -92,6 +103,16 @@ extension LibraryRepository on DataRepository {
         .getWorksByCategory(categoryId);
   }
 
+  static Future<bool> isWorkInCategory(
+    Work work,
+    LibraryCategory category,
+  ) async {
+    return await DataRepository.database.libraryCategoriesDao.isWorkInCategory(
+      work.id,
+      category.id!,
+    );
+  }
+
   static Future<List<LibraryCategory>> getCategoriesForWork(int workId) async {
     return await DataRepository.database.libraryCategoriesDao
         .getCategoriesForWork(workId);
@@ -106,5 +127,11 @@ extension LibraryRepository on DataRepository {
   static Future<bool> removeAllWorksFromCategory(int categoryId) async {
     return await DataRepository.database.libraryCategoriesDao
         .removeAllWorksFromCategory(categoryId);
+  }
+
+  static Future<List<Work>> getWorksInLibrary(int page) async {
+    return await DataRepository.database.libraryDao.getWorksInLibrary(
+      page: page,
+    );
   }
 }
