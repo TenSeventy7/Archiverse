@@ -35,7 +35,7 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
         return Skeletonizer(
           enabled: provider.isLoading,
           child: Padding(
-            padding: EdgeInsets.only(bottom: 8.0),
+            padding: EdgeInsets.only(top: 4.0),
             child: Column(
               children: [
                 if (widget.showHeader) ...[
