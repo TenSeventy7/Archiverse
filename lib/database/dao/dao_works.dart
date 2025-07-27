@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:archiverse/database/database.dart';
-import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/series.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:drift/drift.dart';
 
 import 'dao_base.dart';
+
+part 'dao_works.g.dart';
 
 @DriftAccessor(tables: [DbWorks])
 class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
@@ -315,5 +316,10 @@ class WorksDao extends BaseDao<DbWorks, DbWork, Work> {
 
     final results = await query.get();
     return results.map((row) => fromRow(row.readTable(table))).toList();
+  }
+
+  Future<List<int>> getAllWorkIds() async {
+    final results = await select(table).get();
+    return results.map((w) => w.id).toList();
   }
 }

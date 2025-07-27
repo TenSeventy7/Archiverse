@@ -3,6 +3,8 @@ import 'package:archiverse/models/tag.dart';
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
+part 'dao_tags.g.dart';
+
 @DriftAccessor(
   tables: [
     DbTags,

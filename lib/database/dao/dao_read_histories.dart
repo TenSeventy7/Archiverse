@@ -4,6 +4,8 @@ import 'package:archiverse/models/chapter.dart';
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
+part 'dao_read_histories.g.dart';
+
 @DriftAccessor(tables: [DbReadHistories, DbWorks, DbChapters])
 class ReadHistoriesDao
     extends BaseDao<DbReadHistories, DbReadHistory, ReadHistory> {
@@ -21,6 +23,7 @@ class ReadHistoriesDao
       position: Value(history.position),
       status: Value(history.status.name),
       completion: Value(history.completion),
+      hits: Value(history.hits),
     );
   }
 
@@ -30,6 +33,15 @@ class ReadHistoriesDao
     // Use getReadHistoryComplete for full data with relationships
     throw UnimplementedError(
       'Use getReadHistoryComplete instead - ReadHistory requires Work object',
+    );
+  }
+
+  // Override insertOrUpdate to use workId for conflict resolution
+  @override
+  Future<void> insertOrUpdate(ReadHistory model) async {
+    await into(table).insert(
+      toCompanion(model),
+      onConflict: DoUpdate((old) => toCompanion(model)),
     );
   }
 
@@ -246,6 +258,7 @@ class ReadHistoriesDao
           position: 0,
           status: ReadStatus.IN_PROGRESS,
           completion: 0.0,
+          hits: 1,
         );
 
         await insertOrUpdate(newHistory);
@@ -474,10 +487,16 @@ class ReadHistoriesDao
             (s) => s.name == historyData.status,
           ),
           completion: historyData.completion,
+          hits: historyData.hits,
         ),
       );
     }
 
     return histories;
+  }
+
+  Future<List<int>> getAllReadHistoryWorkIds() async {
+    final results = await select(table).get();
+    return results.map((h) => h.workId).toList();
   }
 }

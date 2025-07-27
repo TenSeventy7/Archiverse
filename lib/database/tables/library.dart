@@ -11,19 +11,46 @@ class DbWorksLibrary extends Table {
   DateTimeColumn get timestamp =>
       dateTime()(); // Timestamp of when the work was added to the library
 
-  @override
-  Set<Column> get primaryKey => {id}; // Use auto-increment ID as primary key
-
   // Add unique constraint on workId to prevent duplicates
   @override
   List<Set<Column>>? get uniqueKeys => [
     {workId},
   ];
+}
 
-  // Add index for better query performance
+class DbLibraryCategories extends Table {
   @override
-  List<String> get customConstraints => [
-    'CREATE INDEX IF NOT EXISTS idx_library_timestamp ON library(timestamp DESC)',
+  String get tableName => 'library_categories'; // Keep the actual table name as 'library_categories'
+
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 512)(); // Category name
+  TextColumn get icon => text().nullable()(); // Optional icon for the category
+  TextColumn get color =>
+      text().withDefault(const Constant('blue'))(); // Default color
+
+  // Add unique constraint on name to prevent duplicates
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+    {name},
+  ];
+}
+
+class DbLibraryCategoryWorks extends Table {
+  @override
+  String get tableName => 'library_category_works'; // Keep the actual table name as 'library_category_works'
+
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get workId =>
+      integer().references(DbWorks, #id)(); // Foreign key to works table
+  IntColumn get categoryId => integer().references(
+    DbLibraryCategories,
+    #id,
+  )(); // Foreign key to categories table
+
+  // Add unique constraint on workId and categoryId to prevent duplicates
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+    {workId, categoryId},
   ];
 }
 
@@ -42,20 +69,10 @@ class DbDownloadedWorks extends Table {
     const Constant(false),
   )(); // Whether the download is complete
 
-  @override
-  Set<Column> get primaryKey => {id}; // Use auto-increment ID as primary key
-
   // Add unique constraint on workId to prevent duplicates
   @override
   List<Set<Column>>? get uniqueKeys => [
     {workId},
-  ];
-
-  // Add indexes for better query performance
-  @override
-  List<String> get customConstraints => [
-    'CREATE INDEX IF NOT EXISTS idx_downloaded_works_timestamp ON downloaded_works(timestamp DESC)',
-    'CREATE INDEX IF NOT EXISTS idx_downloaded_works_complete ON downloaded_works(is_complete)',
   ];
 }
 
@@ -71,19 +88,9 @@ class DbDownloadedChapters extends Table {
     const Constant(false),
   )(); // Whether the download is complete
 
-  @override
-  Set<Column> get primaryKey => {id}; // Use auto-increment ID as primary key
-
   // Add unique constraint on chapterId to prevent duplicates
   @override
   List<Set<Column>>? get uniqueKeys => [
     {chapterId},
-  ];
-
-  // Add indexes for better query performance
-  @override
-  List<String> get customConstraints => [
-    'CREATE INDEX IF NOT EXISTS idx_downloaded_chapters_timestamp ON downloaded_chapters(timestamp DESC)',
-    'CREATE INDEX IF NOT EXISTS idx_downloaded_chapters_complete ON downloaded_chapters(is_complete)',
   ];
 }

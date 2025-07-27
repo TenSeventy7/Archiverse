@@ -4251,6 +4251,10 @@ class $DbReadHistoriesTable extends DbReadHistories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {workId},
+  ];
+  @override
   DbReadHistory map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DbReadHistory(
@@ -6468,6 +6472,571 @@ class DbWorksLibraryCompanion extends UpdateCompanion<DbWorksLibraryData> {
   }
 }
 
+class $DbLibraryCategoriesTable extends DbLibraryCategories
+    with TableInfo<$DbLibraryCategoriesTable, DbLibraryCategory> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbLibraryCategoriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 512,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+    'icon',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('blue'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, icon, color];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'library_categories';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbLibraryCategory> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('icon')) {
+      context.handle(
+        _iconMeta,
+        icon.isAcceptableOrUnknown(data['icon']!, _iconMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {name},
+  ];
+  @override
+  DbLibraryCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbLibraryCategory(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      icon: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon'],
+      ),
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      )!,
+    );
+  }
+
+  @override
+  $DbLibraryCategoriesTable createAlias(String alias) {
+    return $DbLibraryCategoriesTable(attachedDatabase, alias);
+  }
+}
+
+class DbLibraryCategory extends DataClass
+    implements Insertable<DbLibraryCategory> {
+  final int id;
+  final String name;
+  final String? icon;
+  final String color;
+  const DbLibraryCategory({
+    required this.id,
+    required this.name,
+    this.icon,
+    required this.color,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || icon != null) {
+      map['icon'] = Variable<String>(icon);
+    }
+    map['color'] = Variable<String>(color);
+    return map;
+  }
+
+  DbLibraryCategoriesCompanion toCompanion(bool nullToAbsent) {
+    return DbLibraryCategoriesCompanion(
+      id: Value(id),
+      name: Value(name),
+      icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
+      color: Value(color),
+    );
+  }
+
+  factory DbLibraryCategory.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbLibraryCategory(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      icon: serializer.fromJson<String?>(json['icon']),
+      color: serializer.fromJson<String>(json['color']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'icon': serializer.toJson<String?>(icon),
+      'color': serializer.toJson<String>(color),
+    };
+  }
+
+  DbLibraryCategory copyWith({
+    int? id,
+    String? name,
+    Value<String?> icon = const Value.absent(),
+    String? color,
+  }) => DbLibraryCategory(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    icon: icon.present ? icon.value : this.icon,
+    color: color ?? this.color,
+  );
+  DbLibraryCategory copyWithCompanion(DbLibraryCategoriesCompanion data) {
+    return DbLibraryCategory(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      icon: data.icon.present ? data.icon.value : this.icon,
+      color: data.color.present ? data.color.value : this.color,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbLibraryCategory(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, icon, color);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbLibraryCategory &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.icon == this.icon &&
+          other.color == this.color);
+}
+
+class DbLibraryCategoriesCompanion extends UpdateCompanion<DbLibraryCategory> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> icon;
+  final Value<String> color;
+  const DbLibraryCategoriesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.color = const Value.absent(),
+  });
+  DbLibraryCategoriesCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.icon = const Value.absent(),
+    this.color = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<DbLibraryCategory> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? icon,
+    Expression<String>? color,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (icon != null) 'icon': icon,
+      if (color != null) 'color': color,
+    });
+  }
+
+  DbLibraryCategoriesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? icon,
+    Value<String>? color,
+  }) {
+    return DbLibraryCategoriesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbLibraryCategoriesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('icon: $icon, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
+    with TableInfo<$DbLibraryCategoryWorksTable, DbLibraryCategoryWork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DbLibraryCategoryWorksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _workIdMeta = const VerificationMeta('workId');
+  @override
+  late final GeneratedColumn<int> workId = GeneratedColumn<int>(
+    'work_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES works (id)',
+    ),
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES library_categories (id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, workId, categoryId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'library_category_works';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DbLibraryCategoryWork> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('work_id')) {
+      context.handle(
+        _workIdMeta,
+        workId.isAcceptableOrUnknown(data['work_id']!, _workIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_workIdMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {workId, categoryId},
+  ];
+  @override
+  DbLibraryCategoryWork map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DbLibraryCategoryWork(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      workId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}work_id'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+    );
+  }
+
+  @override
+  $DbLibraryCategoryWorksTable createAlias(String alias) {
+    return $DbLibraryCategoryWorksTable(attachedDatabase, alias);
+  }
+}
+
+class DbLibraryCategoryWork extends DataClass
+    implements Insertable<DbLibraryCategoryWork> {
+  final int id;
+  final int workId;
+  final int categoryId;
+  const DbLibraryCategoryWork({
+    required this.id,
+    required this.workId,
+    required this.categoryId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['work_id'] = Variable<int>(workId);
+    map['category_id'] = Variable<int>(categoryId);
+    return map;
+  }
+
+  DbLibraryCategoryWorksCompanion toCompanion(bool nullToAbsent) {
+    return DbLibraryCategoryWorksCompanion(
+      id: Value(id),
+      workId: Value(workId),
+      categoryId: Value(categoryId),
+    );
+  }
+
+  factory DbLibraryCategoryWork.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DbLibraryCategoryWork(
+      id: serializer.fromJson<int>(json['id']),
+      workId: serializer.fromJson<int>(json['workId']),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'workId': serializer.toJson<int>(workId),
+      'categoryId': serializer.toJson<int>(categoryId),
+    };
+  }
+
+  DbLibraryCategoryWork copyWith({int? id, int? workId, int? categoryId}) =>
+      DbLibraryCategoryWork(
+        id: id ?? this.id,
+        workId: workId ?? this.workId,
+        categoryId: categoryId ?? this.categoryId,
+      );
+  DbLibraryCategoryWork copyWithCompanion(
+    DbLibraryCategoryWorksCompanion data,
+  ) {
+    return DbLibraryCategoryWork(
+      id: data.id.present ? data.id.value : this.id,
+      workId: data.workId.present ? data.workId.value : this.workId,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbLibraryCategoryWork(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('categoryId: $categoryId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, workId, categoryId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DbLibraryCategoryWork &&
+          other.id == this.id &&
+          other.workId == this.workId &&
+          other.categoryId == this.categoryId);
+}
+
+class DbLibraryCategoryWorksCompanion
+    extends UpdateCompanion<DbLibraryCategoryWork> {
+  final Value<int> id;
+  final Value<int> workId;
+  final Value<int> categoryId;
+  const DbLibraryCategoryWorksCompanion({
+    this.id = const Value.absent(),
+    this.workId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+  });
+  DbLibraryCategoryWorksCompanion.insert({
+    this.id = const Value.absent(),
+    required int workId,
+    required int categoryId,
+  }) : workId = Value(workId),
+       categoryId = Value(categoryId);
+  static Insertable<DbLibraryCategoryWork> custom({
+    Expression<int>? id,
+    Expression<int>? workId,
+    Expression<int>? categoryId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (workId != null) 'work_id': workId,
+      if (categoryId != null) 'category_id': categoryId,
+    });
+  }
+
+  DbLibraryCategoryWorksCompanion copyWith({
+    Value<int>? id,
+    Value<int>? workId,
+    Value<int>? categoryId,
+  }) {
+    return DbLibraryCategoryWorksCompanion(
+      id: id ?? this.id,
+      workId: workId ?? this.workId,
+      categoryId: categoryId ?? this.categoryId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (workId.present) {
+      map['work_id'] = Variable<int>(workId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DbLibraryCategoryWorksCompanion(')
+          ..write('id: $id, ')
+          ..write('workId: $workId, ')
+          ..write('categoryId: $categoryId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $DbDownloadedWorksTable extends DbDownloadedWorks
     with TableInfo<$DbDownloadedWorksTable, DbDownloadedWork> {
   @override
@@ -7164,6 +7733,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DbBookmarksTable dbBookmarks = $DbBookmarksTable(this);
   late final $DbChapterWorksTable dbChapterWorks = $DbChapterWorksTable(this);
   late final $DbWorksLibraryTable dbWorksLibrary = $DbWorksLibraryTable(this);
+  late final $DbLibraryCategoriesTable dbLibraryCategories =
+      $DbLibraryCategoriesTable(this);
+  late final $DbLibraryCategoryWorksTable dbLibraryCategoryWorks =
+      $DbLibraryCategoryWorksTable(this);
   late final $DbDownloadedWorksTable dbDownloadedWorks =
       $DbDownloadedWorksTable(this);
   late final $DbDownloadedChaptersTable dbDownloadedChapters =
@@ -7176,6 +7749,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final SeriesDao seriesDao = SeriesDao(this as AppDatabase);
+  late final LibraryDao libraryDao = LibraryDao(this as AppDatabase);
+  late final LibraryCategoriesDao libraryCategoriesDao = LibraryCategoriesDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7196,6 +7773,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     dbBookmarks,
     dbChapterWorks,
     dbWorksLibrary,
+    dbLibraryCategories,
+    dbLibraryCategoryWorks,
     dbDownloadedWorks,
     dbDownloadedChapters,
   ];
@@ -7462,6 +8041,34 @@ final class $$DbWorksTableReferences
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_dbWorksLibraryRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $DbLibraryCategoryWorksTable,
+    List<DbLibraryCategoryWork>
+  >
+  _dbLibraryCategoryWorksRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.dbLibraryCategoryWorks,
+        aliasName: $_aliasNameGenerator(
+          db.dbWorks.id,
+          db.dbLibraryCategoryWorks.workId,
+        ),
+      );
+
+  $$DbLibraryCategoryWorksTableProcessedTableManager
+  get dbLibraryCategoryWorksRefs {
+    final manager = $$DbLibraryCategoryWorksTableTableManager(
+      $_db,
+      $_db.dbLibraryCategoryWorks,
+    ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _dbLibraryCategoryWorksRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -7883,6 +8490,32 @@ class $$DbWorksTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
+    return f(composer);
+  }
+
+  Expression<bool> dbLibraryCategoryWorksRefs(
+    Expression<bool> Function($$DbLibraryCategoryWorksTableFilterComposer f) f,
+  ) {
+    final $$DbLibraryCategoryWorksTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbLibraryCategoryWorks,
+          getReferencedColumn: (t) => t.workId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoryWorksTableFilterComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategoryWorks,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 
@@ -8399,6 +9032,32 @@ class $$DbWorksTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> dbLibraryCategoryWorksRefs<T extends Object>(
+    Expression<T> Function($$DbLibraryCategoryWorksTableAnnotationComposer a) f,
+  ) {
+    final $$DbLibraryCategoryWorksTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbLibraryCategoryWorks,
+          getReferencedColumn: (t) => t.workId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoryWorksTableAnnotationComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategoryWorks,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
   Expression<T> dbDownloadedWorksRefs<T extends Object>(
     Expression<T> Function($$DbDownloadedWorksTableAnnotationComposer a) f,
   ) {
@@ -8451,6 +9110,7 @@ class $$DbWorksTableTableManager
             bool dbBookmarksRefs,
             bool dbChapterWorksRefs,
             bool dbWorksLibraryRefs,
+            bool dbLibraryCategoryWorksRefs,
             bool dbDownloadedWorksRefs,
           })
         > {
@@ -8582,6 +9242,7 @@ class $$DbWorksTableTableManager
                 dbBookmarksRefs = false,
                 dbChapterWorksRefs = false,
                 dbWorksLibraryRefs = false,
+                dbLibraryCategoryWorksRefs = false,
                 dbDownloadedWorksRefs = false,
               }) {
                 return PrefetchHooks(
@@ -8598,6 +9259,7 @@ class $$DbWorksTableTableManager
                     if (dbBookmarksRefs) db.dbBookmarks,
                     if (dbChapterWorksRefs) db.dbChapterWorks,
                     if (dbWorksLibraryRefs) db.dbWorksLibrary,
+                    if (dbLibraryCategoryWorksRefs) db.dbLibraryCategoryWorks,
                     if (dbDownloadedWorksRefs) db.dbDownloadedWorks,
                   ],
                   addJoins: null,
@@ -8834,6 +9496,27 @@ class $$DbWorksTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (dbLibraryCategoryWorksRefs)
+                        await $_getPrefetchedData<
+                          DbWork,
+                          $DbWorksTable,
+                          DbLibraryCategoryWork
+                        >(
+                          currentTable: table,
+                          referencedTable: $$DbWorksTableReferences
+                              ._dbLibraryCategoryWorksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$DbWorksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).dbLibraryCategoryWorksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.workId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (dbDownloadedWorksRefs)
                         await $_getPrefetchedData<
                           DbWork,
@@ -8887,6 +9570,7 @@ typedef $$DbWorksTableProcessedTableManager =
         bool dbBookmarksRefs,
         bool dbChapterWorksRefs,
         bool dbWorksLibraryRefs,
+        bool dbLibraryCategoryWorksRefs,
         bool dbDownloadedWorksRefs,
       })
     >;
@@ -15100,6 +15784,704 @@ typedef $$DbWorksLibraryTableProcessedTableManager =
       DbWorksLibraryData,
       PrefetchHooks Function({bool workId})
     >;
+typedef $$DbLibraryCategoriesTableCreateCompanionBuilder =
+    DbLibraryCategoriesCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<String?> icon,
+      Value<String> color,
+    });
+typedef $$DbLibraryCategoriesTableUpdateCompanionBuilder =
+    DbLibraryCategoriesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String?> icon,
+      Value<String> color,
+    });
+
+final class $$DbLibraryCategoriesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbLibraryCategoriesTable,
+          DbLibraryCategory
+        > {
+  $$DbLibraryCategoriesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $DbLibraryCategoryWorksTable,
+    List<DbLibraryCategoryWork>
+  >
+  _dbLibraryCategoryWorksRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.dbLibraryCategoryWorks,
+        aliasName: $_aliasNameGenerator(
+          db.dbLibraryCategories.id,
+          db.dbLibraryCategoryWorks.categoryId,
+        ),
+      );
+
+  $$DbLibraryCategoryWorksTableProcessedTableManager
+  get dbLibraryCategoryWorksRefs {
+    final manager = $$DbLibraryCategoryWorksTableTableManager(
+      $_db,
+      $_db.dbLibraryCategoryWorks,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _dbLibraryCategoryWorksRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$DbLibraryCategoriesTableFilterComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
+  $$DbLibraryCategoriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> dbLibraryCategoryWorksRefs(
+    Expression<bool> Function($$DbLibraryCategoryWorksTableFilterComposer f) f,
+  ) {
+    final $$DbLibraryCategoryWorksTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbLibraryCategoryWorks,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoryWorksTableFilterComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategoryWorks,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$DbLibraryCategoriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
+  $$DbLibraryCategoriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get icon => $composableBuilder(
+    column: $table.icon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DbLibraryCategoriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
+  $$DbLibraryCategoriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  Expression<T> dbLibraryCategoryWorksRefs<T extends Object>(
+    Expression<T> Function($$DbLibraryCategoryWorksTableAnnotationComposer a) f,
+  ) {
+    final $$DbLibraryCategoryWorksTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.dbLibraryCategoryWorks,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoryWorksTableAnnotationComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategoryWorks,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$DbLibraryCategoriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbLibraryCategoriesTable,
+          DbLibraryCategory,
+          $$DbLibraryCategoriesTableFilterComposer,
+          $$DbLibraryCategoriesTableOrderingComposer,
+          $$DbLibraryCategoriesTableAnnotationComposer,
+          $$DbLibraryCategoriesTableCreateCompanionBuilder,
+          $$DbLibraryCategoriesTableUpdateCompanionBuilder,
+          (DbLibraryCategory, $$DbLibraryCategoriesTableReferences),
+          DbLibraryCategory,
+          PrefetchHooks Function({bool dbLibraryCategoryWorksRefs})
+        > {
+  $$DbLibraryCategoriesTableTableManager(
+    _$AppDatabase db,
+    $DbLibraryCategoriesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbLibraryCategoriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DbLibraryCategoriesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DbLibraryCategoriesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+              }) => DbLibraryCategoriesCompanion(
+                id: id,
+                name: name,
+                icon: icon,
+                color: color,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> icon = const Value.absent(),
+                Value<String> color = const Value.absent(),
+              }) => DbLibraryCategoriesCompanion.insert(
+                id: id,
+                name: name,
+                icon: icon,
+                color: color,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbLibraryCategoriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({dbLibraryCategoryWorksRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (dbLibraryCategoryWorksRefs) db.dbLibraryCategoryWorks,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (dbLibraryCategoryWorksRefs)
+                    await $_getPrefetchedData<
+                      DbLibraryCategory,
+                      $DbLibraryCategoriesTable,
+                      DbLibraryCategoryWork
+                    >(
+                      currentTable: table,
+                      referencedTable: $$DbLibraryCategoriesTableReferences
+                          ._dbLibraryCategoryWorksRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$DbLibraryCategoriesTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).dbLibraryCategoryWorksRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.categoryId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbLibraryCategoriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbLibraryCategoriesTable,
+      DbLibraryCategory,
+      $$DbLibraryCategoriesTableFilterComposer,
+      $$DbLibraryCategoriesTableOrderingComposer,
+      $$DbLibraryCategoriesTableAnnotationComposer,
+      $$DbLibraryCategoriesTableCreateCompanionBuilder,
+      $$DbLibraryCategoriesTableUpdateCompanionBuilder,
+      (DbLibraryCategory, $$DbLibraryCategoriesTableReferences),
+      DbLibraryCategory,
+      PrefetchHooks Function({bool dbLibraryCategoryWorksRefs})
+    >;
+typedef $$DbLibraryCategoryWorksTableCreateCompanionBuilder =
+    DbLibraryCategoryWorksCompanion Function({
+      Value<int> id,
+      required int workId,
+      required int categoryId,
+    });
+typedef $$DbLibraryCategoryWorksTableUpdateCompanionBuilder =
+    DbLibraryCategoryWorksCompanion Function({
+      Value<int> id,
+      Value<int> workId,
+      Value<int> categoryId,
+    });
+
+final class $$DbLibraryCategoryWorksTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $DbLibraryCategoryWorksTable,
+          DbLibraryCategoryWork
+        > {
+  $$DbLibraryCategoryWorksTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
+    $_aliasNameGenerator(db.dbLibraryCategoryWorks.workId, db.dbWorks.id),
+  );
+
+  $$DbWorksTableProcessedTableManager get workId {
+    final $_column = $_itemColumn<int>('work_id')!;
+
+    final manager = $$DbWorksTableTableManager(
+      $_db,
+      $_db.dbWorks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DbLibraryCategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.dbLibraryCategories.createAlias(
+        $_aliasNameGenerator(
+          db.dbLibraryCategoryWorks.categoryId,
+          db.dbLibraryCategories.id,
+        ),
+      );
+
+  $$DbLibraryCategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$DbLibraryCategoriesTableTableManager(
+      $_db,
+      $_db.dbLibraryCategories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$DbLibraryCategoryWorksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
+  $$DbLibraryCategoryWorksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$DbWorksTableFilterComposer get workId {
+    final $$DbWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbLibraryCategoriesTableFilterComposer get categoryId {
+    final $$DbLibraryCategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.dbLibraryCategories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbLibraryCategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.dbLibraryCategories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$DbLibraryCategoryWorksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
+  $$DbLibraryCategoryWorksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$DbWorksTableOrderingComposer get workId {
+    final $$DbWorksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbLibraryCategoriesTableOrderingComposer get categoryId {
+    final $$DbLibraryCategoriesTableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.categoryId,
+          referencedTable: $db.dbLibraryCategories,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoriesTableOrderingComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategories,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$DbLibraryCategoryWorksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
+  $$DbLibraryCategoryWorksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  $$DbWorksTableAnnotationComposer get workId {
+    final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workId,
+      referencedTable: $db.dbWorks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbWorksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DbLibraryCategoriesTableAnnotationComposer get categoryId {
+    final $$DbLibraryCategoriesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.categoryId,
+          referencedTable: $db.dbLibraryCategories,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$DbLibraryCategoriesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.dbLibraryCategories,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$DbLibraryCategoryWorksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DbLibraryCategoryWorksTable,
+          DbLibraryCategoryWork,
+          $$DbLibraryCategoryWorksTableFilterComposer,
+          $$DbLibraryCategoryWorksTableOrderingComposer,
+          $$DbLibraryCategoryWorksTableAnnotationComposer,
+          $$DbLibraryCategoryWorksTableCreateCompanionBuilder,
+          $$DbLibraryCategoryWorksTableUpdateCompanionBuilder,
+          (DbLibraryCategoryWork, $$DbLibraryCategoryWorksTableReferences),
+          DbLibraryCategoryWork,
+          PrefetchHooks Function({bool workId, bool categoryId})
+        > {
+  $$DbLibraryCategoryWorksTableTableManager(
+    _$AppDatabase db,
+    $DbLibraryCategoryWorksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DbLibraryCategoryWorksTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$DbLibraryCategoryWorksTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$DbLibraryCategoryWorksTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> workId = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+              }) => DbLibraryCategoryWorksCompanion(
+                id: id,
+                workId: workId,
+                categoryId: categoryId,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int workId,
+                required int categoryId,
+              }) => DbLibraryCategoryWorksCompanion.insert(
+                id: id,
+                workId: workId,
+                categoryId: categoryId,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$DbLibraryCategoryWorksTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workId = false, categoryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (workId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.workId,
+                                referencedTable:
+                                    $$DbLibraryCategoryWorksTableReferences
+                                        ._workIdTable(db),
+                                referencedColumn:
+                                    $$DbLibraryCategoryWorksTableReferences
+                                        ._workIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (categoryId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.categoryId,
+                                referencedTable:
+                                    $$DbLibraryCategoryWorksTableReferences
+                                        ._categoryIdTable(db),
+                                referencedColumn:
+                                    $$DbLibraryCategoryWorksTableReferences
+                                        ._categoryIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$DbLibraryCategoryWorksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DbLibraryCategoryWorksTable,
+      DbLibraryCategoryWork,
+      $$DbLibraryCategoryWorksTableFilterComposer,
+      $$DbLibraryCategoryWorksTableOrderingComposer,
+      $$DbLibraryCategoryWorksTableAnnotationComposer,
+      $$DbLibraryCategoryWorksTableCreateCompanionBuilder,
+      $$DbLibraryCategoryWorksTableUpdateCompanionBuilder,
+      (DbLibraryCategoryWork, $$DbLibraryCategoryWorksTableReferences),
+      DbLibraryCategoryWork,
+      PrefetchHooks Function({bool workId, bool categoryId})
+    >;
 typedef $$DbDownloadedWorksTableCreateCompanionBuilder =
     DbDownloadedWorksCompanion Function({
       Value<int> id,
@@ -15782,6 +17164,13 @@ class $AppDatabaseManager {
       $$DbChapterWorksTableTableManager(_db, _db.dbChapterWorks);
   $$DbWorksLibraryTableTableManager get dbWorksLibrary =>
       $$DbWorksLibraryTableTableManager(_db, _db.dbWorksLibrary);
+  $$DbLibraryCategoriesTableTableManager get dbLibraryCategories =>
+      $$DbLibraryCategoriesTableTableManager(_db, _db.dbLibraryCategories);
+  $$DbLibraryCategoryWorksTableTableManager get dbLibraryCategoryWorks =>
+      $$DbLibraryCategoryWorksTableTableManager(
+        _db,
+        _db.dbLibraryCategoryWorks,
+      );
   $$DbDownloadedWorksTableTableManager get dbDownloadedWorks =>
       $$DbDownloadedWorksTableTableManager(_db, _db.dbDownloadedWorks);
   $$DbDownloadedChaptersTableTableManager get dbDownloadedChapters =>

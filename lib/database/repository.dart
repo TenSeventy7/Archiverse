@@ -6,6 +6,7 @@ export 'package:archiverse/database/repository/repository_read_histories.dart';
 export 'package:archiverse/database/repository/repository_series.dart';
 export 'package:archiverse/database/repository/repository_tags.dart';
 export 'package:archiverse/database/repository/repository_works.dart';
+export 'package:archiverse/database/repository/repository_library.dart';
 
 class DataRepository {
   static final DataRepository _instance = DataRepository._internal();

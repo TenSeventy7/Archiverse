@@ -19,16 +19,9 @@ class DbReadHistories extends Table {
   @override
   Set<Column> get primaryKey => {id};
 
-  // Add indexes optimized for your date-based offset queries
+  // Add unique constraint on workId to prevent duplicates
   @override
-  List<String> get customConstraints => [
-    // Primary index for date-based queries (most recent first)
-    'CREATE INDEX IF NOT EXISTS idx_read_histories_timestamp_desc ON read_histories(timestamp DESC)',
-    // Composite index for per-work date queries
-    'CREATE INDEX IF NOT EXISTS idx_read_histories_work_timestamp ON read_histories(work_id, timestamp DESC)',
-    // Index for filtering by completion status with date
-    'CREATE INDEX IF NOT EXISTS idx_read_histories_completion_timestamp ON read_histories(completion, timestamp DESC)',
-    // Index for chapter-specific queries
-    'CREATE INDEX IF NOT EXISTS idx_read_histories_chapter ON read_histories(chapter_id) WHERE chapter_id IS NOT NULL',
+  List<Set<Column>>? get uniqueKeys => [
+    {workId},
   ];
 }

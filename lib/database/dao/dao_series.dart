@@ -4,6 +4,8 @@ import 'package:archiverse/models/work.dart' as work;
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
+part 'dao_series.g.dart';
+
 @DriftAccessor(tables: [DbSeries, DbWorkSeries])
 class SeriesDao extends BaseDao<DbSeries, DbSery, Series> {
   SeriesDao(super.db);

@@ -3,6 +3,8 @@ import 'package:archiverse/models/pseud.dart';
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
+part 'dao_authors.g.dart';
+
 @DriftAccessor(tables: [DbAuthors, DbWorkAuthors])
 class AuthorsDao extends BaseDao<DbAuthors, DbAuthor, Pseud> {
   AuthorsDao(super.db);

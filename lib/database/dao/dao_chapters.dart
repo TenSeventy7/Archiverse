@@ -3,6 +3,8 @@ import 'package:archiverse/models/chapter.dart';
 import 'package:drift/drift.dart';
 import 'dao_base.dart';
 
+part 'dao_chapters.g.dart';
+
 @DriftAccessor(tables: [DbChapters, DbChapterWorks])
 class ChaptersDao extends BaseDao<DbChapters, DbChapter, Chapter> {
   ChaptersDao(super.db);
