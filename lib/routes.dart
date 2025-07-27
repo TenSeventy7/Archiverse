@@ -26,6 +26,8 @@ import 'package:archiverse/views/lists/activity_author_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_author_series.dart';
 import 'package:archiverse/views/lists/activity_author_works.dart';
 import 'package:archiverse/views/lists/activity_folder_works.dart';
+import 'package:archiverse/views/lists/activity_library_folders.dart';
+import 'package:archiverse/views/lists/activity_library_works.dart';
 import 'package:archiverse/views/lists/activity_series_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_bookmarks.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
@@ -74,6 +76,9 @@ class AppRoutes {
     SignInActivity.routeName: (context) => const SignInActivity(),
     BackupRestoreActivity.routeName: (context) => const BackupRestoreActivity(),
     OnboardingActivity.routeName: (context) => const OnboardingActivity(),
+    LibraryWorksActivity.routeName: (context) => const LibraryWorksActivity(),
+    LibraryFoldersActivity.routeName: (context) =>
+        const LibraryFoldersActivity(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
