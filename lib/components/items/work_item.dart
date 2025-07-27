@@ -2,6 +2,7 @@ import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/utils.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,14 @@ class WorkItem extends StatelessWidget {
   final Work work;
   final bool small;
   final bool mini;
-  const WorkItem({super.key, required this.work}) : small = false, mini = false;
-  const WorkItem.small({super.key, required this.work})
+  final LibraryCategory? category;
+  const WorkItem({super.key, required this.work, this.category})
+    : small = false,
+      mini = false;
+  const WorkItem.small({super.key, required this.work, this.category})
     : small = true,
       mini = false;
-  const WorkItem.mini({super.key, required this.work})
+  const WorkItem.mini({super.key, required this.work, this.category})
     : small = true,
       mini = true;
 
@@ -81,8 +85,11 @@ class WorkItem extends StatelessWidget {
               Skeleton.leaf(
                 child: IconButton.filledTonal(
                   visualDensity: VisualDensity.compact,
-                  onPressed: () =>
-                      WorkOptionsDialog.showSheet(context, work: work),
+                  onPressed: () => WorkOptionsDialog.showSheet(
+                    context,
+                    work: work,
+                    category: category,
+                  ),
                   icon: Icon(
                     TablerIcons.dots_vertical,
                     size: 18.0,

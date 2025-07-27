@@ -6,21 +6,37 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
+import 'package:archiverse/dialogs/add_to_category_dialog.dart';
+import 'package:archiverse/dialogs/edit_category_dialog.dart';
 import 'package:archiverse/dialogs/reader_settings_dialog.dart';
+import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
+import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_reader.dart';
-import 'package:archiverse/views/activity_settings.dart';
 import 'package:archiverse/views/activity_work.dart';
+import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
 
 class _WorkOptionsDialog extends StatefulWidget {
   final Work work;
   final bool isReader; // Flag to indicate if this is for the reader activity
-  const _WorkOptionsDialog({required this.work, this.isReader = false});
+  final BuildContext context;
+  final LibraryCategory? category;
+  final VoidCallback? onWorkRemovedFromFolder;
+
+  const _WorkOptionsDialog({
+    required this.work,
+    this.isReader = false,
+    required this.context,
+    this.category,
+    this.onWorkRemovedFromFolder,
+  });
 
   @override
   State<_WorkOptionsDialog> createState() => _WorkOptionsDialogState();
@@ -30,10 +46,39 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
   ReadHistory? _readHistory;
   bool _isLoadingHistory = true;
 
+  bool _isLoadingLibraryStatus = true;
+  bool _isInLibrary = false;
+  bool _isInCategory = false;
+  late Future<List<LibraryCategory>> future;
+
   @override
   void initState() {
     super.initState();
     _loadReadHistory();
+    _checkLibraryStatus();
+  }
+
+  Future<void> _checkLibraryStatus() async {
+    try {
+      final isInLibrary = await AppApi().isWorkInLibrary(widget.work);
+      final isInCategory = widget.category != null
+          ? await AppApi().isWorkInCategory(widget.work, widget.category!)
+          : false;
+
+      if (mounted) {
+        setState(() {
+          _isInLibrary = isInLibrary;
+          _isInCategory = isInCategory;
+          _isLoadingLibraryStatus = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingLibraryStatus = false;
+        });
+      }
+    }
   }
 
   Future<void> _loadReadHistory() async {
@@ -66,13 +111,12 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
         _buildWorkHeader(context),
 
         // Primary actions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainer,
-            margin: const EdgeInsets.only(bottom: 12.0),
-            clipBehavior: Clip.antiAlias,
+        Container(
+          margin: const EdgeInsets.only(bottom: 12.0, left: 16.0, right: 16.0),
+          child: Material(
+            borderRadius: BorderRadius.circular(16.0),
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent, // or your desired color
             child: Column(
               children: [
                 if (!widget.isReader) ...[
@@ -98,15 +142,6 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
                 _buildActionTile(
                   context,
-                  icon: TablerIcons.plus,
-                  title: "Add to Library",
-                  onTap: () {},
-                ),
-
-                _buildDivider(),
-
-                _buildActionTile(
-                  context,
                   icon: TablerIcons.download,
                   title: context.strings.work_download,
                   onTap: () {},
@@ -116,14 +151,54 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
           ),
         ),
 
+        // Library options
+        Container(
+          margin: const EdgeInsets.only(bottom: 12.0, left: 16.0, right: 16.0),
+          child: Material(
+            borderRadius: BorderRadius.circular(16.0),
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent, // or your desired color
+            child: Column(
+              children: [
+                _buildAddToLibraryAction(context),
+                if (_isInLibrary && widget.category == null) ...[
+                  _buildDivider(),
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.folder_plus,
+                    title: "Add to folder",
+                    onTap: () {
+                      context.navigator.pop();
+                      _showAddToCategoryDialog(widget.context);
+                    },
+                  ),
+                ],
+                if (_isInLibrary &&
+                    widget.category != null &&
+                    _isInCategory) ...[
+                  _buildDivider(),
+                  _buildActionTile(
+                    context,
+                    icon: TablerIcons.folder_minus,
+                    title: "Remove from folder",
+                    onTap: () {
+                      context.navigator.pop();
+                      _removeFromCategory(context, widget.category!);
+                    },
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+
         // Secondary actions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: Card(
-            elevation: 0,
-            color: colorScheme.surfaceContainer,
-            margin: const EdgeInsets.symmetric(vertical: 4.0),
-            clipBehavior: Clip.antiAlias,
+        Container(
+          margin: const EdgeInsets.only(bottom: 12.0, left: 16.0, right: 16.0),
+          child: Material(
+            borderRadius: BorderRadius.circular(16.0),
+            clipBehavior: Clip.hardEdge,
+            color: Colors.transparent, // or your desired color
             child: Column(
               children: [
                 if (widget.isReader) ...[
@@ -186,13 +261,16 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
         if (widget.isReader) ...[
           const SizedBox(height: 8.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Card(
-              elevation: 0,
-              color: colorScheme.surfaceContainer,
-              margin: const EdgeInsets.symmetric(vertical: 4.0),
-              clipBehavior: Clip.antiAlias,
+          Container(
+            margin: const EdgeInsets.only(
+              bottom: 12.0,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Material(
+              borderRadius: BorderRadius.circular(16.0),
+              clipBehavior: Clip.hardEdge,
+              color: Colors.transparent, // or your desired color
               child: Column(
                 children: [
                   _buildActionTile(
@@ -212,6 +290,97 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
         SizedBox(height: context.screenPadding.bottom + context.commonPadding),
       ],
+    );
+  }
+
+  Future<void> _removeFromCategory(
+    BuildContext context,
+    LibraryCategory category,
+  ) async {
+    try {
+      if (await AppApi().isWorkInCategory(widget.work, category)) {
+        context.read<LibraryProvider>().removeWorkFromCategory(
+          widget.work,
+          category,
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "${widget.work.title} removed from ${category.name}",
+              ),
+            ),
+          );
+        }
+
+        if (widget.onWorkRemovedFromFolder != null) {
+          widget.onWorkRemovedFromFolder!();
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${widget.work.title} is not in ${category.name}"),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to remove work from category")),
+        );
+      }
+    }
+  }
+
+  void _showAddToCategoryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AddToCategoryDialog(work: widget.work),
+    );
+  }
+
+  Widget _buildAddToLibraryAction(BuildContext context) {
+    if (_isLoadingLibraryStatus) {
+      return _buildActionTile(
+        context,
+        icon: TablerIcons.library_plus,
+        title: "Add to library",
+        isHighlighted: true,
+        isLoading: true,
+        onTap: () {},
+      );
+    }
+
+    return _buildActionTile(
+      context,
+      icon: !_isInLibrary ? TablerIcons.plus : TablerIcons.minus,
+      title: !_isInLibrary ? "Add to library" : "Remove from library",
+      onTap: () async {
+        if (_isInLibrary) {
+          // Remove from library
+          await AppApi().removeWorkFromLibrary(widget.work);
+          widget.context.navigator.pop();
+          if (widget.context.mounted) {
+            widget.context.read<LibraryProvider>().refreshAll();
+            ScaffoldMessenger.of(widget.context).showSnackBar(
+              SnackBar(
+                content: Text("${widget.work.title} removed from library"),
+              ),
+            );
+          }
+        } else {
+          // Add to library
+          await AppApi().addWorkToLibrary(widget.work);
+          if (widget.context.mounted) {
+            ScaffoldMessenger.of(widget.context).showSnackBar(
+              SnackBar(content: Text("${widget.work.title} added to library")),
+            );
+          }
+          setState(() {
+            _isInLibrary = true;
+          });
+        }
+      },
     );
   }
 
@@ -271,7 +440,6 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      color: colorScheme.surface,
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -354,13 +522,17 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
     return ListTile(
       onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      tileColor: isHighlighted
+          ? colorScheme.primaryContainer
+          : colorScheme.surfaceContainerLow,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       leading: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
           color: isHighlighted
-              ? colorScheme.primaryContainer
+              ? colorScheme.onPrimaryContainer
               : colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
         ),
@@ -370,7 +542,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                 padding: EdgeInsets.all(8.0),
                 strokeWidth: 3.0,
                 color: isHighlighted
-                    ? colorScheme.onPrimaryContainer
+                    ? colorScheme.primaryContainer
                     : colorScheme.onSurface,
               )
             : textIcon != null
@@ -379,7 +551,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                 style: context.textTheme.titleMedium
                     ?.copyWith(
                       color: isHighlighted
-                          ? colorScheme.onPrimaryContainer
+                          ? colorScheme.primaryContainer
                           : colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
                     )
@@ -389,7 +561,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                 icon,
                 size: 20,
                 color: isHighlighted
-                    ? colorScheme.onPrimaryContainer
+                    ? colorScheme.primaryContainer
                     : colorScheme.onSurface,
               ),
       ),
@@ -407,10 +579,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
   }
 
   Widget _buildDivider() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 72),
-      child: Divider(height: 1),
-    );
+    return const SizedBox(height: 4.0);
   }
 
   Row _buildWorkStatistics() {
@@ -439,8 +608,10 @@ class WorkOptionsDialog {
   static void showSheet(
     BuildContext context, {
     required Work work,
+    LibraryCategory? category,
     bool isReader = false,
     AnimationController? bottomSheetAnimator,
+    VoidCallback? onWorkRemovedFromFolder,
   }) {
     showModalBottomSheet<void>(
       context: Navigator.of(context, rootNavigator: true).context,
@@ -451,8 +622,13 @@ class WorkOptionsDialog {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (BuildContext context) =>
-          _WorkOptionsDialog(work: work, isReader: isReader),
+      builder: (BuildContext context) => _WorkOptionsDialog(
+        work: work,
+        isReader: isReader,
+        context: context,
+        category: category,
+        onWorkRemovedFromFolder: onWorkRemovedFromFolder,
+      ),
     );
   }
 }
