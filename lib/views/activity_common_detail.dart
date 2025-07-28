@@ -94,7 +94,7 @@ abstract class CommonDetailActivityState<T>
   void _updateAppBarOpacity() {
     // Adjust these values as needed for your design
     final double fadeStart = 0.0;
-    final double fadeEnd = (getExpandedHeight(context) ?? 200) - kToolbarHeight;
+    final double fadeEnd = (getExpandedHeight(context) ?? 200) - 64.0;
     final double offset = _scrollController.hasClients
         ? _scrollController.offset
         : 0.0;
@@ -122,7 +122,7 @@ abstract class CommonDetailActivityState<T>
       // Error state uses a simple app bar
       appBar: state == LoadingState.ERROR
           ? AppBar(
-              toolbarHeight: kToolbarHeight + 8.0,
+              toolbarHeight: 64.0 + 8.0,
               leading: IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(
@@ -269,7 +269,10 @@ abstract class CommonDetailActivityState<T>
         _appBarOpacity,
       ),
       shape: const InverseRoundedRectangleBorder(radius: 24.0),
-      collapsedHeight: ExpressiveSliverAppBar.kToolbarHeight + 24.0,
+      collapsedHeight:
+          ExpressiveSliverAppBar.kToolbarHeight +
+          24.0 +
+          context.screenPadding.top,
       expandedHeight: getExpandedHeight(context),
       actions: buildAppBarActions(context),
       leading: IconButton(

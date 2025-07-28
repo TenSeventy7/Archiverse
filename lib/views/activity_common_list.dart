@@ -35,6 +35,10 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
   double? getExpandedHeight(BuildContext context) => null;
   Widget? buildSeparator(BuildContext context, int index) =>
       const SizedBox(height: 4.0);
+  Widget buildPlaceholder(BuildContext context) => const ItemPlaceholder(
+    message: 'Looks empty for now',
+    icon: TablerIcons.template,
+  );
   bool get isSelectable => true;
 
   final ScrollController _scrollController = ScrollController();
@@ -152,7 +156,10 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
           _appBarOpacity,
         ),
         shape: const InverseRoundedRectangleBorder(radius: 24.0),
-        collapsedHeight: ExpressiveSliverAppBar.kToolbarHeight + 24.0,
+        collapsedHeight:
+            ExpressiveSliverAppBar.kToolbarHeight +
+            24.0 +
+            context.screenPadding.top,
         expandedHeight: expandedHeight,
         actions: buildAppBarActions(context),
         leading: IconButton(
@@ -237,12 +244,8 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
                 padding: EdgeInsets.all(16.0),
                 child: Center(child: CircularProgressIndicator()),
               ),
-              noItemsFoundIndicatorBuilder: (context) => const Center(
-                child: ItemPlaceholder(
-                  message: 'Looks empty for now',
-                  icon: TablerIcons.template,
-                ),
-              ),
+              noItemsFoundIndicatorBuilder: (context) =>
+                  Center(child: buildPlaceholder(context)),
             ),
             separatorBuilder: (context, index) => separator,
           );
@@ -266,12 +269,8 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
                 padding: EdgeInsets.all(16.0),
                 child: Center(child: CircularProgressIndicator()),
               ),
-              noItemsFoundIndicatorBuilder: (context) => const Center(
-                child: ItemPlaceholder(
-                  message: 'Looks empty for now',
-                  icon: TablerIcons.template,
-                ),
-              ),
+              noItemsFoundIndicatorBuilder: (context) =>
+                  Center(child: buildPlaceholder(context)),
             ),
           );
         }
