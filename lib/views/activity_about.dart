@@ -70,10 +70,10 @@ class _AboutActivityState extends State<AboutActivity> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: context.screenPadding.top),
-                      const CircleAvatar(
-                        radius: 50,
-                        // backgroundImage: AssetImage('assets/images/logo.png'),
-                      ),
+                      // const CircleAvatar(
+                      //   radius: 50,
+                      //   // backgroundImage: AssetImage('assets/images/logo.png'),
+                      // ),
                       const SizedBox(height: 10),
                       Text(
                         appName,
@@ -104,8 +104,8 @@ class _AboutActivityState extends State<AboutActivity> {
               padding: context.horizontalPadding,
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _buildAppInfo(),
-                  SizedBox(height: context.commonPaddingHalf),
+                  // _buildAppInfo(),
+                  // SizedBox(height: context.commonPaddingHalf),
                   _buildDeveloperInfo(),
                   SizedBox(height: context.commonPaddingHalf),
                   _buildLicenseInfo(),
