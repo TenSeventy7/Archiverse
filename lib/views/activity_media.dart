@@ -148,6 +148,7 @@ class _MediaActivityState extends State<MediaActivity> {
     return ExpressiveScaffold(
       appBar: (controller) => ExpressiveAppBar(
         controller: controller,
+        unelevatedColor: context.colorScheme.surfaceContainer,
         title: _isSearching
             ? TextField(
                 controller: _searchController,
