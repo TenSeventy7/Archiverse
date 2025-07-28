@@ -141,16 +141,17 @@ class _TypographySettingsActivityState extends State<TextFontsSettingsActivity>
         children: [
           Expanded(
             child: CustomScrollView(
-              controller: controller,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.commonPadding,
+                  child: SingleChildScrollView(
+                    controller: controller,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.commonPadding,
+                      ),
+                      child: const ReaderPreview(),
                     ),
-                    child: const ReaderPreview(),
                   ),
                 ),
               ],
