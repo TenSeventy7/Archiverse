@@ -1,14 +1,10 @@
 import 'package:drift/drift.dart';
 import 'migration_base.dart';
 import 'migration_1.dart';
-import 'migration_2.dart';
 
 /// Manages database migrations
 class MigrationManager {
-  static final List<DatabaseMigration> _migrations = [
-    Migration1(),
-    Migration2(),
-  ];
+  static final List<DatabaseMigration> _migrations = [Migration1()];
 
   /// Execute all migrations up to the target version
   static Future<void> runMigrations(

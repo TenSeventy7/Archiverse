@@ -27,12 +27,6 @@ class DbLibraryCategories extends Table {
   TextColumn get icon => text().nullable()(); // Optional icon for the category
   TextColumn get color =>
       text().withDefault(const Constant('blue'))(); // Default color
-
-  // Add unique constraint on name to prevent duplicates
-  @override
-  List<Set<Column>>? get uniqueKeys => [
-    {name},
-  ];
 }
 
 class DbLibraryCategoryWorks extends Table {
