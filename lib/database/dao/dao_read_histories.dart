@@ -41,7 +41,10 @@ class ReadHistoriesDao
   Future<void> insertOrUpdate(ReadHistory model) async {
     await into(table).insert(
       toCompanion(model),
-      onConflict: DoUpdate((old) => toCompanion(model)),
+      onConflict: DoUpdate(
+        (old) => toCompanion(model),
+        target: [table.asDslTable.workId],
+      ),
     );
   }
 
