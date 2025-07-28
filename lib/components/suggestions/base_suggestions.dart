@@ -33,7 +33,17 @@ abstract class BaseSuggestions<T, C extends Widget> extends StatelessWidget {
           spacing: 4.0,
           children: [
             header ?? const SizedBox(),
-            ...trimmed.map((item) => buildCard(item, elevation ?? 1)),
+            Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16.0),
+              clipBehavior: Clip.hardEdge,
+              child: Column(
+                spacing: 4.0,
+                children: trimmed
+                    .map((item) => buildCard(item, elevation ?? 0.0))
+                    .toList(),
+              ),
+            ),
             footer ?? const SizedBox(),
           ],
         ),

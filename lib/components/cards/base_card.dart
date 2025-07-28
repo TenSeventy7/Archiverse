@@ -13,16 +13,18 @@ abstract class BaseCard<T> extends StatelessWidget {
     required this.item,
     this.elevation,
     this.contentPadding = const EdgeInsets.all(16.0),
-    this.borderRadius = const BorderRadius.all(Radius.circular(16.0)),
+    this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.isSelectable = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card.outlined(
-      elevation: elevation ?? 0,
-      clipBehavior: Clip.antiAlias,
+    return Card.filled(
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(borderRadius: borderRadius),
       color: context.colorScheme.surfaceContainerLowest,
+      elevation: elevation ?? 0.0,
+      margin: EdgeInsets.zero,
       child: isSelectable
           ? InkWell(
               borderRadius: borderRadius,

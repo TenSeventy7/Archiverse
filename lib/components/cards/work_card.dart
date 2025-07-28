@@ -16,12 +16,12 @@ class WorkCard extends BaseCard<Work> {
         ),
       );
 
-  @override
-  Widget buildHeader(BuildContext context) {
-    return Skeleton.shade(
-      child: Container(height: 8, color: _getRatingColor(context, item)),
-    );
-  }
+  // @override
+  // Widget buildHeader(BuildContext context) {
+  //   return Skeleton.shade(
+  //     child: Container(height: 8, color: _getRatingColor(context, item)),
+  //   );
+  // }
 
   @override
   Widget buildContent(BuildContext context) {
