@@ -1,21 +1,17 @@
-import 'package:archiverse/api.dart';
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/folder_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
+import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/dialogs/edit_category_dialog.dart';
-import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/views/lists/activity_library_folders.dart';
 import 'package:archiverse/views/lists/activity_library_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class LibrarySavedFragment extends StatefulWidget {
   const LibrarySavedFragment({super.key, this.controller});
@@ -97,6 +93,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
                   );
                 },
               ),
+              SizedBox(height: context.commonPaddingDouble),
             ],
           ),
         ),
@@ -105,17 +102,11 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
   }
 
   Widget _buildLoadingList(int count) {
-    return Skeletonizer(
-      enabled: true,
-      child: Column(
-        children: List.generate(count, (index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
-            child: WorkCard(
-              work: Fillers.work,
-            ), // Use placeholder while loading
-          );
-        }),
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
@@ -133,14 +124,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
       );
     }
 
-    return Column(
-      children: works.map((work) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: WorkCard(work: work),
-        );
-      }).toList(),
-    );
+    return WorkSuggestions(works: works, loading: false);
   }
 
   Widget _buildCollectionsList(LibraryProvider provider) {

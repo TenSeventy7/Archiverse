@@ -1,6 +1,7 @@
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
+import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
@@ -65,18 +66,13 @@ class _LibraryAllFragmentState extends State<LibraryAllFragment> {
 
                     return _buildWorksList(
                       provider.recentlyAddedWorks.take(4).toList(),
+                      false,
                     );
                   },
                 ),
 
                 // Most Read Section
-                TextHeader.medium(
-                  title: "Most Read",
-                  actionText: Text("View all"),
-                  onTap: () {
-                    // Navigate to most read works
-                  },
-                ),
+                TextHeader.medium(title: "Most Read"),
 
                 // Most read works
                 Consumer<LibraryProvider>(
@@ -86,7 +82,8 @@ class _LibraryAllFragmentState extends State<LibraryAllFragment> {
                     }
 
                     return _buildWorksList(
-                      provider.mostReadWorks.take(2).toList(),
+                      provider.mostReadWorks.take(5).toList(),
+                      true,
                     );
                   },
                 ),
@@ -100,37 +97,31 @@ class _LibraryAllFragmentState extends State<LibraryAllFragment> {
     );
   }
 
-  Widget _buildWorksList(List<Work> works) {
+  Widget _buildWorksList(List<Work> works, bool history) {
     if (works.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         child: Center(
           child: ItemPlaceholder.small(
-            icon: TablerIcons.book,
-            subtitle: "Add works to your library to see them here",
+            icon: history ? TablerIcons.history : TablerIcons.book,
+            subtitle: history
+                ? "Start reading some works to see your history here"
+                : "Add works to your library to see them here",
           ),
         ),
       );
     }
 
-    return Column(
-      children: works.map((work) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: WorkCard(work: work),
-        );
-      }).toList(),
-    );
+    return WorkSuggestions(works: works, loading: false);
   }
 
   Widget _buildLoadingList(int count) {
-    return Column(
-      children: List.generate(count, (index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: WorkCard(work: Fillers.work), // Use placeholder while loading
-        );
-      }),
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).colorScheme.primary,
+        ),
+      ),
     );
   }
 }

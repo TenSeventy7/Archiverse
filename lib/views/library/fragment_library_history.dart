@@ -110,22 +110,26 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
 
     return Column(
       children: [
-        TextHeader.small(title: AppUtils.formatDateTight(context, date)),
+        TextHeader.medium(title: AppUtils.formatDateTight(context, date)),
 
-        Padding(
-          padding: context.horizontalPadding,
+        Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0)),
+          clipBehavior: Clip.hardEdge,
+          margin: context.horizontalPadding,
           child: ListView.separated(
             shrinkWrap: true,
-            padding: EdgeInsets.only(bottom: context.commonPadding),
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: history.length,
             itemBuilder: (context, index) {
               ReadHistory readHistory = history[index];
               return WorkCard(work: readHistory.work);
             },
-            separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+            separatorBuilder: (context, index) => const SizedBox(height: 4.0),
           ),
         ),
+
+        SizedBox(height: context.commonPadding),
       ],
     );
   }
