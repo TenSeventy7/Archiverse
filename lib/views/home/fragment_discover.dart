@@ -1,6 +1,4 @@
-import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/discover_header.dart';
-import 'package:archiverse/components/expressive/nested_scroll_view.dart';
 import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
@@ -101,27 +99,6 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
     );
   }
 
-  Widget _buildScrollView(ScrollController controller, BuildContext context) {
-    return ExpressiveNestedScrollView(
-      controller: controller,
-      appBarHeight: kToolbarHeight + 48.0,
-      headerSliverBuilder:
-          (
-            BuildContext context,
-            bool innerBoxIsScrolled,
-            ScrollController controller,
-          ) {
-            return <Widget>[
-              DiscoverHeader(
-                controller: controller,
-                onSearchTap: () =>
-                    context.navigator.pushNamed(SearchActivity.routeName),
-              ),
-            ];
-          },
-    );
-  }
-
   PagingListener<int, BaseRecommendation<dynamic>> _buildRecommendations(
     ScrollController controller,
   ) {
@@ -192,21 +169,23 @@ class _DiscoverFragmentState extends State<DiscoverFragment> {
   }
 
   Widget _buildNoItemsIndicator(ScrollController controller) {
-    return SingleChildScrollView(
+    return ListView(
       controller: controller,
-      physics: const BouncingScrollPhysics(),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.6,
-        child: Padding(
-          padding: context.horizontalPadding,
-          child: ItemPlaceholder.medium(
-            icon: TablerIcons.telescope,
-            message: 'Welcome to Archiverse!',
-            subtitle:
-                'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Padding(
+            padding: context.horizontalPadding,
+            child: ItemPlaceholder.medium(
+              icon: TablerIcons.telescope,
+              message: 'Welcome to Archiverse!',
+              subtitle:
+                  'Discover new works and authors by exploring recommendations tailored just for you. Start reading to see personalized suggestions here.',
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
