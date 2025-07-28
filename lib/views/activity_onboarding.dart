@@ -1,7 +1,12 @@
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/preferences.dart';
+import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/views/activity_common.dart';
+import 'package:archiverse/views/activity_home.dart';
+import 'package:archiverse/views/activity_signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingActivity extends CommonActivity {
   static const String routeName = '/onboarding';
@@ -144,33 +149,6 @@ class _OnboardingActivityState extends State<OnboardingActivity>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // App Icon/Logo
-          Container(
-            width: context.vw(0.3),
-            height: context.vw(0.3),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFF77062), Color(0xFFFE5196)],
-                stops: [0.2, 2.0],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ),
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: colorScheme.primary.withOpacity(0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Icon(
-              TablerIcons.brand_ao3,
-              size: 72,
-              color: colorScheme.onPrimary,
-            ),
-          ),
-
           const SizedBox(height: 24),
 
           // Tagline
@@ -196,7 +174,11 @@ class _OnboardingActivityState extends State<OnboardingActivity>
         children: [
           FilledButton.icon(
             onPressed: () {
-              // Navigate to login/signup
+              context.read<PreferencesProvider>().setBool(
+                Preferences.onboardingShown,
+                true,
+              );
+              context.navigator.pushNamed(SignInActivity.routeName);
             },
             style: FilledButton.styleFrom(
               minimumSize: const Size(double.infinity, 56),
@@ -218,7 +200,14 @@ class _OnboardingActivityState extends State<OnboardingActivity>
 
           FilledButton.tonalIcon(
             onPressed: () {
-              // Navigate to browse without account
+              context.read<PreferencesProvider>().setBool(
+                Preferences.onboardingShown,
+                true,
+              );
+              context.navigator.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const HomeActivity()),
+                (route) => false,
+              );
             },
             style: FilledButton.styleFrom(
               minimumSize: const Size(double.infinity, 56),
