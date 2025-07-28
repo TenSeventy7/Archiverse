@@ -137,15 +137,6 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                     },
                   ),
                 ],
-
-                _buildDivider(),
-
-                _buildActionTile(
-                  context,
-                  icon: TablerIcons.download,
-                  title: context.strings.work_download,
-                  onTap: () {},
-                ),
               ],
             ),
           ),
@@ -187,6 +178,15 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                     },
                   ),
                 ],
+
+                _buildDivider(),
+
+                _buildActionTile(
+                  context,
+                  icon: TablerIcons.download,
+                  title: context.strings.work_download,
+                  onTap: () {},
+                ),
               ],
             ),
           ),
