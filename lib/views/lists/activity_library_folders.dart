@@ -1,5 +1,6 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/item_placeholder.dart';
+import 'package:archiverse/dialogs/edit_category_dialog.dart';
 import 'package:archiverse/dialogs/library_folder_options.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -7,6 +8,7 @@ import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/views/activity_common_list.dart';
 import 'package:archiverse/views/lists/activity_folder_works.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
 class LibraryFoldersActivity extends CommonListActivity<LibraryCategory> {
   const LibraryFoldersActivity({super.key});
@@ -27,6 +29,18 @@ class FolderWorksActivityState
   EdgeInsets get padding => super.padding.copyWith(top: 0, bottom: 0);
 
   @override
+  List<Widget> buildAppBarActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.add),
+        onPressed: () {
+          _showAddCategoryDialog();
+        },
+      ),
+    ];
+  }
+
+  @override
   Widget buildPlaceholder(BuildContext context) {
     return ItemPlaceholder(
       message: 'No folders',
@@ -35,6 +49,19 @@ class FolderWorksActivityState
     );
   }
 
+  void _showAddCategoryDialog() async {
+    final result = await EditCategoryDialog.show(context);
+    if (result == true) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Folder created successfully')),
+        );
+
+        // Refresh the list to show the new category
+        refreshList();
+      }
+    }
+  }
 
   @override
   Widget buildItemWidget(
