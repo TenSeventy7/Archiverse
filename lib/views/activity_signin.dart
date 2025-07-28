@@ -1,3 +1,5 @@
+import 'package:archiverse/components/expressive/app_bar.dart';
+import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/views/activity_common.dart';
@@ -32,266 +34,263 @@ class _SignInActivityState extends State<SignInActivity> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 44 - context.screenPadding.bottom),
+    return ExpressiveScaffold(
+      appBar: (controller) => ExpressiveAppBar(controller: controller),
+      body: (controller) => SingleChildScrollView(
+        controller: controller,
+        padding: const EdgeInsets.all(24.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 44 - context.screenPadding.bottom),
 
-                // Header Section
-                Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Icon(
-                          TablerIcons.brand_ao3,
-                          size: 48,
-                          color: colorScheme.onPrimaryContainer,
-                        ),
+              // Header Section
+              Center(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Sign in',
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                        ),
+                      child: Icon(
+                        TablerIcons.brand_ao3,
+                        size: 48,
+                        color: colorScheme.onPrimaryContainer,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Access more features in Archiverse and see more content by signing in with your Archive of Our Own account.',
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Sign in',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Access more features in Archiverse and see more content by signing in with your Archive of Our Own account.',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: 48),
+              const SizedBox(height: 48),
 
-                // Email Field
-                TextFormField(
-                  controller: _emailController,
-                  enabled: !_isLoading,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email address',
-                    prefixIcon: const Icon(TablerIcons.mail),
-                    filled: true,
-                    fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: colorScheme.outline.withOpacity(0.3),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: colorScheme.primary,
-                        width: 2,
-                      ),
+              // Email Field
+              TextFormField(
+                controller: _emailController,
+                enabled: !_isLoading,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  hintText: 'Enter your email address',
+                  prefixIcon: const Icon(TablerIcons.mail),
+                  filled: true,
+                  fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: colorScheme.outline.withOpacity(0.3),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(
-                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // Password Field
-                TextFormField(
-                  controller: _passwordController,
-                  enabled: !_isLoading,
-                  obscureText: !_isPasswordVisible,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                    prefixIcon: const Icon(TablerIcons.key),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? TablerIcons.eye_closed
-                            : TablerIcons.eye,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
-                    filled: true,
-                    fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: colorScheme.outline.withOpacity(0.3),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: colorScheme.primary,
-                        width: 2,
-                      ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
 
-                const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
-                // Sign In Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: FilledButton(
-                    onPressed: !_isLoading
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              _signIn();
-                            }
-                          }
-                        : null,
-                    style: FilledButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
+              // Password Field
+              TextFormField(
+                controller: _passwordController,
+                enabled: !_isLoading,
+                obscureText: !_isPasswordVisible,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  prefixIcon: const Icon(TablerIcons.key),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? TablerIcons.eye_closed
+                          : TablerIcons.eye,
                     ),
-                    child: !_isLoading
-                        ? const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        : const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                            ),
-                          ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  filled: true,
+                  fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: colorScheme.outline.withOpacity(0.3),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
                   ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+              ),
 
-                const SizedBox(height: 8),
+              const SizedBox(height: 24),
 
-                TextButton(
+              // Sign In Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FilledButton(
                   onPressed: !_isLoading
                       ? () {
-                          // Handle forgot password
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Forgot password functionality'),
-                            ),
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            _signIn();
+                          }
                         }
                       : null,
-                  style: TextButton.styleFrom(
-                    foregroundColor: colorScheme.secondary,
-                  ),
-                  child: const Text('Forgot Password?'),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Sign Up Section
-                Center(
-                  child: Column(
-                    spacing: 2,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      TextButton.icon(
-                        onPressed: !_isLoading
-                            ? () {
-                                // Navigate to sign up
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Navigate to AO3 registration',
-                                    ),
-                                  ),
-                                );
-                              }
-                            : null,
-                        style: TextButton.styleFrom(
-                          foregroundColor: colorScheme.tertiary,
-                        ),
-                        icon: const Icon(TablerIcons.mailbox),
-                        label: const Text(
-                          'Request an invitation to join',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Footer
-                Center(
-                  child: Text(
-                    'By signing in, you agree to AO3\'s Terms of Service',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    textAlign: TextAlign.center,
                   ),
+                  child: !_isLoading
+                      ? const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      : const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        ),
                 ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 8),
+
+              TextButton(
+                onPressed: !_isLoading
+                    ? () {
+                        // Handle forgot password
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Forgot password functionality'),
+                          ),
+                        );
+                      }
+                    : null,
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.secondary,
+                ),
+                child: const Text('Forgot Password?'),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Sign Up Section
+              Center(
+                child: Column(
+                  spacing: 2,
+                  children: [
+                    Text(
+                      "Don't have an account?",
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: !_isLoading
+                          ? () {
+                              // Navigate to sign up
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Navigate to AO3 registration'),
+                                ),
+                              );
+                            }
+                          : null,
+                      style: TextButton.styleFrom(
+                        foregroundColor: colorScheme.tertiary,
+                      ),
+                      icon: const Icon(TablerIcons.mailbox),
+                      label: const Text(
+                        'Request an invitation to join',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Footer
+              Center(
+                child: Text(
+                  'By signing in, you agree to AO3\'s Terms of Service',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -312,14 +311,19 @@ class _SignInActivityState extends State<SignInActivity> {
         .signIn(username: email, password: password)
         .then((user) {
           if (user != null) {
-            // Sign in successful
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Welcome back, ${user.name}!'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            Navigator.pop(context); // Close the sign-in screen
+            if (mounted) {
+              // Sign in successful
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Welcome back, ${user.name}!'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              context.navigator.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const SignInActivity()),
+                (route) => false,
+              );
+            }
           } else {
             // Sign in failed
             ScaffoldMessenger.of(context).showSnackBar(
