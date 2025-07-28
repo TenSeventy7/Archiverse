@@ -1,3 +1,4 @@
+import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -17,6 +18,8 @@ class RecentSearchItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
+      tileColor: context.colorScheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
       leading: const Icon(TablerIcons.clock),
       title: Text(searchTerm),

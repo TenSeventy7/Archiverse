@@ -19,13 +19,16 @@ import 'package:provider/provider.dart';
 
 class InitialSearchFragment extends CommonStatelessSearchFragment {
   static const String routeName = 'search/';
-  const InitialSearchFragment({super.key});
+  const InitialSearchFragment({super.key, this.controller});
+
+  final ScrollController? controller;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<SearchProvider>(context);
 
     return SingleChildScrollView(
+      controller: controller,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,16 +41,28 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
               message: 'Your recent search terms will appear here.',
             )
           else
-            ...provider.recentSearches.map(
-              (term) => RecentSearchItem(
-                searchTerm: term,
-                onTap: () => provider.performSearch(term),
-                onRemove: () => provider.removeSearchItem(term),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(16.0),
+                clipBehavior: Clip.hardEdge,
+                child: Column(
+                  spacing: 4.0,
+                  children: provider.recentSearches
+                      .map(
+                        (term) => RecentSearchItem(
+                          searchTerm: term,
+                          onTap: () => provider.performSearch(term),
+                          onRemove: () => provider.removeSearchItem(term),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
 
           const SizedBox(height: 16.0),
-          const PaddedDivider(padding: EdgeInsets.symmetric(horizontal: 8.0)),
 
           // Trending tags section
           TextHeader.medium(icon: TablerIcons.books, title: 'Popular Fandoms'),
@@ -91,33 +106,24 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
   }
 
   Widget _buildFandomWidget(BuildContext context, Media media, List<Tag> tags) {
-    return Card.outlined(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      color: context.colorScheme.surfaceContainerLowest,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            tileColor: context.colorScheme.surfaceContainerHigh,
-            leading: Icon(
-              media.icon,
-              color: context.colorScheme.onSurfaceVariant,
-            ),
-            title: Text(
-              media.toLocalName(context),
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextHeader.medium(
+          leading: Icon(
+            media.icon,
+            color: context.colorScheme.onSurfaceVariant,
           ),
+          title: media.toLocalName(context),
+          hasPadding: false,
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+        ),
 
-          Divider(
-            height: 1,
-            color: context.colorScheme.outlineVariant.withOpacity(0.3),
-          ),
-
-          ListView.separated(
+        Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16.0),
+          clipBehavior: Clip.hardEdge,
+          child: ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
@@ -125,8 +131,13 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
             itemBuilder: (context, index) => index == tags.length
                 ? _buildSeeMoreTile(context, media)
                 : ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    tileColor: context.colorScheme.surfaceContainerLowest,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
+                      vertical: 2.0,
                     ),
                     visualDensity: VisualDensity.compact,
                     title: Text(
@@ -144,13 +155,10 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
                           arguments: tags[index],
                         ),
                   ),
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              color: context.colorScheme.outlineVariant.withOpacity(0.3),
-            ),
+            separatorBuilder: (context, index) => SizedBox(height: 4.0),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -175,7 +183,12 @@ class InitialSearchFragment extends CommonStatelessSearchFragment {
 
   Widget _buildSeeMoreTile(BuildContext context, Media media) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      tileColor: context.colorScheme.surfaceContainerLowest,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 2.0,
+      ),
       visualDensity: VisualDensity.compact,
       title: Text('See all', style: context.textTheme.titleMedium),
       trailing: Icon(
