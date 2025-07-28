@@ -278,9 +278,7 @@ class _UserFragmentState extends State<UserFragment> {
         OptionTile(
           title: 'Help & Support',
           icon: TablerIcons.help,
-          onTap: () {
-            context.navigator.pushNamed(OnboardingActivity.routeName);
-          },
+          onTap: () {},
         ),
         OptionTile(
           title: 'About',
