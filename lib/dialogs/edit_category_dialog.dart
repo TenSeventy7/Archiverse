@@ -3,6 +3,7 @@ import 'package:archiverse/components/expressive/app_bar.dart';
 import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/icon_selector.dart';
 import 'package:archiverse/components/text_header.dart';
+import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/library_category.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:flutter/material.dart';
@@ -73,140 +74,135 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Dialog.fullscreen(
-      child: ExpressiveScaffold(
-        appBar: (controller) => ExpressiveAppBar(
-          controller: controller,
-          elevation: 0,
-          scrolledUnderElevation: 1,
-          title: Text(isEditing ? 'Edit folder' : 'Create folder'),
-          leading: IconButton(
-            icon: Icon(
-              TablerIcons.x,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            tooltip: 'Close',
+    return ExpressiveScaffold(
+      appBar: (controller) => ExpressiveAppBar(
+        controller: controller,
+        elevation: 0,
+        scrolledUnderElevation: 1,
+        title: Text(isEditing ? 'Edit folder' : 'Create folder'),
+        leading: IconButton(
+          icon: Icon(
+            TablerIcons.x,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: FilledButton(
-                onPressed: (_isLoading || !isNameValid) ? null : _handleSave,
-                child: _isLoading
-                    ? SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      )
-                    : Text(isEditing ? 'Save' : 'Create'),
-              ),
-            ),
-          ],
+          onPressed: _isLoading ? null : () => Navigator.pop(context),
+          tooltip: 'Close',
         ),
-        body: (controller) => SingleChildScrollView(
-          controller: controller,
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconSelector(
-                selectedIcon: _selectedIcon,
-                color: LibraryCategory.colors[_selectedColor],
-                onIconSelected: (icon) {
-                  setState(() {
-                    _selectedIcon = icon;
-                  });
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Folder name',
-                  hintText: 'Think of a creative name',
-                  prefixIcon: const Icon(TablerIcons.folder),
-                  filled: true,
-                  fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
-
-                  errorText: _nameError,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(
-                      color: colorScheme.outline.withOpacity(0.3),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(
-                      color: colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colorScheme.error, width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: colorScheme.error, width: 2),
-                  ),
-                ),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-              ),
-
-              const SizedBox(height: 16.0),
-
-              // Color selector section
-              TextHeader.medium(
-                hasPadding: false,
-                title: 'Folder Color',
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.tertiaryContainer.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    TablerIcons.palette,
-                    size: 22,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 4.0),
-
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: LibraryCategory.colors.entries
-                    .map(
-                      (entry) => _buildColorChip(
-                        entry.value,
-                        entry.key,
-                        _selectedColor == entry.key,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FilledButton(
+              onPressed: (_isLoading || !isNameValid) ? null : _handleSave,
+              child: _isLoading
+                  ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     )
-                    .toList(),
-              ),
-
-              // TODO: Add custom color picker
-
-              // Bottom spacing for comfortable scrolling
-              const SizedBox(height: 24),
-            ],
+                  : Text(isEditing ? 'Save' : 'Create'),
+            ),
           ),
+        ],
+      ),
+      body: (controller) => SingleChildScrollView(
+        controller: controller,
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            IconSelector(
+              selectedIcon: _selectedIcon,
+              color: LibraryCategory.colors[_selectedColor],
+              onIconSelected: (icon) {
+                setState(() {
+                  _selectedIcon = icon;
+                });
+              },
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Folder name',
+                hintText: 'Think of a creative name',
+                prefixIcon: const Icon(TablerIcons.folder),
+                filled: true,
+                fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+
+                errorText: _nameError,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: colorScheme.outline.withOpacity(0.3),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colorScheme.error, width: 2),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(color: colorScheme.error, width: 2),
+                ),
+              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+            ),
+
+            const SizedBox(height: 16.0),
+
+            // Color selector section
+            TextHeader.medium(
+              hasPadding: false,
+              title: 'Folder Color',
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.tertiaryContainer.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  TablerIcons.palette,
+                  size: 22,
+                  color: Theme.of(context).colorScheme.onTertiaryContainer,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4.0),
+
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: LibraryCategory.colors.entries
+                  .map(
+                    (entry) => _buildColorChip(
+                      entry.value,
+                      entry.key,
+                      _selectedColor == entry.key,
+                    ),
+                  )
+                  .toList(),
+            ),
+
+            // TODO: Add custom color picker
+
+            // Bottom spacing for comfortable scrolling
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
@@ -301,6 +297,9 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
 class EditCategoryDialog {
   static Future<bool?> show(BuildContext context, {LibraryCategory? category}) {
     return showDialog<bool>(
+      fullscreenDialog: true,
+      barrierDismissible: false,
+      barrierColor: context.colorScheme.surface,
       context: Navigator.of(context, rootNavigator: true).context,
       builder: (context) => _EditCategoryDialog(category: category),
     );
