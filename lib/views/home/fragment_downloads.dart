@@ -1,6 +1,7 @@
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/expressive/app_bar.dart';
 import 'package:archiverse/components/expressive/scaffold.dart';
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/storage_info_card.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -39,7 +40,18 @@ class LibraryDownloadsFragment extends StatelessWidget {
     );
   }
 
+  // Coming soon message for now
   Widget _buildBody(BuildContext context, ScrollController controller) {
+    return Center(
+      child: ItemPlaceholder(
+        icon: TablerIcons.download,
+        message: 'Coming soon!',
+        subtitle: "Download your favorite works and access them offline.",
+      ),
+    );
+  }
+
+  Widget _buildBodyInternal(BuildContext context, ScrollController controller) {
     return CustomScrollView(
       controller: controller,
       physics: const BouncingScrollPhysics(),
