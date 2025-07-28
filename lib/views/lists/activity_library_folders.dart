@@ -1,4 +1,5 @@
 import 'package:archiverse/api.dart';
+import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/dialogs/library_folder_options.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
@@ -24,6 +25,16 @@ class FolderWorksActivityState
 
   @override
   EdgeInsets get padding => super.padding.copyWith(top: 0, bottom: 0);
+
+  @override
+  Widget buildPlaceholder(BuildContext context) {
+    return ItemPlaceholder(
+      message: 'No folders',
+      subtitle: 'Organize your works by creating folders to group them',
+      icon: TablerIcons.folders,
+    );
+  }
+
 
   @override
   Widget buildItemWidget(
