@@ -7,7 +7,7 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/reader_font.dart';
-import 'package:archiverse/models/theming.dart';
+import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/providers/provider_preferences.dart';
 import 'package:archiverse/providers/provider_read_history.dart';
@@ -17,6 +17,7 @@ import 'package:archiverse/providers/provider_theme.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/routes.dart';
 import 'package:archiverse/strings/app_localizations.dart';
+import 'package:archiverse/views/activity_onboarding.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,12 @@ void main() async {
   GoogleFonts.config.allowRuntimeFetching = false;
   addFontLicenses(); // Add font licenses to the license registry
 
+  // Check if onboarding has been shown
+  final onboarded = preferences.getBool(
+    Preferences.onboardingShown,
+    defaultValue: false,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -62,7 +69,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => readHistory),
         ChangeNotifierProvider(create: (_) => library),
       ],
-      child: const Archiverse(),
+      child: Archiverse(onboarded: onboarded),
     ),
   );
 }
@@ -82,7 +89,8 @@ Future<void> addFontLicenses() async {
 }
 
 class Archiverse extends StatelessWidget {
-  const Archiverse({super.key});
+  const Archiverse({super.key, this.onboarded = false});
+  final bool onboarded;
 
   // This widget is the root of your application.
   @override
@@ -115,7 +123,7 @@ class Archiverse extends StatelessWidget {
                 provider.darkColorScheme,
               ),
               themeMode: provider.themeMode,
-              initialRoute: '/',
+              initialRoute: onboarded ? '/' : OnboardingActivity.routeName,
               routes: AppRoutes.routes,
               onGenerateRoute: (settings) =>
                   AppRoutes.onGenerateRoute(settings),

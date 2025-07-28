@@ -32,4 +32,6 @@ class Preferences {
   static const String lineHeight = 'reader_line_height';
   static const String readerJustifiedText = 'reader_justified_text';
   static const String keepScreenOn = 'keep_screen_on';
+
+  static const String onboardingShown = 'onboarding_shown';
 }
