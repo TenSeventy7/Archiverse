@@ -147,7 +147,7 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       tileColor: isHighlighted
           ? colorScheme.primaryContainer
-          : colorScheme.surfaceContainerLow,
+          : colorScheme.surfaceContainerLowest,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       leading: Container(
         width: 40,

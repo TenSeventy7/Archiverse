@@ -131,7 +131,7 @@ abstract class CommonListActivityState<T> extends State<CommonListActivity<T>>
   Widget _buildItemWidget(BuildContext context, T item, int index) {
     return Material(
       clipBehavior: Clip.hardEdge,
-      color: context.colorScheme.surfaceContainerLow,
+      color: context.colorScheme.surfaceContainerLowest,
       borderRadius: BorderRadius.circular(8.0),
       child: _buildItemWidgetTitle(context, item, index),
     );

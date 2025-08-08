@@ -15,7 +15,7 @@ class FolderCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      color: colorScheme.surfaceContainer,
+      color: colorScheme.surfaceContainerLowest,
       elevation: 0,
       child: InkWell(
         onTap: () {
