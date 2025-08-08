@@ -7,6 +7,7 @@ import 'package:archiverse/views/activity_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignInActivity extends CommonActivity {
   const SignInActivity({super.key});
@@ -257,13 +258,16 @@ class _SignInActivityState extends State<SignInActivity> {
                     ),
                     TextButton.icon(
                       onPressed: !_isLoading
-                          ? () {
-                              // Navigate to sign up
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Navigate to AO3 registration'),
-                                ),
+                          ? () async {
+                              Uri info = Uri.parse(
+                                "https://archiveofourown.org/invite_requests",
                               );
+                              if (!await launchUrl(
+                                info,
+                                mode: LaunchMode.externalApplication,
+                              )) {
+                                throw Exception('Could not launch $info');
+                              }
                             }
                           : null,
                       style: TextButton.styleFrom(
