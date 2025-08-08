@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class AppBarDefaultsM3 extends AppBarTheme {
+class AppBarDefaultsM3 extends AppBarThemeData {
   AppBarDefaultsM3(this.context)
     : super(
         elevation: 0.0,
@@ -49,7 +49,7 @@ class AppBarDefaultsM3 extends AppBarTheme {
 }
 
 // Hand coded defaults based on Material Design 2.
-class AppBarDefaultsM2 extends AppBarTheme {
+class AppBarDefaultsM2 extends AppBarThemeData {
   AppBarDefaultsM2(this.context)
     : super(
         elevation: 4.0,

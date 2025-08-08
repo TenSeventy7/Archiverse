@@ -35,8 +35,8 @@ class ScrollUnderFlexibleSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final AppBarTheme appBarTheme = AppBarTheme.of(context);
-    late final AppBarTheme defaults = Theme.of(context).useMaterial3
+    late final AppBarThemeData appBarTheme = AppBarTheme.of(context);
+    late final AppBarThemeData defaults = Theme.of(context).useMaterial3
         ? AppBarDefaultsM3(context)
         : AppBarDefaultsM2(context);
     final FlexibleSpaceBarSettings settings = context
