@@ -626,25 +626,32 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
                       ),
 
                     // For main profile, show join date
-                    if (!item.isPseud && item.joinDate != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              TablerIcons.calendar,
-                              size: 16,
-                              color: colorScheme.onSurface.withAlpha(150),
+                    if (!item.isPseud &&
+                        (item.joinDate != null ||
+                            state == LoadingState.LOADING))
+                      Skeletonizer(
+                        enabled: state == LoadingState.LOADING,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Skeleton.unite(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  TablerIcons.calendar,
+                                  size: 16,
+                                  color: colorScheme.onSurface.withAlpha(150),
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Joined ${AppUtils.formatDate(context, state == LoadingState.LOADED ? item.joinDate! : DateTime.now())}",
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    color: colorScheme.onSurface.withAlpha(150),
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 6),
-                            Text(
-                              "Joined ${AppUtils.formatDate(context, item.joinDate!)}",
-                              style: context.textTheme.titleSmall?.copyWith(
-                                color: colorScheme.onSurface.withAlpha(150),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                   ],
