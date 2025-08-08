@@ -164,16 +164,16 @@ class _LibraryFragmentState extends State<LibraryFragment>
           return SingleChildScrollView(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minWidth: shouldCenter ? constraints.maxWidth - 20.0 : 0,
+                minWidth: shouldCenter ? constraints.maxWidth : 0,
               ),
               child: Row(
                 mainAxisAlignment: shouldCenter
                     ? MainAxisAlignment.spaceEvenly
                     : MainAxisAlignment.start,
-                spacing: 6.0,
+                spacing: 8.0,
                 children: _tabs.asMap().entries.map((entry) {
                   int index = entry.key;
                   return _buildTabItem(index);
@@ -196,7 +196,7 @@ class _LibraryFragmentState extends State<LibraryFragment>
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
         height: 44.0,
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 28.0),
         decoration: BoxDecoration(
           color: isSelected
               ? context.theme.colorScheme.primaryContainer
