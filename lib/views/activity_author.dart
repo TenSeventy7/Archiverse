@@ -601,10 +601,10 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
             // User info
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                padding: const EdgeInsets.only(right: 16.0, bottom: 24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       item.isPseud ? item.pseud : item.name,
