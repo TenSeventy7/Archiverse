@@ -73,7 +73,6 @@ class AppRoutes {
         const CacheManagementActivity(),
     ReadingHistorySettingsActivity.routeName: (context) =>
         const ReadingHistorySettingsActivity(),
-    SignInActivity.routeName: (context) => const SignInActivity(),
     BackupRestoreActivity.routeName: (context) => const BackupRestoreActivity(),
     OnboardingActivity.routeName: (context) => const OnboardingActivity(),
     LibraryWorksActivity.routeName: (context) => const LibraryWorksActivity(),
@@ -218,6 +217,14 @@ class AppRoutes {
           );
         }
         return null;
+      case SignInActivity.routeName:
+        final args = settings.arguments;
+        if (args is bool) {
+          return MaterialPageRoute(
+            builder: (context) => SignInActivity(onboarding: args),
+          );
+        }
+        return MaterialPageRoute(builder: (context) => const SignInActivity());
       default:
         return null;
     }

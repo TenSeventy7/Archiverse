@@ -178,7 +178,10 @@ class _OnboardingActivityState extends State<OnboardingActivity>
                 Preferences.onboardingShown,
                 true,
               );
-              context.navigator.pushNamed(SignInActivity.routeName);
+              context.navigator.pushNamed(
+                SignInActivity.routeName,
+                arguments: true,
+              );
             },
             style: FilledButton.styleFrom(
               minimumSize: const Size(double.infinity, 56),

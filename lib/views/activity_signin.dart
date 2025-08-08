@@ -10,8 +10,10 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignInActivity extends CommonActivity {
-  const SignInActivity({super.key});
+  const SignInActivity({super.key, this.onboarding = false});
   static const String routeName = '/signin';
+
+  final bool onboarding;
 
   @override
   State<SignInActivity> createState() => _SignInActivityState();
@@ -324,10 +326,15 @@ class _SignInActivityState extends State<SignInActivity> {
                   behavior: SnackBarBehavior.floating,
                 ),
               );
-              context.navigator.pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const HomeActivity()),
-                (route) => false,
-              );
+
+              if (widget.onboarding) {
+                context.navigator.pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const HomeActivity()),
+                  (route) => false,
+                );
+              } else {
+                context.navigator.pop();
+              }
             }
           } else {
             // Sign in failed
