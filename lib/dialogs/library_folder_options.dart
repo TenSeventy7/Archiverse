@@ -221,24 +221,69 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
 
   void _showDeleteCategoryDialog(LibraryCategory category) {
     showDialog(
-      context: widget.context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text('Are you sure you want to delete "${category.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(widget.context),
-            child: const Text('Cancel'),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: Icon(
+            TablerIcons.folder_cancel,
+            size: 28.0,
+            color: context.colorScheme.secondary,
           ),
-          TextButton(
-            onPressed: () async {
-              await _deleteCategory(widget.context, category);
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+          title: const Text('Delete this folder?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Are you sure you want to delete this folder? This action cannot be undone.',
+              ),
+              const SizedBox(height: 24.0),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 48.0,
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () async {
+                          await _deleteCategory(widget.context, category);
+                        },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: context.colorScheme.error,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                        child: const Text('Delete folder'),
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    SizedBox(
+                      height: 48.0,
+                      width: double.infinity,
+                      child: FilledButton.tonal(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
