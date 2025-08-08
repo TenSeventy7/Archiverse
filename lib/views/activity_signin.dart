@@ -3,6 +3,7 @@ import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/providers/provider_user.dart';
 import 'package:archiverse/views/activity_common.dart';
+import 'package:archiverse/views/activity_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
@@ -320,7 +321,7 @@ class _SignInActivityState extends State<SignInActivity> {
                 ),
               );
               context.navigator.pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const SignInActivity()),
+                MaterialPageRoute(builder: (context) => const HomeActivity()),
                 (route) => false,
               );
             }
