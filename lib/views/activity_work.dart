@@ -1,12 +1,9 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/bookmarks_card.dart';
 import 'package:archiverse/components/cards/series_card.dart';
-import 'package:archiverse/components/items/series_item.dart';
 import 'package:archiverse/components/live_user_image.dart';
-import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/rating_list.dart';
 import 'package:archiverse/components/text_header.dart';
-import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/author_orphan_info.dart';
 import 'package:archiverse/dialogs/authors_list_dialog.dart';
 import 'package:archiverse/dialogs/work_options.dart';
@@ -25,7 +22,6 @@ import 'package:archiverse/components/work_metadata_item.dart';
 import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/lists/activity_tag_works.dart';
 import 'package:archiverse/views/lists/activity_work_bookmarks.dart';
-import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -215,7 +211,6 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
             children: [
               SizedBox(height: 8.0),
               _buildHeroSection(context),
-              SizedBox(height: 8.0),
               _buildWorkContent(context),
             ],
           ),
@@ -225,19 +220,22 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   }
 
   Widget _buildHeroSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Author avatars with profile links
-        const SizedBox(height: 16.0),
-        _buildAuthorSection(context),
-        const SizedBox(height: 32.0),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: _buildHeroStats(context),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Skeleton.keep(
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAuthorSection(context),
+              const SizedBox(height: 4.0),
+              _buildHeroStats(context),
+            ],
+          ),
         ),
-        const SizedBox(height: 16.0),
-      ],
+      ),
     );
   }
 
@@ -298,38 +296,59 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   Widget _buildHeroStats(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.bookmarks,
-          value: item.bookmarks,
-          label: "Bookmarks",
-          color: colorScheme.primary,
-        ),
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.heart,
-          value: item.kudos,
-          label: "Kudos",
-          color: colorScheme.secondary,
-        ),
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.message,
-          value: item.comments,
-          label: "Comments",
-          color: colorScheme.tertiary,
-        ),
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.eye,
-          value: item.hits,
-          label: "Hits",
-          color: colorScheme.error,
-        ),
-      ],
+    final stats = [
+      (TablerIcons.bookmarks, item.bookmarks, "Bookmarks", colorScheme.primary),
+      (TablerIcons.heart, item.kudos, "Kudos", colorScheme.secondary),
+      (TablerIcons.message, item.comments, "Comments", colorScheme.tertiary),
+      (TablerIcons.eye, item.hits, "Hits", colorScheme.error),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate items per row based on available width
+        // Minimum width per item: 120px, with 4px spacing
+        final itemWidth = 120.0;
+        final spacing = 4.0;
+        final availableWidth = constraints.maxWidth;
+        final itemsPerRow = (availableWidth / (itemWidth + spacing))
+            .floor()
+            .clamp(1, 4);
+
+        // Build rows
+        final rows = <Widget>[];
+        for (int i = 0; i < stats.length; i += itemsPerRow) {
+          final rowItems = stats.skip(i).take(itemsPerRow).toList();
+
+          rows.add(
+            Row(
+              children: rowItems
+                  .map(
+                    (stat) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: rowItems.last == stat ? 0 : spacing,
+                        ),
+                        child: _buildStatBox(
+                          context: context,
+                          icon: stat.$1,
+                          value: stat.$2,
+                          label: stat.$3,
+                          color: stat.$4,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+
+          if (i + itemsPerRow < stats.length) {
+            rows.add(SizedBox(height: spacing));
+          }
+        }
+
+        return Column(children: rows);
+      },
     );
   }
 
@@ -340,24 +359,34 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     required String label,
     required Color color,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 6),
-        Text(
-          AppUtils.formatCompactNumber(value),
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      color: color.withValues(alpha: 0.1),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 24),
+            SizedBox(width: 8),
+            Text(
+              AppUtils.formatCompactNumber(value),
+              style: context.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: color.withValues(alpha: 0.9),
+              ),
+            ),
+          ],
         ),
-        Text(
-          label,
-          style: context.textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -370,9 +399,11 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
           // Series information if applicable
           if (item.series.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 16.0,
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 4.0,
+                bottom: 8.0,
               ),
               child: _buildSeriesSection(context),
             ),
@@ -403,8 +434,8 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
   Widget _buildAuthorSection(BuildContext context) {
     return Card.filled(
       color: context.colorScheme.tertiaryContainer.withValues(alpha: 0.75),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
@@ -492,6 +523,12 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                   ],
                 ),
               ),
+              Icon(
+                TablerIcons.chevron_right,
+                size: 20,
+                color: context.colorScheme.onTertiaryContainer,
+              ),
+              const SizedBox(width: 2.0),
             ],
           ),
         ),
