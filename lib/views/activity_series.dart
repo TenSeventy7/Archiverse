@@ -7,6 +7,7 @@ import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
+import 'package:archiverse/dialogs/author_orphan_info.dart';
 import 'package:archiverse/dialogs/authors_list_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/mixins/mixin_common_paginated_list.dart';
@@ -197,8 +198,6 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
           children: [
             SizedBox(height: 8.0),
             _buildSeriesInfo(context),
-            _buildAuthorsSection(context),
-            SizedBox(height: 8.0),
 
             if (item.summary.isNotEmpty) ...[
               _buildSummarySection(context),
@@ -246,101 +245,21 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
   }
 
   Widget _buildSeriesInfo(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Status and last updated
-          Row(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      child: Skeleton.unite(
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                TablerIcons.clock,
-                size: 18,
-                color: colorScheme.onSurfaceVariant.withOpacity(0.7),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                AppUtils.formatDate(context, item.updateDate ?? DateTime.now()),
-                style: context.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant.withOpacity(0.7),
-                ),
-              ),
-
-              const Spacer(),
-
-              // Completion status
-              if (item.finished == true)
-                Skeleton.leaf(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          TablerIcons.check,
-                          size: 14,
-                          color: colorScheme.onSecondaryContainer,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "Complete",
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onSecondaryContainer,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              else
-                Skeleton.leaf(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.tertiaryContainer,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          TablerIcons.clock,
-                          size: 14,
-                          color: colorScheme.onTertiaryContainer,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "In Progress",
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onTertiaryContainer,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              _buildAuthorsSection(context),
+              const SizedBox(height: 4.0),
+              _buildStatsRow(context),
             ],
           ),
-
-          const SizedBox(height: 24.0),
-          _buildStatsRow(context),
-          const SizedBox(height: 16.0),
-        ],
+        ),
       ),
     );
   }
@@ -348,31 +267,63 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
   Widget _buildStatsRow(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.books,
-          value: item.works,
-          label: "Works",
-          color: colorScheme.primary,
-        ),
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.align_left,
-          value: item.words,
-          label: "Words",
-          color: colorScheme.secondary,
-        ),
-        _buildStatBox(
-          context: context,
-          icon: TablerIcons.bookmarks,
-          value: item.bookmarks,
-          label: "Bookmarks",
-          color: colorScheme.tertiary,
-        ),
-      ],
+    final stats = [
+      (TablerIcons.books, item.works, "Works", colorScheme.primary),
+      (
+        TablerIcons.bookmarks,
+        item.bookmarks,
+        "Bookmarks",
+        colorScheme.tertiary,
+      ),
+      (TablerIcons.align_left, item.words, "Words", colorScheme.secondary),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate items per row based on available width
+        // Minimum width per item: 120px, with 4px spacing
+        final itemWidth = 120.0;
+        final spacing = 4.0;
+        final availableWidth = constraints.maxWidth;
+        final itemsPerRow = (availableWidth / (itemWidth + spacing))
+            .floor()
+            .clamp(1, 4);
+
+        // Build rows
+        final rows = <Widget>[];
+        for (int i = 0; i < stats.length; i += itemsPerRow) {
+          final rowItems = stats.skip(i).take(itemsPerRow).toList();
+
+          rows.add(
+            Row(
+              children: rowItems
+                  .map(
+                    (stat) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: rowItems.last == stat ? 0 : spacing,
+                        ),
+                        child: _buildStatBox(
+                          context: context,
+                          icon: stat.$1,
+                          value: stat.$2,
+                          label: stat.$3,
+                          color: stat.$4,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+
+          if (i + itemsPerRow < stats.length) {
+            rows.add(SizedBox(height: spacing));
+          }
+        }
+
+        return Column(children: rows);
+      },
     );
   }
 
@@ -383,63 +334,82 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
     required String label,
     required Color color,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 6),
-        Text(
-          AppUtils.formatCompactNumber(value),
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      color: color.withValues(alpha: 0.1),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 24),
+            SizedBox(width: 8),
+            Text(
+              AppUtils.formatCompactNumber(value),
+              style: context.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: color.withValues(alpha: 0.9),
+              ),
+            ),
+          ],
         ),
-        Text(
-          label,
-          style: context.textTheme.labelSmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _buildAuthorsSection(BuildContext context) {
-    if (item.authors.isEmpty) return SizedBox.shrink();
-
     return Card.filled(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      color: context.colorScheme.tertiaryContainer.withValues(alpha: 0.75),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
+          if (item.authors.first.isOrphan) {
+            // Show author orphan info dialog
+            AuthorOrphanInfoDialog.showSheet(context);
+            return;
+          }
+
+          // If more than 1 author, show list dialog
           if (item.authors.length > 1) {
+            // Show authors list dialog
             AuthorsListDialog.showSheet(context, authors: item.authors);
             return;
           }
 
+          // Otherwise, navigate to author detail
           context.navigator.pushNamed(
             AuthorActivity.routeName,
             arguments: item.authors.first,
           );
         },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           child: Row(
             children: [
-              // Author avatars
+              // Author avatars with overlap
               Skeleton.leaf(
                 child: SizedBox(
-                  height: 48,
+                  height: 56,
                   width: item.authors.length > 1
-                      ? 48 + (item.authors.length - 1) * 24
-                      : 48,
+                      ? 56 + (item.authors.length - 1) * 28
+                      : 56,
                   child: Stack(
                     children: [
                       for (int i = 0; i < item.authors.length; i++)
                         Positioned(
-                          left: i * 24.0,
+                          left: i * 28.0,
                           child: CircleAvatar(
-                            radius: 24,
+                            radius: 28,
                             child: (int i, BuildContext context) {
                               var author = item.authors[i];
                               return LiveUserImage(
@@ -454,8 +424,9 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
                 ),
               ),
 
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
 
+              // Author names
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,24 +434,35 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
                     Text(
                       item.authors.length == 1 ? "Author" : "Authors",
                       style: context.textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onTertiaryContainer.withOpacity(0.8),
                       ),
                     ),
                     Text(
                       item.authors.length == 1
                           ? _getAuthorName(item.authors.first)
                           : "${item.authors.length} authors",
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: context.textTheme.titleMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onTertiaryContainer,
+                          )
+                          .apply(fontSizeDelta: 2.0),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-
-              Icon(TablerIcons.chevron_right, size: 18),
+              Icon(
+                TablerIcons.chevron_right,
+                size: 20,
+                color: context.colorScheme.onTertiaryContainer,
+              ),
+              const SizedBox(width: 2.0),
             ],
           ),
         ),
@@ -728,7 +710,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 16.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -757,6 +739,90 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+          ),
+
+          // Status and last updated
+          Row(
+            children: [
+              Icon(
+                TablerIcons.clock,
+                size: 18,
+                color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                AppUtils.formatDate(context, item.updateDate ?? DateTime.now()),
+                style: context.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+                ),
+              ),
+
+              const Spacer(),
+
+              // Completion status
+              if (item.finished == true)
+                Skeleton.leaf(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          TablerIcons.check,
+                          size: 14,
+                          color: colorScheme.onSecondaryContainer,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "Complete",
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSecondaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                Skeleton.leaf(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          TablerIcons.clock,
+                          size: 14,
+                          color: colorScheme.onTertiaryContainer,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "In Progress",
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onTertiaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
