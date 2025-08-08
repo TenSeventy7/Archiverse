@@ -2,6 +2,7 @@ import 'package:archiverse/components/rating_utils.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class _RatingInfoActivity extends StatelessWidget {
   final RatingInfo info;
@@ -33,16 +34,16 @@ class _RatingInfoActivity extends StatelessWidget {
           children: [
             Expanded(
               child: FilledButton.tonalIcon(
-                onPressed: () => {
-                  // TODO: Implement learn more action
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      content: Text(
-                        "This should open a web page with more info.",
-                      ),
-                    ),
-                  ),
+                onPressed: () async {
+                  Uri info = Uri.parse(
+                    "https://archiveofourown.org/help/symbols-key.html",
+                  );
+                  if (!await launchUrl(
+                    info,
+                    mode: LaunchMode.inAppBrowserView,
+                  )) {
+                    throw Exception('Could not launch $info');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
