@@ -111,7 +111,6 @@ class RecommendationsProvider extends ChangeNotifier {
     await initialize();
 
     while (!_isInitialized) {
-      // Wait for initialization to complete
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
@@ -129,39 +128,43 @@ class RecommendationsProvider extends ChangeNotifier {
       return continueReadingResult;
     }
 
-    int attempts = 0;
-    while (attempts <= 3) {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      // Get recommendations with fallback strategy
+      final result = await _getRecommendationsWithFallback(pageKey);
+
+      _cache[pageKey] = result;
+      _isLoading = false;
+      notifyListeners();
+
+      return result;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+
+      // Return guaranteed non-empty fallback
+      final errorResult = await _getGuaranteedRecommendation(pageKey);
+      _cache[pageKey] = errorResult;
+      return errorResult;
+    }
+  }
+
+  /// Get recommendations with intelligent fallback strategy
+  Future<BaseRecommendation> _getRecommendationsWithFallback(
+    int pageKey,
+  ) async {
+    final hasHistory = _workHistory != null && _workHistory!.isNotEmpty;
+
+    // Create prioritized list of recommendation engines
+    final prioritizedEngines = _getPrioritizedEngines(hasHistory);
+
+    // Try each engine in order of priority
+    for (final engine in prioritizedEngines) {
       try {
-        _isLoading = true;
-        _error = null;
-        notifyListeners();
-
-        // Filter recommendations based on history requirement
-        final hasHistory = _workHistory != null && _workHistory!.isNotEmpty;
-        final availableRecs = _recommendations
-            .where((rec) => !rec.requiresHistory || hasHistory)
-            .toList();
-
-        if (availableRecs.isEmpty) {
-          // Fallback to random discovery
-          availableRecs.add(const RandomDiscoveryRecommendation());
-        }
-
-        // Randomly select a recommendation type
-        final random = Random();
-        BaseRecommendation<dynamic> engine = RandomDiscoveryRecommendation();
-
-        if (attempts < 3) {
-          int index = random.nextInt(availableRecs.length);
-
-          // Ensure we don't select the same recommendation type as last time
-          while (index == _lastRecommendationId) {
-            index = random.nextInt(availableRecs.length);
-          }
-
-          engine = availableRecs[index];
-        }
-
         final recommendations = await engine.getRecommendations(
           api: _api,
           seed: pageKey,
@@ -169,35 +172,62 @@ class RecommendationsProvider extends ChangeNotifier {
         );
 
         if (recommendations.items.isNotEmpty) {
-          final result = engine.copyWith(
+          return engine.copyWith(
             items: recommendations.items,
             title: recommendations.title,
           );
-
-          _cache[pageKey] = result;
-
-          _isLoading = false;
-          notifyListeners();
-
-          return result;
         }
       } catch (e) {
-        _error = e.toString();
-        _isLoading = false;
-        notifyListeners();
-
-        // Return empty result on error
-        final errorResult = const RandomDiscoveryRecommendation(items: []);
-        _cache[pageKey] = errorResult;
-        return errorResult;
+        // Continue to next engine
+        continue;
       }
-      attempts++;
     }
 
-    // Return empty result on error
-    final errorResult = const RandomDiscoveryRecommendation(items: []);
-    _cache[pageKey] = errorResult;
-    return errorResult;
+    // If all engines fail, return guaranteed fallback
+    return await _getGuaranteedRecommendation(pageKey);
+  }
+
+  /// Get prioritized list of recommendation engines
+  List<BaseRecommendation<dynamic>> _getPrioritizedEngines(bool hasHistory) {
+    final available = _recommendations
+        .where((rec) => !rec.requiresHistory || hasHistory)
+        .toList();
+
+    if (available.isEmpty) {
+      return [const RandomDiscoveryRecommendation()];
+    }
+
+    // Shuffle to avoid always using the same order, but ensure variety
+    final random = Random(DateTime.now().millisecondsSinceEpoch);
+    available.shuffle(random);
+
+    // Always include RandomDiscovery as final fallback if not already present
+    if (!available.any((rec) => rec is RandomDiscoveryRecommendation)) {
+      available.add(const RandomDiscoveryRecommendation());
+    }
+
+    return available;
+  }
+
+  /// Get a guaranteed non-empty recommendation (fallback of fallbacks)
+  Future<BaseRecommendation> _getGuaranteedRecommendation(int pageKey) async {
+    // Use random discovery with broader search parameters
+    try {
+      final engine = const RandomDiscoveryRecommendation();
+      final recommendations = await engine.getRecommendations(
+        api: _api,
+        seed: pageKey,
+        readHistory: [], // Empty history for broader results
+      );
+
+      return engine.copyWith(
+        items: recommendations.items,
+        title: recommendations.title,
+      );
+    } catch (e) {
+      // Absolute fallback - return empty but properly structured result
+      return const RandomDiscoveryRecommendation(items: []);
+    }
   }
 
   bool get hasHistory {
