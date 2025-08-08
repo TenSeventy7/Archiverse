@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import 'package:archiverse/api.dart';
 import 'package:archiverse/models/collection.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:relative_time/relative_time.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AppUtils {
   static String formatAuthorList(
@@ -177,5 +179,38 @@ class AppUtils {
   static formatNumber(int num) {
     var currentLocale = Intl.getCurrentLocale();
     return NumberFormat('#,##0', currentLocale).format(num);
+  }
+
+  static String generateSharingLink(Object item) {
+    return switch (item) {
+      Work(id: final id) => 'works/$id',
+      Series(id: final id) => 'series/$id',
+      Collection(name: final name) => 'collections/$name',
+      Tag(encodedName: final encodedName) => 'tags/$encodedName',
+      Pseud(name: final name) => 'users/$name',
+      _ => throw ArgumentError('Unsupported item type for sharing link'),
+    };
+  }
+
+  static Uri generateSharingUri(Object item) {
+    String path = generateSharingLink(item);
+    return Uri.parse('${AppApi().baseUrl}$path');
+  }
+
+  static void shareItem(Object item) {
+    SharePlus.instance.share(
+      ShareParams(
+        uri: generateSharingUri(item),
+        subject: 'Check this out!',
+        title: switch (item) {
+          Work(title: final title) => title,
+          Series(title: final title) => title,
+          Collection(title: final title) => title,
+          Tag(name: final name) => name,
+          Pseud(name: final name) => name,
+          _ => 'Check this out!',
+        },
+      ),
+    );
   }
 }

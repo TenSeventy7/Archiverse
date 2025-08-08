@@ -173,9 +173,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
       ),
 
       IconButton(
-        onPressed: () {
-          // TODO
-        },
+        onPressed: () => AppUtils.shareItem(item),
         icon: Icon(TablerIcons.share, size: 22.0),
       ),
 

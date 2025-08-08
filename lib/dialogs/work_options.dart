@@ -243,7 +243,10 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                   context,
                   icon: TablerIcons.share,
                   title: context.strings.work_share,
-                  onTap: () {},
+                  onTap: () => {
+                    context.navigator.pop(),
+                    AppUtils.shareItem(widget.work),
+                  },
                 ),
 
                 _buildDivider(),

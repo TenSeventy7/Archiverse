@@ -28,6 +28,7 @@ import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkActivity extends CommonDetailActivity<Work> {
@@ -179,9 +180,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
       ),
 
       IconButton(
-        onPressed: () {
-          // TODO
-        },
+        onPressed: () => AppUtils.shareItem(item),
         icon: Icon(TablerIcons.share, size: 22.0),
       ),
 
