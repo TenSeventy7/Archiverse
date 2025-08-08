@@ -2,6 +2,7 @@ import 'package:archiverse/api.dart';
 import 'package:archiverse/components/bookmarks_card.dart';
 import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
+import 'package:archiverse/components/live_user_image.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/padded_column.dart';
 import 'package:archiverse/components/text_header.dart';
@@ -439,20 +440,13 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
                           left: i * 24.0,
                           child: CircleAvatar(
                             radius: 24,
-                            child: EnhancedFutureBuilder(
-                              future: AppApi().getPseud(item.authors[i]),
-                              rememberFutureResult: true,
-                              whenDone: (author) => UserImage(
-                                context: context,
-                                user: author,
-                                size: 24,
-                              ),
-                              whenNotDone: UserImage(
-                                context: context,
-                                user: item.authors[i],
-                                size: 24,
-                              ),
-                            ),
+                            child: (int i, BuildContext context) {
+                              var author = item.authors[i];
+                              return LiveUserImage(
+                                deferred: state == LoadingState.LOADING,
+                                author: author,
+                              );
+                            }(i, context),
                           ),
                         ),
                     ],

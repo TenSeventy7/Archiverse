@@ -2,6 +2,7 @@ import 'package:archiverse/api.dart';
 import 'package:archiverse/components/bookmarks_card.dart';
 import 'package:archiverse/components/cards/series_card.dart';
 import 'package:archiverse/components/items/series_item.dart';
+import 'package:archiverse/components/live_user_image.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/rating_list.dart';
 import 'package:archiverse/components/text_header.dart';
@@ -28,7 +29,6 @@ import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class WorkActivity extends CommonDetailActivity<Work> {
@@ -445,20 +445,13 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                           left: i * 28.0,
                           child: CircleAvatar(
                             radius: 28,
-                            child: EnhancedFutureBuilder(
-                              future: AppApi().getPseud(item.authors[i]),
-                              rememberFutureResult: true,
-                              whenDone: (author) => UserImage(
-                                context: context,
-                                user: author,
-                                size: 28,
-                              ),
-                              whenNotDone: UserImage(
-                                context: context,
-                                user: item.authors[i],
-                                size: 28,
-                              ),
-                            ),
+                            child: (int i, BuildContext context) {
+                              var author = item.authors[i];
+                              return LiveUserImage(
+                                deferred: state == LoadingState.LOADING,
+                                author: author,
+                              );
+                            }(i, context),
                           ),
                         ),
                     ],
