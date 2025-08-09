@@ -28,6 +28,9 @@ import 'package:provider/provider.dart';
 import 'package:relative_time/relative_time.dart';
 
 void main() async {
+  // Initialize Flutter bindings
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Initialize the Ao3Api instance
   await AppApi().initFlutter();
 
