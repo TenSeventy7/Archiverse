@@ -1,9 +1,6 @@
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
-import 'package:archiverse/components/padded_divider.dart';
-import 'package:archiverse/components/padded_wrap.dart';
 import 'package:archiverse/components/search/recent_item.dart';
-import 'package:archiverse/components/search/trending_tag.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/media.dart';

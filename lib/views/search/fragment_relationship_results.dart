@@ -5,7 +5,6 @@
  */
 
 import 'package:archiverse/api.dart';
-import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/views/search/fragment_tag_results.dart';
 

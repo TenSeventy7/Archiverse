@@ -1,5 +1,4 @@
 import 'package:archiverse/api.dart';
-import 'package:archiverse/api/parsers/tag.dart';
 import 'package:archiverse/components/suggestions/tag_suggestions.dart';
 import 'package:archiverse/models/tag.dart';
 import 'package:archiverse/placeholders.dart';
