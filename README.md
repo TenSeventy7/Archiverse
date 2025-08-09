@@ -56,7 +56,7 @@ Archiverse is developed in accordance with the [OTW's Terms of Service](https://
 
 ## 🤝 Support
 
-Archiverse has an official Discord community where you can get support, share feedback, and connect with other users. Join us at [Archiverse Explorers](https://discord.gg/archiverse) today!
+Archiverse has an official Discord community where you can get support, share feedback, and connect with other users. Join us at [Archiverse Explorers](https://discord.gg/vhtsGZtKBH) today!
 
 ## 🔨 Contributing
 
