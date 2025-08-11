@@ -1,4 +1,4 @@
-import 'package:archiverse/components/cards/work_card.dart';
+import 'package:archiverse/components/cards/read_history_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
@@ -123,7 +123,7 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
             itemCount: history.length,
             itemBuilder: (context, index) {
               ReadHistory readHistory = history[index];
-              return WorkCard(work: readHistory.work);
+              return ReadHistoryCard(history: readHistory);
             },
             separatorBuilder: (context, index) => const SizedBox(height: 4.0),
           ),
