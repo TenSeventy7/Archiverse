@@ -263,7 +263,6 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
         ),
 
         if (widget.isReader) ...[
-          const SizedBox(height: 8.0),
           Container(
             margin: const EdgeInsets.only(
               bottom: 12.0,
