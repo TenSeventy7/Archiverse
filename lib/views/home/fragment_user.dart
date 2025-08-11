@@ -82,6 +82,16 @@ class _UserFragmentState extends State<UserFragment> {
                   SizedBox(height: context.commonPaddingHalf / 2),
                   _buildWorksList(),
                   SizedBox(height: context.commonPaddingHalf / 2),
+                ] else ...[
+                  OptionGroup(
+                    children: [
+                      OptionTile(
+                        title: 'Sign in',
+                        icon: TablerIcons.login,
+                        onTap: () => _handleUserTap(userProvider),
+                      ),
+                    ],
+                  ),
                 ],
                 _buildSettingsList(),
                 if (user != null) ...[
@@ -156,7 +166,7 @@ class _UserFragmentState extends State<UserFragment> {
               // User info
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                  padding: const EdgeInsets.only(right: 24.0, bottom: 26.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -177,12 +187,12 @@ class _UserFragmentState extends State<UserFragment> {
               ),
             ],
           ),
-          trailing: Icon(
-            TablerIcons.chevron_right,
-            size: 24,
-            color: context.colorScheme.onSurface.withAlpha(150),
-          ),
-          onTap: () => _handleUserTap(provider),
+          trailing: !provider.isSignedIn
+              ? null
+              : IconButton(
+                  onPressed: () => _handleUserTap(provider),
+                  icon: Icon(TablerIcons.chevron_right, size: 24),
+                ),
         ),
       ],
     );
@@ -414,7 +424,7 @@ class _UserFragmentState extends State<UserFragment> {
 
     if (provider.isLoadingError || user == null) {
       return Padding(
-        padding: const EdgeInsets.only(top: 4.0),
+        padding: const EdgeInsets.only(top: 2.0),
         child: Text(
           provider.isLoadingError
               ? "Tap to try again"
