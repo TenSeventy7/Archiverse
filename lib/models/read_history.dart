@@ -23,4 +23,24 @@ class ReadHistory {
     required this.completion,
     this.hits = 1,
   });
+
+  ReadHistory copyWith({
+    Work? work,
+    Chapter? chapter,
+    DateTime? timestamp,
+    int? position,
+    ReadStatus? status,
+    double? completion,
+    int? hits,
+  }) {
+    return ReadHistory(
+      work: work ?? this.work,
+      chapter: chapter ?? this.chapter,
+      timestamp: timestamp ?? this.timestamp,
+      position: position ?? this.position,
+      status: status ?? this.status,
+      completion: completion ?? this.completion,
+      hits: hits ?? this.hits,
+    );
+  }
 }
