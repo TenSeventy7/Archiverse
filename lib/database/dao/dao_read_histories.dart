@@ -420,7 +420,8 @@ class ReadHistoriesDao
       // i.e. this is an existing session
       final latestEntry = await getLatestReadHistory();
 
-      if (latestEntry != null && latestEntry.workId == history.work.id) {
+      if (latestEntry != null &&
+          _isCurrentSession(latestEntry, history.work.id)) {
         // Update the latest entry if it's from the current session
         await (update(table)..where(
               (h) =>
@@ -433,6 +434,23 @@ class ReadHistoriesDao
         await insert(history);
       }
     });
+  }
+
+  bool _isCurrentSession(DbReadHistory? history, int workId) {
+    if (history == null) {
+      return false;
+    }
+
+    // Check if the work IDs match
+    if (workId != history.workId) {
+      return false;
+    }
+
+    // Check if this is the same day
+    final today = DateTime.now();
+    return today.year == history.timestamp.year &&
+        today.month == history.timestamp.month &&
+        today.day == history.timestamp.day;
   }
 
   // Add method to get latest history entry in the database
