@@ -91,6 +91,7 @@ class OptionTile extends StatelessWidget {
       trailing: _buildTrailingWidget(
         child: const Icon(TablerIcons.chevron_right),
       ),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
       onTap:
           onTap ??
           (routeName != null
