@@ -62,16 +62,17 @@ class AppUtils {
     BuildContext context,
     DateTime date, {
     bool proper = true,
+    Iterable<TimeUnit> timeUnits = const [
+      TimeUnit.year,
+      TimeUnit.month,
+      TimeUnit.week,
+      TimeUnit.day,
+    ],
   }) {
     try {
       String relative = RelativeTime(
         context,
-        timeUnits: const [
-          TimeUnit.year,
-          TimeUnit.month,
-          TimeUnit.week,
-          TimeUnit.day,
-        ],
+        timeUnits: timeUnits,
       ).format(date);
 
       // Capitalize the first letter of the string
