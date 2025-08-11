@@ -14,14 +14,4 @@ class DbReadHistories extends Table {
   IntColumn get position => integer()();
   TextColumn get status => text()(); // ReadStatus enum as string
   RealColumn get completion => real()();
-  IntColumn get hits => integer().withDefault(const Constant(1))();
-
-  @override
-  Set<Column> get primaryKey => {id};
-
-  // Add unique constraint on workId to prevent duplicates
-  @override
-  List<Set<Column>>? get uniqueKeys => [
-    {workId},
-  ];
 }

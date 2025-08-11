@@ -3,8 +3,9 @@ import 'package:archiverse/models/read_history.dart';
 
 extension ReadHistoryRepository on DataRepository {
   static Future<void> saveReadHistory(ReadHistory history) async {
-    await DataRepository.database.readHistoriesDao
-        .insertOrUpdateReadHistoryComplete(history);
+    await DataRepository.database.readHistoriesDao.insertReadHistoryComplete(
+      history,
+    );
   }
 
   static Future<ReadHistory?> getReadHistory(int workId) async {
@@ -124,9 +125,5 @@ extension ReadHistoryRepository on DataRepository {
 
   static Future<int> getReadHistoryCount() async {
     return await DataRepository.database.readHistoriesDao.getCount();
-  }
-
-  static Future<void> addHit(int workId, {int hits = 1}) async {
-    await DataRepository.database.readHistoriesDao.addHit(workId, hits: hits);
   }
 }

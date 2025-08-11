@@ -23,7 +23,6 @@ class ReadHistoriesDao
       position: Value(history.position),
       status: Value(history.status.name),
       completion: Value(history.completion),
-      hits: Value(history.hits),
     );
   }
 
@@ -33,18 +32,6 @@ class ReadHistoriesDao
     // Use getReadHistoryComplete for full data with relationships
     throw UnimplementedError(
       'Use getReadHistoryComplete instead - ReadHistory requires Work object',
-    );
-  }
-
-  // Override insertOrUpdate to use workId for conflict resolution
-  @override
-  Future<void> insertOrUpdate(ReadHistory model) async {
-    await into(table).insert(
-      toCompanion(model),
-      onConflict: DoUpdate(
-        (old) => toCompanion(model),
-        target: [table.asDslTable.workId],
-      ),
     );
   }
 
@@ -89,7 +76,7 @@ class ReadHistoriesDao
     for (final record in historyRecords) {
       final history = await getReadHistoryComplete(record.workId);
       if (history != null) {
-        histories.add(history);
+        histories.add(history.copyWith(hits: await getHitCount(record.workId)));
       }
     }
 
@@ -146,7 +133,7 @@ class ReadHistoriesDao
             (s) => s.name == historyData.status,
           ),
           completion: historyData.completion,
-          hits: historyData.hits,
+          hits: await getHitCount(work.id),
         ),
       );
     }
@@ -387,7 +374,7 @@ class ReadHistoriesDao
             (s) => s.name == historyData.status,
           ),
           completion: historyData.completion,
-          hits: historyData.hits,
+          hits: await getHitCount(work.id),
         ),
       );
     }
@@ -399,18 +386,6 @@ class ReadHistoriesDao
   Future<bool> hasHistoryBeyondDate(DateTime date) async {
     final count = await getCount((h) => h.timestamp.isSmallerThanValue(date));
     return count > 0;
-  }
-
-  // Add hit to work history
-  // Increments the hit count for a work in the read history.
-  // This is separate from a work's general hit count, as this is instead used
-  // to track how many times a work has been read by the user.
-  // This is useful for analytics and personalized recommendations.
-  Future<void> addHit(int workId, {int hits = 1}) async {
-    await customUpdate(
-      'UPDATE read_histories SET hits = hits + ? WHERE work_id = ?',
-      variables: [Variable<int>(hits), Variable<int>(workId)],
-    );
   }
 
   // Enhanced insert/update that handles complete ReadHistory with Work
@@ -427,6 +402,58 @@ class ReadHistoriesDao
       // Insert/update the read history
       await insertOrUpdate(history);
     });
+  }
+
+  // Insert that handles complete ReadHistory with Work
+  Future<void> insertReadHistoryComplete(ReadHistory history) async {
+    await transaction(() async {
+      // Ensure the work exists (insert/update it)
+      await db.worksDao.insertOrUpdateWorkComplete(history.work);
+
+      // If there's a chapter, ensure it exists
+      if (history.chapter != null) {
+        await db.chaptersDao.insertOrUpdate(history.chapter!);
+      }
+
+      // Check if an existing read history entry exists
+      // We're only going to do an update IFF it is the latest entry
+      // i.e. this is an existing session
+      final latestEntry = await getLatestReadHistory();
+
+      if (latestEntry != null && latestEntry.workId == history.work.id) {
+        // Update the latest entry if it's from the current session
+        await (update(table)..where(
+              (h) =>
+                  h.workId.equals(history.work.id) &
+                  h.timestamp.equals(latestEntry.timestamp),
+            ))
+            .write(toCompanion(history));
+      } else {
+        // Insert new entry for a new session
+        await insert(history);
+      }
+    });
+  }
+
+  // Add method to get latest history entry in the database
+  Future<DbReadHistory?> getLatestReadHistory() async {
+    final result =
+        await (select(table)
+              ..orderBy([(h) => OrderingTerm.desc(h.timestamp)])
+              ..limit(1))
+            .get();
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  // Get hit count for a particular work
+  // This pools all counts of history with the same workId
+  Future<int> getHitCount(int workId) async {
+    final count = await (select(
+      table,
+    )..where((h) => h.workId.equals(workId))).get();
+
+    // Return how many entries we get
+    return count.length;
   }
 
   // Bulk operations for better performance
@@ -490,7 +517,7 @@ class ReadHistoriesDao
             (s) => s.name == historyData.status,
           ),
           completion: historyData.completion,
-          hits: historyData.hits,
+          hits: await getHitCount(work.id),
         ),
       );
     }

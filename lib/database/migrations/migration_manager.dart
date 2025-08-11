@@ -1,10 +1,14 @@
+import 'package:archiverse/database/migrations/migration_2.dart';
 import 'package:drift/drift.dart';
 import 'migration_base.dart';
 import 'migration_1.dart';
 
 /// Manages database migrations
 class MigrationManager {
-  static final List<DatabaseMigration> _migrations = [Migration1()];
+  static final List<DatabaseMigration> _migrations = [
+    Migration1(),
+    Migration2(),
+  ];
 
   /// Execute all migrations up to the target version
   static Future<void> runMigrations(

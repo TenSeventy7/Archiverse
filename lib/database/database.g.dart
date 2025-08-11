@@ -4157,16 +4157,6 @@ class $DbReadHistoriesTable extends DbReadHistories
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _hitsMeta = const VerificationMeta('hits');
-  @override
-  late final GeneratedColumn<int> hits = GeneratedColumn<int>(
-    'hits',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4176,7 +4166,6 @@ class $DbReadHistoriesTable extends DbReadHistories
     position,
     status,
     completion,
-    hits,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4239,21 +4228,11 @@ class $DbReadHistoriesTable extends DbReadHistories
     } else if (isInserting) {
       context.missing(_completionMeta);
     }
-    if (data.containsKey('hits')) {
-      context.handle(
-        _hitsMeta,
-        hits.isAcceptableOrUnknown(data['hits']!, _hitsMeta),
-      );
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {workId},
-  ];
   @override
   DbReadHistory map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -4286,10 +4265,6 @@ class $DbReadHistoriesTable extends DbReadHistories
         DriftSqlType.double,
         data['${effectivePrefix}completion'],
       )!,
-      hits: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}hits'],
-      )!,
     );
   }
 
@@ -4307,7 +4282,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
   final int position;
   final String status;
   final double completion;
-  final int hits;
   const DbReadHistory({
     required this.id,
     required this.workId,
@@ -4316,7 +4290,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     required this.position,
     required this.status,
     required this.completion,
-    required this.hits,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4330,7 +4303,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     map['position'] = Variable<int>(position);
     map['status'] = Variable<String>(status);
     map['completion'] = Variable<double>(completion);
-    map['hits'] = Variable<int>(hits);
     return map;
   }
 
@@ -4345,7 +4317,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
       position: Value(position),
       status: Value(status),
       completion: Value(completion),
-      hits: Value(hits),
     );
   }
 
@@ -4362,7 +4333,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
       position: serializer.fromJson<int>(json['position']),
       status: serializer.fromJson<String>(json['status']),
       completion: serializer.fromJson<double>(json['completion']),
-      hits: serializer.fromJson<int>(json['hits']),
     );
   }
   @override
@@ -4376,7 +4346,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
       'position': serializer.toJson<int>(position),
       'status': serializer.toJson<String>(status),
       'completion': serializer.toJson<double>(completion),
-      'hits': serializer.toJson<int>(hits),
     };
   }
 
@@ -4388,7 +4357,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     int? position,
     String? status,
     double? completion,
-    int? hits,
   }) => DbReadHistory(
     id: id ?? this.id,
     workId: workId ?? this.workId,
@@ -4397,7 +4365,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     position: position ?? this.position,
     status: status ?? this.status,
     completion: completion ?? this.completion,
-    hits: hits ?? this.hits,
   );
   DbReadHistory copyWithCompanion(DbReadHistoriesCompanion data) {
     return DbReadHistory(
@@ -4410,7 +4377,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
       completion: data.completion.present
           ? data.completion.value
           : this.completion,
-      hits: data.hits.present ? data.hits.value : this.hits,
     );
   }
 
@@ -4423,8 +4389,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
           ..write('timestamp: $timestamp, ')
           ..write('position: $position, ')
           ..write('status: $status, ')
-          ..write('completion: $completion, ')
-          ..write('hits: $hits')
+          ..write('completion: $completion')
           ..write(')'))
         .toString();
   }
@@ -4438,7 +4403,6 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
     position,
     status,
     completion,
-    hits,
   );
   @override
   bool operator ==(Object other) =>
@@ -4450,8 +4414,7 @@ class DbReadHistory extends DataClass implements Insertable<DbReadHistory> {
           other.timestamp == this.timestamp &&
           other.position == this.position &&
           other.status == this.status &&
-          other.completion == this.completion &&
-          other.hits == this.hits);
+          other.completion == this.completion);
 }
 
 class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
@@ -4462,7 +4425,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
   final Value<int> position;
   final Value<String> status;
   final Value<double> completion;
-  final Value<int> hits;
   const DbReadHistoriesCompanion({
     this.id = const Value.absent(),
     this.workId = const Value.absent(),
@@ -4471,7 +4433,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     this.position = const Value.absent(),
     this.status = const Value.absent(),
     this.completion = const Value.absent(),
-    this.hits = const Value.absent(),
   });
   DbReadHistoriesCompanion.insert({
     this.id = const Value.absent(),
@@ -4481,7 +4442,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     required int position,
     required String status,
     required double completion,
-    this.hits = const Value.absent(),
   }) : workId = Value(workId),
        timestamp = Value(timestamp),
        position = Value(position),
@@ -4495,7 +4455,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     Expression<int>? position,
     Expression<String>? status,
     Expression<double>? completion,
-    Expression<int>? hits,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4505,7 +4464,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
       if (position != null) 'position': position,
       if (status != null) 'status': status,
       if (completion != null) 'completion': completion,
-      if (hits != null) 'hits': hits,
     });
   }
 
@@ -4517,7 +4475,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     Value<int>? position,
     Value<String>? status,
     Value<double>? completion,
-    Value<int>? hits,
   }) {
     return DbReadHistoriesCompanion(
       id: id ?? this.id,
@@ -4527,7 +4484,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
       position: position ?? this.position,
       status: status ?? this.status,
       completion: completion ?? this.completion,
-      hits: hits ?? this.hits,
     );
   }
 
@@ -4555,9 +4511,6 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
     if (completion.present) {
       map['completion'] = Variable<double>(completion.value);
     }
-    if (hits.present) {
-      map['hits'] = Variable<int>(hits.value);
-    }
     return map;
   }
 
@@ -4570,8 +4523,7 @@ class DbReadHistoriesCompanion extends UpdateCompanion<DbReadHistory> {
           ..write('timestamp: $timestamp, ')
           ..write('position: $position, ')
           ..write('status: $status, ')
-          ..write('completion: $completion, ')
-          ..write('hits: $hits')
+          ..write('completion: $completion')
           ..write(')'))
         .toString();
   }
@@ -13246,7 +13198,6 @@ typedef $$DbReadHistoriesTableCreateCompanionBuilder =
       required int position,
       required String status,
       required double completion,
-      Value<int> hits,
     });
 typedef $$DbReadHistoriesTableUpdateCompanionBuilder =
     DbReadHistoriesCompanion Function({
@@ -13257,7 +13208,6 @@ typedef $$DbReadHistoriesTableUpdateCompanionBuilder =
       Value<int> position,
       Value<String> status,
       Value<double> completion,
-      Value<int> hits,
     });
 
 final class $$DbReadHistoriesTableReferences
@@ -13338,11 +13288,6 @@ class $$DbReadHistoriesTableFilterComposer
 
   ColumnFilters<double> get completion => $composableBuilder(
     column: $table.completion,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get hits => $composableBuilder(
-    column: $table.hits,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13427,11 +13372,6 @@ class $$DbReadHistoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get hits => $composableBuilder(
-    column: $table.hits,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$DbWorksTableOrderingComposer get workId {
     final $$DbWorksTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -13504,9 +13444,6 @@ class $$DbReadHistoriesTableAnnotationComposer
     column: $table.completion,
     builder: (column) => column,
   );
-
-  GeneratedColumn<int> get hits =>
-      $composableBuilder(column: $table.hits, builder: (column) => column);
 
   $$DbWorksTableAnnotationComposer get workId {
     final $$DbWorksTableAnnotationComposer composer = $composerBuilder(
@@ -13592,7 +13529,6 @@ class $$DbReadHistoriesTableTableManager
                 Value<int> position = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<double> completion = const Value.absent(),
-                Value<int> hits = const Value.absent(),
               }) => DbReadHistoriesCompanion(
                 id: id,
                 workId: workId,
@@ -13601,7 +13537,6 @@ class $$DbReadHistoriesTableTableManager
                 position: position,
                 status: status,
                 completion: completion,
-                hits: hits,
               ),
           createCompanionCallback:
               ({
@@ -13612,7 +13547,6 @@ class $$DbReadHistoriesTableTableManager
                 required int position,
                 required String status,
                 required double completion,
-                Value<int> hits = const Value.absent(),
               }) => DbReadHistoriesCompanion.insert(
                 id: id,
                 workId: workId,
@@ -13621,7 +13555,6 @@ class $$DbReadHistoriesTableTableManager
                 position: position,
                 status: status,
                 completion: completion,
-                hits: hits,
               ),
           withReferenceMapper: (p0) => p0
               .map(

@@ -47,12 +47,6 @@ extension AppApiReadHistory on AppApi {
         completion = chapter.chapter / work.chapters;
       }
 
-      // Get existing history to preserve hit count
-      final existingHistory = await ReadHistoryRepository.getReadHistory(
-        work.id,
-      );
-      final hits = existingHistory?.hits ?? 0;
-
       ReadHistory readHistory = ReadHistory(
         work: work,
         chapter: chapter,
@@ -60,7 +54,6 @@ extension AppApiReadHistory on AppApi {
         position: scrollPosition,
         status: ReadStatus.IN_PROGRESS,
         completion: completion,
-        hits: hits + 1, // Increment hits on each save
       );
 
       // Save to database (insertOnConflictUpdate will handle upsert)
@@ -170,16 +163,6 @@ extension AppApiReadHistory on AppApi {
     } catch (e) {
       print('Error fetching read history count: $e');
       return 0;
-    }
-  }
-
-  Future<void> addHit(int workId, {int hits = 1}) async {
-    try {
-      // Only increment hits, don't create or update read history entries
-      // This is separate from saveReadHistory to avoid conflicts
-      await ReadHistoryRepository.addHit(workId, hits: hits);
-    } catch (e) {
-      print('Error adding hit: $e');
     }
   }
 }
