@@ -206,7 +206,7 @@ class SeriesItem extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          TablerIcons.clock,
+          TablerIcons.progress_check,
           size: 16.0,
           color: colorScheme.onSurfaceVariant,
         ),

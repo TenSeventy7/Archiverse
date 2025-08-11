@@ -246,7 +246,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
     return Row(
       children: [
         Icon(
-          TablerIcons.clock,
+          TablerIcons.progress_check,
           size: 18,
           color: colorScheme.onSurfaceVariant.withOpacity(0.7),
         ),
@@ -792,7 +792,7 @@ class WorkDetailState extends CommonDetailActivityState<Work> {
                   ),
                   WorkMetadataItem(
                     context: context,
-                    icon: TablerIcons.clock,
+                    icon: TablerIcons.progress_check,
                     label: "Updated",
                     value: AppUtils.formatDate(context, item.updateDate),
                   ),

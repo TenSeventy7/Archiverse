@@ -519,7 +519,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
                   const SizedBox(height: 12),
                   _buildMetadataRow(
                     context,
-                    TablerIcons.clock,
+                    TablerIcons.progress_check,
                     "Last Updated",
                     AppUtils.formatDate(
                       context,
@@ -745,7 +745,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
           Row(
             children: [
               Icon(
-                TablerIcons.clock,
+                TablerIcons.progress_check,
                 size: 18,
                 color: colorScheme.onSurfaceVariant.withOpacity(0.7),
               ),
@@ -806,7 +806,7 @@ class SeriesDetailState extends CommonDetailActivityState<Series>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          TablerIcons.clock,
+                          TablerIcons.progress,
                           size: 14,
                           color: colorScheme.onTertiaryContainer,
                         ),
