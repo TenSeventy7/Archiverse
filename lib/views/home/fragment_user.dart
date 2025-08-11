@@ -82,7 +82,17 @@ class _UserFragmentState extends State<UserFragment> {
                   SizedBox(height: context.commonPaddingHalf / 2),
                   _buildWorksList(),
                   SizedBox(height: context.commonPaddingHalf / 2),
-                ] else ...[
+                ] else if (userProvider.isLoadingError) ...[
+                  OptionGroup(
+                    children: [
+                      OptionTile(
+                        title: 'Try again',
+                        icon: TablerIcons.refresh,
+                        onTap: () => _handleUserTap(userProvider),
+                      ),
+                    ],
+                  ),
+                ] else if (!userProvider.isSignedIn) ...[
                   OptionGroup(
                     children: [
                       OptionTile(
@@ -187,7 +197,7 @@ class _UserFragmentState extends State<UserFragment> {
               ),
             ],
           ),
-          trailing: !provider.isSignedIn
+          trailing: !provider.isSignedIn || provider.isLoadingError
               ? null
               : IconButton(
                   onPressed: () => _handleUserTap(provider),
