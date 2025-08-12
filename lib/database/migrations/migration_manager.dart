@@ -1,13 +1,12 @@
+import 'package:archiverse/database/migrations/migration_0.dart';
 import 'package:archiverse/database/migrations/migration_2.dart';
 import 'package:archiverse/database/migrations/migration_3.dart';
 import 'package:drift/drift.dart';
 import 'migration_base.dart';
-import 'migration_1.dart';
 
 /// Manages database migrations
 class MigrationManager {
   static final List<DatabaseMigration> _migrations = [
-    Migration1(),
     Migration2(),
     Migration3(),
   ];
@@ -33,8 +32,8 @@ class MigrationManager {
     // Create all tables first
     await migrator.createAll();
 
-    // Then run all migrations
-    await runMigrations(database, migrator, _getLatestVersion());
+    // Then run only Migration0
+    await Migration0().migrate(database, migrator);
   }
 
   /// Execute migrations for onUpgrade
@@ -50,13 +49,5 @@ class MigrationManager {
         await migration.migrate(database, migrator);
       }
     }
-  }
-
-  /// Get the latest migration version
-  static int _getLatestVersion() {
-    if (_migrations.isEmpty) return 1;
-    return _migrations
-        .map((m) => m.targetVersion)
-        .reduce((a, b) => a > b ? a : b);
   }
 }

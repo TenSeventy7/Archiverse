@@ -2,9 +2,9 @@ import 'package:drift/drift.dart';
 import 'migration_base.dart';
 
 /// Initial migration - creates all indexes
-class Migration1 extends DatabaseMigration {
+class Migration0 extends DatabaseMigration {
   @override
-  int get targetVersion => 1;
+  int get targetVersion => 3;
 
   @override
   Future<void> migrate(
@@ -32,12 +32,12 @@ class Migration1 extends DatabaseMigration {
       'CREATE INDEX IF NOT EXISTS idx_read_histories_chapter ON read_histories(chapter_id) WHERE chapter_id IS NOT NULL',
     );
 
-    // Library category works indexes for joins
+    // Library folder works indexes for joins
     await helper.createIndex(
-      'CREATE INDEX IF NOT EXISTS idx_library_category_works_work ON library_category_works(work_id)',
+      'CREATE INDEX IF NOT EXISTS idx_library_folder_works_work ON library_folder_works(work_id)',
     );
     await helper.createIndex(
-      'CREATE INDEX IF NOT EXISTS idx_library_category_works_category ON library_category_works(category_id)',
+      'CREATE INDEX IF NOT EXISTS idx_library_folder_works_folder ON library_folder_works(folder_id)',
     );
 
     // Downloaded works indexes
