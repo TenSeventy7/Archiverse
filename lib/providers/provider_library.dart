@@ -43,7 +43,7 @@ class LibraryProvider extends ChangeNotifier {
   String? get anyError => _readHistoryError ?? _libraryError;
 
   Future<void> initialize() async {
-    await _loadMostRecentHistory();
+    await refreshHistory();
   }
 
   /// Saves read history and updates related library data
