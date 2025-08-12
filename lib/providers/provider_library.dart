@@ -14,6 +14,7 @@ class LibraryProvider extends ChangeNotifier {
   ReadHistory? _mostRecentHistory;
   bool _isLoadingHistory = false;
   String? _readHistoryError;
+  final ValueNotifier<int> _history = ValueNotifier(0);
 
   // Library state
   List<Work> _recentlyAddedWorks = [];
@@ -41,9 +42,16 @@ class LibraryProvider extends ChangeNotifier {
       _isLoadingMostRead ||
       _isLoadingFolders;
   String? get anyError => _readHistoryError ?? _libraryError;
+  ValueNotifier<int> get history => _history;
 
   Future<void> initialize() async {
     await refreshHistory();
+  }
+
+  @override
+  void dispose() {
+    _history.dispose();
+    super.dispose();
   }
 
   /// Saves read history and updates related library data
@@ -95,6 +103,7 @@ class LibraryProvider extends ChangeNotifier {
       _mostRecentHistory = await _api.getMostRecentReadHistory();
 
       _isLoadingHistory = false;
+      _history.value = DateTime.now().millisecondsSinceEpoch;
       notifyListeners();
     } catch (e) {
       _readHistoryError = e.toString();
