@@ -1,4 +1,5 @@
 import 'package:archiverse/api.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error, e.g., user not found or network issue
-      print(e);
+      AppLog().e('Error fetching user info: $e', tag: "UserProvider");
       _user = null;
       _isFetching = false;
       notifyListeners();

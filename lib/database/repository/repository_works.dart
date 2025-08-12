@@ -1,4 +1,5 @@
 import 'package:archiverse/database/repository.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/work.dart';
 
 extension WorkRepository on DataRepository {
@@ -79,7 +80,7 @@ extension WorkRepository on DataRepository {
         );
       } else {
         // Optionally, log or handle the case where the work is still in use
-        print('Work $workId is still in use in library or read history.');
+        AppLog().d('Work $workId is still in use in library or read history.', tag: "WorkRepository");
       }
     }
   }

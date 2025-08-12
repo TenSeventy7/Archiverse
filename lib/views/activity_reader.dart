@@ -4,6 +4,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/dialogs/chapters_list.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/work.dart';
@@ -133,7 +134,10 @@ class _ReaderActivityState extends State<ReaderActivity>
               totalScrollPosition: maxScrollExtent,
             )
             .catchError((error) {
-              debugPrint('Error saving read history: $error');
+              AppLog().e(
+                'Error saving read history: $error',
+                tag: "ReaderActivity",
+              );
             });
       } else {
         // Save without scroll position if controller isn't attached
@@ -144,11 +148,17 @@ class _ReaderActivityState extends State<ReaderActivity>
               scrollPosition: 0,
             )
             .catchError((error) {
-              debugPrint('Error saving read history: $error');
+              AppLog().e(
+                'Error saving read history: $error',
+                tag: "ReaderActivity",
+              );
             });
       }
     } catch (e) {
-      debugPrint('Error accessing provider or saving read history: $e');
+      AppLog().e(
+        'Error accessing provider or saving read history: $e',
+        tag: "ReaderActivity",
+      );
     }
   }
 
@@ -238,14 +248,21 @@ class _ReaderActivityState extends State<ReaderActivity>
             totalScrollPosition: 0,
           )
           .catchError((error) {
-            debugPrint('Error recording initial read history: $error');
+            AppLog().e(
+              'Error recording initial read history: $error',
+              tag: "ReaderActivity",
+            );
           });
 
-      debugPrint(
+      AppLog().d(
         'Recorded initial read history for: ${work.title} - ${_currentChapter!.title}',
+        tag: "ReaderActivity",
       );
     } catch (e) {
-      debugPrint('Error accessing provider for initial history: $e');
+      AppLog().e(
+        'Error accessing provider for initial history: $e',
+        tag: "ReaderActivity",
+      );
     }
   }
 

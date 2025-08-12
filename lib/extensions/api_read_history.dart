@@ -1,5 +1,6 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/database/repository.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
@@ -59,7 +60,7 @@ extension AppApiReadHistory on AppApi {
       // Save to database (insertOnConflictUpdate will handle upsert)
       await ReadHistoryRepository.saveReadHistory(readHistory);
     } catch (e) {
-      print('Error saving read history: $e');
+      AppLog().e('Error saving read history: $e', tag: "ApiLibrary");
     }
   }
 
@@ -70,7 +71,7 @@ extension AppApiReadHistory on AppApi {
     try {
       return await ReadHistoryRepository.getReadHistory(work.id);
     } catch (e) {
-      print('Error fetching read history: $e');
+      AppLog().e('Error fetching read history: $e', tag: "ApiLibrary");
       return null;
     }
   }
@@ -90,7 +91,7 @@ extension AppApiReadHistory on AppApi {
         return null;
       }
     } catch (e) {
-      print('Error fetching latest read history: $e');
+      AppLog().e('Error fetching latest read history: $e', tag: "ApiLibrary");
       return null;
     }
   }
@@ -107,7 +108,10 @@ extension AppApiReadHistory on AppApi {
       }
       return null;
     } catch (e) {
-      print('Error fetching most recent read history: $e');
+      AppLog().e(
+        'Error fetching most recent read history: $e',
+        tag: "ApiLibrary",
+      );
       return null;
     }
   }
@@ -137,7 +141,10 @@ extension AppApiReadHistory on AppApi {
 
       return {offset: list};
     } catch (e) {
-      print('Error fetching paginated grouped history: $e');
+      AppLog().e(
+        'Error fetching paginated grouped history: $e',
+        tag: "ApiLibrary",
+      );
       return {};
     }
   }
@@ -151,7 +158,7 @@ extension AppApiReadHistory on AppApi {
 
       return await ReadHistoryRepository.hasHistoryBeyondDate(nextDate);
     } catch (e) {
-      print('Error checking for more history: $e');
+      AppLog().e('Error checking for more history: $e', tag: "ApiLibrary");
       return false;
     }
   }
@@ -161,7 +168,7 @@ extension AppApiReadHistory on AppApi {
     try {
       return await ReadHistoryRepository.getReadHistoryCount();
     } catch (e) {
-      print('Error fetching read history count: $e');
+      AppLog().e('Error fetching read history count: $e', tag: "ApiLibrary");
       return 0;
     }
   }

@@ -11,6 +11,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/components/user_image.dart';
 import 'package:archiverse/dialogs/pseuds_list_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/bookmark.dart';
 import 'package:archiverse/models/loading_states.dart';
 import 'package:archiverse/models/pseud.dart';
@@ -109,7 +110,7 @@ class AuthorDetailState extends CommonDetailActivityState<Pseud> {
         });
       }
     } catch (e) {
-      print("Error fetching bookmarks: $e");
+      AppLog().e("Error fetching bookmarks: $e", tag: "AuthorActivity");
       if (mounted) {
         setState(() {
           _bookmarksState = LoadingState.ERROR;
