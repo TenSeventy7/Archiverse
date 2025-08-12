@@ -21,6 +21,7 @@ class LibraryHistoryFragment extends StatefulWidget {
 
 class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
   late final PagingController<int, Map<int, List<ReadHistory>>> _controller;
+  LibraryProvider? _provider;
 
   @override
   void initState() {
@@ -33,8 +34,25 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
 
   @override
   void dispose() {
+    _provider?.history.removeListener(_onHistoryChanged);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_provider == null) {
+      _provider = context.read<LibraryProvider>();
+      _provider!.history.addListener(_onHistoryChanged);
+    }
+  }
+
+  void _onHistoryChanged() {
+    if (mounted) {
+      _controller.refresh();
+    }
   }
 
   Future<List<Map<int, List<ReadHistory>>>> _fetchPage(int pageKey) async {
