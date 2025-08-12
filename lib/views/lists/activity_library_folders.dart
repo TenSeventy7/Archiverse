@@ -1,16 +1,16 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/item_placeholder.dart';
-import 'package:archiverse/dialogs/edit_category_dialog.dart';
+import 'package:archiverse/dialogs/folder_edit_dialog.dart';
 import 'package:archiverse/dialogs/library_folder_options.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/views/activity_common_list.dart';
 import 'package:archiverse/views/lists/activity_folder_works.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class LibraryFoldersActivity extends CommonListActivity<LibraryCategory> {
+class LibraryFoldersActivity extends CommonListActivity<LibraryFolder> {
   const LibraryFoldersActivity({super.key});
   static const String routeName = "/library/folders";
 
@@ -18,11 +18,10 @@ class LibraryFoldersActivity extends CommonListActivity<LibraryCategory> {
   FolderWorksActivityState createState() => FolderWorksActivityState();
 }
 
-class FolderWorksActivityState
-    extends CommonListActivityState<LibraryCategory> {
+class FolderWorksActivityState extends CommonListActivityState<LibraryFolder> {
   @override
-  Future<List<LibraryCategory>> fetchItems(int page) async {
-    return await AppApi().getLibraryCategories(page);
+  Future<List<LibraryFolder>> fetchItems(int page) async {
+    return AppApi().getLibraryFolders(page);
   }
 
   @override
@@ -34,7 +33,7 @@ class FolderWorksActivityState
       IconButton(
         icon: const Icon(Icons.add),
         onPressed: () {
-          _showAddCategoryDialog();
+          _showCreateFolderDialog();
         },
       ),
     ];
@@ -49,26 +48,22 @@ class FolderWorksActivityState
     );
   }
 
-  void _showAddCategoryDialog() async {
-    final result = await EditCategoryDialog.show(context);
+  void _showCreateFolderDialog() async {
+    final result = await EditFolderDialog.show(context);
     if (result == true) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Folder created successfully')),
         );
 
-        // Refresh the list to show the new category
+        // Refresh the list to show the new folder
         refreshList();
       }
     }
   }
 
   @override
-  Widget buildItemWidget(
-    BuildContext context,
-    LibraryCategory item,
-    int index,
-  ) {
+  Widget buildItemWidget(BuildContext context, LibraryFolder item, int index) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Container(
@@ -85,13 +80,13 @@ class FolderWorksActivityState
   }
 
   @override
-  void onItemTap(LibraryCategory item) {
+  void onItemTap(LibraryFolder item) {
     context.navigator.pushNamed(FolderWorksActivity.routeName, arguments: item);
   }
 
   @override
-  void onItemLongPress(LibraryCategory item) {
-    FolderOptionsDialog.showSheet(context, category: item);
+  void onItemLongPress(LibraryFolder item) {
+    FolderOptionsDialog.showSheet(context, folder: item);
   }
 
   @override

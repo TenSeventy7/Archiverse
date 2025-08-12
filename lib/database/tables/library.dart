@@ -18,33 +18,33 @@ class DbWorksLibrary extends Table {
   ];
 }
 
-class DbLibraryCategories extends Table {
+class DbLibraryFolders extends Table {
   @override
-  String get tableName => 'library_categories'; // Keep the actual table name as 'library_categories'
+  String get tableName => 'library_folders'; // Keep the actual table name as 'library_folders'
 
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text().withLength(min: 1, max: 512)(); // Category name
-  TextColumn get icon => text().nullable()(); // Optional icon for the category
+  TextColumn get name => text().withLength(min: 1, max: 512)(); // Folder name
+  TextColumn get icon => text().nullable()(); // Optional icon for the folder
   TextColumn get color =>
       text().withDefault(const Constant('blue'))(); // Default color
 }
 
-class DbLibraryCategoryWorks extends Table {
+class DbLibraryFolderWorks extends Table {
   @override
-  String get tableName => 'library_category_works'; // Keep the actual table name as 'library_category_works'
+  String get tableName => 'library_folder_works'; // Keep the actual table name as 'library_folder_works'
 
   IntColumn get id => integer().autoIncrement()();
   IntColumn get workId =>
       integer().references(DbWorks, #id)(); // Foreign key to works table
-  IntColumn get categoryId => integer().references(
-    DbLibraryCategories,
+  IntColumn get folderId => integer().references(
+    DbLibraryFolders,
     #id,
-  )(); // Foreign key to categories table
+  )(); // Foreign key to folders table
 
-  // Add unique constraint on workId and categoryId to prevent duplicates
+  // Add unique constraint on workId and folderId to prevent duplicates
   @override
   List<Set<Column>>? get uniqueKeys => [
-    {workId, categoryId},
+    {workId, folderId},
   ];
 }
 

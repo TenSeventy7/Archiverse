@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
-class LibraryCategory {
+class LibraryFolder {
   final int? id;
   final String name;
   final String? icon;
@@ -50,7 +50,7 @@ class LibraryCategory {
     'sword': TablerIcons.sword,
   };
 
-  const LibraryCategory({
+  const LibraryFolder({
     this.id,
     required this.name,
     required this.color,
@@ -60,17 +60,17 @@ class LibraryCategory {
 
   @override
   String toString() {
-    return 'LibraryCategory(id: $id, name: $name, icon: $icon, count: $count)';
+    return 'LibraryFolder(id: $id, name: $name, icon: $icon, count: $count)';
   }
 
-  LibraryCategory copyWith({
+  LibraryFolder copyWith({
     int? id,
     String? name,
     String? icon,
     String? color,
     int? count,
   }) {
-    return LibraryCategory(
+    return LibraryFolder(
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,

@@ -4,41 +4,40 @@ import 'package:archiverse/components/expressive/scaffold.dart';
 import 'package:archiverse/components/icon_selector.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
 
-class _EditCategoryDialog extends StatefulWidget {
-  final LibraryCategory? category; // null for add, non-null for edit
+class _EditFolderDialog extends StatefulWidget {
+  final LibraryFolder? folder; // null for add, non-null for edit
 
-  const _EditCategoryDialog({this.category});
+  const _EditFolderDialog({this.folder});
 
   @override
-  State<_EditCategoryDialog> createState() => _EditCategoryDialogState();
+  State<_EditFolderDialog> createState() => _EditFolderDialogState();
 }
 
-class _EditCategoryDialogState extends State<_EditCategoryDialog> {
+class _EditFolderDialogState extends State<_EditFolderDialog> {
   late final TextEditingController _nameController;
-  final _formKey = GlobalKey<FormState>();
   String? _nameError;
   IconData? _selectedIcon;
   bool _isLoading = false;
   String _selectedColor = 'blue'; // Default color, can be changed later
 
-  bool get isEditing => widget.category != null;
+  bool get isEditing => widget.folder != null;
   bool get isNameValid =>
       _nameError == null && _nameController.text.trim().isNotEmpty;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.category?.name ?? '');
+    _nameController = TextEditingController(text: widget.folder?.name ?? '');
     _nameController.addListener(_validateName);
-    if (widget.category != null) {
-      _selectedIcon = widget.category!.iconData;
-      _selectedColor = widget.category!.color;
+    if (widget.folder != null) {
+      _selectedIcon = widget.folder!.iconData;
+      _selectedColor = widget.folder!.color;
     }
   }
 
@@ -115,7 +114,7 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
           children: [
             IconSelector(
               selectedIcon: _selectedIcon,
-              color: LibraryCategory.colors[_selectedColor],
+              color: LibraryFolder.colors[_selectedColor],
               onIconSelected: (icon) {
                 setState(() {
                   _selectedIcon = icon;
@@ -187,7 +186,7 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: LibraryCategory.colors.entries
+              children: LibraryFolder.colors.entries
                   .map(
                     (entry) => _buildColorChip(
                       entry.value,
@@ -248,16 +247,16 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
 
     try {
       if (isEditing) {
-        final updatedCategory = LibraryCategory(
-          id: widget.category?.id ?? -1,
+        final updated = LibraryFolder(
+          id: widget.folder?.id ?? -1,
           name: name,
           icon: _getStringFromIcon(_selectedIcon ?? TablerIcons.folder),
           color: _selectedColor,
         );
-        await context.read<LibraryProvider>().updateCategory(updatedCategory);
+        await context.read<LibraryProvider>().updateFolder(updated);
       } else {
-        await context.read<LibraryProvider>().addCategory(
-          LibraryCategory(
+        await context.read<LibraryProvider>().addFolder(
+          LibraryFolder(
             name: name,
             icon: _getStringFromIcon(_selectedIcon ?? TablerIcons.folder),
             color: _selectedColor,
@@ -275,8 +274,8 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
           SnackBar(
             content: Text(
               isEditing
-                  ? 'Error updating category: $e'
-                  : 'Error adding category: $e',
+                  ? 'Error updating folder: $e'
+                  : 'Error adding folder: $e',
             ),
           ),
         );
@@ -285,7 +284,7 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
   }
 
   String _getStringFromIcon(IconData icon) {
-    return LibraryCategory.icons.entries
+    return LibraryFolder.icons.entries
         .firstWhere(
           (entry) => entry.value == icon,
           orElse: () => const MapEntry('folder', TablerIcons.folder),
@@ -294,14 +293,14 @@ class _EditCategoryDialogState extends State<_EditCategoryDialog> {
   }
 }
 
-class EditCategoryDialog {
-  static Future<bool?> show(BuildContext context, {LibraryCategory? category}) {
+class EditFolderDialog {
+  static Future<bool?> show(BuildContext context, {LibraryFolder? folder}) {
     return showDialog<bool>(
       fullscreenDialog: true,
       barrierDismissible: false,
       barrierColor: context.colorScheme.surface,
       context: Navigator.of(context, rootNavigator: true).context,
-      builder: (context) => _EditCategoryDialog(category: category),
+      builder: (context) => _EditFolderDialog(folder: folder),
     );
   }
 }

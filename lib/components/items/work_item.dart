@@ -2,7 +2,7 @@ import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/utils.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +15,14 @@ class WorkItem extends StatelessWidget {
   final Work work;
   final bool small;
   final bool mini;
-  final LibraryCategory? category;
-  const WorkItem({super.key, required this.work, this.category})
+  final LibraryFolder? folder;
+  const WorkItem({super.key, required this.work, this.folder})
     : small = false,
       mini = false;
-  const WorkItem.small({super.key, required this.work, this.category})
+  const WorkItem.small({super.key, required this.work, this.folder})
     : small = true,
       mini = false;
-  const WorkItem.mini({super.key, required this.work, this.category})
+  const WorkItem.mini({super.key, required this.work, this.folder})
     : small = true,
       mini = true;
 
@@ -88,7 +88,7 @@ class WorkItem extends StatelessWidget {
                   onPressed: () => WorkOptionsDialog.showSheet(
                     context,
                     work: work,
-                    category: category,
+                    folder: folder,
                   ),
                   icon: Icon(
                     TablerIcons.dots_vertical,

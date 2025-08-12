@@ -1,5 +1,5 @@
 import 'package:archiverse/database/repository.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/work.dart';
 
 extension LibraryRepository on DataRepository {
@@ -18,9 +18,9 @@ extension LibraryRepository on DataRepository {
     return await DataRepository.database.libraryDao.removeWork(workId);
   }
 
-  static Future<bool> removeWorkFromAllCategories(int workId) async {
-    return await DataRepository.database.libraryCategoriesDao
-        .removeWorkFromAllCategories(workId);
+  static Future<bool> removeWorkFromAllFolders(int workId) async {
+    return await DataRepository.database.libraryFoldersDao
+        .removeWorkFromAllFolders(workId);
   }
 
   static Future<bool> isWorkInLibrary(int workId) async {
@@ -45,88 +45,79 @@ extension LibraryRepository on DataRepository {
     return await DataRepository.database.libraryDao.getTotalCount();
   }
 
-  // Library category operations
-  static Future<LibraryCategory> createLibraryCategory(
-    LibraryCategory category,
-  ) async {
-    final id = await DataRepository.database.libraryCategoriesDao.create(
-      category,
-    );
-    return category.copyWith(id: id);
+  // Library folder operations
+  static Future<LibraryFolder> createLibraryFolder(LibraryFolder folder) async {
+    final id = await DataRepository.database.libraryFoldersDao.create(folder);
+    return folder.copyWith(id: id);
   }
 
-  static Future<LibraryCategory?> getLibraryCategoryByName(String name) async {
-    return await DataRepository.database.libraryCategoriesDao.getByName(name);
+  static Future<LibraryFolder?> getLibraryFolderByName(String name) async {
+    return await DataRepository.database.libraryFoldersDao.getByName(name);
   }
 
-  static Future<List<LibraryCategory>> getAllLibraryCategories() async {
-    return await DataRepository.database.libraryCategoriesDao
-        .getAllCategories();
+  static Future<List<LibraryFolder>> getAllLibraryFolders() async {
+    return await DataRepository.database.libraryFoldersDao.getAllFolders();
   }
 
-  static Future<List<LibraryCategory>> getLibraryCategories(int page) async {
-    return await DataRepository.database.libraryCategoriesDao.getCategories(
-      page,
-    );
+  static Future<List<LibraryFolder>> getLibraryFolders(int page) async {
+    return await DataRepository.database.libraryFoldersDao.getFolders(page);
   }
 
-  static Future<bool> updateLibraryCategory(LibraryCategory category) async {
-    return await DataRepository.database.libraryCategoriesDao.updateCategory(
-      category,
-    );
+  static Future<bool> updateLibraryFolder(LibraryFolder folder) async {
+    return await DataRepository.database.libraryFoldersDao.updateFolder(folder);
   }
 
-  static Future<bool> deleteLibraryCategory(int id) async {
-    // Remove all works from category first
-    await DataRepository.database.libraryCategoriesDao
-        .removeAllWorksFromCategory(id);
-    return await DataRepository.database.libraryCategoriesDao.deleteCategory(
+  static Future<bool> deleteLibraryFolder(int id) async {
+    // Remove all works from folder first
+    await DataRepository.database.libraryFoldersDao.removeAllWorksFromFolder(
       id,
     );
+    return await DataRepository.database.libraryFoldersDao.deleteFolder(id);
   }
 
-  // Work-category relationship operations
-  static Future<void> addWorkToCategory(int workId, int categoryId) async {
-    await DataRepository.database.libraryCategoriesDao.addWorkToCategory(
+  // Work-folder relationship operations
+  static Future<void> addWorkToFolder(int workId, int folderId) async {
+    await DataRepository.database.libraryFoldersDao.addWorkToFolder(
       workId,
-      categoryId,
+      folderId,
     );
   }
 
-  static Future<bool> removeWorkFromCategory(int workId, int categoryId) async {
-    return await DataRepository.database.libraryCategoriesDao
-        .removeWorkFromCategory(workId, categoryId);
+  static Future<bool> removeWorkFromFolder(int workId, int folderId) async {
+    return await DataRepository.database.libraryFoldersDao.removeWorkFromFolder(
+      workId,
+      folderId,
+    );
   }
 
-  static Future<List<Work>> getWorksByCategory(int categoryId) async {
-    return await DataRepository.database.libraryCategoriesDao
-        .getWorksByCategory(categoryId);
+  static Future<List<Work>> getWorksByFolder(int folderId) async {
+    return await DataRepository.database.libraryFoldersDao.getWorksByFolder(
+      folderId,
+    );
   }
 
-  static Future<bool> isWorkInCategory(
-    Work work,
-    LibraryCategory category,
-  ) async {
-    return await DataRepository.database.libraryCategoriesDao.isWorkInCategory(
+  static Future<bool> isWorkInFolder(Work work, LibraryFolder folder) async {
+    return await DataRepository.database.libraryFoldersDao.isWorkInFolder(
       work.id,
-      category.id!,
+      folder.id!,
     );
   }
 
-  static Future<List<LibraryCategory>> getCategoriesForWork(int workId) async {
-    return await DataRepository.database.libraryCategoriesDao
-        .getCategoriesForWork(workId);
-  }
-
-  static Future<int> getCategoryWorkCount(int categoryId) async {
-    return await DataRepository.database.libraryCategoriesDao.getWorkCount(
-      categoryId,
+  static Future<List<LibraryFolder>> getFoldersForWork(int workId) async {
+    return await DataRepository.database.libraryFoldersDao.getFoldersForWork(
+      workId,
     );
   }
 
-  static Future<bool> removeAllWorksFromCategory(int categoryId) async {
-    return await DataRepository.database.libraryCategoriesDao
-        .removeAllWorksFromCategory(categoryId);
+  static Future<int> getFolderWorkCount(int folderId) async {
+    return await DataRepository.database.libraryFoldersDao.getWorkCount(
+      folderId,
+    );
+  }
+
+  static Future<bool> removeAllWorksFromFolder(int folderId) async {
+    return await DataRepository.database.libraryFoldersDao
+        .removeAllWorksFromFolder(folderId);
   }
 
   static Future<List<Work>> getWorksInLibrary(int page) async {

@@ -47,8 +47,8 @@ const bool kDeleteDatabaseOnStart = false;
     DbBookmarks,
     DbChapterWorks,
     DbWorksLibrary,
-    DbLibraryCategories,
-    DbLibraryCategoryWorks,
+    DbLibraryFolders,
+    DbLibraryFolderWorks,
     DbDownloadedWorks,
     DbDownloadedChapters,
   ],
@@ -60,14 +60,14 @@ const bool kDeleteDatabaseOnStart = false;
     ReadHistoriesDao,
     SeriesDao,
     LibraryDao,
-    LibraryCategoriesDao,
+    LibraryFoldersDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {

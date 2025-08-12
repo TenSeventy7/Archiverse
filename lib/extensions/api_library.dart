@@ -1,6 +1,6 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/database/repository.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/work.dart';
 
 extension ApiLibrary on AppApi {
@@ -13,11 +13,11 @@ extension ApiLibrary on AppApi {
     }
   }
 
-  Future<bool> isWorkInCategory(Work work, LibraryCategory category) async {
+  Future<bool> isWorkInFolder(Work work, LibraryFolder folder) async {
     try {
-      return await LibraryRepository.isWorkInCategory(work, category);
+      return await LibraryRepository.isWorkInFolder(work, folder);
     } catch (e) {
-      print('Error checking if work is in category ${category.name}: $e');
+      print('Error checking if work is in folder ${folder.name}: $e');
       return false;
     }
   }
@@ -50,8 +50,8 @@ extension ApiLibrary on AppApi {
         return;
       }
 
-      // Remove work from all categories first
-      await LibraryRepository.removeWorkFromAllCategories(work.id);
+      // Remove work from all folders first
+      await LibraryRepository.removeWorkFromAllFolders(work.id);
 
       // Remove work from library
       await LibraryRepository.removeWorkFromLibrary(work.id);
@@ -87,109 +87,106 @@ extension ApiLibrary on AppApi {
     }
   }
 
-  Future<List<LibraryCategory>> getAllLibraryCategories() async {
+  Future<List<LibraryFolder>> getAllLibraryFolders() async {
     try {
-      return await LibraryRepository.getAllLibraryCategories();
+      return await LibraryRepository.getAllLibraryFolders();
     } catch (e) {
-      print('Error fetching library categories: $e');
+      print('Error fetching library folders: $e');
       return [];
     }
   }
 
-  Future<List<LibraryCategory>> getLibraryCategories(int page) async {
+  Future<List<LibraryFolder>> getLibraryFolders(int page) async {
     try {
-      return await LibraryRepository.getLibraryCategories(page);
+      return await LibraryRepository.getLibraryFolders(page);
     } catch (e) {
-      print('Error fetching library categories for page $page: $e');
+      print('Error fetching library folders for page $page: $e');
       return [];
     }
   }
 
-  Future<List<Work>> getWorksByCategory(LibraryCategory category) async {
+  Future<List<Work>> getWorksByFolder(LibraryFolder folder) async {
     try {
-      if (category.id == null) {
-        print('Category ID is null, cannot fetch works');
+      if (folder.id == null) {
+        print('Folder ID is null, cannot fetch works');
         return [];
       }
 
-      return await LibraryRepository.getWorksByCategory(category.id!);
+      return await LibraryRepository.getWorksByFolder(folder.id!);
     } catch (e) {
-      print('Error fetching works for category ${category.name}: $e');
+      print('Error fetching works for folder ${folder.name}: $e');
       return [];
     }
   }
 
-  Future<void> addWorkToCategory(Work work, LibraryCategory category) async {
+  Future<void> addWorkToFolder(Work work, LibraryFolder folder) async {
     try {
       // Check if work is in Library first
       if (!(await LibraryRepository.isWorkInLibrary(work.id))) {
-        print('Work not found in library, cannot add to category');
+        print('Work not found in library, cannot add to folder');
         return;
       }
 
-      if (category.id == null) {
-        print('Category ID is null, cannot add work to category');
+      if (folder.id == null) {
+        print('Folder ID is null, cannot add work to folder');
         return;
       }
 
-      await LibraryRepository.addWorkToCategory(work.id, category.id!);
+      await LibraryRepository.addWorkToFolder(work.id, folder.id!);
     } catch (e) {
-      print('Error adding work to category ${category.name}: $e');
+      print('Error adding work to folder ${folder.name}: $e');
     }
   }
 
-  Future<void> removeWorkFromCategory(
-    Work work,
-    LibraryCategory category,
-  ) async {
+  Future<void> removeWorkFromFolder(Work work, LibraryFolder folder) async {
     try {
       if (!(await LibraryRepository.isWorkInLibrary(work.id))) {
-        print('Work not found in library, cannot remove from category');
+        print('Work not found in library, cannot remove from folder');
         return;
       }
 
-      if (category.id == null) {
-        print('Category ID is null, cannot remove work from category');
+      if (folder.id == null) {
+        print('Folder ID is null, cannot remove work from folder');
         return;
       }
 
-      await LibraryRepository.removeWorkFromCategory(work.id, category.id!);
+      await LibraryRepository.removeWorkFromFolder(work.id, folder.id!);
     } catch (e) {
-      print('Error removing work from category ${category.name}: $e');
+      print('Error removing work from folder ${folder.name}: $e');
     }
   }
 
-  Future<void> createLibraryCategory(
+  Future<void> createLibraryFolder(
     String name, {
     String? icon,
     required String color,
   }) async {
     try {
-      final category = LibraryCategory(name: name, icon: icon, color: color);
-      await LibraryRepository.createLibraryCategory(category);
+      final folder = LibraryFolder(name: name, icon: icon, color: color);
+      await LibraryRepository.createLibraryFolder(folder);
     } catch (e) {
-      print('Error creating library category: $e');
+      print('Error creating library folder: $e');
     }
   }
 
-  Future<void> updateLibraryCategory(LibraryCategory category) async {
+  Future<void> updateLibraryFolder(LibraryFolder folder) async {
     try {
-      await LibraryRepository.updateLibraryCategory(category);
+      await LibraryRepository.updateLibraryFolder(folder);
     } catch (e) {
-      print('Error updating library category: $e');
+      print('Error updating library folder: $e');
     }
   }
 
-  Future<void> deleteLibraryCategory(LibraryCategory category) async {
+  Future<void> deleteLibraryFolder(LibraryFolder folder) async {
     try {
-      if (category.id == null) {
-        print('Category ID is null, cannot delete category');
+      if (folder.id == null) {
+        print('Folder ID is null, cannot delete folder');
         return;
       }
 
-      await LibraryRepository.deleteLibraryCategory(category.id!);
+      await LibraryRepository.deleteLibraryFolder(folder.id!);
     } catch (e) {
-      print('Error deleting library category: $e');
+      print('Error deleting library folder: $e');
     }
   }
 }

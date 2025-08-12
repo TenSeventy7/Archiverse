@@ -3,7 +3,7 @@ import 'package:archiverse/api.dart';
 import 'package:archiverse/database/repository.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/models/chapter.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
 
@@ -18,7 +18,7 @@ class LibraryProvider extends ChangeNotifier {
   // Library state
   List<Work> _recentlyAddedWorks = [];
   List<Work> _mostReadWorks = [];
-  List<LibraryCategory> _folders = [];
+  List<LibraryFolder> _folders = [];
 
   bool _isLoadingRecentlyAdded = false;
   bool _isLoadingMostRead = false;
@@ -30,7 +30,7 @@ class LibraryProvider extends ChangeNotifier {
   ReadHistory? get mostRecentHistory => _mostRecentHistory;
   List<Work> get recentlyAddedWorks => _recentlyAddedWorks;
   List<Work> get mostReadWorks => _mostReadWorks;
-  List<LibraryCategory> get folders => _folders;
+  List<LibraryFolder> get folders => _folders;
   bool get isLoadingRecentlyAdded => _isLoadingRecentlyAdded;
   bool get isLoadingMostRead => _isLoadingMostRead;
   bool get isLoadingFolders => _isLoadingFolders;
@@ -193,7 +193,7 @@ class LibraryProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _folders = await _api.getLibraryCategories(1);
+      _folders = await _api.getLibraryFolders(1);
     } catch (e) {
       _libraryError = 'Error fetching library folders: $e';
       _folders = [];
@@ -268,63 +268,56 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-  /// Delete a library category
-  Future<void> deleteCategory(LibraryCategory category) async {
+  /// Delete a library folder
+  Future<void> deleteFolder(LibraryFolder folder) async {
     try {
-      await _api.deleteLibraryCategory(category);
-      await refreshFolders();
-      notifyListeners();
+      await _api.deleteLibraryFolder(folder);
+      await fetchFolders();
     } catch (e) {
-      _libraryError = 'Error deleting category: $e';
-      notifyListeners();
+      _libraryError = 'Error deleting folder: $e';
     }
+    notifyListeners();
   }
 
-  /// Remove a work from a specific category
-  Future<void> removeWorkFromCategory(
-    Work work,
-    LibraryCategory category,
-  ) async {
+  /// Remove a work from a specific folder
+  Future<void> removeWorkFromFolder(Work work, LibraryFolder folder) async {
     try {
-      if (!await _api.isWorkInCategory(work, category)) {
+      if (!await _api.isWorkInFolder(work, folder)) {
         return;
       }
 
-      await _api.removeWorkFromCategory(work, category);
-      await refreshFolders();
-      notifyListeners();
+      await _api.removeWorkFromFolder(work, folder);
+      await fetchFolders();
     } catch (e) {
-      _libraryError = 'Error removing work from category: $e';
-      notifyListeners();
+      _libraryError = 'Error removing work from folder: $e';
     }
+    notifyListeners();
   }
 
-  /// Add a new library category
-  Future<void> addCategory(LibraryCategory category) async {
+  /// Add a new library folder
+  Future<void> addFolder(LibraryFolder folder) async {
     try {
-      await _api.createLibraryCategory(
-        category.name,
-        icon: category.icon,
-        color: category.color,
+      await _api.createLibraryFolder(
+        folder.name,
+        icon: folder.icon,
+        color: folder.color,
       );
-      await refreshFolders();
-      notifyListeners();
+      await fetchFolders();
     } catch (e) {
-      _libraryError = 'Error adding category: $e';
-      notifyListeners();
+      _libraryError = 'Error adding folder: $e';
     }
+    notifyListeners();
   }
 
-  /// Update an existing library category
-  Future<void> updateCategory(LibraryCategory category) async {
+  /// Update an existing library folder
+  Future<void> updateFolder(LibraryFolder folder) async {
     try {
-      await _api.updateLibraryCategory(category);
-      await refreshFolders();
-      notifyListeners();
+      await _api.updateLibraryFolder(folder);
+      await fetchFolders();
     } catch (e) {
-      _libraryError = 'Error updating category: $e';
-      notifyListeners();
+      _libraryError = 'Error updating folder: $e';
     }
+    notifyListeners();
   }
 
   /// Refresh folders from API

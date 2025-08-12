@@ -1,4 +1,5 @@
 import 'package:archiverse/database/migrations/migration_2.dart';
+import 'package:archiverse/database/migrations/migration_3.dart';
 import 'package:drift/drift.dart';
 import 'migration_base.dart';
 import 'migration_1.dart';
@@ -8,6 +9,7 @@ class MigrationManager {
   static final List<DatabaseMigration> _migrations = [
     Migration1(),
     Migration2(),
+    Migration3(),
   ];
 
   /// Execute all migrations up to the target version

@@ -6,19 +6,17 @@
 import 'package:archiverse/api.dart';
 import 'package:archiverse/components/compact_text_icon.dart';
 import 'package:archiverse/components/rating_badges.dart';
-import 'package:archiverse/dialogs/add_to_category_dialog.dart';
-import 'package:archiverse/dialogs/edit_category_dialog.dart';
+import 'package:archiverse/dialogs/folder_add_work_dialog.dart';
 import 'package:archiverse/dialogs/reader_settings_dialog.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/utils.dart';
 import 'package:archiverse/views/activity_reader.dart';
 import 'package:archiverse/views/activity_work.dart';
-import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
@@ -27,14 +25,14 @@ class _WorkOptionsDialog extends StatefulWidget {
   final Work work;
   final bool isReader; // Flag to indicate if this is for the reader activity
   final BuildContext context;
-  final LibraryCategory? category;
+  final LibraryFolder? folder;
   final VoidCallback? onWorkRemovedFromFolder;
 
   const _WorkOptionsDialog({
     required this.work,
     this.isReader = false,
     required this.context,
-    this.category,
+    this.folder,
     this.onWorkRemovedFromFolder,
   });
 
@@ -48,8 +46,8 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
   bool _isLoadingLibraryStatus = true;
   bool _isInLibrary = false;
-  bool _isInCategory = false;
-  late Future<List<LibraryCategory>> future;
+  bool _isInFolder = false;
+  late Future<List<LibraryFolder>> future;
 
   @override
   void initState() {
@@ -61,14 +59,14 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
   Future<void> _checkLibraryStatus() async {
     try {
       final isInLibrary = await AppApi().isWorkInLibrary(widget.work);
-      final isInCategory = widget.category != null
-          ? await AppApi().isWorkInCategory(widget.work, widget.category!)
+      final isInFolder = widget.folder != null
+          ? await AppApi().isWorkInFolder(widget.work, widget.folder!)
           : false;
 
       if (mounted) {
         setState(() {
           _isInLibrary = isInLibrary;
-          _isInCategory = isInCategory;
+          _isInFolder = isInFolder;
           _isLoadingLibraryStatus = false;
         });
       }
@@ -101,8 +99,6 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +148,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
             child: Column(
               children: [
                 _buildAddToLibraryAction(context),
-                if (_isInLibrary && widget.category == null) ...[
+                if (_isInLibrary && widget.folder == null) ...[
                   _buildDivider(),
                   _buildActionTile(
                     context,
@@ -160,13 +156,11 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                     title: "Add to folder",
                     onTap: () {
                       context.navigator.pop();
-                      _showAddToCategoryDialog(widget.context);
+                      _showAddWorkToFolderDialog(widget.context);
                     },
                   ),
                 ],
-                if (_isInLibrary &&
-                    widget.category != null &&
-                    _isInCategory) ...[
+                if (_isInLibrary && widget.folder != null && _isInFolder) ...[
                   _buildDivider(),
                   _buildActionTile(
                     context,
@@ -174,7 +168,7 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
                     title: "Remove from folder",
                     onTap: () {
                       context.navigator.pop();
-                      _removeFromCategory(context, widget.category!);
+                      _removeWorkFromFolder(context, widget.folder!);
                     },
                   ),
                 ],
@@ -295,22 +289,20 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
     );
   }
 
-  Future<void> _removeFromCategory(
+  Future<void> _removeWorkFromFolder(
     BuildContext context,
-    LibraryCategory category,
+    LibraryFolder folder,
   ) async {
     try {
-      if (await AppApi().isWorkInCategory(widget.work, category)) {
-        context.read<LibraryProvider>().removeWorkFromCategory(
+      if (await AppApi().isWorkInFolder(widget.work, folder)) {
+        context.read<LibraryProvider>().removeWorkFromFolder(
           widget.work,
-          category,
+          folder,
         );
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                "${widget.work.title} removed from ${category.name}",
-              ),
+              content: Text("${widget.work.title} removed from ${folder.name}"),
             ),
           );
         }
@@ -321,23 +313,23 @@ class _WorkOptionsDialogState extends State<_WorkOptionsDialog> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("${widget.work.title} is not in ${category.name}"),
+            content: Text("${widget.work.title} is not in ${folder.name}"),
           ),
         );
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to remove work from category")),
+          SnackBar(content: Text("Failed to remove work from folder")),
         );
       }
     }
   }
 
-  void _showAddToCategoryDialog(BuildContext context) {
+  void _showAddWorkToFolderDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AddToCategoryDialog(work: widget.work),
+      builder: (context) => AddWorkToFolderDialog(work: widget.work),
     );
   }
 
@@ -610,7 +602,7 @@ class WorkOptionsDialog {
   static void showSheet(
     BuildContext context, {
     required Work work,
-    LibraryCategory? category,
+    LibraryFolder? folder,
     bool isReader = false,
     AnimationController? bottomSheetAnimator,
     VoidCallback? onWorkRemovedFromFolder,
@@ -628,7 +620,7 @@ class WorkOptionsDialog {
         work: work,
         isReader: isReader,
         context: context,
-        category: category,
+        folder: folder,
         onWorkRemovedFromFolder: onWorkRemovedFromFolder,
       ),
     );

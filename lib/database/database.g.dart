@@ -6424,12 +6424,12 @@ class DbWorksLibraryCompanion extends UpdateCompanion<DbWorksLibraryData> {
   }
 }
 
-class $DbLibraryCategoriesTable extends DbLibraryCategories
-    with TableInfo<$DbLibraryCategoriesTable, DbLibraryCategory> {
+class $DbLibraryFoldersTable extends DbLibraryFolders
+    with TableInfo<$DbLibraryFoldersTable, DbLibraryFolder> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $DbLibraryCategoriesTable(this.attachedDatabase, [this._alias]);
+  $DbLibraryFoldersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -6481,10 +6481,10 @@ class $DbLibraryCategoriesTable extends DbLibraryCategories
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'library_categories';
+  static const String $name = 'library_folders';
   @override
   VerificationContext validateIntegrity(
-    Insertable<DbLibraryCategory> instance, {
+    Insertable<DbLibraryFolder> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -6518,9 +6518,9 @@ class $DbLibraryCategoriesTable extends DbLibraryCategories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  DbLibraryCategory map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbLibraryFolder map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DbLibraryCategory(
+    return DbLibraryFolder(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -6541,18 +6541,17 @@ class $DbLibraryCategoriesTable extends DbLibraryCategories
   }
 
   @override
-  $DbLibraryCategoriesTable createAlias(String alias) {
-    return $DbLibraryCategoriesTable(attachedDatabase, alias);
+  $DbLibraryFoldersTable createAlias(String alias) {
+    return $DbLibraryFoldersTable(attachedDatabase, alias);
   }
 }
 
-class DbLibraryCategory extends DataClass
-    implements Insertable<DbLibraryCategory> {
+class DbLibraryFolder extends DataClass implements Insertable<DbLibraryFolder> {
   final int id;
   final String name;
   final String? icon;
   final String color;
-  const DbLibraryCategory({
+  const DbLibraryFolder({
     required this.id,
     required this.name,
     this.icon,
@@ -6570,8 +6569,8 @@ class DbLibraryCategory extends DataClass
     return map;
   }
 
-  DbLibraryCategoriesCompanion toCompanion(bool nullToAbsent) {
-    return DbLibraryCategoriesCompanion(
+  DbLibraryFoldersCompanion toCompanion(bool nullToAbsent) {
+    return DbLibraryFoldersCompanion(
       id: Value(id),
       name: Value(name),
       icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
@@ -6579,12 +6578,12 @@ class DbLibraryCategory extends DataClass
     );
   }
 
-  factory DbLibraryCategory.fromJson(
+  factory DbLibraryFolder.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return DbLibraryCategory(
+    return DbLibraryFolder(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       icon: serializer.fromJson<String?>(json['icon']),
@@ -6602,19 +6601,19 @@ class DbLibraryCategory extends DataClass
     };
   }
 
-  DbLibraryCategory copyWith({
+  DbLibraryFolder copyWith({
     int? id,
     String? name,
     Value<String?> icon = const Value.absent(),
     String? color,
-  }) => DbLibraryCategory(
+  }) => DbLibraryFolder(
     id: id ?? this.id,
     name: name ?? this.name,
     icon: icon.present ? icon.value : this.icon,
     color: color ?? this.color,
   );
-  DbLibraryCategory copyWithCompanion(DbLibraryCategoriesCompanion data) {
-    return DbLibraryCategory(
+  DbLibraryFolder copyWithCompanion(DbLibraryFoldersCompanion data) {
+    return DbLibraryFolder(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       icon: data.icon.present ? data.icon.value : this.icon,
@@ -6624,7 +6623,7 @@ class DbLibraryCategory extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('DbLibraryCategory(')
+    return (StringBuffer('DbLibraryFolder(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
@@ -6638,31 +6637,31 @@ class DbLibraryCategory extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is DbLibraryCategory &&
+      (other is DbLibraryFolder &&
           other.id == this.id &&
           other.name == this.name &&
           other.icon == this.icon &&
           other.color == this.color);
 }
 
-class DbLibraryCategoriesCompanion extends UpdateCompanion<DbLibraryCategory> {
+class DbLibraryFoldersCompanion extends UpdateCompanion<DbLibraryFolder> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> icon;
   final Value<String> color;
-  const DbLibraryCategoriesCompanion({
+  const DbLibraryFoldersCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.icon = const Value.absent(),
     this.color = const Value.absent(),
   });
-  DbLibraryCategoriesCompanion.insert({
+  DbLibraryFoldersCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.icon = const Value.absent(),
     this.color = const Value.absent(),
   }) : name = Value(name);
-  static Insertable<DbLibraryCategory> custom({
+  static Insertable<DbLibraryFolder> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? icon,
@@ -6676,13 +6675,13 @@ class DbLibraryCategoriesCompanion extends UpdateCompanion<DbLibraryCategory> {
     });
   }
 
-  DbLibraryCategoriesCompanion copyWith({
+  DbLibraryFoldersCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String?>? icon,
     Value<String>? color,
   }) {
-    return DbLibraryCategoriesCompanion(
+    return DbLibraryFoldersCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       icon: icon ?? this.icon,
@@ -6710,7 +6709,7 @@ class DbLibraryCategoriesCompanion extends UpdateCompanion<DbLibraryCategory> {
 
   @override
   String toString() {
-    return (StringBuffer('DbLibraryCategoriesCompanion(')
+    return (StringBuffer('DbLibraryFoldersCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('icon: $icon, ')
@@ -6720,12 +6719,12 @@ class DbLibraryCategoriesCompanion extends UpdateCompanion<DbLibraryCategory> {
   }
 }
 
-class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
-    with TableInfo<$DbLibraryCategoryWorksTable, DbLibraryCategoryWork> {
+class $DbLibraryFolderWorksTable extends DbLibraryFolderWorks
+    with TableInfo<$DbLibraryFolderWorksTable, DbLibraryFolderWork> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $DbLibraryCategoryWorksTable(this.attachedDatabase, [this._alias]);
+  $DbLibraryFolderWorksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -6751,30 +6750,30 @@ class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
       'REFERENCES works (id)',
     ),
   );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
+  static const VerificationMeta _folderIdMeta = const VerificationMeta(
+    'folderId',
   );
   @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
+  late final GeneratedColumn<int> folderId = GeneratedColumn<int>(
+    'folder_id',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES library_categories (id)',
+      'REFERENCES library_folders (id)',
     ),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, workId, categoryId];
+  List<GeneratedColumn> get $columns => [id, workId, folderId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'library_category_works';
+  static const String $name = 'library_folder_works';
   @override
   VerificationContext validateIntegrity(
-    Insertable<DbLibraryCategoryWork> instance, {
+    Insertable<DbLibraryFolderWork> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -6790,13 +6789,13 @@ class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
     } else if (isInserting) {
       context.missing(_workIdMeta);
     }
-    if (data.containsKey('category_id')) {
+    if (data.containsKey('folder_id')) {
       context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+        _folderIdMeta,
+        folderId.isAcceptableOrUnknown(data['folder_id']!, _folderIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_categoryIdMeta);
+      context.missing(_folderIdMeta);
     }
     return context;
   }
@@ -6805,12 +6804,12 @@ class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-    {workId, categoryId},
+    {workId, folderId},
   ];
   @override
-  DbLibraryCategoryWork map(Map<String, dynamic> data, {String? tablePrefix}) {
+  DbLibraryFolderWork map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return DbLibraryCategoryWork(
+    return DbLibraryFolderWork(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -6819,55 +6818,55 @@ class $DbLibraryCategoryWorksTable extends DbLibraryCategoryWorks
         DriftSqlType.int,
         data['${effectivePrefix}work_id'],
       )!,
-      categoryId: attachedDatabase.typeMapping.read(
+      folderId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
+        data['${effectivePrefix}folder_id'],
       )!,
     );
   }
 
   @override
-  $DbLibraryCategoryWorksTable createAlias(String alias) {
-    return $DbLibraryCategoryWorksTable(attachedDatabase, alias);
+  $DbLibraryFolderWorksTable createAlias(String alias) {
+    return $DbLibraryFolderWorksTable(attachedDatabase, alias);
   }
 }
 
-class DbLibraryCategoryWork extends DataClass
-    implements Insertable<DbLibraryCategoryWork> {
+class DbLibraryFolderWork extends DataClass
+    implements Insertable<DbLibraryFolderWork> {
   final int id;
   final int workId;
-  final int categoryId;
-  const DbLibraryCategoryWork({
+  final int folderId;
+  const DbLibraryFolderWork({
     required this.id,
     required this.workId,
-    required this.categoryId,
+    required this.folderId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['work_id'] = Variable<int>(workId);
-    map['category_id'] = Variable<int>(categoryId);
+    map['folder_id'] = Variable<int>(folderId);
     return map;
   }
 
-  DbLibraryCategoryWorksCompanion toCompanion(bool nullToAbsent) {
-    return DbLibraryCategoryWorksCompanion(
+  DbLibraryFolderWorksCompanion toCompanion(bool nullToAbsent) {
+    return DbLibraryFolderWorksCompanion(
       id: Value(id),
       workId: Value(workId),
-      categoryId: Value(categoryId),
+      folderId: Value(folderId),
     );
   }
 
-  factory DbLibraryCategoryWork.fromJson(
+  factory DbLibraryFolderWork.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return DbLibraryCategoryWork(
+    return DbLibraryFolderWork(
       id: serializer.fromJson<int>(json['id']),
       workId: serializer.fromJson<int>(json['workId']),
-      categoryId: serializer.fromJson<int>(json['categoryId']),
+      folderId: serializer.fromJson<int>(json['folderId']),
     );
   }
   @override
@@ -6876,86 +6875,82 @@ class DbLibraryCategoryWork extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'workId': serializer.toJson<int>(workId),
-      'categoryId': serializer.toJson<int>(categoryId),
+      'folderId': serializer.toJson<int>(folderId),
     };
   }
 
-  DbLibraryCategoryWork copyWith({int? id, int? workId, int? categoryId}) =>
-      DbLibraryCategoryWork(
+  DbLibraryFolderWork copyWith({int? id, int? workId, int? folderId}) =>
+      DbLibraryFolderWork(
         id: id ?? this.id,
         workId: workId ?? this.workId,
-        categoryId: categoryId ?? this.categoryId,
+        folderId: folderId ?? this.folderId,
       );
-  DbLibraryCategoryWork copyWithCompanion(
-    DbLibraryCategoryWorksCompanion data,
-  ) {
-    return DbLibraryCategoryWork(
+  DbLibraryFolderWork copyWithCompanion(DbLibraryFolderWorksCompanion data) {
+    return DbLibraryFolderWork(
       id: data.id.present ? data.id.value : this.id,
       workId: data.workId.present ? data.workId.value : this.workId,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
+      folderId: data.folderId.present ? data.folderId.value : this.folderId,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('DbLibraryCategoryWork(')
+    return (StringBuffer('DbLibraryFolderWork(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
-          ..write('categoryId: $categoryId')
+          ..write('folderId: $folderId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, workId, categoryId);
+  int get hashCode => Object.hash(id, workId, folderId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is DbLibraryCategoryWork &&
+      (other is DbLibraryFolderWork &&
           other.id == this.id &&
           other.workId == this.workId &&
-          other.categoryId == this.categoryId);
+          other.folderId == this.folderId);
 }
 
-class DbLibraryCategoryWorksCompanion
-    extends UpdateCompanion<DbLibraryCategoryWork> {
+class DbLibraryFolderWorksCompanion
+    extends UpdateCompanion<DbLibraryFolderWork> {
   final Value<int> id;
   final Value<int> workId;
-  final Value<int> categoryId;
-  const DbLibraryCategoryWorksCompanion({
+  final Value<int> folderId;
+  const DbLibraryFolderWorksCompanion({
     this.id = const Value.absent(),
     this.workId = const Value.absent(),
-    this.categoryId = const Value.absent(),
+    this.folderId = const Value.absent(),
   });
-  DbLibraryCategoryWorksCompanion.insert({
+  DbLibraryFolderWorksCompanion.insert({
     this.id = const Value.absent(),
     required int workId,
-    required int categoryId,
+    required int folderId,
   }) : workId = Value(workId),
-       categoryId = Value(categoryId);
-  static Insertable<DbLibraryCategoryWork> custom({
+       folderId = Value(folderId);
+  static Insertable<DbLibraryFolderWork> custom({
     Expression<int>? id,
     Expression<int>? workId,
-    Expression<int>? categoryId,
+    Expression<int>? folderId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (workId != null) 'work_id': workId,
-      if (categoryId != null) 'category_id': categoryId,
+      if (folderId != null) 'folder_id': folderId,
     });
   }
 
-  DbLibraryCategoryWorksCompanion copyWith({
+  DbLibraryFolderWorksCompanion copyWith({
     Value<int>? id,
     Value<int>? workId,
-    Value<int>? categoryId,
+    Value<int>? folderId,
   }) {
-    return DbLibraryCategoryWorksCompanion(
+    return DbLibraryFolderWorksCompanion(
       id: id ?? this.id,
       workId: workId ?? this.workId,
-      categoryId: categoryId ?? this.categoryId,
+      folderId: folderId ?? this.folderId,
     );
   }
 
@@ -6968,18 +6963,18 @@ class DbLibraryCategoryWorksCompanion
     if (workId.present) {
       map['work_id'] = Variable<int>(workId.value);
     }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
+    if (folderId.present) {
+      map['folder_id'] = Variable<int>(folderId.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('DbLibraryCategoryWorksCompanion(')
+    return (StringBuffer('DbLibraryFolderWorksCompanion(')
           ..write('id: $id, ')
           ..write('workId: $workId, ')
-          ..write('categoryId: $categoryId')
+          ..write('folderId: $folderId')
           ..write(')'))
         .toString();
   }
@@ -7681,10 +7676,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DbBookmarksTable dbBookmarks = $DbBookmarksTable(this);
   late final $DbChapterWorksTable dbChapterWorks = $DbChapterWorksTable(this);
   late final $DbWorksLibraryTable dbWorksLibrary = $DbWorksLibraryTable(this);
-  late final $DbLibraryCategoriesTable dbLibraryCategories =
-      $DbLibraryCategoriesTable(this);
-  late final $DbLibraryCategoryWorksTable dbLibraryCategoryWorks =
-      $DbLibraryCategoryWorksTable(this);
+  late final $DbLibraryFoldersTable dbLibraryFolders = $DbLibraryFoldersTable(
+    this,
+  );
+  late final $DbLibraryFolderWorksTable dbLibraryFolderWorks =
+      $DbLibraryFolderWorksTable(this);
   late final $DbDownloadedWorksTable dbDownloadedWorks =
       $DbDownloadedWorksTable(this);
   late final $DbDownloadedChaptersTable dbDownloadedChapters =
@@ -7698,7 +7694,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final SeriesDao seriesDao = SeriesDao(this as AppDatabase);
   late final LibraryDao libraryDao = LibraryDao(this as AppDatabase);
-  late final LibraryCategoriesDao libraryCategoriesDao = LibraryCategoriesDao(
+  late final LibraryFoldersDao libraryFoldersDao = LibraryFoldersDao(
     this as AppDatabase,
   );
   @override
@@ -7721,8 +7717,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     dbBookmarks,
     dbChapterWorks,
     dbWorksLibrary,
-    dbLibraryCategories,
-    dbLibraryCategoryWorks,
+    dbLibraryFolders,
+    dbLibraryFolderWorks,
     dbDownloadedWorks,
     dbDownloadedChapters,
   ];
@@ -7995,27 +7991,27 @@ final class $$DbWorksTableReferences
   }
 
   static MultiTypedResultKey<
-    $DbLibraryCategoryWorksTable,
-    List<DbLibraryCategoryWork>
+    $DbLibraryFolderWorksTable,
+    List<DbLibraryFolderWork>
   >
-  _dbLibraryCategoryWorksRefsTable(_$AppDatabase db) =>
+  _dbLibraryFolderWorksRefsTable(_$AppDatabase db) =>
       MultiTypedResultKey.fromTable(
-        db.dbLibraryCategoryWorks,
+        db.dbLibraryFolderWorks,
         aliasName: $_aliasNameGenerator(
           db.dbWorks.id,
-          db.dbLibraryCategoryWorks.workId,
+          db.dbLibraryFolderWorks.workId,
         ),
       );
 
-  $$DbLibraryCategoryWorksTableProcessedTableManager
-  get dbLibraryCategoryWorksRefs {
-    final manager = $$DbLibraryCategoryWorksTableTableManager(
+  $$DbLibraryFolderWorksTableProcessedTableManager
+  get dbLibraryFolderWorksRefs {
+    final manager = $$DbLibraryFolderWorksTableTableManager(
       $_db,
-      $_db.dbLibraryCategoryWorks,
+      $_db.dbLibraryFolderWorks,
     ).filter((f) => f.workId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _dbLibraryCategoryWorksRefsTable($_db),
+      _dbLibraryFolderWorksRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -8441,29 +8437,28 @@ class $$DbWorksTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> dbLibraryCategoryWorksRefs(
-    Expression<bool> Function($$DbLibraryCategoryWorksTableFilterComposer f) f,
+  Expression<bool> dbLibraryFolderWorksRefs(
+    Expression<bool> Function($$DbLibraryFolderWorksTableFilterComposer f) f,
   ) {
-    final $$DbLibraryCategoryWorksTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.dbLibraryCategoryWorks,
-          getReferencedColumn: (t) => t.workId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$DbLibraryFolderWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbLibraryFolderWorks,
+      getReferencedColumn: (t) => t.workId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbLibraryFolderWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbLibraryFolderWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoryWorksTableFilterComposer(
-                $db: $db,
-                $table: $db.dbLibraryCategoryWorks,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 
@@ -8980,23 +8975,23 @@ class $$DbWorksTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> dbLibraryCategoryWorksRefs<T extends Object>(
-    Expression<T> Function($$DbLibraryCategoryWorksTableAnnotationComposer a) f,
+  Expression<T> dbLibraryFolderWorksRefs<T extends Object>(
+    Expression<T> Function($$DbLibraryFolderWorksTableAnnotationComposer a) f,
   ) {
-    final $$DbLibraryCategoryWorksTableAnnotationComposer composer =
+    final $$DbLibraryFolderWorksTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.id,
-          referencedTable: $db.dbLibraryCategoryWorks,
+          referencedTable: $db.dbLibraryFolderWorks,
           getReferencedColumn: (t) => t.workId,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoryWorksTableAnnotationComposer(
+              }) => $$DbLibraryFolderWorksTableAnnotationComposer(
                 $db: $db,
-                $table: $db.dbLibraryCategoryWorks,
+                $table: $db.dbLibraryFolderWorks,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -9058,7 +9053,7 @@ class $$DbWorksTableTableManager
             bool dbBookmarksRefs,
             bool dbChapterWorksRefs,
             bool dbWorksLibraryRefs,
-            bool dbLibraryCategoryWorksRefs,
+            bool dbLibraryFolderWorksRefs,
             bool dbDownloadedWorksRefs,
           })
         > {
@@ -9190,7 +9185,7 @@ class $$DbWorksTableTableManager
                 dbBookmarksRefs = false,
                 dbChapterWorksRefs = false,
                 dbWorksLibraryRefs = false,
-                dbLibraryCategoryWorksRefs = false,
+                dbLibraryFolderWorksRefs = false,
                 dbDownloadedWorksRefs = false,
               }) {
                 return PrefetchHooks(
@@ -9207,7 +9202,7 @@ class $$DbWorksTableTableManager
                     if (dbBookmarksRefs) db.dbBookmarks,
                     if (dbChapterWorksRefs) db.dbChapterWorks,
                     if (dbWorksLibraryRefs) db.dbWorksLibrary,
-                    if (dbLibraryCategoryWorksRefs) db.dbLibraryCategoryWorks,
+                    if (dbLibraryFolderWorksRefs) db.dbLibraryFolderWorks,
                     if (dbDownloadedWorksRefs) db.dbDownloadedWorks,
                   ],
                   addJoins: null,
@@ -9444,21 +9439,21 @@ class $$DbWorksTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (dbLibraryCategoryWorksRefs)
+                      if (dbLibraryFolderWorksRefs)
                         await $_getPrefetchedData<
                           DbWork,
                           $DbWorksTable,
-                          DbLibraryCategoryWork
+                          DbLibraryFolderWork
                         >(
                           currentTable: table,
                           referencedTable: $$DbWorksTableReferences
-                              ._dbLibraryCategoryWorksRefsTable(db),
+                              ._dbLibraryFolderWorksRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$DbWorksTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).dbLibraryCategoryWorksRefs,
+                              ).dbLibraryFolderWorksRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.workId == item.id,
@@ -9518,7 +9513,7 @@ typedef $$DbWorksTableProcessedTableManager =
         bool dbBookmarksRefs,
         bool dbChapterWorksRefs,
         bool dbWorksLibraryRefs,
-        bool dbLibraryCategoryWorksRefs,
+        bool dbLibraryFolderWorksRefs,
         bool dbDownloadedWorksRefs,
       })
     >;
@@ -15713,56 +15708,52 @@ typedef $$DbWorksLibraryTableProcessedTableManager =
       DbWorksLibraryData,
       PrefetchHooks Function({bool workId})
     >;
-typedef $$DbLibraryCategoriesTableCreateCompanionBuilder =
-    DbLibraryCategoriesCompanion Function({
+typedef $$DbLibraryFoldersTableCreateCompanionBuilder =
+    DbLibraryFoldersCompanion Function({
       Value<int> id,
       required String name,
       Value<String?> icon,
       Value<String> color,
     });
-typedef $$DbLibraryCategoriesTableUpdateCompanionBuilder =
-    DbLibraryCategoriesCompanion Function({
+typedef $$DbLibraryFoldersTableUpdateCompanionBuilder =
+    DbLibraryFoldersCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String?> icon,
       Value<String> color,
     });
 
-final class $$DbLibraryCategoriesTableReferences
+final class $$DbLibraryFoldersTableReferences
     extends
-        BaseReferences<
-          _$AppDatabase,
-          $DbLibraryCategoriesTable,
-          DbLibraryCategory
-        > {
-  $$DbLibraryCategoriesTableReferences(
+        BaseReferences<_$AppDatabase, $DbLibraryFoldersTable, DbLibraryFolder> {
+  $$DbLibraryFoldersTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
   static MultiTypedResultKey<
-    $DbLibraryCategoryWorksTable,
-    List<DbLibraryCategoryWork>
+    $DbLibraryFolderWorksTable,
+    List<DbLibraryFolderWork>
   >
-  _dbLibraryCategoryWorksRefsTable(_$AppDatabase db) =>
+  _dbLibraryFolderWorksRefsTable(_$AppDatabase db) =>
       MultiTypedResultKey.fromTable(
-        db.dbLibraryCategoryWorks,
+        db.dbLibraryFolderWorks,
         aliasName: $_aliasNameGenerator(
-          db.dbLibraryCategories.id,
-          db.dbLibraryCategoryWorks.categoryId,
+          db.dbLibraryFolders.id,
+          db.dbLibraryFolderWorks.folderId,
         ),
       );
 
-  $$DbLibraryCategoryWorksTableProcessedTableManager
-  get dbLibraryCategoryWorksRefs {
-    final manager = $$DbLibraryCategoryWorksTableTableManager(
+  $$DbLibraryFolderWorksTableProcessedTableManager
+  get dbLibraryFolderWorksRefs {
+    final manager = $$DbLibraryFolderWorksTableTableManager(
       $_db,
-      $_db.dbLibraryCategoryWorks,
-    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+      $_db.dbLibraryFolderWorks,
+    ).filter((f) => f.folderId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(
-      _dbLibraryCategoryWorksRefsTable($_db),
+      _dbLibraryFolderWorksRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -15770,9 +15761,9 @@ final class $$DbLibraryCategoriesTableReferences
   }
 }
 
-class $$DbLibraryCategoriesTableFilterComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
-  $$DbLibraryCategoriesTableFilterComposer({
+class $$DbLibraryFoldersTableFilterComposer
+    extends Composer<_$AppDatabase, $DbLibraryFoldersTable> {
+  $$DbLibraryFoldersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -15799,36 +15790,35 @@ class $$DbLibraryCategoriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> dbLibraryCategoryWorksRefs(
-    Expression<bool> Function($$DbLibraryCategoryWorksTableFilterComposer f) f,
+  Expression<bool> dbLibraryFolderWorksRefs(
+    Expression<bool> Function($$DbLibraryFolderWorksTableFilterComposer f) f,
   ) {
-    final $$DbLibraryCategoryWorksTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.dbLibraryCategoryWorks,
-          getReferencedColumn: (t) => t.categoryId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$DbLibraryFolderWorksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.dbLibraryFolderWorks,
+      getReferencedColumn: (t) => t.folderId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbLibraryFolderWorksTableFilterComposer(
+            $db: $db,
+            $table: $db.dbLibraryFolderWorks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoryWorksTableFilterComposer(
-                $db: $db,
-                $table: $db.dbLibraryCategoryWorks,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 }
 
-class $$DbLibraryCategoriesTableOrderingComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
-  $$DbLibraryCategoriesTableOrderingComposer({
+class $$DbLibraryFoldersTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbLibraryFoldersTable> {
+  $$DbLibraryFoldersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -15856,9 +15846,9 @@ class $$DbLibraryCategoriesTableOrderingComposer
   );
 }
 
-class $$DbLibraryCategoriesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoriesTable> {
-  $$DbLibraryCategoriesTableAnnotationComposer({
+class $$DbLibraryFoldersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbLibraryFoldersTable> {
+  $$DbLibraryFoldersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -15877,23 +15867,23 @@ class $$DbLibraryCategoriesTableAnnotationComposer
   GeneratedColumn<String> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
 
-  Expression<T> dbLibraryCategoryWorksRefs<T extends Object>(
-    Expression<T> Function($$DbLibraryCategoryWorksTableAnnotationComposer a) f,
+  Expression<T> dbLibraryFolderWorksRefs<T extends Object>(
+    Expression<T> Function($$DbLibraryFolderWorksTableAnnotationComposer a) f,
   ) {
-    final $$DbLibraryCategoryWorksTableAnnotationComposer composer =
+    final $$DbLibraryFolderWorksTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.id,
-          referencedTable: $db.dbLibraryCategoryWorks,
-          getReferencedColumn: (t) => t.categoryId,
+          referencedTable: $db.dbLibraryFolderWorks,
+          getReferencedColumn: (t) => t.folderId,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoryWorksTableAnnotationComposer(
+              }) => $$DbLibraryFolderWorksTableAnnotationComposer(
                 $db: $db,
-                $table: $db.dbLibraryCategoryWorks,
+                $table: $db.dbLibraryFolderWorks,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -15904,47 +15894,41 @@ class $$DbLibraryCategoriesTableAnnotationComposer
   }
 }
 
-class $$DbLibraryCategoriesTableTableManager
+class $$DbLibraryFoldersTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $DbLibraryCategoriesTable,
-          DbLibraryCategory,
-          $$DbLibraryCategoriesTableFilterComposer,
-          $$DbLibraryCategoriesTableOrderingComposer,
-          $$DbLibraryCategoriesTableAnnotationComposer,
-          $$DbLibraryCategoriesTableCreateCompanionBuilder,
-          $$DbLibraryCategoriesTableUpdateCompanionBuilder,
-          (DbLibraryCategory, $$DbLibraryCategoriesTableReferences),
-          DbLibraryCategory,
-          PrefetchHooks Function({bool dbLibraryCategoryWorksRefs})
+          $DbLibraryFoldersTable,
+          DbLibraryFolder,
+          $$DbLibraryFoldersTableFilterComposer,
+          $$DbLibraryFoldersTableOrderingComposer,
+          $$DbLibraryFoldersTableAnnotationComposer,
+          $$DbLibraryFoldersTableCreateCompanionBuilder,
+          $$DbLibraryFoldersTableUpdateCompanionBuilder,
+          (DbLibraryFolder, $$DbLibraryFoldersTableReferences),
+          DbLibraryFolder,
+          PrefetchHooks Function({bool dbLibraryFolderWorksRefs})
         > {
-  $$DbLibraryCategoriesTableTableManager(
+  $$DbLibraryFoldersTableTableManager(
     _$AppDatabase db,
-    $DbLibraryCategoriesTable table,
+    $DbLibraryFoldersTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$DbLibraryCategoriesTableFilterComposer($db: db, $table: table),
+              $$DbLibraryFoldersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$DbLibraryCategoriesTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$DbLibraryFoldersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$DbLibraryCategoriesTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$DbLibraryFoldersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> icon = const Value.absent(),
                 Value<String> color = const Value.absent(),
-              }) => DbLibraryCategoriesCompanion(
+              }) => DbLibraryFoldersCompanion(
                 id: id,
                 name: name,
                 icon: icon,
@@ -15956,7 +15940,7 @@ class $$DbLibraryCategoriesTableTableManager
                 required String name,
                 Value<String?> icon = const Value.absent(),
                 Value<String> color = const Value.absent(),
-              }) => DbLibraryCategoriesCompanion.insert(
+              }) => DbLibraryFoldersCompanion.insert(
                 id: id,
                 name: name,
                 icon: icon,
@@ -15966,36 +15950,36 @@ class $$DbLibraryCategoriesTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$DbLibraryCategoriesTableReferences(db, table, e),
+                  $$DbLibraryFoldersTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({dbLibraryCategoryWorksRefs = false}) {
+          prefetchHooksCallback: ({dbLibraryFolderWorksRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (dbLibraryCategoryWorksRefs) db.dbLibraryCategoryWorks,
+                if (dbLibraryFolderWorksRefs) db.dbLibraryFolderWorks,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (dbLibraryCategoryWorksRefs)
+                  if (dbLibraryFolderWorksRefs)
                     await $_getPrefetchedData<
-                      DbLibraryCategory,
-                      $DbLibraryCategoriesTable,
-                      DbLibraryCategoryWork
+                      DbLibraryFolder,
+                      $DbLibraryFoldersTable,
+                      DbLibraryFolderWork
                     >(
                       currentTable: table,
-                      referencedTable: $$DbLibraryCategoriesTableReferences
-                          ._dbLibraryCategoryWorksRefsTable(db),
+                      referencedTable: $$DbLibraryFoldersTableReferences
+                          ._dbLibraryFolderWorksRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$DbLibraryCategoriesTableReferences(
+                          $$DbLibraryFoldersTableReferences(
                             db,
                             table,
                             p0,
-                          ).dbLibraryCategoryWorksRefs,
+                          ).dbLibraryFolderWorksRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.categoryId == item.id),
+                          referencedItems.where((e) => e.folderId == item.id),
                       typedResults: items,
                     ),
                 ];
@@ -16006,48 +15990,48 @@ class $$DbLibraryCategoriesTableTableManager
       );
 }
 
-typedef $$DbLibraryCategoriesTableProcessedTableManager =
+typedef $$DbLibraryFoldersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $DbLibraryCategoriesTable,
-      DbLibraryCategory,
-      $$DbLibraryCategoriesTableFilterComposer,
-      $$DbLibraryCategoriesTableOrderingComposer,
-      $$DbLibraryCategoriesTableAnnotationComposer,
-      $$DbLibraryCategoriesTableCreateCompanionBuilder,
-      $$DbLibraryCategoriesTableUpdateCompanionBuilder,
-      (DbLibraryCategory, $$DbLibraryCategoriesTableReferences),
-      DbLibraryCategory,
-      PrefetchHooks Function({bool dbLibraryCategoryWorksRefs})
+      $DbLibraryFoldersTable,
+      DbLibraryFolder,
+      $$DbLibraryFoldersTableFilterComposer,
+      $$DbLibraryFoldersTableOrderingComposer,
+      $$DbLibraryFoldersTableAnnotationComposer,
+      $$DbLibraryFoldersTableCreateCompanionBuilder,
+      $$DbLibraryFoldersTableUpdateCompanionBuilder,
+      (DbLibraryFolder, $$DbLibraryFoldersTableReferences),
+      DbLibraryFolder,
+      PrefetchHooks Function({bool dbLibraryFolderWorksRefs})
     >;
-typedef $$DbLibraryCategoryWorksTableCreateCompanionBuilder =
-    DbLibraryCategoryWorksCompanion Function({
+typedef $$DbLibraryFolderWorksTableCreateCompanionBuilder =
+    DbLibraryFolderWorksCompanion Function({
       Value<int> id,
       required int workId,
-      required int categoryId,
+      required int folderId,
     });
-typedef $$DbLibraryCategoryWorksTableUpdateCompanionBuilder =
-    DbLibraryCategoryWorksCompanion Function({
+typedef $$DbLibraryFolderWorksTableUpdateCompanionBuilder =
+    DbLibraryFolderWorksCompanion Function({
       Value<int> id,
       Value<int> workId,
-      Value<int> categoryId,
+      Value<int> folderId,
     });
 
-final class $$DbLibraryCategoryWorksTableReferences
+final class $$DbLibraryFolderWorksTableReferences
     extends
         BaseReferences<
           _$AppDatabase,
-          $DbLibraryCategoryWorksTable,
-          DbLibraryCategoryWork
+          $DbLibraryFolderWorksTable,
+          DbLibraryFolderWork
         > {
-  $$DbLibraryCategoryWorksTableReferences(
+  $$DbLibraryFolderWorksTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
   static $DbWorksTable _workIdTable(_$AppDatabase db) => db.dbWorks.createAlias(
-    $_aliasNameGenerator(db.dbLibraryCategoryWorks.workId, db.dbWorks.id),
+    $_aliasNameGenerator(db.dbLibraryFolderWorks.workId, db.dbWorks.id),
   );
 
   $$DbWorksTableProcessedTableManager get workId {
@@ -16064,22 +16048,22 @@ final class $$DbLibraryCategoryWorksTableReferences
     );
   }
 
-  static $DbLibraryCategoriesTable _categoryIdTable(_$AppDatabase db) =>
-      db.dbLibraryCategories.createAlias(
+  static $DbLibraryFoldersTable _folderIdTable(_$AppDatabase db) =>
+      db.dbLibraryFolders.createAlias(
         $_aliasNameGenerator(
-          db.dbLibraryCategoryWorks.categoryId,
-          db.dbLibraryCategories.id,
+          db.dbLibraryFolderWorks.folderId,
+          db.dbLibraryFolders.id,
         ),
       );
 
-  $$DbLibraryCategoriesTableProcessedTableManager get categoryId {
-    final $_column = $_itemColumn<int>('category_id')!;
+  $$DbLibraryFoldersTableProcessedTableManager get folderId {
+    final $_column = $_itemColumn<int>('folder_id')!;
 
-    final manager = $$DbLibraryCategoriesTableTableManager(
+    final manager = $$DbLibraryFoldersTableTableManager(
       $_db,
-      $_db.dbLibraryCategories,
+      $_db.dbLibraryFolders,
     ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    final item = $_typedResult.readTableOrNull(_folderIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -16087,9 +16071,9 @@ final class $$DbLibraryCategoryWorksTableReferences
   }
 }
 
-class $$DbLibraryCategoryWorksTableFilterComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
-  $$DbLibraryCategoryWorksTableFilterComposer({
+class $$DbLibraryFolderWorksTableFilterComposer
+    extends Composer<_$AppDatabase, $DbLibraryFolderWorksTable> {
+  $$DbLibraryFolderWorksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -16124,20 +16108,20 @@ class $$DbLibraryCategoryWorksTableFilterComposer
     return composer;
   }
 
-  $$DbLibraryCategoriesTableFilterComposer get categoryId {
-    final $$DbLibraryCategoriesTableFilterComposer composer = $composerBuilder(
+  $$DbLibraryFoldersTableFilterComposer get folderId {
+    final $$DbLibraryFoldersTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.dbLibraryCategories,
+      getCurrentColumn: (t) => t.folderId,
+      referencedTable: $db.dbLibraryFolders,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$DbLibraryCategoriesTableFilterComposer(
+          }) => $$DbLibraryFoldersTableFilterComposer(
             $db: $db,
-            $table: $db.dbLibraryCategories,
+            $table: $db.dbLibraryFolders,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -16148,9 +16132,9 @@ class $$DbLibraryCategoryWorksTableFilterComposer
   }
 }
 
-class $$DbLibraryCategoryWorksTableOrderingComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
-  $$DbLibraryCategoryWorksTableOrderingComposer({
+class $$DbLibraryFolderWorksTableOrderingComposer
+    extends Composer<_$AppDatabase, $DbLibraryFolderWorksTable> {
+  $$DbLibraryFolderWorksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -16185,34 +16169,33 @@ class $$DbLibraryCategoryWorksTableOrderingComposer
     return composer;
   }
 
-  $$DbLibraryCategoriesTableOrderingComposer get categoryId {
-    final $$DbLibraryCategoriesTableOrderingComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.categoryId,
-          referencedTable: $db.dbLibraryCategories,
-          getReferencedColumn: (t) => t.id,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+  $$DbLibraryFoldersTableOrderingComposer get folderId {
+    final $$DbLibraryFoldersTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.folderId,
+      referencedTable: $db.dbLibraryFolders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbLibraryFoldersTableOrderingComposer(
+            $db: $db,
+            $table: $db.dbLibraryFolders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoriesTableOrderingComposer(
-                $db: $db,
-                $table: $db.dbLibraryCategories,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return composer;
   }
 }
 
-class $$DbLibraryCategoryWorksTableAnnotationComposer
-    extends Composer<_$AppDatabase, $DbLibraryCategoryWorksTable> {
-  $$DbLibraryCategoryWorksTableAnnotationComposer({
+class $$DbLibraryFolderWorksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DbLibraryFolderWorksTable> {
+  $$DbLibraryFolderWorksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -16245,65 +16228,61 @@ class $$DbLibraryCategoryWorksTableAnnotationComposer
     return composer;
   }
 
-  $$DbLibraryCategoriesTableAnnotationComposer get categoryId {
-    final $$DbLibraryCategoriesTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.categoryId,
-          referencedTable: $db.dbLibraryCategories,
-          getReferencedColumn: (t) => t.id,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+  $$DbLibraryFoldersTableAnnotationComposer get folderId {
+    final $$DbLibraryFoldersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.folderId,
+      referencedTable: $db.dbLibraryFolders,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DbLibraryFoldersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.dbLibraryFolders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$DbLibraryCategoriesTableAnnotationComposer(
-                $db: $db,
-                $table: $db.dbLibraryCategories,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return composer;
   }
 }
 
-class $$DbLibraryCategoryWorksTableTableManager
+class $$DbLibraryFolderWorksTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $DbLibraryCategoryWorksTable,
-          DbLibraryCategoryWork,
-          $$DbLibraryCategoryWorksTableFilterComposer,
-          $$DbLibraryCategoryWorksTableOrderingComposer,
-          $$DbLibraryCategoryWorksTableAnnotationComposer,
-          $$DbLibraryCategoryWorksTableCreateCompanionBuilder,
-          $$DbLibraryCategoryWorksTableUpdateCompanionBuilder,
-          (DbLibraryCategoryWork, $$DbLibraryCategoryWorksTableReferences),
-          DbLibraryCategoryWork,
-          PrefetchHooks Function({bool workId, bool categoryId})
+          $DbLibraryFolderWorksTable,
+          DbLibraryFolderWork,
+          $$DbLibraryFolderWorksTableFilterComposer,
+          $$DbLibraryFolderWorksTableOrderingComposer,
+          $$DbLibraryFolderWorksTableAnnotationComposer,
+          $$DbLibraryFolderWorksTableCreateCompanionBuilder,
+          $$DbLibraryFolderWorksTableUpdateCompanionBuilder,
+          (DbLibraryFolderWork, $$DbLibraryFolderWorksTableReferences),
+          DbLibraryFolderWork,
+          PrefetchHooks Function({bool workId, bool folderId})
         > {
-  $$DbLibraryCategoryWorksTableTableManager(
+  $$DbLibraryFolderWorksTableTableManager(
     _$AppDatabase db,
-    $DbLibraryCategoryWorksTable table,
+    $DbLibraryFolderWorksTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$DbLibraryCategoryWorksTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
+              $$DbLibraryFolderWorksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$DbLibraryCategoryWorksTableOrderingComposer(
+              $$DbLibraryFolderWorksTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$DbLibraryCategoryWorksTableAnnotationComposer(
+              $$DbLibraryFolderWorksTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -16311,31 +16290,31 @@ class $$DbLibraryCategoryWorksTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> workId = const Value.absent(),
-                Value<int> categoryId = const Value.absent(),
-              }) => DbLibraryCategoryWorksCompanion(
+                Value<int> folderId = const Value.absent(),
+              }) => DbLibraryFolderWorksCompanion(
                 id: id,
                 workId: workId,
-                categoryId: categoryId,
+                folderId: folderId,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required int workId,
-                required int categoryId,
-              }) => DbLibraryCategoryWorksCompanion.insert(
+                required int folderId,
+              }) => DbLibraryFolderWorksCompanion.insert(
                 id: id,
                 workId: workId,
-                categoryId: categoryId,
+                folderId: folderId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$DbLibraryCategoryWorksTableReferences(db, table, e),
+                  $$DbLibraryFolderWorksTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({workId = false, categoryId = false}) {
+          prefetchHooksCallback: ({workId = false, folderId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -16361,26 +16340,26 @@ class $$DbLibraryCategoryWorksTableTableManager
                                 currentTable: table,
                                 currentColumn: table.workId,
                                 referencedTable:
-                                    $$DbLibraryCategoryWorksTableReferences
+                                    $$DbLibraryFolderWorksTableReferences
                                         ._workIdTable(db),
                                 referencedColumn:
-                                    $$DbLibraryCategoryWorksTableReferences
+                                    $$DbLibraryFolderWorksTableReferences
                                         ._workIdTable(db)
                                         .id,
                               )
                               as T;
                     }
-                    if (categoryId) {
+                    if (folderId) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.categoryId,
+                                currentColumn: table.folderId,
                                 referencedTable:
-                                    $$DbLibraryCategoryWorksTableReferences
-                                        ._categoryIdTable(db),
+                                    $$DbLibraryFolderWorksTableReferences
+                                        ._folderIdTable(db),
                                 referencedColumn:
-                                    $$DbLibraryCategoryWorksTableReferences
-                                        ._categoryIdTable(db)
+                                    $$DbLibraryFolderWorksTableReferences
+                                        ._folderIdTable(db)
                                         .id,
                               )
                               as T;
@@ -16397,19 +16376,19 @@ class $$DbLibraryCategoryWorksTableTableManager
       );
 }
 
-typedef $$DbLibraryCategoryWorksTableProcessedTableManager =
+typedef $$DbLibraryFolderWorksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $DbLibraryCategoryWorksTable,
-      DbLibraryCategoryWork,
-      $$DbLibraryCategoryWorksTableFilterComposer,
-      $$DbLibraryCategoryWorksTableOrderingComposer,
-      $$DbLibraryCategoryWorksTableAnnotationComposer,
-      $$DbLibraryCategoryWorksTableCreateCompanionBuilder,
-      $$DbLibraryCategoryWorksTableUpdateCompanionBuilder,
-      (DbLibraryCategoryWork, $$DbLibraryCategoryWorksTableReferences),
-      DbLibraryCategoryWork,
-      PrefetchHooks Function({bool workId, bool categoryId})
+      $DbLibraryFolderWorksTable,
+      DbLibraryFolderWork,
+      $$DbLibraryFolderWorksTableFilterComposer,
+      $$DbLibraryFolderWorksTableOrderingComposer,
+      $$DbLibraryFolderWorksTableAnnotationComposer,
+      $$DbLibraryFolderWorksTableCreateCompanionBuilder,
+      $$DbLibraryFolderWorksTableUpdateCompanionBuilder,
+      (DbLibraryFolderWork, $$DbLibraryFolderWorksTableReferences),
+      DbLibraryFolderWork,
+      PrefetchHooks Function({bool workId, bool folderId})
     >;
 typedef $$DbDownloadedWorksTableCreateCompanionBuilder =
     DbDownloadedWorksCompanion Function({
@@ -17093,13 +17072,10 @@ class $AppDatabaseManager {
       $$DbChapterWorksTableTableManager(_db, _db.dbChapterWorks);
   $$DbWorksLibraryTableTableManager get dbWorksLibrary =>
       $$DbWorksLibraryTableTableManager(_db, _db.dbWorksLibrary);
-  $$DbLibraryCategoriesTableTableManager get dbLibraryCategories =>
-      $$DbLibraryCategoriesTableTableManager(_db, _db.dbLibraryCategories);
-  $$DbLibraryCategoryWorksTableTableManager get dbLibraryCategoryWorks =>
-      $$DbLibraryCategoryWorksTableTableManager(
-        _db,
-        _db.dbLibraryCategoryWorks,
-      );
+  $$DbLibraryFoldersTableTableManager get dbLibraryFolders =>
+      $$DbLibraryFoldersTableTableManager(_db, _db.dbLibraryFolders);
+  $$DbLibraryFolderWorksTableTableManager get dbLibraryFolderWorks =>
+      $$DbLibraryFolderWorksTableTableManager(_db, _db.dbLibraryFolderWorks);
   $$DbDownloadedWorksTableTableManager get dbDownloadedWorks =>
       $$DbDownloadedWorksTableTableManager(_db, _db.dbDownloadedWorks);
   $$DbDownloadedChaptersTableTableManager get dbDownloadedChapters =>

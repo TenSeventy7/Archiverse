@@ -2,7 +2,7 @@ import 'package:archiverse/components/folder_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
-import 'package:archiverse/dialogs/edit_category_dialog.dart';
+import 'package:archiverse/dialogs/folder_edit_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/providers/provider_library.dart';
@@ -136,10 +136,10 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
       );
     }
 
-    // Add "Add Category" card at the end
+    // Add "Add Folder" card at the end
     final displayItems = [
       ...provider.folders.take(5),
-      null, // This will be the "Add Category" card
+      null, // This will be the "Add Folder" card
     ];
 
     return GridView.count(
@@ -150,21 +150,21 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
       childAspectRatio: 1.25,
       mainAxisSpacing: 4.0,
       crossAxisSpacing: 4.0,
-      children: displayItems.map((category) {
-        if (category == null) {
-          return _buildAddCategoryCard();
+      children: displayItems.map((folder) {
+        if (folder == null) {
+          return _buildAddFolderCard();
         }
-        return FolderCard(category: category);
+        return FolderCard(folder: folder);
       }).toList(),
     );
   }
 
-  Widget _buildAddCategoryCard() {
+  Widget _buildAddFolderCard() {
     return Card.outlined(
       clipBehavior: Clip.antiAlias,
       elevation: 0,
       child: InkWell(
-        onTap: _showAddCategoryDialog,
+        onTap: _showCreateFolderDialog,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -186,12 +186,12 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
     );
   }
 
-  void _showAddCategoryDialog() async {
-    final result = await EditCategoryDialog.show(context);
+  void _showCreateFolderDialog() async {
+    final result = await EditFolderDialog.show(context);
     if (result == true) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Category added successfully')),
+          const SnackBar(content: Text('Folder created successfully')),
         );
       }
     }

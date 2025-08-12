@@ -5,7 +5,7 @@
  */
 
 import 'package:archiverse/models/chapter.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/media.dart';
 import 'package:archiverse/models/pseud.dart';
 import 'package:archiverse/models/series.dart';
@@ -211,7 +211,7 @@ class AppRoutes {
         return null;
       case FolderWorksActivity.routeName:
         final args = settings.arguments;
-        if (args is LibraryCategory) {
+        if (args is LibraryFolder) {
           return MaterialPageRoute(
             builder: (context) => FolderWorksActivity(folder: args),
           );

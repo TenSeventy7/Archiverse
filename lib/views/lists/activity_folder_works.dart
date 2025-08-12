@@ -4,7 +4,7 @@ import 'package:archiverse/components/items/work_item.dart';
 import 'package:archiverse/dialogs/work_options.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/views/activity_common_list.dart';
 import 'package:archiverse/views/activity_work.dart';
@@ -14,23 +14,23 @@ import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 class FolderWorksActivity extends CommonListActivity<Work> {
   const FolderWorksActivity({super.key, required this.folder});
   static const String routeName = "/folder/works";
-  final LibraryCategory folder;
+  final LibraryFolder folder;
 
   @override
   FolderWorksActivityState createState() => FolderWorksActivityState();
 }
 
 class FolderWorksActivityState extends CommonListActivityState<Work> {
-  LibraryCategory get folder => (widget as FolderWorksActivity).folder;
+  LibraryFolder get folder => (widget as FolderWorksActivity).folder;
 
   @override
   Future<List<Work>> fetchItems(int page) async {
-    return await AppApi().getWorksByCategory(folder);
+    return await AppApi().getWorksByFolder(folder);
   }
 
   @override
   Widget buildItemWidget(BuildContext context, Work item, int index) {
-    return WorkItem(work: item, category: folder);
+    return WorkItem(work: item, folder: folder);
   }
 
   @override
@@ -52,7 +52,7 @@ class FolderWorksActivityState extends CommonListActivityState<Work> {
     WorkOptionsDialog.showSheet(
       context,
       work: item,
-      category: folder,
+      folder: folder,
       onWorkRemovedFromFolder: refreshList,
     );
   }

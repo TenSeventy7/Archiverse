@@ -3,18 +3,18 @@
  * This code is licensed under GNU GPL 3.0 or later. See LICENSE for details.
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-import 'package:archiverse/dialogs/edit_category_dialog.dart';
+import 'package:archiverse/dialogs/folder_edit_dialog.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:provider/provider.dart';
 
 class _FolderOptionsDialog extends StatefulWidget {
-  final LibraryCategory category;
+  final LibraryFolder folder;
   final BuildContext context;
-  const _FolderOptionsDialog({required this.category, required this.context});
+  const _FolderOptionsDialog({required this.folder, required this.context});
 
   @override
   State<_FolderOptionsDialog> createState() => _FolderOptionsDialogState();
@@ -44,9 +44,9 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
                   icon: TablerIcons.pencil,
                   title: "Edit folder",
                   onTap: () {
-                    final category = widget.category;
+                    final folder = widget.folder;
                     context.navigator.pop();
-                    _showEditCategoryDialog(widget.context, category);
+                    _showEditFolderDialog(widget.context, folder);
                   },
                 ),
 
@@ -57,9 +57,9 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
                   icon: TablerIcons.trash,
                   title: "Delete folder",
                   onTap: () {
-                    final category = widget.category;
+                    final folder = widget.folder;
                     context.navigator.pop();
-                    _showDeleteCategoryDialog(category);
+                    _showDeleteFolderDialog(folder);
                   },
                 ),
               ],
@@ -88,12 +88,12 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: widget.category.accentColor.withAlpha(50),
+                  color: widget.folder.accentColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Icon(
-                  widget.category.iconData,
-                  color: widget.category.accentColor,
+                  widget.folder.iconData,
+                  color: widget.folder.accentColor,
                   size: 32,
                 ),
               ),
@@ -101,14 +101,14 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.category.name,
+                    widget.folder.name,
                     style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    "${widget.category.count} works",
+                    "${widget.folder.count} works",
                     style: context.textTheme.labelMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -204,22 +204,19 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
     return const SizedBox(height: 4.0);
   }
 
-  void _showEditCategoryDialog(
-    BuildContext context,
-    LibraryCategory category,
-  ) async {
-    final result = await EditCategoryDialog.show(context, category: category);
+  void _showEditFolderDialog(BuildContext context, LibraryFolder folder) async {
+    final result = await EditFolderDialog.show(context, folder: folder);
     if (result == true) {
       if (context.mounted) {
         context.read<LibraryProvider>().refreshFolders();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Category updated successfully')),
+          const SnackBar(content: Text('Folder updated successfully')),
         );
       }
     }
   }
 
-  void _showDeleteCategoryDialog(LibraryCategory category) {
+  void _showDeleteFolderDialog(LibraryFolder folder) {
     showDialog(
       context: context,
       builder: (context) {
@@ -250,7 +247,7 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
                       width: double.infinity,
                       child: FilledButton(
                         onPressed: () async {
-                          await _deleteCategory(widget.context, category);
+                          await _deleteFolder(widget.context, folder);
                         },
                         style: FilledButton.styleFrom(
                           backgroundColor: context.colorScheme.error,
@@ -287,23 +284,20 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
     );
   }
 
-  Future<void> _deleteCategory(
-    BuildContext context,
-    LibraryCategory category,
-  ) async {
+  Future<void> _deleteFolder(BuildContext context, LibraryFolder folder) async {
     Navigator.pop(context);
     try {
-      await context.read<LibraryProvider>().deleteCategory(category);
+      await context.read<LibraryProvider>().deleteFolder(folder);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Category deleted successfully')),
+          const SnackBar(content: Text('Folder deleted successfully')),
         );
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error deleting category: $e')));
+        ).showSnackBar(SnackBar(content: Text('Error deleting folder: $e')));
       }
     }
   }
@@ -312,7 +306,7 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
 class FolderOptionsDialog {
   static void showSheet(
     BuildContext context, {
-    required LibraryCategory category,
+    required LibraryFolder folder,
     AnimationController? bottomSheetAnimator,
   }) {
     showModalBottomSheet<void>(
@@ -325,7 +319,7 @@ class FolderOptionsDialog {
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (BuildContext _) => _FolderOptionsDialog(
-        category: category,
+        folder: folder,
         context: Navigator.of(context, rootNavigator: true).context,
       ),
     );

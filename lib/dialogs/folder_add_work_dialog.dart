@@ -1,24 +1,24 @@
 import 'package:archiverse/api.dart';
-import 'package:archiverse/dialogs/edit_category_dialog.dart';
+import 'package:archiverse/dialogs/folder_edit_dialog.dart';
 import 'package:archiverse/extensions/api_library.dart';
 import 'package:archiverse/extensions/context.dart';
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:archiverse/models/work.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AddToCategoryDialog extends StatefulWidget {
+class AddWorkToFolderDialog extends StatefulWidget {
   final Work work;
-  const AddToCategoryDialog({Key? key, required this.work}) : super(key: key);
+  const AddWorkToFolderDialog({super.key, required this.work});
 
   @override
-  State<AddToCategoryDialog> createState() => _AddToCategoryDialogState();
+  State<AddWorkToFolderDialog> createState() => _AddWorkToFolderDialogState();
 }
 
-class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
-  late Future<Map<LibraryCategory, bool>> future;
+class _AddWorkToFolderDialogState extends State<AddWorkToFolderDialog> {
+  late Future<Map<LibraryFolder, bool>> future;
 
   @override
   void initState() {
@@ -26,20 +26,20 @@ class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
     future = _fetchCategories();
   }
 
-  Future<Map<LibraryCategory, bool>> _fetchCategories() async {
-    final categories = await AppApi().getAllLibraryCategories();
-    final result = <LibraryCategory, bool>{};
-    for (final category in categories) {
-      result[category] = await AppApi().isWorkInCategory(widget.work, category);
+  Future<Map<LibraryFolder, bool>> _fetchCategories() async {
+    final categories = await AppApi().getAllLibraryFolders();
+    final result = <LibraryFolder, bool>{};
+    for (final folder in categories) {
+      result[folder] = await AppApi().isWorkInFolder(widget.work, folder);
     }
     return result;
   }
 
-  void _showAddCategoryDialog(BuildContext context) async {
-    final result = await EditCategoryDialog.show(context);
+  void _showAddFolderDialog(BuildContext context) async {
+    final result = await EditFolderDialog.show(context);
     if (result == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Category added successfully')),
+        const SnackBar(content: Text('Folder added successfully')),
       );
       setState(() {
         future = _fetchCategories();
@@ -47,35 +47,30 @@ class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
     }
   }
 
-  Future<void> _addToCategory(
-    BuildContext context,
-    LibraryCategory category,
-  ) async {
+  Future<void> _addToFolder(BuildContext context, LibraryFolder folder) async {
     try {
-      if (await AppApi().isWorkInCategory(widget.work, category)) {
+      if (await AppApi().isWorkInFolder(widget.work, folder)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              "${widget.work.title} is already in ${category.name}",
-            ),
+            content: Text("${widget.work.title} is already in ${folder.name}"),
           ),
         );
         return;
       }
-      await AppApi().addWorkToCategory(widget.work, category);
+      await AppApi().addWorkToFolder(widget.work, folder);
       if (context.mounted) {
         context.read<LibraryProvider>().refreshAll();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("${widget.work.title} added to ${category.name}"),
+            content: Text("${widget.work.title} added to ${folder.name}"),
           ),
         );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to add work to category")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to add work to folder")));
       }
     }
   }
@@ -95,11 +90,11 @@ class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
               shrinkWrap: true,
               itemCount: categories.length,
               itemBuilder: (context, index) {
-                LibraryCategory category = categories.keys.elementAt(index);
-                bool isInCategory = categories[category] ?? false;
+                LibraryFolder folder = categories.keys.elementAt(index);
+                bool isInFolder = categories[folder] ?? false;
 
                 return ListTile(
-                  enabled: !isInCategory,
+                  enabled: !isInFolder,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -110,40 +105,38 @@ class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
                   leading: Container(
                     padding: const EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
-                      color: category.accentColor.withAlpha(
-                        isInCategory ? 30 : 50,
-                      ),
+                      color: folder.accentColor.withAlpha(isInFolder ? 30 : 50),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Icon(
-                      category.iconData,
-                      color: category.accentColor.withAlpha(
-                        !isInCategory ? 255 : 150,
+                      folder.iconData,
+                      color: folder.accentColor.withAlpha(
+                        !isInFolder ? 255 : 150,
                       ),
                       size: 24,
                     ),
                   ),
                   title: Text(
-                    category.name,
+                    folder.name,
                     style: context.textTheme.titleMedium?.copyWith(
-                      color: isInCategory
+                      color: isInFolder
                           ? context.colorScheme.onSurface.withOpacity(0.6)
                           : null,
                     ),
                   ),
                   subtitle: Text(
-                    isInCategory
+                    isInFolder
                         ? "Already in this folder"
-                        : "${category.count} works",
+                        : "${folder.count} works",
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colorScheme.onSurface.withOpacity(
-                        isInCategory ? 0.3 : 0.6,
+                        isInFolder ? 0.3 : 0.6,
                       ),
                     ),
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
-                    _addToCategory(context, category);
+                    _addToFolder(context, folder);
                   },
                 );
               },
@@ -154,7 +147,7 @@ class _AddToCategoryDialogState extends State<AddToCategoryDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => _showAddCategoryDialog(context),
+          onPressed: () => _showAddFolderDialog(context),
           child: const Text("Create folder"),
         ),
         TextButton(

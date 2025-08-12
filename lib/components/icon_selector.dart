@@ -1,4 +1,4 @@
-import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/library_folder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 
@@ -91,11 +91,9 @@ class IconSelector extends StatelessWidget {
                     mainAxisSpacing: 8,
                     childAspectRatio: 1,
                   ),
-                  itemCount: LibraryCategory.icons.length,
+                  itemCount: LibraryFolder.icons.length,
                   itemBuilder: (context, index) {
-                    final entry = LibraryCategory.icons.entries.elementAt(
-                      index,
-                    );
+                    final entry = LibraryFolder.icons.entries.elementAt(index);
                     final isSelected = selectedIcon == entry.value;
 
                     return Material(
