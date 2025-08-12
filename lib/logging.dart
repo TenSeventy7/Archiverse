@@ -15,7 +15,12 @@ class AppLog {
 
   AppLog._internal();
   void initFlutter() {
-    Logger.root.level = Level.ALL; // Set default log level
+    // Set default log level
+    if (kDebugMode) {
+      Logger.root.level = Level.FINE;
+    } else {
+      Logger.root.level = Level.INFO;
+    }
 
     // If Android platform, output to logcat
     if (Platform.isAndroid) {
