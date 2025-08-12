@@ -1,11 +1,9 @@
-import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/continue_reading_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/placeholders.dart';
 import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/views/lists/activity_library_works.dart';
 import 'package:flutter/material.dart';

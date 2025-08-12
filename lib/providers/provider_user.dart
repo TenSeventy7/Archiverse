@@ -22,11 +22,11 @@ class UserProvider extends ChangeNotifier {
   UserProvider() {
     // Initialize the user state when the provider is created
     _isFetching = true;
-    initializeUser();
+    initialize();
   }
 
   /// Attempt to load user information
-  Future<void> initializeUser() async {
+  Future<void> initialize() async {
     String? username = await _api.storage.read(key: "username");
 
     if (username == null) {
@@ -48,6 +48,7 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error, e.g., user not found or network issue
+      print(e);
       _user = null;
       _isFetching = false;
       notifyListeners();

@@ -4,7 +4,7 @@ import 'package:archiverse/components/load_error.dart';
 import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/read_history.dart';
-import 'package:archiverse/providers/provider_read_history.dart';
+import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
@@ -38,7 +38,7 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
   }
 
   Future<List<Map<int, List<ReadHistory>>>> _fetchPage(int pageKey) async {
-    final provider = context.read<ReadHistoryProvider>();
+    final provider = context.read<LibraryProvider>();
     final newItems = await provider.loadPaginatedGroupedHistory(
       offset: pageKey - 1,
     );
@@ -60,11 +60,11 @@ class _LibraryHistoryFragmentState extends State<LibraryHistoryFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ReadHistoryProvider>(
+    return Consumer<LibraryProvider>(
       builder: (context, provider, child) {
         return RefreshIndicator(
           onRefresh: () async {
-            await provider.refresh();
+            await provider.refreshHistory();
             _controller.refresh();
           },
           child: PagingListener<int, Map<int, List<ReadHistory>>>(

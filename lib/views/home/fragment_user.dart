@@ -176,7 +176,10 @@ class _UserFragmentState extends State<UserFragment> {
               // User info
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 24.0, bottom: 26.0),
+                  padding: EdgeInsets.only(
+                    right: 24.0,
+                    bottom: user == null ? 16.0 : 26.0,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,

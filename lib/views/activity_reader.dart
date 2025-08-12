@@ -7,7 +7,7 @@ import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/reader_color.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:archiverse/providers/provider_read_history.dart';
+import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/providers/provider_reader.dart';
 import 'package:archiverse/views/activity_common.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +117,7 @@ class _ReaderActivityState extends State<ReaderActivity>
     _resetStatusBarColor();
 
     try {
-      final provider = Provider.of<ReadHistoryProvider>(context, listen: false);
+      final provider = Provider.of<LibraryProvider>(context, listen: false);
 
       if (_scrollController.hasClients) {
         final scrollPosition = _scrollController.offset.toInt();
@@ -227,7 +227,7 @@ class _ReaderActivityState extends State<ReaderActivity>
     if (_currentChapter == null) return;
 
     try {
-      final provider = Provider.of<ReadHistoryProvider>(context, listen: false);
+      final provider = Provider.of<LibraryProvider>(context, listen: false);
 
       // Record that user started reading this work/chapter
       provider
@@ -278,9 +278,9 @@ class _ReaderActivityState extends State<ReaderActivity>
     }
 
     // Get chapter from read history if available
-    final readHistory = await context
-        .read<ReadHistoryProvider>()
-        .getReadHistory(work);
+    final readHistory = await context.read<LibraryProvider>().getReadHistory(
+      work,
+    );
     if (readHistory != null) {
       _currentChapterIndex = _chapters.indexWhere(
         (c) => c.id == readHistory.chapter?.id,

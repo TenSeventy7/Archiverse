@@ -1,43 +1,184 @@
+import 'package:flutter/material.dart';
 import 'package:archiverse/api.dart';
 import 'package:archiverse/database/repository.dart';
 import 'package:archiverse/extensions/api_library.dart';
+import 'package:archiverse/models/chapter.dart';
 import 'package:archiverse/models/library_category.dart';
+import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/models/work.dart';
-import 'package:flutter/material.dart';
 
 class LibraryProvider extends ChangeNotifier {
   final AppApi _api = AppApi();
 
-  // Recently added works state
+  // Read History state
+  ReadHistory? _mostRecentHistory;
+  bool _isLoadingHistory = false;
+  String? _readHistoryError;
+
+  // Library state
   List<Work> _recentlyAddedWorks = [];
-  List<Work> get recentlyAddedWorks => _recentlyAddedWorks;
-
-  // Most read works state - derived from read history with highest hits
   List<Work> _mostReadWorks = [];
-  List<Work> get mostReadWorks => _mostReadWorks;
+  List<LibraryCategory> _folders = [];
 
-  // List of library categories
-  List<LibraryCategory> _categories = [];
-  List<LibraryCategory> get categories => _categories;
-  bool _isLoadingCategories = true;
-  bool get isLoadingCategories => _isLoadingCategories;
-
-  // Loading states
   bool _isLoadingRecentlyAdded = false;
-  bool get isLoadingRecentlyAdded => _isLoadingRecentlyAdded;
-
   bool _isLoadingMostRead = false;
+  bool _isLoadingFolders = true;
+  String? _libraryError;
+
+  bool get isLoadingHistory => _isLoadingHistory;
+  String? get readHistoryError => _readHistoryError;
+  ReadHistory? get mostRecentHistory => _mostRecentHistory;
+  List<Work> get recentlyAddedWorks => _recentlyAddedWorks;
+  List<Work> get mostReadWorks => _mostReadWorks;
+  List<LibraryCategory> get folders => _folders;
+  bool get isLoadingRecentlyAdded => _isLoadingRecentlyAdded;
   bool get isLoadingMostRead => _isLoadingMostRead;
+  bool get isLoadingFolders => _isLoadingFolders;
+  String? get libraryError => _libraryError;
+  bool get isLoadingAny =>
+      _isLoadingHistory ||
+      _isLoadingRecentlyAdded ||
+      _isLoadingMostRead ||
+      _isLoadingFolders;
+  String? get anyError => _readHistoryError ?? _libraryError;
+
+  Future<void> initialize() async {
+    await _loadMostRecentHistory();
+  }
+
+  /// Saves read history and updates related library data
+  Future<void> saveReadHistory({
+    required Work work,
+    required Chapter chapter,
+    required int scrollPosition,
+    int? totalScrollPosition,
+  }) async {
+    try {
+      await _api.saveReadHistory(
+        work: work,
+        chapter: chapter,
+        scrollPosition: scrollPosition,
+        totalScrollPosition: totalScrollPosition,
+      );
+
+      // Clear cache and refresh data
+      _mostRecentHistory = null;
+      await _loadMostRecentHistory();
+
+      // Also refresh most read works since this affects the ranking
+      await _fetchMostRead();
+
+      notifyListeners();
+    } catch (e) {
+      _readHistoryError = e.toString();
+      notifyListeners();
+    }
+  }
+
+  /// Gets read history for a specific work
+  Future<ReadHistory?> getReadHistory(Work work) async {
+    try {
+      return await _api.getReadHistory(work);
+    } catch (e) {
+      _readHistoryError = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<void> _loadMostRecentHistory() async {
+    try {
+      _isLoadingHistory = true;
+      _readHistoryError = null;
+      notifyListeners();
+
+      _mostRecentHistory = await _api.getMostRecentReadHistory();
+
+      _isLoadingHistory = false;
+      notifyListeners();
+    } catch (e) {
+      _readHistoryError = e.toString();
+      _isLoadingHistory = false;
+      notifyListeners();
+    }
+  }
+
+  /// Loads paginated grouped history
+  Future<Map<int, List<ReadHistory>>> loadPaginatedGroupedHistory({
+    int offset = 0,
+  }) async {
+    try {
+      _isLoadingHistory = true;
+      _readHistoryError = null;
+      notifyListeners();
+
+      final result = await _api.getPaginatedGroupedHistory(offset: offset);
+
+      _isLoadingHistory = false;
+      notifyListeners();
+
+      return result;
+    } catch (e) {
+      _readHistoryError = e.toString();
+      _isLoadingHistory = false;
+      notifyListeners();
+      return {};
+    }
+  }
+
+  /// Checks if there's more history beyond the current offset
+  Future<bool> hasMoreHistory(int currentOffset) async {
+    try {
+      return await _api.hasMoreHistory(currentOffset);
+    } catch (e) {
+      _readHistoryError = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Gets the total count of read history entries
+  Future<int> getReadHistoryCount() async {
+    try {
+      return await _api.getReadHistoryCount();
+    } catch (e) {
+      _readHistoryError = e.toString();
+      notifyListeners();
+      return 0;
+    }
+  }
+
+  /// Deletes read history for a work and updates related data
+  Future<bool> deleteReadHistory(Work work) async {
+    try {
+      final success = await _api.deleteReadHistory(work);
+
+      if (success) {
+        _mostRecentHistory = null;
+        await _loadMostRecentHistory();
+        // Refresh most read works since this affects the ranking
+        await _fetchMostRead();
+        notifyListeners();
+      }
+
+      return success;
+    } catch (e) {
+      _readHistoryError = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
 
   /// Fetch recently added works to library
   Future<void> fetchRecentlyAdded({int limit = 10}) async {
     _isLoadingRecentlyAdded = true;
+    _libraryError = null;
     notifyListeners();
 
     try {
       _recentlyAddedWorks = await _api.getRecentlyAddedToLibrary(limit: limit);
     } catch (e) {
-      print('Error fetching recently added works: $e');
+      _libraryError = 'Error fetching recently added works: $e';
       _recentlyAddedWorks = [];
     } finally {
       _isLoadingRecentlyAdded = false;
@@ -45,93 +186,33 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-  /// Fetch library categories
-  Future<void> fetchCategories() async {
-    _isLoadingCategories = true;
+  /// Fetch library folders
+  Future<void> fetchFolders() async {
+    _isLoadingFolders = true;
+    _libraryError = null;
     notifyListeners();
 
     try {
-      _categories = await _api.getLibraryCategories(1);
+      _folders = await _api.getLibraryCategories(1);
     } catch (e) {
-      print('Error fetching library categories: $e');
-      _categories = [];
+      _libraryError = 'Error fetching library folders: $e';
+      _folders = [];
     } finally {
-      _isLoadingCategories = false;
+      _isLoadingFolders = false;
       notifyListeners();
     }
   }
 
-  /// Delete a library category
-  Future<void> deleteCategory(LibraryCategory category) async {
-    try {
-      print('Deleting category: ${category.name}');
-      await _api.deleteLibraryCategory(category);
-      await refreshCategories();
-      notifyListeners();
-    } catch (e) {
-      print('Error deleting category: $e');
-      // Optionally handle error, e.g. show snackbar
-    }
-  }
-
-  /// Remove a work from a specific category
-  Future<void> removeWorkFromCategory(
-    Work work,
-    LibraryCategory category,
-  ) async {
-    try {
-      if (!await _api.isWorkInCategory(work, category)) {
-        return;
-      }
-
-      await _api.removeWorkFromCategory(work, category);
-      notifyListeners();
-
-      await refreshCategories(); // Refresh categories after removal
-    } catch (e) {}
-  }
-
-  /// Add a new library category
-  Future<void> addCategory(LibraryCategory category) async {
-    try {
-      await _api.createLibraryCategory(
-        category.name,
-        icon: category.icon,
-        color: category.color,
-      );
-      notifyListeners();
-      await refreshCategories(); // Refresh categories after adding
-    } catch (e) {
-      print('Error adding category: $e');
-      // Optionally handle error, e.g. show snackbar
-    }
-  }
-
-  /// Update an existing library category
-  Future<void> updateCategory(LibraryCategory category) async {
-    try {
-      await _api.updateLibraryCategory(category);
-      notifyListeners();
-      await refreshCategories(); // Refresh categories after updating
-    } catch (e) {
-      print('Error updating category: $e');
-      // Optionally handle error, e.g. show snackbar
-    }
-  }
-
-  /// Refresh categories from API
-  Future<void> refreshCategories() async {
-    _categories = [];
-    await fetchCategories();
-  }
-
-  /// Fetch most read works based on read history hits and completion
+  /// Fetch most read works based on read history
   Future<void> fetchMostRead({int limit = 10}) async {
+    await _fetchMostRead(limit: limit);
+  }
+
+  Future<void> _fetchMostRead({int limit = 10}) async {
     _isLoadingMostRead = true;
     notifyListeners();
 
     try {
-      // Get all read history entries
       final allHistory = await ReadHistoryRepository.getAllReadHistory();
 
       if (allHistory.isEmpty) {
@@ -140,8 +221,7 @@ class LibraryProvider extends ChangeNotifier {
       }
 
       // Create a scoring system that combines hits and completion
-      // Higher hits = more read, completion shows engagement
-      final scoredWorks = <MapEntry<Work, double>>[];
+      final scores = <int, _WorkScore>{};
 
       for (final history in allHistory) {
         // Base score from hits (primary factor)
@@ -162,18 +242,25 @@ class LibraryProvider extends ChangeNotifier {
           score += 1; // Recent read bonus
         }
 
-        scoredWorks.add(MapEntry(history.work, score));
+        // Use the work ID as key and accumulate/update scores
+        if (scores[history.work.id] == null) {
+          scores[history.work.id] = _WorkScore(history.work, score);
+        } else {
+          // Update with latest score (hit counts should be identical across histories)
+          scores[history.work.id]!.score = score;
+        }
       }
 
       // Sort by score (descending) and take the top works
-      scoredWorks.sort((a, b) => b.value.compareTo(a.value));
+      final sortedEntries = scores.entries.toList()
+        ..sort((a, b) => b.value.score.compareTo(a.value.score));
 
-      _mostReadWorks = scoredWorks
+      _mostReadWorks = sortedEntries
           .take(limit)
-          .map((entry) => entry.key)
+          .map((entry) => entry.value.work)
           .toList();
     } catch (e) {
-      print('Error fetching most read works: $e');
+      _libraryError = 'Error fetching most read works: $e';
       _mostReadWorks = [];
     } finally {
       _isLoadingMostRead = false;
@@ -181,20 +268,127 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-  /// Refresh all library data
+  /// Delete a library category
+  Future<void> deleteCategory(LibraryCategory category) async {
+    try {
+      await _api.deleteLibraryCategory(category);
+      await refreshFolders();
+      notifyListeners();
+    } catch (e) {
+      _libraryError = 'Error deleting category: $e';
+      notifyListeners();
+    }
+  }
+
+  /// Remove a work from a specific category
+  Future<void> removeWorkFromCategory(
+    Work work,
+    LibraryCategory category,
+  ) async {
+    try {
+      if (!await _api.isWorkInCategory(work, category)) {
+        return;
+      }
+
+      await _api.removeWorkFromCategory(work, category);
+      await refreshFolders();
+      notifyListeners();
+    } catch (e) {
+      _libraryError = 'Error removing work from category: $e';
+      notifyListeners();
+    }
+  }
+
+  /// Add a new library category
+  Future<void> addCategory(LibraryCategory category) async {
+    try {
+      await _api.createLibraryCategory(
+        category.name,
+        icon: category.icon,
+        color: category.color,
+      );
+      await refreshFolders();
+      notifyListeners();
+    } catch (e) {
+      _libraryError = 'Error adding category: $e';
+      notifyListeners();
+    }
+  }
+
+  /// Update an existing library category
+  Future<void> updateCategory(LibraryCategory category) async {
+    try {
+      await _api.updateLibraryCategory(category);
+      await refreshFolders();
+      notifyListeners();
+    } catch (e) {
+      _libraryError = 'Error updating category: $e';
+      notifyListeners();
+    }
+  }
+
+  /// Refresh folders from API
+  Future<void> refreshFolders() async {
+    _folders = [];
+    await fetchFolders();
+  }
+
+  /// Refresh all library and read history data
   Future<void> refreshAll() async {
+    await Future.wait([fetchRecentlyAdded(), fetchFolders()]);
+  }
+
+  /// Refresh only read history related data
+  Future<void> refreshHistory() async {
+    _mostRecentHistory = null;
+    _readHistoryError = null;
     await Future.wait([
-      fetchRecentlyAdded(),
-      fetchMostRead(),
-      fetchCategories(),
+      _loadMostRecentHistory(),
+      _fetchMostRead(), // Most read works depend on read history
     ]);
   }
 
-  /// Clear all data
-  void clear() {
+  /// Refresh only library data (not read history)
+  Future<void> refreshLibrary() async {
+    await Future.wait([fetchRecentlyAdded(), fetchFolders()]);
+  }
+
+  /// Clear all cached data
+  void clearAll() {
+    // Clear read history cache
+    _mostRecentHistory = null;
+    _readHistoryError = null;
+
+    // Clear library cache
     _recentlyAddedWorks = [];
     _mostReadWorks = [];
-    _categories = [];
+    _folders = [];
+    _libraryError = null;
+
     notifyListeners();
   }
+
+  /// Clear only read history cache
+  void clearReadHistoryCache() {
+    _mostRecentHistory = null;
+    _readHistoryError = null;
+    notifyListeners();
+  }
+
+  /// Clear only library cache
+  void clearLibraryCache() {
+    _recentlyAddedWorks = [];
+    _mostReadWorks = [];
+    _folders = [];
+    _libraryError = null;
+    notifyListeners();
+  }
+}
+
+/// Helper class for work scoring in most read calculation
+class _WorkScore {
+  final Work work;
+  double score;
+
+  _WorkScore(this.work, this.score);
 }

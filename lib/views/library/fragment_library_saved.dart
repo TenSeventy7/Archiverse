@@ -1,4 +1,3 @@
-import 'package:archiverse/components/cards/work_card.dart';
 import 'package:archiverse/components/folder_card.dart';
 import 'package:archiverse/components/item_placeholder.dart';
 import 'package:archiverse/components/suggestions/work_suggestions.dart';
@@ -35,7 +34,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<LibraryProvider>().refreshCategories();
+      context.read<LibraryProvider>().refreshFolders();
     });
   }
 
@@ -57,7 +56,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
                       .pushNamed(LibraryFoldersActivity.routeName)
                       .then((_) {
                         if (!context.mounted) return;
-                        context.read<LibraryProvider>().refreshCategories();
+                        context.read<LibraryProvider>().refreshFolders();
                       });
                 },
               ),
@@ -128,7 +127,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
   }
 
   Widget _buildCollectionsList(LibraryProvider provider) {
-    if (provider.isLoadingCategories) {
+    if (provider.isLoadingFolders) {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(32.0),
@@ -139,7 +138,7 @@ class _LibrarySavedFragmentState extends State<LibrarySavedFragment> {
 
     // Add "Add Category" card at the end
     final displayItems = [
-      ...provider.categories.take(5),
+      ...provider.folders.take(5),
       null, // This will be the "Add Category" card
     ];
 

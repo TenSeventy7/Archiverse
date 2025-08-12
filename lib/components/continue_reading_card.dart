@@ -3,7 +3,7 @@ import 'package:archiverse/components/text_header.dart';
 import 'package:archiverse/extensions/context.dart';
 import 'package:archiverse/models/read_history.dart';
 import 'package:archiverse/placeholders.dart';
-import 'package:archiverse/providers/provider_read_history.dart';
+import 'package:archiverse/providers/provider_library.dart';
 import 'package:archiverse/views/activity_reader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,14 +26,14 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ReadHistoryProvider>(
+    return Consumer<LibraryProvider>(
       builder: (context, provider, child) {
-        if (!provider.isLoading && provider.mostRecentHistory == null) {
+        if (!provider.isLoadingHistory && provider.mostRecentHistory == null) {
           return const SizedBox.shrink(); // No recent history to display
         }
 
         return Skeletonizer(
-          enabled: provider.isLoading,
+          enabled: provider.isLoadingHistory,
           child: Padding(
             padding: EdgeInsets.only(top: 4.0),
             child: Column(
@@ -43,7 +43,7 @@ class _ContinueReadingCardState extends State<ContinueReadingCard> {
                 ],
                 _buildCard(
                   context,
-                  provider.isLoading
+                  provider.isLoadingHistory
                       ? Fillers.history
                       : provider.mostRecentHistory!,
                 ),

@@ -211,7 +211,7 @@ class _FolderOptionsDialogState extends State<_FolderOptionsDialog> {
     final result = await EditCategoryDialog.show(context, category: category);
     if (result == true) {
       if (context.mounted) {
-        context.read<LibraryProvider>().refreshCategories();
+        context.read<LibraryProvider>().refreshFolders();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Category updated successfully')),
         );
