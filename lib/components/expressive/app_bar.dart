@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 // Default toolbar height for Material 3
 const double _kToolbarHeight = 64.0;
 
+const double kExpressiveToolbarHeight =
+    _kToolbarHeight + ExpressiveAppBar.defaultRadius;
+
 class ExpressiveAppBar extends StatefulWidget implements PreferredSizeWidget {
   // Default radius for the rounded corners
   static const double defaultRadius = 24.0;
