@@ -6,6 +6,7 @@
 
 import 'package:archiverse/api.dart';
 import 'package:archiverse/extensions/context.dart';
+import 'package:archiverse/logging.dart';
 import 'package:archiverse/models/reader_font.dart';
 import 'package:archiverse/preferences.dart';
 import 'package:archiverse/providers/provider_library.dart';
@@ -32,6 +33,7 @@ void main() async {
 
   // Initialize the Ao3Api instance
   await AppApi().initFlutter();
+  AppLog().initFlutter();
 
   // Initialize the preferences provider
   final preferences = PreferencesProvider();
