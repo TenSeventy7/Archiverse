@@ -1,6 +1,6 @@
 # Archiverse
 
-A beautiful, Material 3-design reader for Archive of Our Own (Ao3).
+An unofficial reader for the Archive of Our Own (AO3). A beautiful, Material 3-design reader that brings your favorite works to life.
 
 ## 🌠 Features
 
@@ -44,13 +44,11 @@ These features are coming soon!
 
 ## ⁉️ Where is the API code?
 
-Archiverse is provided as a source-available project, meaning certain portions of the app are not open source, including the API code. **The Archive currently suffers from abuse by bots, scrapers, and notably AI firms using AO3's data to train their models without the Archive's nor the authors' consent.** As a result, it has been agreed by me and the Organization for Transformative Works (OTW; the volunteer organization behind AO3) that the API code will not be open source to prevent potential further abuse of the Archive's data.
+Archiverse is provided as a source-available project, meaning certain portions of the app are not open source, including the API code. **The Archive currently suffers from abuse by bots, scrapers, and notably AI firms using AO3's data to train their models without the Archive's nor the authors' consent.** As a result, I have promised the Organization for Transformative Works (OTW; the volunteer organization behind AO3) that the API code will not be open source to prevent potential further abuse of the Archive's data.
 
 The UI and local database portions of the app are made source-available to allow contributors to help improve the app's user interface and functionality. If you are interested in contributing, please check out the [Contributing Guide](CONTRIBUTING.md).
 
-## ❔ Is this app sanctioned by the OTW?
-
-**Yes!** While the OTW does not officially endorse any third-party apps for Archive of Our Own, they have given permission for Archiverse to be developed and distributed at its current form, including certain monetization strategies that will be introduced in the future.
+## ❔ Does the app follow AO3's terms of service?
 
 Archiverse is developed in accordance with the [OTW's Terms of Service](https://archiveofourown.org/tos) and [Privacy Policy](https://archiveofourown.org/privacy). In addition, Archiverse is developed to comply with AO3's rate limits and usage guidelines, ensuring that it does not abuse the Archive's resources.
 
